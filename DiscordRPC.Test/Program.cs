@@ -11,9 +11,18 @@ namespace DiscordRPC.Test
 	{
 		static void Main(string[] args)
 		{
+			Console.WriteLine("Connecting...");
 			using (DiscordRPC rpc = new DiscordRPC())
 			{
 				Console.WriteLine("Connected!");
+				Console.ReadKey();
+
+				Console.WriteLine("Presence Sent!");
+				rpc.UpdatePresence(new RichPresence()
+				{
+					State = "Solo",
+					Details = "Playing Scrubs"
+				});
 				Console.ReadKey();
 			}
 		}

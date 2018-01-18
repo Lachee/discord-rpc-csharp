@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DiscordRPC
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn, ItemNullValueHandling = NullValueHandling.Ignore)]
-	public struct RichPresence
+	public class RichPresence
 	{
 		/// <summary>
 		/// Max 128 Bytes.
@@ -55,22 +55,22 @@ namespace DiscordRPC
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("match")]
-		public string matchSecret { get; set; }
+		public string MatchSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("join")]
-		public string joinSecret { get; set; }
+		public string JoinSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("spectate")]
-		public string spectateSecret { get; set; }
+		public string SpectateSecret { get; set; }
 
 		[JsonProperty("instance")]
-		public bool instance { get; set; }
+		public bool Instance { get; set; }
 
 		
 	}

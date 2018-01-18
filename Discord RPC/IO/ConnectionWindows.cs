@@ -7,27 +7,33 @@ namespace DiscordRPC.IO
 {
 	internal class ConnectionWindows : IConnection
 	{
-		const string PIPE_NAME = "discord-ipc-{0}";
+		const string PIPE_NAME = @"discord-ipc-{0}";
 
 		public bool IsOpen {  get { return client != null && client.IsConnected; } }
 
 		public int PipeNumber { get { return _pipeno; } }
 		private int _pipeno;
-
 		private NamedPipeClientStream client;
 
 		public bool Open()
 		{
-			for (int i = 0; i <= 9; i++)
-			{
+			int pipeDigit = 0;
+
+			while (true)
+			{ 
 				try
 				{
 					//Prepare the pipe name
-					string pipename = string.Format(PIPE_NAME, i);
-
+					string pipename = string.Format(PIPE_NAME, pipeDigit);
+					Console.WriteLine("Attempting {0}", pipename);
+					
 					//Create the client
-					client = new NamedPipeClientStream(PIPE_NAME);
-					_pipeno = i;
+					client = new NamedPipeClientStream(".", pipename, PipeDirection.InOut);
+					client.Connect(10000);
+					
+					Console.WriteLine("Connected to pipe.");
+					
+					_pipeno = pipeDigit;
 					break;
 				}
 				catch (Exception e)
@@ -35,6 +41,8 @@ namespace DiscordRPC.IO
 					//Something happened, try again
 					Console.WriteLine("Exception: {0}", e.Message);
 					client = null;
+
+					pipeDigit++;
 				}
 			}
 

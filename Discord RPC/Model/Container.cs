@@ -8,17 +8,14 @@ using System.Threading.Tasks;
 namespace DiscordRPC.Model
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-	public class Container
+	public class Command
 	{
 		[JsonProperty("nonce")]
-		public int Nonce { get; set; }
+		public string Nonce { get; set; }
 
 		[JsonProperty("cmd")]
-		public string Command { get; set; }
-
-		[JsonProperty("pid")]
-		public int PID { get; set; }
-
+		public string Action { get; set; }
+		
 		[JsonProperty("args")]
 		public IPayload Args { get; set; }
 	}

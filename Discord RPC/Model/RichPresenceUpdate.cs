@@ -8,16 +8,26 @@ using System.Threading.Tasks;
 namespace DiscordRPC.Model
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-	public class RichPresenceUpdate : IPayload
+	public class RichPresenceUpdate : RichPresence, IPayload
 	{
-		private RichPresence _presence;
-
 		public int PID { get; set; }
 
-		public string State { get { return _presence.state; } }
-		public string Details { get { return _presence.details; } }
-		
-
+		public RichPresenceUpdate(RichPresence p, int pid)
+		{
+			this.State = p.State;
+			this.Details = p.Details;
+			this.Timestamps = p.Timestamps;
+			this.LargeImageKey = p.LargeImageKey;
+			this.LargeImageText = p.LargeImageText;
+			this.SmallImageKey = p.SmallImageKey;
+			this.SmallImageText = p.SmallImageText;
+			this.Party = p.Party;
+			this.MatchSecret = p.MatchSecret;
+			this.JoinSecret = p.JoinSecret;
+			this.SpectateSecret = p.SpectateSecret;
+			this.Instance = p.Instance;
+			this.PID = pid;
+		}
 	}
-	
+
 }

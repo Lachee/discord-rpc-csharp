@@ -48,8 +48,9 @@
     <Compile Include="IO\ConnectionWindows.cs" />
     <Compile Include="IO\IConnection.cs" />
     <Compile Include="IO\Serialization.cs" />
+    <Compile Include="Model\IPayload.cs" />
     <Compile Include="Model\RichPresenceUpdate.cs" />
-    <Compile Include="Model\NonceCommand.cs" />
+    <Compile Include="Model\Container.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RichPresence.cs" />
   </ItemGroup>
