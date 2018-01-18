@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading.Tasks;
 
 namespace DiscordRPC.IO
 {
-	public class ConnectionWindows : IConnection
+	internal class ConnectionWindows : IConnection
 	{
 		const string PIPE_NAME = "discord-ipc-{0}";
 
@@ -47,22 +48,23 @@ namespace DiscordRPC.IO
 			client = null;
 			return true;
 		}
-
-		public void Destroy() { this.Close(); }
-
+		
 		public void Dispose()
 		{
-			throw new NotImplementedException();
+			this.Close();
 		}
 
-		public bool Read(out byte[] data, int length)
+		public int Read(byte[] buff, int length)
 		{
-			throw new NotImplementedException();
+			if (!IsOpen) return 0;
+			return client.Read(buff, 0, length);
 		}
 
 		public bool Write(byte[] data)
 		{
-			throw new NotImplementedException();
+			if (!IsOpen) return false;
+			client.Write(data, 0, data.Length);
+			return true;
 		}
 	}
 }

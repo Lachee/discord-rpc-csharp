@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.IO
 {
-	public interface IConnection : IDisposable
+	internal interface IConnection : IDisposable
 	{
 		bool IsOpen { get; }
 
 		bool Open();
 		bool Close();
 		bool Write(byte[] data);
-		bool Read(out byte[] data, int length);
-		void Destroy();
+		int Read(byte[] data, int length);
 	}
 }

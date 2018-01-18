@@ -11,23 +11,11 @@ namespace DiscordRPC.Test
 	{
 		static void Main(string[] args)
 		{
-			ConnectionWindows conn = new ConnectionWindows();
-
-
-			if (conn.Open())
+			using (DiscordRPC rpc = new DiscordRPC())
 			{
-				Console.WriteLine("Success! Pipe: {0}", conn.PipeNumber);
+				Console.WriteLine("Connected!");
+				Console.ReadKey();
 			}
-			else
-			{
-				Console.WriteLine("Failure!");
-			}
-
-			Console.ReadKey();
-			conn.Close();
-
-			Console.WriteLine("Goodbye!");
-			Console.ReadKey();
 		}
 	}
 }
