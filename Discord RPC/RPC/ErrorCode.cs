@@ -9,8 +9,13 @@ namespace DiscordRPC.RPC
 	/// <summary>
 	/// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
 	/// </summary>
-	enum ErrorCode
+	public enum ErrorCode
 	{
+		Success = 0,
+		PipeException = 1,
+		ReadCorrupt = 2,
+
+
 		UnkownError = 1000,
 		InvalidPayload = 4000,
 		InvalidCommand = 4002,

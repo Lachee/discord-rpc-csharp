@@ -7,17 +7,21 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.RPC
 {
-
 	struct MessageFrame
 	{
 		public Opcode Opcode { get; set; }
 		public string Message { get; set; }
-		public int Length { get { return Message.Length; } }
+
 		public void Write(PipeConnection connection)
 		{
 			connection.Write((int)Opcode);
-			connection.Write(Length);
-			connection.Write(Message);
+			connection.Write(Message, Encoding.Unicode, true);
+		}
+
+		public void Read(PipeConnection connection)
+		{
+			Opcode = (Opcode)connection.ReadInt();
+			Message = connection.ReadString(Encoding.Unicode);
 		}
 	}
 }
