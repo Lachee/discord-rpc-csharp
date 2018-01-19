@@ -9,7 +9,7 @@ namespace DiscordRPC.RPC
 	/// <summary>
 	/// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-events for documentation
 	/// </summary>
-	enum Events
+	enum SubscriptionEvent
 	{
 		Ready,
 		Error,
