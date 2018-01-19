@@ -13,7 +13,7 @@ namespace DiscordRPC.RPC
 {
 	class RpcConnection : IDisposable
 	{
-		enum State
+		public enum State
 		{
 			Disconnected,
 			SentHandshake,
@@ -29,6 +29,7 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Properties
+		public State CurrentState { get { return state; } }
 		public string ApplicationID { get; }
 		public string LastErrorMessage { get { return lastErrorMessage; } }
 		public ErrorCode LastErrorCode { get { return lastErrorCode; } }
