@@ -1,0 +1,47 @@
+bool isRunning = false;
+
+int nextConnect = 0;
+BackoffDelay reconnectTime = new BackoffDelay(500L, 60 * 1000L);	//min, max
+
+Start:
+	//This thread is completely optional. Its there to serve as automatic updating, but you might
+	// want to run UpdateDiscord directly. This is useful for Unity as you can just call UpdateDiscord(); on a normal Update.
+	// However! UpdateDiscord(); reads from the stream, so it is blocking! Unless I make it async
+	Thread.Start(() => {
+		while(isRunning):
+			UpdateDiscord();
+	};
+
+Initialize:
+	//Combine this with start?
+	
+
+UpdateDiscord:
+	if (!connection) return;		//This can be true as Initialize must be called first.
+	if (!connection.IsOpen) 
+	{
+		if (now() >= nextConnect) {
+			UpdateReconnectTime();
+			connection.Open();
+		}
+		
+		//We failed, so terminate here
+		return;
+	}
+	
+	//Read Discord
+	ReadDiscord();
+	
+	//Write Discord
+	WriteDiscord();
+
+
+ReadDiscord:
+
+
+
+WriteDiscord:
+
+	
+UpdateReconnectTime():
+	nextConnect = now() + reconnectTime.NextDelay();
