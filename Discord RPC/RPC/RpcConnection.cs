@@ -36,6 +36,7 @@ namespace DiscordRPC.RPC
 
 		#region Events
 		public event RpcDisconnectEvent OnDisconnect;
+		public event RpcConnectEvent OnConnect;
 		#endregion
 
 		#region Privates
@@ -65,7 +66,8 @@ namespace DiscordRPC.RPC
 
 			if (state == State.SentHandshake)
 			{
-				//We need to send a handshake to discord
+				//We sent a handshake, so now all we have to do is read!
+				Read();
 			}
 			else
 			{
@@ -85,7 +87,7 @@ namespace DiscordRPC.RPC
 				return;
 
 			while (true)
-			{ 
+			{
 				//Prepare the frame
 				MessageFrame frame = new MessageFrame();
 
@@ -99,40 +101,53 @@ namespace DiscordRPC.RPC
 					lastErrorCode = ErrorCode.PipeException;
 					lastErrorMessage = ioe.Message;
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					lastErrorCode = ErrorCode.ReadCorrupt;
 					lastErrorMessage = e.Message;
 				}
 
 				//Perform actions on each opcode
-				switch(frame.Opcode)
+				switch (frame.Opcode)
 				{
+					//Close the socket
 					case Opcode.Close:
 						PipeClose payload = JsonConvert.DeserializeObject<PipeClose>(frame.Message);
 						lastErrorCode = payload.Code;
 						lastErrorMessage = payload.Message;
 						this.Close();
-						return;
+						break;
 
 					case Opcode.Frame:
-						throw new NotImplementedException();
+						ResponsePayload response = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
+						if (response.Command == Command.Dispatch && response.Event == SubscriptionEvent.Ready)
+						{
+							state = State.Connected;
+							OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = response });
+						}
 						break;
 
+					//Return the frame
 					case Opcode.Ping:
-						throw new NotImplementedException();
+						frame.Opcode = Opcode.Pong;
+						WriteFrame(frame);
 						break;
 
+					//Do nothing, we shouldn't really get these.
 					case Opcode.Pong:
-						throw new NotImplementedException();
 						break;
 						
 					default:
 					case Opcode.Handshake:
-						throw new NotImplementedException();
+
+						//Something happened that wasn't suppose to happen... I am scared.
+						lastErrorCode = ErrorCode.ReadCorrupt;
+						lastErrorMessage = "Bad IPC frame!";
+						this.Close();
 						break;
 				}
 			}
+		}
 
 		public void Close()
 		{
@@ -149,12 +164,24 @@ namespace DiscordRPC.RPC
 
 		private void WriteFrame(Opcode opcode, object obj)
 		{
-			MessageFrame frame = new MessageFrame()
+			WriteFrame(new MessageFrame()
 			{
 				Opcode = opcode,
 				Message = JsonConvert.SerializeObject(obj)
-			};
-			
+			});
+		}
+		private void WriteFrame(MessageFrame frame)
+		{
+			try
+			{
+				frame.Write(connection);
+			}
+			catch (Exception e)
+			{
+				lastErrorCode = ErrorCode.UnkownError;
+				lastErrorMessage = "Exception while trying to write frame: " + e.Message;
+				this.Close();
+			}
 		}
 		
 		public void Dispose()
@@ -162,6 +189,4 @@ namespace DiscordRPC.RPC
 			this.Close();
 		}
 	}
-}
-
 }
