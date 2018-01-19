@@ -1,18 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DiscordRPC.RPC;
 
 namespace DiscordRPC.Model
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-	public class RichPresenceUpdate : RichPresence, IPayload
+	public class PresenceUpdate : RichPresence, CommandPayload
 	{
 		public int PID { get; set; }
 
-		public RichPresenceUpdate(RichPresence p, int pid)
+		public PresenceUpdate(RichPresence p, int pid)
 		{
 			this.State = p.State;
 			this.Details = p.Details;

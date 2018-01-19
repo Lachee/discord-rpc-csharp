@@ -1,5 +1,6 @@
 ﻿using DiscordRPC.IO;
 using DiscordRPC.Model;
+using DiscordRPC.RPC;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -51,11 +52,11 @@ namespace DiscordRPC
 				_queuedPresence = null;
 
 				//Create the command
-				Command command = new Command()
+				RpcCommand command = new RpcCommand()
 				{
 					Nonce = (_nonce++).ToString(),
 					Action = "SET_ACTIVITY",
-					Args = new RichPresenceUpdate(_currentPresence, pid)
+					Args = new PresenceUpdate(_currentPresence, pid)
 				};
 				
 				//Get the JSON presence payload and push it

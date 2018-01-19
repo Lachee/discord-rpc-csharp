@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordRPC.Model
+namespace DiscordRPC.RPC
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 	public class Command
 	{
+		const string SET_ACTIVITY = "SET_ACTIVITY";
+		const string DISPATCH = "DISPATCH";
+		const string SUBSCRIBE = "SUBSCRIBE";
+
 		[JsonProperty("nonce")]
 		public string Nonce { get; set; }
 
@@ -17,6 +21,6 @@ namespace DiscordRPC.Model
 		public string Action { get; set; }
 		
 		[JsonProperty("args")]
-		public IPayload Args { get; set; }
+		public CommandPayload Args { get; set; }
 	}
 }

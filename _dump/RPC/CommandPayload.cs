@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordRPC.Model
+namespace DiscordRPC.RPC
 {
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-	public interface IPayload
+	public interface CommandPayload
 	{
 		[JsonProperty("pid")]
 		int PID { get; set; }

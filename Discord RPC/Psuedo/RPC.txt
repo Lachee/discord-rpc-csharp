@@ -3,7 +3,30 @@ bool isRunning = false;
 int nextConnect = 0;
 BackoffDelay reconnectTime = new BackoffDelay(500L, 60 * 1000L);	//min, max
 
-Start:
+
+Initialize(string appid, EventHandlers handlers, bool autoRegister, string steamID = null):
+	//Combine this with start?
+	
+	//Register the file handle steam:// or discord-<appid>://
+	//Probably out of scope for intial testing
+	if (autoRegister) 
+	{
+		if (steamID)
+			Register.RegisterSteam(appID, steamID);	
+		else
+			Register.Register(appID, null);
+	}
+	
+	PID = Process.Current.GetProcessID();	
+	this.handlers = handlers;
+	
+	//Connection already exists, cannot process it
+	if (Connection) 
+		return;
+	
+	
+	
+Start():
 	//This thread is completely optional. Its there to serve as automatic updating, but you might
 	// want to run UpdateDiscord directly. This is useful for Unity as you can just call UpdateDiscord(); on a normal Update.
 	// However! UpdateDiscord(); reads from the stream, so it is blocking! Unless I make it async
@@ -12,11 +35,7 @@ Start:
 			UpdateDiscord();
 	};
 
-Initialize:
-	//Combine this with start?
-	
-
-UpdateDiscord:
+UpdateDiscord():
 	if (!connection) return;		//This can be true as Initialize must be called first.
 	if (!connection.IsOpen) 
 	{

@@ -1,0 +1,11 @@
+Register(string appID, string command):
+	//https://github.com/discordapp/discord-rpc/blob/master/src/discord_register_win.cpp
+	// https://msdn.microsoft.com/en-us/library/aa767914(v=vs.85).aspx
+    // we want to register games so we can run them as discord-<appid>://
+    // Update the HKEY_CURRENT_USER, because it doesn't seem to require special permissions.
+	
+RegisterSteam(string appID, string steamID):
+	//https://github.com/discordapp/discord-rpc/blob/master/src/discord_register_win.cpp
+	// https://msdn.microsoft.com/en-us/library/aa767914(v=vs.85).aspx
+    // we want to register games so we can run them as discord-<appid>://
+    // Update the HKEY_CURRENT_USER, because it doesn't seem to require special permissions.
