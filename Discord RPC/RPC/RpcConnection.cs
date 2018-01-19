@@ -151,7 +151,6 @@ namespace DiscordRPC.RPC
 
 		public void Close()
 		{
-			//TODO: Complete Error Messages
 			//Send a disconnect event
 			if (OnDisconnect != null && (state == State.Connected || state == State.SentHandshake))
 				OnDisconnect(this, new RpcDisconnectEventArgs() { ErrorCode = lastErrorCode, ErrorMessage = lastErrorMessage });
@@ -189,4 +188,4 @@ namespace DiscordRPC.RPC
 			this.Close();
 		}
 	}
-}
+} 
