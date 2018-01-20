@@ -26,9 +26,9 @@ namespace DiscordRPC.Test
 				Console.WriteLine("Connected!");
 				while(true)
 				{
-					//Console.WriteLine("Press a key to update connection");
-					//Console.ReadKey();
-					//Console.WriteLine();
+					Console.WriteLine("Press a key to update connection");
+					Console.ReadKey();
+					Console.WriteLine();
 
 					rpc.UpdateConnection();
 				}

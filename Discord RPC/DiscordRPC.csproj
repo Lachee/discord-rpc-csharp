@@ -51,6 +51,7 @@
     <Compile Include="Events\DiscordErrorEvent.cs" />
     <Compile Include="Events\RpcConnectEvent.cs" />
     <Compile Include="Events\RpcDisconnectEvent.cs" />
+    <Compile Include="IO\BinaryExtensions.cs" />
     <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\Register.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,13 +10,17 @@ namespace DiscordRPC.IO
 	{
 		const string PIPE_NAME = @"discord-ipc-{0}";
 
-		public bool IsOpen {  get { return stream != null && stream.IsConnected; } }
+		public bool IsOpen {  get { return _stream != null && _stream.IsConnected; } }
 
 		public int PipeNumber { get { return _pipeno; } }
 		private int _pipeno;
 
-		private NamedPipeClientStream stream;
-		private BinaryReader reader;
+		private NamedPipeClientStream _stream;
+		private BinaryReader _reader;
+		private BinaryWriter _writer;
+
+		public BinaryReader Reader { get { return _reader; } }
+		public BinaryWriter Writer { get { return _writer; } }
 
 		public bool Open()
 		{
@@ -31,14 +35,15 @@ namespace DiscordRPC.IO
 					DiscordClient.WriteLog("Attempting {0}", pipename);
 
 					//Create the client
-					stream = new NamedPipeClientStream(pipename);
-					stream.Connect(1000);
+					_stream = new NamedPipeClientStream(pipename);
+					_stream.Connect(1000);
 
 					//We have made a connection, prepare the writers
 					DiscordClient.WriteLog("Connected to pipe " + pipename);
 					_pipeno = pipeDigit;
 
-					reader = new BinaryReader(stream);
+					_reader = new BinaryReader(_stream);
+					_writer = new BinaryWriter(_stream);
 
 					break;
 				}
@@ -46,24 +51,36 @@ namespace DiscordRPC.IO
 				{
 					//Something happened, try again
 					DiscordClient.WriteLog("Connection Exception: {0}", e.Message);
-					stream = null;
+					_stream = null;
 
 					pipeDigit++;
 				}
 			}
 
 			//Check if we succeded
-			return stream != null;
+			return _stream != null;
 		}
 
 		public bool Close()
 		{
 			DiscordClient.WriteLog("Closing Pipe");
-		
-			if (stream != null)
+
+			if (_reader != null)
 			{
-				stream.Dispose();
-				stream = null;
+				_reader.Dispose();
+				_reader = null;
+			}
+
+			if (_writer != null)
+			{
+				_writer.Dispose();
+				_writer = null;
+			}
+
+			if (_stream != null)
+			{
+				_stream.Dispose();
+				_stream = null;
 			}
 			
 			return true;
@@ -73,7 +90,9 @@ namespace DiscordRPC.IO
 		{
 			this.Close();
 		}
-		
+
+
+		/*
 		public bool CanRead()
 		{
 			return reader.PeekChar() >= 0;
@@ -87,20 +106,13 @@ namespace DiscordRPC.IO
 
 		public int ReadInt()
 		{
-			//Read the bytes
-			byte[] buff = new byte[4];
-			Read(buff, buff.Length);
-
-			//Flip if required
-			if (!BitConverter.IsLittleEndian) Array.Reverse(buff);
-
-			//Convert to a int
-			int value = BitConverter.ToInt32(buff, 0);
-			return value;
+			if (!IsOpen) return 0;
+			return reader.ReadInt32();
 		}
-
+		
 		public string ReadString(int length, Encoding encoding)
 		{
+			return reader.ReadString();
 			//Read the bytes
 			byte[] buff = new byte[length];
 			Read(buff, length);
@@ -137,5 +149,6 @@ namespace DiscordRPC.IO
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			return Write(bytes);
 		}
+		*/
 	}
 }
