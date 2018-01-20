@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.Events
 {
-	public delegate void RpcConnectEvent(object sender, RpcConnectEventArgs args);
-	public class RpcConnectEventArgs : EventArgs
+	internal delegate void RpcConnectEvent(object sender, RpcConnectEventArgs args);
+	internal class RpcConnectEventArgs : EventArgs
 	{
 		public ResponsePayload Payload { get; set; }
 	}

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.Events
 {
-	public delegate void RpcDisconnectEvent(object sender, RpcDisconnectEventArgs args);
-	public class RpcDisconnectEventArgs : EventArgs
+	internal delegate void RpcDisconnectEvent(object sender, RpcDisconnectEventArgs args);
+	internal class RpcDisconnectEventArgs : EventArgs
 	{
-		public RPC.ErrorCode ErrorCode { get; set; }
+		public ErrorCode ErrorCode { get; set; }
 		public string ErrorMessage { get; set; }
 	}
 }

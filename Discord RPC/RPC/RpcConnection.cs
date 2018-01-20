@@ -29,6 +29,7 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Properties
+		public bool IsOpen { get { return connection.IsOpen && state == State.Connected; } }
 		public State CurrentState { get { return state; } }
 		public string ApplicationID { get; }
 		public string LastErrorMessage { get { return lastErrorMessage; } }
@@ -49,9 +50,9 @@ namespace DiscordRPC.RPC
 		#endregion
 
 
-		public RpcConnection(string appid, PipeConnection connection)
+		public RpcConnection(string appid)
 		{
-			this.connection = connection;
+			this.connection = new PipeConnection();
 			this.ApplicationID = appid;
 			this.state = State.Disconnected;
 			_instance = this;
@@ -68,7 +69,8 @@ namespace DiscordRPC.RPC
 			if (state == State.SentHandshake)
 			{
 				//We sent a handshake, so now all we have to do is read!
-				Read();
+				ResponsePayload payload;
+				ReadEvent(out payload);
 			}
 			else
 			{
@@ -81,11 +83,13 @@ namespace DiscordRPC.RPC
 			}
 		}
 
-		public void Read()
+		public bool ReadEvent(out ResponsePayload payload)
 		{
+			//Set the inital payload
+			payload = null;
+
 			//We are not in a valid state
-			if (state != State.Connected && state != State.SentHandshake)
-				return;
+			if (state != State.Connected && state != State.SentHandshake) return false;
 
 			while (true)
 			{
@@ -101,11 +105,13 @@ namespace DiscordRPC.RPC
 				{
 					lastErrorCode = ErrorCode.PipeException;
 					lastErrorMessage = ioe.Message;
+					return false;
 				}
 				catch (Exception e)
 				{
 					lastErrorCode = ErrorCode.ReadCorrupt;
 					lastErrorMessage = e.Message;
+					return false;
 				}
 
 				//Perform actions on each opcode
@@ -113,31 +119,34 @@ namespace DiscordRPC.RPC
 				{
 					//Close the socket
 					case Opcode.Close:
-						PipeClose payload = JsonConvert.DeserializeObject<PipeClose>(frame.Message);
-						lastErrorCode = payload.Code;
-						lastErrorMessage = payload.Message;
+						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
+						lastErrorCode = closeEvent.Code;
+						lastErrorMessage = closeEvent.Message;
 						this.Close();
-						break;
+						return false;
 
+					//We received an actual payload
 					case Opcode.Frame:
-						ResponsePayload response = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
-						if (response.Command == Command.Dispatch && response.Event == SubscriptionEvent.Ready)
+						payload = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
+						if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
 						{
+							//It was a connect event
 							state = State.Connected;
-							OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = response });
+							OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
 						}
-						break;
+						return true;
 
-					//Return the frame
+					//It is a ping, so we need to respond with a pong
 					case Opcode.Ping:
 						frame.Opcode = Opcode.Pong;
 						WriteFrame(frame);
-						break;
+						return false;
 
-					//Do nothing, we shouldn't really get these.
+					//Its a pong, se we shall do nothing
 					case Opcode.Pong:
-						break;
+						return false;
 						
+					//Something has happened and we got a opcode we are not expecting!
 					default:
 					case Opcode.Handshake:
 
@@ -145,7 +154,7 @@ namespace DiscordRPC.RPC
 						lastErrorCode = ErrorCode.ReadCorrupt;
 						lastErrorMessage = "Bad IPC frame!";
 						this.Close();
-						break;
+						return false;
 				}
 			}
 		}

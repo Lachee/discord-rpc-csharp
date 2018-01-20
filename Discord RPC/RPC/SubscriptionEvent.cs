@@ -28,6 +28,11 @@ namespace DiscordRPC.RPC
 		MessageUpdate,
 		MessageDelete,
 		NotificationCreate,
-		CaptureShortcutChange
+		CaptureShortcutChange,
+
+		//NEW EVENTS
+		ActivityJoin,
+		ActivitySpectate,
+		ActivityJoinRequest
 	}
 }

@@ -4,18 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscordRPC.RPC
+namespace DiscordRPC
 {
 	/// <summary>
 	/// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
 	/// </summary>
 	public enum ErrorCode
 	{
+		//Pipe Error Codes
 		Success = 0,
 		PipeException = 1,
 		ReadCorrupt = 2,
 
+		//Custom Error Code
+		NotImplemented = 10,
 
+		//Discord RPC error codes
 		UnkownError = 1000,
 		InvalidPayload = 4000,
 		InvalidCommand = 4002,
