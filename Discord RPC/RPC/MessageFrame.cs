@@ -14,14 +14,16 @@ namespace DiscordRPC.RPC
 
 		public void Write(PipeConnection connection)
 		{
+			DiscordClient.WriteLog("Writing Connection {0}, {1}", Opcode, Message);
+
 			connection.Write((int)Opcode);
-			connection.Write(Message, Encoding.Unicode, true);
+			connection.Write(Message, Encoding.UTF8, true);
 		}
 
 		public void Read(PipeConnection connection)
 		{
 			Opcode = (Opcode)connection.ReadInt();
-			Message = connection.ReadString(Encoding.Unicode);
+			Message = connection.ReadString(Encoding.UTF8);
 		}
 	}
 }

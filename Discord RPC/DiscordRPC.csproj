@@ -46,10 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackoffDelay.cs" />
     <Compile Include="DiscordRPC.cs" />
+    <Compile Include="Events\DiscordErrorEvent.cs" />
     <Compile Include="Events\RpcConnectEvent.cs" />
     <Compile Include="Events\RpcDisconnectEvent.cs" />
     <Compile Include="IO\PipeConnection.cs" />
+    <Compile Include="IO\Register.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RPC\CloseCode.cs" />
     <Compile Include="RPC\Command.cs" />
@@ -57,9 +60,9 @@
     <Compile Include="RPC\MessageFrame.cs" />
     <Compile Include="RPC\Opcode.cs" />
     <Compile Include="RPC\Payload.cs" />
-    <Compile Include="RPC\ErrorCode.cs" />
+    <Compile Include="ErrorCode.cs" />
     <Compile Include="RPC\Payloads\Handshake.cs" />
-    <Compile Include="RPC\Payloads\PipeClose.cs" />
+    <Compile Include="RPC\Payloads\PipeError.cs" />
     <Compile Include="RPC\RpcConnection.cs" />
     <Compile Include="RPC\SubscriptionEvent.cs" />
     <Compile Include="Serialization\EnumSnakeCaseSerializer.cs" />

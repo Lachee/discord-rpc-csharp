@@ -8,6 +8,8 @@ namespace DiscordRPC
 {
 	public class DiscordClient : IDisposable
 	{
+		public delegate void Log(string formatting, params object[] objects);
+
 		#region Properties
 		public string ApplicationID { get { return _appid; } }
 		private string _appid;
@@ -28,6 +30,7 @@ namespace DiscordRPC
 
 		#region Events
 		public event DiscordErrorEvent OnError;
+		public static event Log OnLog;
 		#endregion
 
 		public DiscordClient(string applicationID, bool autoRegister = false) : this(applicationID, "", autoRegister) { }
@@ -63,11 +66,17 @@ namespace DiscordRPC
 			//No connection has been made, so we cannot update it
 			if (rpc == null) return;
 
+			WriteLog("Updating Connection");
+
 			if (!rpc.IsOpen)
 			{
+				WriteLog("RPC is not open, aborting...");
+
 				//Have we meet the current delay?
 				if (runtime.ElapsedMilliseconds >= nextReconnectAttempt)
 				{
+					WriteLog("Attempting to connect before abort...");
+
 					//Reconnect to the RPC.
 					IncrementReconnectDelay();
 					rpc.Open();
@@ -86,17 +95,27 @@ namespace DiscordRPC
 
 		private void ReadConnection()
 		{
+			WriteLog("Attempting to read...");
+
 			while (true)
 			{
+				WriteLog("Reading Content...");
+
 				//Attempt to read the payload.
 				ResponsePayload response;
 				if (!rpc.ReadEvent(out response)) break;
-				
+
+				WriteLog("Payload: {0} {1}", response.Command, response.Event);
+
 				if (!string.IsNullOrEmpty(response.Nonce))
 				{
+					WriteLog("Nonce found!");
+
 					// Check if we have an error event
 					if (response.Event == SubscriptionEvent.Error)
 					{
+						WriteLog("Error Found!");
+
 						//We are an error! Makes me sad really ;-;
 						PipeError close = response.Data as PipeError;
 						if (close == null)
@@ -184,6 +203,11 @@ namespace DiscordRPC
 		#endregion
 
 		#region Helpers
+		internal static void WriteLog(string format, params object[] objs)
+		{
+			OnLog?.Invoke(format, objs);
+		}
+
 		private void IncrementReconnectDelay()
 		{
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();

@@ -29,7 +29,7 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Properties
-		public bool IsOpen { get { return connection.IsOpen && state == State.Connected; } }
+		public bool IsOpen { get { return state == State.Connected; } }
 		public State CurrentState { get { return state; } }
 		public string ApplicationID { get; }
 		public string LastErrorMessage { get { return lastErrorMessage; } }
@@ -61,25 +61,39 @@ namespace DiscordRPC.RPC
 		public void Open()
 		{
 			//We are already open, nothing else we can do
-			if (state == State.Connected) return;
+			if (state == State.Connected)
+			{
+				DiscordClient.WriteLog("Cannot open RPC as it is already connected");
+				return;
+			}
 
 			//We are disconnected, so try and open it
-			if (state == State.Disconnected && !connection.Open()) return;
+			if (state == State.Disconnected && !connection.Open())
+			{
+				DiscordClient.WriteLog("We faild to open the connection");
+				return;
+			}
 
 			if (state == State.SentHandshake)
 			{
+				DiscordClient.WriteLog("Sent handshake, so just going to update it instead");
+
 				//We sent a handshake, so now all we have to do is read!
 				ResponsePayload payload;
 				ReadEvent(out payload);
 			}
 			else
 			{
+				DiscordClient.WriteLog("Sending Handshake");
+				state = State.SentHandshake;
+
 				//Write the handshake
 				WriteFrame(Opcode.Handshake, new Handshake()
 				{
 					Version = VERSION,
 					ClientID = ApplicationID
 				});
+
 			}
 		}
 
@@ -89,7 +103,8 @@ namespace DiscordRPC.RPC
 			payload = null;
 
 			//We are not in a valid state
-			if (state != State.Connected && state != State.SentHandshake) return false;
+			if (state != State.Connected && state != State.SentHandshake)
+				return false;
 
 			while (true)
 			{
@@ -119,6 +134,9 @@ namespace DiscordRPC.RPC
 				{
 					//Close the socket
 					case Opcode.Close:
+
+						DiscordClient.WriteLog("Close OPCODE");
+
 						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
 						lastErrorCode = closeEvent.Code;
 						lastErrorMessage = closeEvent.Message;
@@ -149,6 +167,8 @@ namespace DiscordRPC.RPC
 					//Something has happened and we got a opcode we are not expecting!
 					default:
 					case Opcode.Handshake:
+
+						DiscordClient.WriteLog("Bad IPC Frame!");
 
 						//Something happened that wasn't suppose to happen... I am scared.
 						lastErrorCode = ErrorCode.ReadCorrupt;
@@ -187,6 +207,8 @@ namespace DiscordRPC.RPC
 			}
 			catch (Exception e)
 			{
+				DiscordClient.WriteLog("Exception while trying to write frame: {0} ", e.Message);
+
 				lastErrorCode = ErrorCode.UnkownError;
 				lastErrorMessage = "Exception while trying to write frame: " + e.Message;
 				this.Close();

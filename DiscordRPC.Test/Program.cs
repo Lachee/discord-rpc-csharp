@@ -17,18 +17,21 @@ namespace DiscordRPC.Test
 			Console.WriteLine("Connecting...");
 			using (DiscordClient rpc = new DiscordClient(key))
 			{
-				Console.WriteLine("Connected!");
-				Console.ReadKey();
-
-				Console.WriteLine("Presence Sent!");
-				/*
-				rpc.UpdatePresence(new RichPresence()
+				DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
+				rpc.OnError += (s, e) =>
 				{
-					State = "Solo",
-					Details = "Playing Scrubs"
-				});
-				*/
-				Console.ReadKey();
+					Console.WriteLine("An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
+				};
+
+				Console.WriteLine("Connected!");
+				while(true)
+				{
+					//Console.WriteLine("Press a key to update connection");
+					//Console.ReadKey();
+					//Console.WriteLine();
+
+					rpc.UpdateConnection();
+				}
 			}
 		}
 	}
