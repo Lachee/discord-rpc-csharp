@@ -79,7 +79,7 @@ namespace DiscordRPC.RPC
 
 					//Try and create a connection. Open cannot be Async
 					DiscordClient.WriteLog("Attempting to connect...");					
-					if (!connection.Open())
+					if (!await connection.OpenAsync())
 					{
 						DiscordClient.WriteLog("RPC failed to create connection with discord!");
 						lastErrorCode = ErrorCode.PipeException;

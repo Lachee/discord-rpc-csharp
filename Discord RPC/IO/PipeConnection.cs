@@ -65,6 +65,15 @@ namespace DiscordRPC.IO
 			return stream != null;
 		}
 		
+		/// <summary>
+		/// Opens a new pipe stream to discord asyncronously
+		/// </summary>
+		/// <returns></returns>
+		public async Task<bool> OpenAsync()
+		{
+			return await Task<bool>.Run(() => Open());
+		}
+
 		#region Disposal
 		/// <summary>
 		/// Closes the pipe stream.
