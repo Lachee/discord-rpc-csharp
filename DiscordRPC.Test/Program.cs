@@ -36,9 +36,9 @@ namespace DiscordRPC.Test
 						Instance = true,
 						Assets = new Assets()
 						{
-							LargeImageKey = "large_default",
+							LargeImageKey = "coffee_time",
 							LargeImageText = "Where's Perry?",
-							SmallImageKey = "small_default",
+							SmallImageKey = "default_small",
 							SmallImageText = "THREADS RULE",
 						},
 
@@ -51,8 +51,7 @@ namespace DiscordRPC.Test
 
 						Timestamps = new Timestamps()
 						{
-							Start = 100,
-							End = 200
+							Start = DateTime.UtcNow
 						}
 					});
 

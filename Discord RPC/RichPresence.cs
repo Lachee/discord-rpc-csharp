@@ -14,42 +14,42 @@ namespace DiscordRPC
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("state")]
+		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
 		public string State { get; set; }
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("details")]
+		[JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
 		public string Details { get; set; }
 		
-		[JsonProperty("timestamps")]
+		[JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
 		public Timestamps? Timestamps { get; set; }
 
-		[JsonProperty("assets")]
-		public Assets Assets { get; set; }
+		[JsonProperty("assets", NullValueHandling = NullValueHandling.Ignore)]
+		public Assets? Assets { get; set; }
 		
-		[JsonProperty("party")]
+		[JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
 		public Party? Party { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("match")]
+		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
 		public string MatchSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("join")]
+		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
 		public string JoinSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("spectate")]
+		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
 		public string SpectateSecret { get; set; }
 
-		[JsonProperty("instance")]
+		[JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Instance { get; set; }
 
 		
@@ -60,35 +60,47 @@ namespace DiscordRPC
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("large_image")]
+		[JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
 		public string LargeImageKey { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("large_text")]
+		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string LargeImageText { get; set; }
 
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("small_image")]
+		[JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
 		public string SmallImageKey { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("small_text")]
+		[JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string SmallImageText { get; set; }
 	}
 
 	public struct Timestamps
 	{
-		[JsonProperty("start")]//, JsonConverter(typeof(DateTimeSerializer))]
-		public long? Start { get; set; }
+		[JsonIgnore]
+		public DateTime? Start { get; set; }
 
-		[JsonProperty("end")]//, JsonConverter(typeof(DateTimeSerializer))]
-		public long? End { get; set; }
+		[JsonIgnore]
+		public DateTime? End { get; set; }
+
+		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
+		private long? epochStart { get { return Start.HasValue ? GetEpoch(Start.Value) : (long?)null; } }
+
+		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
+		private long? epochEnd { get { return End.HasValue ? GetEpoch(End.Value) : (long?)null; } }
+
+		public static long GetEpoch(DateTime time)
+		{
+			DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+			return (long)(time - epochStart).TotalSeconds;
+		}
 	}
 
 	public struct Party
@@ -96,7 +108,7 @@ namespace DiscordRPC
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("id")]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string ID { get; set; }
 
 		[JsonIgnore]
@@ -105,7 +117,7 @@ namespace DiscordRPC
 		[JsonIgnore]
 		public int? Max { get; set; }
 
-		[JsonProperty("size")]
+		[JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
 		private int[] _size
 		{
 			get
