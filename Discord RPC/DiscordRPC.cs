@@ -68,18 +68,19 @@ namespace DiscordRPC
 
 			//WriteLog("Updating Connection");
 
+			//We are not open, so we have to try to open it instead
 			if (!rpc.IsOpen)
 			{
-				//WriteLog("RPC is not open, aborting...");
+				WriteLog("We cannot send any information as RPC is not available");
 
 				//Have we meet the current delay?
 				if (runtime.ElapsedMilliseconds >= nextReconnectAttempt)
 				{
-					WriteLog("Attempting to connect before abort...");
+					WriteLog("Attempt to connect to the RPC");
 
 					//Reconnect to the RPC.
 					IncrementReconnectDelay();
-					rpc.Open();
+					rpc.AttemptConnection();
 				}
 
 				//Don't want to do anything else until its open
@@ -87,7 +88,7 @@ namespace DiscordRPC
 			}
 
 			//Do some reading
-			ReadConnection();
+			//ReadConnection();
 
 			//Do some writing
 			WriteConnection();
@@ -167,6 +168,7 @@ namespace DiscordRPC
 		{
 			
 		}
+
 		#region Events
 
 		private void OnRpcConnect(object sender, Events.RpcConnectEventArgs args)

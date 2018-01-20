@@ -58,7 +58,7 @@ namespace DiscordRPC.RPC
 			_instance = this;
 		}
 
-		public void Open()
+		public void AttemptConnection()
 		{
 			//We are already open, nothing else we can do
 			if (state == State.Connected)
@@ -77,15 +77,11 @@ namespace DiscordRPC.RPC
 			if (state == State.SentHandshake)
 			{
 				DiscordClient.WriteLog("Sent handshake, so just going to update it instead");
-
-				//We sent a handshake, so now all we have to do is read!
-				ResponsePayload payload;
-				ReadEvent(out payload);
+				CheckHandshakeResponse();
 			}
 			else
 			{
 				DiscordClient.WriteLog("Sending Handshake");
-				state = State.SentHandshake;
 
 				//Write the handshake
 				WriteFrame(Opcode.Handshake, new Handshake()
@@ -94,6 +90,26 @@ namespace DiscordRPC.RPC
 					ClientID = ApplicationID
 				});
 
+				state = State.SentHandshake;
+				while (state != State.Connected) CheckHandshakeResponse();
+			}
+		}
+
+		private void CheckHandshakeResponse()
+		{
+			//Try and read the payload
+			ResponsePayload payload;
+			if (ReadEvent(out payload))
+			{
+				//It was a connect event
+				if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
+				{
+					DiscordClient.WriteLog("We have connected!");
+
+					//WE connected!
+					state = State.Connected;
+					OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
+				}
 			}
 		}
 
@@ -105,10 +121,7 @@ namespace DiscordRPC.RPC
 			//We are not in a valid state
 			if (state != State.Connected && state != State.SentHandshake)
 				return false;
-
-			if (state == State.Connected && connection.Reader.PeekChar() < 0)
-				return false;
-
+			
 			while (true)
 			{
 				//Prepare the frame
@@ -148,13 +161,7 @@ namespace DiscordRPC.RPC
 
 					//We received an actual payload
 					case Opcode.Frame:
-						payload = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
-						if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
-						{
-							//It was a connect event
-							state = State.Connected;
-							OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
-						}
+						payload = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);					
 						return true;
 
 					//It is a ping, so we need to respond with a pong
