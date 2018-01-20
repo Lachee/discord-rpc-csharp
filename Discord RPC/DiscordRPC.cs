@@ -6,6 +6,7 @@ using DiscordRPC.RPC.Payloads;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace DiscordRPC
 {
@@ -57,182 +58,76 @@ namespace DiscordRPC
 
 			//Create the reconnext time
 			reconnectDelay = new BackoffDelay(500, 60 * 1000);
-
-			//create the connection
-			rpc = new RpcConnection(_appid);
-			rpc.OnConnect += OnRpcConnect;
-			rpc.OnDisconnect += OnRpcDisconnect;
-
+			
 			//Create the runtime stopwatch
 			runtime = new Stopwatch();
 			runtime.Start();
 		}
 
-		public void UpdateConnection()
+		/// <summary>
+		/// Checks the connection to the server and makes sure its valid. 
+		/// </summary>
+		/// <returns>Returns false if a connection could not be established</returns>
+		private async Task<bool> CheckConnection()
 		{
-
-			//No connection has been made, so we cannot update it
-			if (rpc == null) return;
-
-			//WriteLog("Updating Connection");
-
-			//We are not open, so we have to try to open it instead
-			if (!rpc.IsOpen)
+			if (rpc == null)
 			{
-				WriteLog("We cannot send any information as RPC is not available");
+				//create the connection. In the future this will have to autosubscribe to events too
+				rpc = new RpcConnection(_appid);
+				rpc.OnConnect += async (s, a) => { reconnectDelay.Reset(); await ProcessPresenceQueue(); };
+				rpc.OnDisconnect += (s, a) => IncrementReconnectDelay(); 
+			}
 
-				//Have we meet the current delay?
-				if (runtime.ElapsedMilliseconds >= nextReconnectAttempt)
-				{
-					WriteLog("Attempt to connect to the RPC");
+			//Check if the RPC is open
+			if (rpc.IsOpen) return true;
 
-					//Reconnect to the RPC.
-					IncrementReconnectDelay();
-					rpc.AttemptConnection();
-				}
+			//The RPC is not open, are we allowed to open it?
+			if (runtime.ElapsedMilliseconds < nextReconnectAttempt) return false;
 
-				//Don't want to do anything else until its open
+			//We are allowed to open it, we better open it then!
+			DiscordClient.WriteLog("Attempting to connect to the APC");
+			IncrementReconnectDelay();
+			return await rpc.AttemptConnection();
+		}
+
+		/// <summary>
+		/// Goes through all the presence updates that have been cached and sends them off.
+		/// </summary>
+		private async Task ProcessPresenceQueue()
+		{
+			//Make sure the RPC is connected
+			if (!await CheckConnection()) return;
+
+			//Loop until the queue is empty
+			while (!presenceQueue.IsEmpty)
+			{
+				//Try to get the element
+				RichPresence presence;
+				if (!presenceQueue.TryDequeue(out presence)) continue;
+
+				//Send it off
+				await rpc.WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = presence });
+			}
+		}
+
+		#region Helpers
+		
+		public async void SetPresence(RichPresence presence)
+		{
+			if (!await CheckConnection())
+			{
+				//We failed to connect, just queue the presence for now
+				presenceQueue.Enqueue(presence);
 				return;
 			}
 
-			//Do some reading
-			//ReadConnection();
-
-			//Do some writing
-			WriteConnection();
+			//We connected, now we just need to update
+			await ProcessPresenceQueue();
 		}
 
-		private void ReadConnection()
-		{
-			WriteLog("Attempting to read...");
-
-			while (true)
-			{
-				WriteLog("Reading Content...");
-
-				//Attempt to read the payload.
-				ResponsePayload response;
-				if (!rpc.ReadEvent(out response)) break;
-
-				WriteLog("Payload: {0} {1}", response.Command, response.Event);
-
-				if (!string.IsNullOrEmpty(response.Nonce))
-				{
-					WriteLog("Nonce found!");
-
-					// Check if we have an error event
-					if (response.Event == SubscriptionEvent.Error)
-					{
-						WriteLog("Error Found!");
-
-						//We are an error! Makes me sad really ;-;
-						PipeError close = response.Data as PipeError;
-						if (close == null)
-						{
-							//We have had an error, but we have no idea how it works!?
-							OnError?.Invoke(this, new DiscordErrorEventArgs()
-							{
-								ErrorCode = ErrorCode.UnkownError,
-								Message = "An unkown error has occured with the RPC connection. The error code returned was not successfully parsed either!"
-							});
-						}
-						else
-						{
-							//We need to tell the subscribers that we have come across an error
-							OnError?.Invoke(this, new DiscordErrorEventArgs()
-							{
-								ErrorCode = close.Code,
-								Message = close.Message
-							});
-						}
-					}
-					
-					//Nothing else to do if we have a Nonce apparently
-					return;
-				}
-
-				//Get the appropriate event
-				switch(response.Event)
-				{
-					//An event we don't care about, ignore this.
-					default:
-						Console.WriteLine("Ignoring Event " + response.Event.ToString());
-						break;
-
-					case SubscriptionEvent.ActivityJoin:
-					case SubscriptionEvent.ActivitySpectate:
-					case SubscriptionEvent.ActivityJoinRequest:
-						OnError?.Invoke(this, new DiscordErrorEventArgs()
-						{
-							ErrorCode = ErrorCode.NotImplemented,
-							Message = response.Event.ToString() + " has not yet been implemented by this library."
-						});
-						break;
-				}
-			}
-		}
-
-		private void WriteConnection()
-		{
-			while(!presenceQueue.IsEmpty)
-			{
-				//Get the next update
-				RichPresence update;
-				while (!presenceQueue.TryDequeue(out update)) { }
-
-				//Send it off
-				rpc.WriteCommand(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = update });
-			}
-		}
-
-		#region Events
-
-		private void OnRpcConnect(object sender, Events.RpcConnectEventArgs args)
-		{
-			//We have connected to the RPC, so reset our delay
-			reconnectDelay.Reset();
-
-			//Send the events for ACTIVITY_JOIN, ACTIVITY_SPECTATE and ACTIVITY_JOIN_REQUEST,
-			// ONLY if we have handlers for those events.
-			//TODO: Implement Join/Spectate systems.
-			//src: https://github.com/discordapp/discord-rpc/blob/b85758ec19ab37a317662eb93d7208eaae129e84/src/discord-rpc.cpp#L285
-			/*
-			if (Handlers.joinGame) {
-				RegisterForEvent("ACTIVITY_JOIN");
-			}
-
-			if (Handlers.spectateGame) {
-				RegisterForEvent("ACTIVITY_SPECTATE");
-			}
-
-			if (Handlers.joinRequest) {
-				RegisterForEvent("ACTIVITY_JOIN_REQUEST");
-			}
-			*/
-
-		}
-
-		private void OnRpcDisconnect(object sender, Events.RpcDisconnectEventArgs args)
-		{
-			//Update the disconnect timer because we failed to connect
-			//Potential bug? This will end up incrementing the delay twice (one here, and one when we try to reconnect)
-			IncrementReconnectDelay();
-		}
-		#endregion
-
-		#region Helpers
-		internal static void WriteLog(string format, params object[] objs)
-		{
-			OnLog?.Invoke(format, objs);
-		}
 		private void IncrementReconnectDelay()
 		{
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();
-		}
-
-		public void SetPresence(RichPresence presence)
-		{
-			presenceQueue.Enqueue(presence);
 		}
 
 		public void Dispose()
@@ -248,6 +143,11 @@ namespace DiscordRPC
 				rpc.Dispose();
 				rpc = null;
 			}
+		}
+		
+		internal static void WriteLog(string format, params object[] objs)
+		{
+			OnLog?.Invoke(format, objs);
 		}
 		#endregion
 	}

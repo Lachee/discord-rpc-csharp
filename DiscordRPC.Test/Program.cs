@@ -14,29 +14,26 @@ namespace DiscordRPC.Test
 			//Read the key from a file
 			string key = System.IO.File.ReadAllText("discord.key");
 
-			Console.WriteLine("Connecting...");
+			Console.WriteLine("Establishing Client...");
 			using (DiscordClient rpc = new DiscordClient(key))
 			{
 				DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
-				rpc.OnError += (s, e) =>
+				rpc.OnError += (s, e) => Console.WriteLine("ERR: An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
+				
+				while (true)
 				{
-					Console.WriteLine("An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
-				};
+					Console.Write("Details: ");
+					string details = Console.ReadLine();
+					
 
-				Console.WriteLine("Connected!");
-				while(true)
-				{
-					Console.WriteLine("Press a key to update connection");
-					Console.ReadKey();
-					Console.WriteLine();
 					rpc.SetPresence(new RichPresence()
 					{
-						Details = "Frank Walker from National Tiles",
-						State = "Async Sucks",
+						Details = details,
+						State = "In Editor",
 						Instance = true,
 						Assets = new Assets()
 						{
-							LargeImageKey = "coffee_time",
+							LargeImageKey = "default_large",
 							LargeImageText = "Where's Perry?",
 							SmallImageKey = "default_small",
 							SmallImageText = "THREADS RULE",
@@ -54,8 +51,6 @@ namespace DiscordRPC.Test
 							Start = DateTime.UtcNow
 						}
 					});
-
-					rpc.UpdateConnection();
 				}
 			}
 		}

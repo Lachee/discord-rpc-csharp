@@ -17,7 +17,6 @@ namespace DiscordRPC.RPC
 		{
 			Disconnected,
 			SentHandshake,
-			AwaitingRepsonse,
 			Connected
 		}
 
@@ -59,62 +58,71 @@ namespace DiscordRPC.RPC
 			_instance = this;
 		}
 
-		public void AttemptConnection()
+		/// <summary>
+		/// Confirms the connection is established and will connect if it is not.
+		/// </summary>
+		/// <returns>True if connected.</returns>
+		internal async Task<bool> AttemptConnection()
 		{
-			//We are already open, nothing else we can do
-			if (state == State.Connected)
+			switch (state)
 			{
-				DiscordClient.WriteLog("Cannot open RPC as it is already connected");
-				return;
-			}
+				default:
+					DiscordClient.WriteLog("RPC is in a invalid state");
+					return false;
 
-			//We are disconnected, so try and open it
-			if (state == State.Disconnected && !connection.Open())
-			{
-				DiscordClient.WriteLog("We faild to open the connection");
-				return;
-			}
+				case State.Connected:
+					DiscordClient.WriteLog("RPC already open");
+					return true;
 
-			if (state == State.SentHandshake)
-			{
-				DiscordClient.WriteLog("Sent handshake, so just going to update it instead");
-				CheckHandshakeResponse();
-			}
-			else
-			{
-				DiscordClient.WriteLog("Sending Handshake");
+				case State.Disconnected:
 
-				//Write the handshake
-				WriteFrame(Opcode.Handshake, new Handshake()
-				{
-					Version = VERSION,
-					ClientID = ApplicationID
-				});
+					//Try and create a connection. Open cannot be Async
+					DiscordClient.WriteLog("Attempting to connect...");
+					if (!connection.Open())
+					{
+						DiscordClient.WriteLog("RPC failed to create connection with discord!");
+						lastErrorCode = ErrorCode.PipeException;
+						lastErrorMessage = "Failed to establish connection with pipe";
+						return false;
+					}
 
-				state = State.SentHandshake;
-				while (state != State.Connected) CheckHandshakeResponse();
+					//Send the handshake
+					DiscordClient.WriteLog("Sending Handhsake...");
+					state = State.SentHandshake;
+					await WriteFrameAsync(new MessageFrame(Opcode.Handshake, new Handshake() { ClientID = this.ApplicationID, Version = VERSION }));
+					DiscordClient.WriteLog("Done, waiting for response...");
+					return await AttemptConnection();
+
+				case State.SentHandshake:
+
+					//Try to read the handshake
+					ResponsePayload payload = await ReadEventAsync();
+					if (payload == null)
+					{
+						DiscordClient.WriteLog("RPC failed to establish handshake.");
+						lastErrorCode = ErrorCode.PipeException;
+						lastErrorMessage = "Failed to establish handshake.";
+						return false;
+					}
+
+					//It was a connect event
+					if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
+					{
+						DiscordClient.WriteLog("Connection established with RPC.");
+
+						//WE connected!
+						state = State.Connected;
+						OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
+						return true;
+					}
+
+					//It was not a connect event, so ignore
+					return false;
+
 			}
 		}
 
-		private void CheckHandshakeResponse()
-		{
-			//Try and read the payload
-			ResponsePayload payload;
-			if (ReadEvent(out payload))
-			{
-				//It was a connect event
-				if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
-				{
-					DiscordClient.WriteLog("We have connected!");
-
-					//WE connected!
-					state = State.Connected;
-					OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
-				}
-			}
-		}
-
-		public bool ReadEvent(out ResponsePayload payload)
+		internal bool ReadEvent(out ResponsePayload payload)
 		{
 			//Set the inital payload
 			payload = null;
@@ -152,7 +160,7 @@ namespace DiscordRPC.RPC
 					//Close the socket
 					case Opcode.Close:
 
-						DiscordClient.WriteLog("Close OPCODE");
+						DiscordClient.WriteLog("RPC Closing due to received message.");
 
 						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
 						lastErrorCode = closeEvent.Code;
@@ -189,8 +197,83 @@ namespace DiscordRPC.RPC
 				}
 			}
 		}
+		internal async Task<ResponsePayload> ReadEventAsync()
+		{
+			//We are not in a valid state
+			if (state != State.Connected && state != State.SentHandshake) return null;
 
-		public void WriteCommand(Command command, object args)
+			//Read the frame
+
+			while (true)
+			{
+				//Prepare the frame
+				MessageFrame frame;
+
+				try
+				{
+					//Read the message
+					frame = await MessageFrame.ReadAsync(connection);
+					if (frame == null) return null;
+				}
+				catch (IOException ioe)
+				{
+					lastErrorCode = ErrorCode.PipeException;
+					lastErrorMessage = ioe.Message;
+					return null;
+				}
+				catch (Exception e)
+				{
+					lastErrorCode = ErrorCode.ReadCorrupt;
+					lastErrorMessage = e.Message;
+					return null;
+				}
+
+				//Perform actions on each opcode
+				switch (frame.Opcode)
+				{
+					//We received an actual payload
+					case Opcode.Frame:
+						return JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
+
+
+					//It is a ping, so we need to respond with a pong
+					case Opcode.Ping:
+
+						//Change the opcode and send it away again
+						frame.Opcode = Opcode.Pong;
+						WriteFrame(frame);
+
+						//Continue reading for messages.
+						break;	
+
+					//Its a pong, se we shall do nothing. We will read the next message
+					case Opcode.Pong: break;
+
+					//Close the socket
+					case Opcode.Close:
+						DiscordClient.WriteLog("RPC Closing due to received message.");
+						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
+						lastErrorCode = closeEvent.Code;
+						lastErrorMessage = closeEvent.Message;
+						Close();
+						return null;
+
+					//Default / Unhandled Exception
+					default:
+					case Opcode.Handshake:						
+						//Something happened that wasn't suppose to happen... I am scared.
+						DiscordClient.WriteLog("RPC Closing due to a bad IPC frame.");
+						lastErrorCode = ErrorCode.ReadCorrupt;
+						lastErrorMessage = "Bad IPC frame!";
+						Close();
+						return null;
+				}
+			}
+
+		}
+
+		#region Writers
+		internal void WriteCommand(Command command, object args)
 		{
 			RequestPayload request = new RequestPayload()
 			{
@@ -199,29 +282,8 @@ namespace DiscordRPC.RPC
 				Nonce = (nonce++).ToString()
 			};
 
-			WriteFrame(Opcode.Frame, request);
-		}
-
-		public void Close()
-		{
-			//Send a disconnect event
-			if (OnDisconnect != null && (state == State.Connected || state == State.SentHandshake))
-				OnDisconnect(this, new RpcDisconnectEventArgs() { ErrorCode = lastErrorCode, ErrorMessage = lastErrorMessage });
-
-			if (connection != null)
-				connection.Dispose();
-
-			state = State.Disconnected;
-		}
-
-		private void WriteFrame(Opcode opcode, object obj)
-		{
-			WriteFrame(new MessageFrame()
-			{
-				Opcode = opcode,
-				Message = JsonConvert.SerializeObject(obj)
-			});
-		}
+			WriteFrame(new MessageFrame(Opcode.Frame, request));
+		}		
 		private void WriteFrame(MessageFrame frame)
 		{
 			try
@@ -237,10 +299,52 @@ namespace DiscordRPC.RPC
 				this.Close();
 			}
 		}
-		
+	
+		internal async Task WriteCommandAsync(Command command, object args)
+		{
+			//The request payload
+			RequestPayload request = new RequestPayload()
+			{
+				Command = command,
+				Args = args,
+				Nonce = (nonce++).ToString()
+			};
+			
+			//Send it off
+			await WriteFrameAsync(new MessageFrame(Opcode.Frame, request));
+		}
+		private async Task WriteFrameAsync(MessageFrame frame)
+		{
+			try
+			{
+				await frame.WriteAsync(connection);
+			}
+			catch (Exception e)
+			{
+				DiscordClient.WriteLog("Exception while trying to write frame async: {0} ", e.Message);
+				lastErrorCode = ErrorCode.UnkownError;
+				lastErrorMessage = "Exception while trying to write frame async: " + e.Message;
+				this.Close();
+			}
+		}
+		#endregion
+
+		#region Disposal
+		public void Close()
+		{
+			//Send a disconnect event
+			if (OnDisconnect != null && (state == State.Connected || state == State.SentHandshake))
+				OnDisconnect(this, new RpcDisconnectEventArgs() { ErrorCode = lastErrorCode, ErrorMessage = lastErrorMessage });
+
+			if (connection != null)
+				connection.Dispose();
+
+			state = State.Disconnected;
+		}
 		public void Dispose()
 		{
 			this.Close();
 		}
+		#endregion
 	}
 } 
