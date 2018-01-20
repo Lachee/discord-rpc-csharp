@@ -28,7 +28,7 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Properties
-		public bool IsOpen { get { return state == State.Connected; } }
+		public bool IsOpen { get { return state == State.Connected && connection.IsOpen; } }
 		public State CurrentState { get { return state; } }
 		public string ApplicationID { get; }
 		public string LastErrorMessage { get { return lastErrorMessage; } }

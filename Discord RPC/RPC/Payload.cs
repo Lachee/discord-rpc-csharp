@@ -31,7 +31,7 @@ namespace DiscordRPC.RPC
 	/// Response payload received by RPC events
 	/// </summary>
 	internal class ResponsePayload : Payload
-	{
+	{	
 		[JsonProperty("data")]
 		public object Data { get; set; }
 

@@ -187,21 +187,8 @@ namespace DiscordRPC.IO
 		
 		public async Task WriteAsync(byte[] data)
 		{
-			if (!IsOpen)
-			{
-				Console.WriteLine("Not Open");
-				return;
-			}
-
-			try
-			{
-				Console.WriteLine("WRITE: " + data.Length + " bytes");
-				await stream.WriteAsync(data, 0, data.Length);
-			}catch(Exception e)
-			{
-				Console.WriteLine("Exception!");
-				Console.WriteLine(e.Message);
-			}
+			if (!IsOpen) return;
+			await stream.WriteAsync(data, 0, data.Length);
 		}
 		public async Task WriteAsync(int data)
 		{

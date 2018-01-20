@@ -119,6 +119,11 @@ namespace DiscordRPC
 
 		#region Helpers
 		
+		public async void UpdatePresence()
+		{
+			await ProcessPresenceQueue();
+		}
+
 		public async void SetPresence(RichPresence presence)
 		{
 			//Check the status

@@ -34,10 +34,12 @@ namespace DiscordRPC.RPC
 		/// <param name="connection"></param>
 		public void Write(PipeConnection connection)
 		{
+			/*
+			//This is disabled for consistency with the WriteAsync
 			connection.Write((int)Opcode);
 			connection.Write(Message, Encoding.UTF8);
-
-			//Behind the scenes is the same as the bottom one
+			*/
+			connection.Write(Serialize());
 		}
 
 		/// <summary>
@@ -47,16 +49,31 @@ namespace DiscordRPC.RPC
 		/// <returns></returns>
 		public async Task WriteAsync(PipeConnection connection)
 		{
+			await connection.WriteAsync(Serialize());
+		}
+
+		/// <summary>
+		/// Converts this object into bytes
+		/// </summary>
+		/// <returns></returns>
+		private byte[] Serialize()
+		{
 			byte[] opcode = BitConverter.GetBytes((int)Opcode);
 			byte[] message = Encoding.UTF8.GetBytes(Message);
 			byte[] length = BitConverter.GetBytes(message.Length);
+
+			if (!BitConverter.IsLittleEndian)
+			{
+				opcode.Reverse();
+				length.Reverse();
+			}
 
 			byte[] buffer = new byte[opcode.Length + message.Length + length.Length];
 			opcode.CopyTo(buffer, 0);
 			length.CopyTo(buffer, opcode.Length);
 			message.CopyTo(buffer, opcode.Length + length.Length);
 
-			await connection.WriteAsync(buffer);
+			return buffer;
 		}
 
 		/// <summary>
