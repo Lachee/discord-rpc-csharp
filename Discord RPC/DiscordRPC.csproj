@@ -55,6 +55,7 @@
     <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\Register.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RichPresence.cs" />
     <Compile Include="RPC\CloseCode.cs" />
     <Compile Include="RPC\Command.cs" />
     <Compile Include="RPC\Connection.cs" />
@@ -64,9 +65,12 @@
     <Compile Include="ErrorCode.cs" />
     <Compile Include="RPC\Payloads\Handshake.cs" />
     <Compile Include="RPC\Payloads\PipeError.cs" />
+    <Compile Include="RPC\Payloads\PresenceUpdate.cs" />
     <Compile Include="RPC\RpcConnection.cs" />
     <Compile Include="RPC\SubscriptionEvent.cs" />
+    <Compile Include="Serialization\DateTimeSerializer.cs" />
     <Compile Include="Serialization\EnumSnakeCaseSerializer.cs" />
+    <Compile Include="Thread\DiscordThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

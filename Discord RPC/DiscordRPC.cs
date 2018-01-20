@@ -3,6 +3,9 @@ using DiscordRPC.Events;
 using System;
 using System.Diagnostics;
 using DiscordRPC.RPC.Payloads;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace DiscordRPC
 {
@@ -26,6 +29,8 @@ namespace DiscordRPC
 		private BackoffDelay reconnectDelay;
 		private long nextReconnectAttempt = 0;
 		private int PID;
+
+		private ConcurrentQueue<RichPresence> presenceQueue;
 		#endregion
 
 		#region Events
@@ -39,6 +44,8 @@ namespace DiscordRPC
 			_appid = applicationID;
 			_steamid = steamID;
 			PID = Process.GetCurrentProcess().Id;
+
+			presenceQueue = new ConcurrentQueue<RichPresence>();
 
 			if (autoRegsiter)
 			{
@@ -63,6 +70,7 @@ namespace DiscordRPC
 
 		public void UpdateConnection()
 		{
+
 			//No connection has been made, so we cannot update it
 			if (rpc == null) return;
 
@@ -166,7 +174,15 @@ namespace DiscordRPC
 
 		private void WriteConnection()
 		{
-			
+			while(!presenceQueue.IsEmpty)
+			{
+				//Get the next update
+				RichPresence update;
+				while (!presenceQueue.TryDequeue(out update)) { }
+
+				//Send it off
+				rpc.WriteCommand(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = update });
+			}
 		}
 
 		#region Events
@@ -209,10 +225,14 @@ namespace DiscordRPC
 		{
 			OnLog?.Invoke(format, objs);
 		}
-
 		private void IncrementReconnectDelay()
 		{
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();
+		}
+
+		public void SetPresence(RichPresence presence)
+		{
+			presenceQueue.Enqueue(presence);
 		}
 
 		public void Dispose()

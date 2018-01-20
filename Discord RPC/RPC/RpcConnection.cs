@@ -47,6 +47,7 @@ namespace DiscordRPC.RPC
 
 		private string lastErrorMessage;
 		private ErrorCode lastErrorCode;
+		private int nonce = 1;
 		#endregion
 
 
@@ -187,6 +188,18 @@ namespace DiscordRPC.RPC
 						return false;
 				}
 			}
+		}
+
+		public void WriteCommand(Command command, object args)
+		{
+			RequestPayload request = new RequestPayload()
+			{
+				Command = command,
+				Args = args,
+				Nonce = (nonce++).ToString()
+			};
+
+			WriteFrame(Opcode.Frame, request);
 		}
 
 		public void Close()

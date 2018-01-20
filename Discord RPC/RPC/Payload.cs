@@ -16,14 +16,15 @@ namespace DiscordRPC.RPC
 		[JsonProperty("nonce")]
 		public string Nonce { get; set; }
 
-		[JsonProperty("evt"), JsonConverter(typeof(EnumSnakeCaseSerializer))]
-		public SubscriptionEvent Event { get; set; }
 	}
 
 	internal class ResponsePayload : Payload
 	{
 		[JsonProperty("data")]
 		public object Data { get; set; }
+
+		[JsonProperty("evt"), JsonConverter(typeof(EnumSnakeCaseSerializer))]
+		public SubscriptionEvent Event { get; set; }
 	}
 
 	internal class RequestPayload : Payload

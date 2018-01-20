@@ -12,6 +12,11 @@ namespace DiscordRPC.RPC
 		Dispatch,
 
 		/// <summary>
+		/// Called to set the activity
+		/// </summary>
+		SetActivity,
+
+		/// <summary>
 		/// used to authorize a new client with your app
 		/// </summary>
 		Authorize,

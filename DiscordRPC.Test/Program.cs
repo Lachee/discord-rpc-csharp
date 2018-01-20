@@ -26,9 +26,35 @@ namespace DiscordRPC.Test
 				Console.WriteLine("Connected!");
 				while(true)
 				{
-					//Console.WriteLine("Press a key to update connection");
-					//Console.ReadKey();
-					//Console.WriteLine();
+					Console.WriteLine("Press a key to update connection");
+					Console.ReadKey();
+					Console.WriteLine();
+					rpc.SetPresence(new RichPresence()
+					{
+						Details = "Frank Walker from National Tiles",
+						State = "Async Sucks",
+						Instance = true,
+						Assets = new Assets()
+						{
+							LargeImageKey = "large_default",
+							LargeImageText = "Where's Perry?",
+							SmallImageKey = "small_default",
+							SmallImageText = "THREADS RULE",
+						},
+
+						Party = new Party()
+						{
+							ID = rpc.GetHashCode().ToString(),
+							Size = 1,
+							Max = 4
+						},
+
+						Timestamps = new Timestamps()
+						{
+							Start = 100,
+							End = 200
+						}
+					});
 
 					rpc.UpdateConnection();
 				}
