@@ -8,6 +8,9 @@ namespace DiscordRPC.IO
 {
 	internal class PipeConnection
 	{
+		/// <summary>
+		/// Discord Pipe Name
+		/// </summary>
 		const string PIPE_NAME = @"discord-ipc-{0}";
 
 		/// <summary>
@@ -39,14 +42,16 @@ namespace DiscordRPC.IO
 
 					//Create the client
 					stream = new NamedPipeClientStream(pipename);
-					stream.Connect(1000);
+					stream.Connect(100);
+
+					while (!stream.IsConnected) { Task.Delay(100); }
 
 					//We have made a connection, prepare the writers
 					DiscordClient.WriteLog("Connected to pipe " + pipename);
 					_pipeno = i;
 
 					//We have succesfully connected
-					return true;
+					return IsOpen;
 				}
 				catch (Exception e)
 				{
@@ -59,7 +64,7 @@ namespace DiscordRPC.IO
 			//Check if we succeded
 			return stream != null;
 		}
-
+		
 		#region Disposal
 		/// <summary>
 		/// Closes the pipe stream.
@@ -182,18 +187,32 @@ namespace DiscordRPC.IO
 		
 		public async Task WriteAsync(byte[] data)
 		{
-			await stream.WriteAsync(data, 0, data.Length);
+			if (!IsOpen)
+			{
+				Console.WriteLine("Not Open");
+				return;
+			}
+
+			try
+			{
+				Console.WriteLine("WRITE: " + data.Length + " bytes");
+				await stream.WriteAsync(data, 0, data.Length);
+			}catch(Exception e)
+			{
+				Console.WriteLine("Exception!");
+				Console.WriteLine(e.Message);
+			}
 		}
 		public async Task WriteAsync(int data)
 		{
 			byte[] bytes = BitConverter.GetBytes(data);
-			if (BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			await WriteAsync(bytes);
 		}
 		public async Task WriteAsync(string data, Encoding encoding)
 		{
 			byte[] bytes = encoding.GetBytes(data);
-			WriteAsync(bytes.Length).Wait();
+			await WriteAsync(bytes.Length);
 			await WriteAsync(bytes);
 		}
 		#endregion

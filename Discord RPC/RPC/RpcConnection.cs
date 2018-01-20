@@ -38,6 +38,7 @@ namespace DiscordRPC.RPC
 		#region Events
 		public event RpcDisconnectEvent OnDisconnect;
 		public event RpcConnectEvent OnConnect;
+		public event DiscordErrorEvent OnError;
 		#endregion
 
 		#region Privates
@@ -77,7 +78,7 @@ namespace DiscordRPC.RPC
 				case State.Disconnected:
 
 					//Try and create a connection. Open cannot be Async
-					DiscordClient.WriteLog("Attempting to connect...");
+					DiscordClient.WriteLog("Attempting to connect...");					
 					if (!connection.Open())
 					{
 						DiscordClient.WriteLog("RPC failed to create connection with discord!");
@@ -86,14 +87,21 @@ namespace DiscordRPC.RPC
 						return false;
 					}
 
+					await Task.Delay(1000);
+
 					//Send the handshake
 					DiscordClient.WriteLog("Sending Handhsake...");
 					state = State.SentHandshake;
-					await WriteFrameAsync(new MessageFrame(Opcode.Handshake, new Handshake() { ClientID = this.ApplicationID, Version = VERSION }));
+					WriteFrame(new MessageFrame(Opcode.Handshake, new Handshake() { ClientID = this.ApplicationID, Version = VERSION }));
 					DiscordClient.WriteLog("Done, waiting for response...");
+
+					await Task.Delay(1000);
+
 					return await AttemptConnection();
 
 				case State.SentHandshake:
+
+					DiscordClient.WriteLog("Waiting for handshake, checking events");
 
 					//Try to read the handshake
 					ResponsePayload payload = await ReadEventAsync();
@@ -104,6 +112,8 @@ namespace DiscordRPC.RPC
 						lastErrorMessage = "Failed to establish handshake.";
 						return false;
 					}
+
+					DiscordClient.WriteLog("Found an event!");
 
 					//It was a connect event
 					if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
@@ -130,16 +140,17 @@ namespace DiscordRPC.RPC
 			//We are not in a valid state
 			if (state != State.Connected && state != State.SentHandshake)
 				return false;
-			
+
 			while (true)
 			{
 				//Prepare the frame
-				MessageFrame frame = new MessageFrame();
+				MessageFrame frame = null;
 
 				//Read the message
 				try
 				{
-					frame.Read(connection);
+					frame = MessageFrame.Read(connection);
+					if (frame == null) return false;
 				}
 				catch (IOException ioe)
 				{
@@ -157,42 +168,39 @@ namespace DiscordRPC.RPC
 				//Perform actions on each opcode
 				switch (frame.Opcode)
 				{
-					//Close the socket
-					case Opcode.Close:
-
-						DiscordClient.WriteLog("RPC Closing due to received message.");
-
-						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
-						lastErrorCode = closeEvent.Code;
-						lastErrorMessage = closeEvent.Message;
-						this.Close();
-						return false;
-
 					//We received an actual payload
 					case Opcode.Frame:
-						payload = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);					
+						payload = JsonConvert.DeserializeObject<ResponsePayload>(frame.Message);
 						return true;
 
 					//It is a ping, so we need to respond with a pong
 					case Opcode.Ping:
+
+						//Change the opcode and send it away again
 						frame.Opcode = Opcode.Pong;
 						WriteFrame(frame);
+
+						//Continue reading for messages.
+						break;
+
+					//Its a pong, se we shall do nothing. We will read the next message
+					case Opcode.Pong: break;
+
+					//Close the socket
+					case Opcode.Close:
+						DiscordClient.WriteLog("RPC Closing due to received message.");
+						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
+						SetError(closeEvent.Code, closeEvent.Message);
+						Close();
 						return false;
 
-					//Its a pong, se we shall do nothing
-					case Opcode.Pong:
-						return false;
-						
-					//Something has happened and we got a opcode we are not expecting!
+					//Default / Unhandled Exception
 					default:
 					case Opcode.Handshake:
-
-						DiscordClient.WriteLog("Bad IPC Frame!");
-
 						//Something happened that wasn't suppose to happen... I am scared.
-						lastErrorCode = ErrorCode.ReadCorrupt;
-						lastErrorMessage = "Bad IPC frame!";
-						this.Close();
+						DiscordClient.WriteLog("RPC Closing due to a bad IPC frame.");
+						SetError(ErrorCode.ReadCorrupt, "Bad IPC frame!");
+						Close();
 						return false;
 				}
 			}
@@ -215,16 +223,14 @@ namespace DiscordRPC.RPC
 					frame = await MessageFrame.ReadAsync(connection);
 					if (frame == null) return null;
 				}
-				catch (IOException ioe)
+				catch (IOException e)
 				{
-					lastErrorCode = ErrorCode.PipeException;
-					lastErrorMessage = ioe.Message;
+					SetError(ErrorCode.PipeException, e.Message);
 					return null;
 				}
 				catch (Exception e)
 				{
-					lastErrorCode = ErrorCode.ReadCorrupt;
-					lastErrorMessage = e.Message;
+					SetError(ErrorCode.ReadCorrupt, e.Message);
 					return null;
 				}
 
@@ -253,8 +259,7 @@ namespace DiscordRPC.RPC
 					case Opcode.Close:
 						DiscordClient.WriteLog("RPC Closing due to received message.");
 						PipeError closeEvent = JsonConvert.DeserializeObject<PipeError>(frame.Message);
-						lastErrorCode = closeEvent.Code;
-						lastErrorMessage = closeEvent.Message;
+						SetError(closeEvent.Code, closeEvent.Message);
 						Close();
 						return null;
 
@@ -263,8 +268,7 @@ namespace DiscordRPC.RPC
 					case Opcode.Handshake:						
 						//Something happened that wasn't suppose to happen... I am scared.
 						DiscordClient.WriteLog("RPC Closing due to a bad IPC frame.");
-						lastErrorCode = ErrorCode.ReadCorrupt;
-						lastErrorMessage = "Bad IPC frame!";
+						SetError(ErrorCode.ReadCorrupt, "Bad IPC frame!");
 						Close();
 						return null;
 				}
@@ -328,6 +332,13 @@ namespace DiscordRPC.RPC
 			}
 		}
 		#endregion
+
+		private void SetError(ErrorCode error, string message)
+		{
+			lastErrorCode = error;
+			lastErrorMessage = message;
+			OnError?.Invoke(this, new DiscordErrorEventArgs() { ErrorCode = error, Message = message });
+		}
 
 		#region Disposal
 		public void Close()

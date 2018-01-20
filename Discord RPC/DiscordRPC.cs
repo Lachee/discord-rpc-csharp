@@ -74,8 +74,13 @@ namespace DiscordRPC
 			{
 				//create the connection. In the future this will have to autosubscribe to events too
 				rpc = new RpcConnection(_appid);
-				rpc.OnConnect += async (s, a) => { reconnectDelay.Reset(); await ProcessPresenceQueue(); };
-				rpc.OnDisconnect += (s, a) => IncrementReconnectDelay(); 
+				rpc.OnDisconnect += (s, a) => IncrementReconnectDelay();
+				rpc.OnError += (s, a) => this.OnError?.Invoke(this, a);
+				rpc.OnConnect += async (s, a) => 
+				{
+					reconnectDelay.Reset();
+					await ProcessPresenceQueue();
+				};
 			}
 
 			//Check if the RPC is open
@@ -85,7 +90,7 @@ namespace DiscordRPC
 			if (runtime.ElapsedMilliseconds < nextReconnectAttempt) return false;
 
 			//We are allowed to open it, we better open it then!
-			DiscordClient.WriteLog("Attempting to connect to the APC");
+			DiscordClient.WriteLog("Attempting to connect to the RPC");
 			IncrementReconnectDelay();
 			return await rpc.AttemptConnection();
 		}
@@ -96,14 +101,16 @@ namespace DiscordRPC
 		private async Task ProcessPresenceQueue()
 		{
 			//Make sure the RPC is connected
-			if (!await CheckConnection()) return;
+			if (!await CheckConnection())
+				return;
 
 			//Loop until the queue is empty
 			while (!presenceQueue.IsEmpty)
 			{
 				//Try to get the element
 				RichPresence presence;
-				if (!presenceQueue.TryDequeue(out presence)) continue;
+				if (!presenceQueue.TryDequeue(out presence))
+					continue;
 
 				//Send it off
 				await rpc.WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = presence });
@@ -114,14 +121,18 @@ namespace DiscordRPC
 		
 		public async void SetPresence(RichPresence presence)
 		{
+			//Check the status
 			if (!await CheckConnection())
 			{
 				//We failed to connect, just queue the presence for now
-				presenceQueue.Enqueue(presence);
+				Console.WriteLine("Enquing Presence Update Instead");
 				return;
 			}
 
-			//We connected, now we just need to update
+			//Enqueue the status
+			presenceQueue.Enqueue(presence);
+			
+			//We are connected, so process the queue
 			await ProcessPresenceQueue();
 		}
 
