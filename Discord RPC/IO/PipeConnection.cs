@@ -16,7 +16,6 @@ namespace DiscordRPC.IO
 		private int _pipeno;
 
 		private NamedPipeClientStream stream;
-		private BinaryWriter writer;
 		private BinaryReader reader;
 
 		public bool Open()
@@ -39,7 +38,6 @@ namespace DiscordRPC.IO
 					DiscordClient.WriteLog("Connected to pipe " + pipename);
 					_pipeno = pipeDigit;
 
-					writer = new BinaryWriter(stream);
 					reader = new BinaryReader(stream);
 
 					break;
@@ -47,7 +45,7 @@ namespace DiscordRPC.IO
 				catch (Exception e)
 				{
 					//Something happened, try again
-					DiscordClient.WriteLog("Exception: {0}", e.Message);
+					DiscordClient.WriteLog("Connection Exception: {0}", e.Message);
 					stream = null;
 
 					pipeDigit++;
@@ -61,19 +59,7 @@ namespace DiscordRPC.IO
 		public bool Close()
 		{
 			DiscordClient.WriteLog("Closing Pipe");
-
-			if (writer != null)
-			{
-				writer.Dispose();
-				writer = null;
-			}
-
-			if (reader != null)
-			{
-				reader.Dispose();
-				reader = null;
-			}
-
+		
 			if (stream != null)
 			{
 				stream.Dispose();
@@ -87,18 +73,20 @@ namespace DiscordRPC.IO
 		{
 			this.Close();
 		}
+		
+		public bool CanRead()
+		{
+			return reader.PeekChar() >= 0;
+		}
 
 		public int Read(byte[] buff, int length)
 		{
-			DiscordClient.WriteLog("Reading {0} bytes", length);
-			if (!IsOpen) return 0;
-			return stream.Read(buff, 0, length);
+			if (!IsOpen) return 0;			
+			return reader.Read(buff, 0, length);
 		}
 
 		public int ReadInt()
 		{
-			DiscordClient.WriteLog("Reading Int");
-
 			//Read the bytes
 			byte[] buff = new byte[4];
 			Read(buff, buff.Length);
@@ -108,22 +96,16 @@ namespace DiscordRPC.IO
 
 			//Convert to a int
 			int value = BitConverter.ToInt32(buff, 0);
-			DiscordClient.WriteLog(" - Value: {0}", value);
-
 			return value;
 		}
 
 		public string ReadString(int length, Encoding encoding)
 		{
-			DiscordClient.WriteLog("Reading String of size {0}", length);
-
 			//Read the bytes
 			byte[] buff = new byte[length];
 			Read(buff, length);
 
 			string message =  encoding.GetString(buff);
-			DiscordClient.WriteLog(" - Value: {0}", message);
-
 			return message;
 		}
 
@@ -136,22 +118,14 @@ namespace DiscordRPC.IO
 
 		public bool Write(byte[] data)
 		{
-			if (!IsOpen)
-			{
-				DiscordClient.WriteLog("Cannot write bytes as we are not open!");
-				return false;
-			}
-
-			DiscordClient.WriteLog("Writing {0} bytes", data.Length);
+			if (!IsOpen) return false;
+			
 			stream.Write(data, 0, data.Length);
-			//stream.Flush();
 			return true;
 		}
 
 		public bool Write(string data, Encoding encoding, bool includeLength = false)
 		{
-			DiscordClient.WriteLog("Writing String {0}", data);
-
 			byte[] bytes = encoding.GetBytes(data);
 			if (includeLength) Write(bytes.Length);
 			return Write(bytes);
@@ -159,8 +133,6 @@ namespace DiscordRPC.IO
 
 		public bool Write(int data)
 		{
-			DiscordClient.WriteLog("Writing Int {0}", data);
-
 			byte[] bytes = BitConverter.GetBytes(data);
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			return Write(bytes);

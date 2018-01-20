@@ -66,11 +66,11 @@ namespace DiscordRPC
 			//No connection has been made, so we cannot update it
 			if (rpc == null) return;
 
-			WriteLog("Updating Connection");
+			//WriteLog("Updating Connection");
 
 			if (!rpc.IsOpen)
 			{
-				WriteLog("RPC is not open, aborting...");
+				//WriteLog("RPC is not open, aborting...");
 
 				//Have we meet the current delay?
 				if (runtime.ElapsedMilliseconds >= nextReconnectAttempt)

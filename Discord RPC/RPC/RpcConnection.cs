@@ -106,6 +106,9 @@ namespace DiscordRPC.RPC
 			if (state != State.Connected && state != State.SentHandshake)
 				return false;
 
+			if (state == State.Connected && !connection.CanRead())
+				return false;
+
 			while (true)
 			{
 				//Prepare the frame
