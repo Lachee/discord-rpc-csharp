@@ -15,11 +15,17 @@ namespace DiscordRPC
 		public delegate void Log(string formatting, params object[] objects);
 
 		#region Properties
+
+		/// <summary>
+		/// The ID being used by the client
+		/// </summary>
 		public string ApplicationID { get { return _appid; } }
 		private string _appid;
 
+		/*
 		public bool HasSteamID { get { return !string.IsNullOrEmpty(SteamID); } }
 		public string SteamID { get { return _steamid; } }
+		*/
 		private string _steamid;
 		#endregion
 
@@ -36,19 +42,31 @@ namespace DiscordRPC
 		#endregion
 
 		#region Events
+		/// <summary>
+		/// Called when an error occurs within the client
+		/// </summary>
 		public event DiscordErrorEvent OnError;
+
+		/// <summary>
+		/// General call used by the client to log messages. Generally used for debugging only and probably won't say anything useful.
+		/// </summary>
 		public static event Log OnLog;
 		#endregion
 
-		public DiscordClient(string applicationID, bool autoRegister = false) : this(applicationID, "", autoRegister) { }
-		public DiscordClient(string applicationID, string steamID, bool autoRegsiter = false)
+		/// <summary>
+		/// Creates a new Rich Presence client.
+		/// </summary>
+		/// <param name="applicationID">The Client ID supplied by the bot</param>
+		public DiscordClient(string applicationID)
 		{
 			_appid = applicationID;
-			_steamid = steamID;
+			//_steamid = steamID;
 			PID = Process.GetCurrentProcess().Id;
 
 			presenceQueue = new ConcurrentQueue<RichPresence>();
 
+			/*
+			//TODO: Implement this
 			if (autoRegsiter)
 			{
 				if (HasSteamID)
@@ -56,6 +74,7 @@ namespace DiscordRPC
 				else
 					IO.Register.RegisterApp(ApplicationID, null);
 			}
+			*/
 
 			//Create the reconnext time
 			reconnectDelay = new BackoffDelay(500, 60 * 1000);
@@ -121,28 +140,53 @@ namespace DiscordRPC
 
 		#region Helpers
 		
+		/// <summary>
+		/// Gets the current presence that is being used by Discord
+		/// </summary>
+		/// <returns>The latest presence</returns>
 		public RichPresence GetPresence()
 		{
 			return _currentPresence;
 		}
 
-		public async Task UpdatePresence() { await ProcessPresenceQueue(); }
+		/// <summary>
+		/// Attempts to make a connection to Discord and process the queued presence updates. Returns the presence current set.
+		/// </summary>
+		/// <returns>Returns the presence current set.</returns>
+		public async Task<RichPresence> UpdatePresence()
+		{
+			//Process the queue
+			await ProcessPresenceQueue();
+
+			//Send the current presence
+			return _currentPresence;
+		}
 		public async Task ClearPresence() { await SetPresence(null); }
-		public async Task SetPresence(RichPresence presence)
+
+		/// <summary>
+		/// Sets the presence of the Discord client. Returns the presence current set and null if no connection was established.
+		/// <para>
+		/// The presence is queued and the queue is processed. If a connection could not be established, then the message will be sent on the next presence update. 
+		/// To initiate a presence update, call either <see cref="SetPresence(RichPresence)"/> or <see cref="UpdatePresence"/>
+		/// </para>
+		/// </summary>
+		/// <param name="presence">The presences to apply</param>
+		/// <returns>Returns the presence current set and null if no connection was established.</returns>
+		public async Task<RichPresence> SetPresence(RichPresence presence)
 		{
 			//Check the status
 			if (!await CheckConnection())
 			{
 				//We failed to connect, just queue the presence for now
 				Console.WriteLine("Enquing Presence Update Instead");
-				return;
+				return null;
 			}
 
 			//Enqueue the status
 			presenceQueue.Enqueue(presence);
-			
+
 			//We are connected, so process the queue
-			await ProcessPresenceQueue();
+			return await UpdatePresence();
 		}
 
 		private void IncrementReconnectDelay()

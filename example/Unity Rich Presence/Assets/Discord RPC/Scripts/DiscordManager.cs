@@ -103,10 +103,7 @@ public class DiscordManager : MonoBehaviour {
 			Debug.LogWarning("Cannot set presence as the discord manager is disabled!");
 			return;
 		}
-
-
-		//"child "activity" fails because [child "assets" fails because [child "large_text" fails because ["large_text" is not allowed to be empty]]]"
-
+		
 		instance.presence = presence;
 		await instance.client.SetPresence(presence.ToRichPresence());
 	}

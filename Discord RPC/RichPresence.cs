@@ -168,8 +168,9 @@ namespace DiscordRPC
 		{
 			get
 			{
-				//It has max size, return both
-				return new int[] { Size, Math.Max(Size, Max) };
+				//see issue https://github.com/discordapp/discord-rpc/issues/111
+				int size = Math.Max(1, Size);
+				return new int[] { size, Math.Max(size, Max) };
 			}
 		}
 	}
