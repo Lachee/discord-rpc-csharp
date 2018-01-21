@@ -37,6 +37,12 @@ namespace DiscordRPC.Test
 						LargeImageText = "  ",
 						SmallImageKey = "default_small",
 						SmallImageText = "  "
+					},
+					Party= new Party()
+					{
+						ID = "someuniqueid",
+						Size = 1,
+						Max = 10
 					}
 				};
 
@@ -44,17 +50,36 @@ namespace DiscordRPC.Test
 				Console.WriteLine("Establishing Client...");
 				using (DiscordClient rpc = new DiscordClient(key))
 				{
+
+					//Register to the log and error events so we know whats happening
 					DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
 					rpc.OnError += (s, e) => Console.WriteLine("ERR: An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
 
 					while (true)
 					{
+						//Read the command
 						Console.Write("Command Line: ");
 						string command = Console.ReadLine();
 						string[] parts = command.Split(new char[] { ' ' }, 2);
 
 						switch (parts[0])
 						{
+							//Clear the presences. Use this to prevent game ghosting.
+							case "clear":
+								await rpc.ClearPresence();
+								break;
+
+							//Update the presence. This is used if there was an exception somewhere in the pipe and messages are queued
+							case "update":
+								await rpc.UpdatePresence();
+								break;
+
+							//Set the presence
+							case "apply":
+								await rpc.SetPresence(presence);
+								break;
+
+
 							case "size":
 								int? size = Parse(parts[1]);
 								if (size.HasValue) presence.Party.Size = size.Value;
@@ -114,17 +139,6 @@ namespace DiscordRPC.Test
 								presence.Timestamps.Start = null;
 								break;
 
-							case "clear":
-								await rpc.ClearPresence();
-								break;
-
-							case "update":
-								await rpc.UpdatePresence();
-								break;
-
-							case "apply":
-								await rpc.SetPresence(presence);
-								break;
 
 							default:
 								Console.WriteLine("Unkown Command");
