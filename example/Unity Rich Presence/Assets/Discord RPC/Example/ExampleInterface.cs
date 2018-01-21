@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class ExampleInterface : MonoBehaviour {
 
-	public UnityPresence presence = new UnityPresence();
-	public InputField state, details, largeImage, smallImage, partyMaxSize;
+	public InputField state, details, largeImage, smallImage, partyMaxSize, partyID, gameLength;
 	public Slider partySize;
 	public Text partySizeText;
+
+	public UnityPresence presence = new UnityPresence();
 
 	private int GetPartyMaxSize() { return int.Parse(partyMaxSize.text); }
 	private int GetPartySize(int max)
@@ -30,10 +31,15 @@ public class ExampleInterface : MonoBehaviour {
 		presence.assets.largeKey = largeImage.text;
 		presence.assets.smallKey = smallImage.text;
 
+		presence.party.identifer = partyID.text;
 		presence.party.maxSize = GetPartyMaxSize();
 		presence.party.identifer = presence.party.maxSize > 0 ? GetHashCode().ToString() : "";
 		presence.party.size = GetPartySize(presence.party.maxSize);
-		
+
+		presence.timestamps.start = new UnityPresence.Stamp();
+		presence.timestamps.end = new UnityPresence.Stamp(Time.time + float.Parse(gameLength.text));
+
+
 		//Update the presence
 		DiscordManager.SetPresence(presence);
 		Debug.Log("Sent Presence!");

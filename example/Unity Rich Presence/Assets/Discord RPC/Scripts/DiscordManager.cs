@@ -88,10 +88,10 @@ public class DiscordManager : MonoBehaviour {
 	}
 
 
-	private void OnDisable()
+	private async void OnDisable()
 	{
 		//Clear the presence (Makes discord acknowledge the game is done) then dispose.
-		client.ClearPresence();
+		await client.ClearPresence();
 		client.Dispose();
 		client = null;		
 	}
