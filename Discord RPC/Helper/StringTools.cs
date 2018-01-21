@@ -8,6 +8,8 @@ namespace DiscordRPC.Helper
 {
 	public static class StringTools
 	{
+		public const string Whitespace = "  ";
+
 		/// <summary>
 		/// If the string is empty, make it null instead. Otherwise return the string.
 		/// </summary>
@@ -26,7 +28,7 @@ namespace DiscordRPC.Helper
 		public static string CreateWhitespace(int count)
 		{
 			StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < count; i++) builder.Append("  ");
+			for (int i = 0; i < count; i++) builder.Append(Whitespace);
 			return builder.ToString();
 		}
 	}
