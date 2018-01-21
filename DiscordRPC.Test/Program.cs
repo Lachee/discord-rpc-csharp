@@ -26,7 +26,7 @@ namespace DiscordRPC.Test
 				//Create the presence
 				presence = new RichPresence()
 				{
-					State = "                s",
+					State = Helper.StringTools.CreateWhitespace(50) + "Space",
 					Timestamps = new Timestamps()
 					{
 						Start = DateTime.UtcNow,

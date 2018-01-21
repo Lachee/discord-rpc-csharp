@@ -18,14 +18,14 @@ namespace DiscordRPC
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-		public string State { get { return _state; } set { _state = value.Nullify(); } }
+		public string State { get { return _state; } set { _state = value.ClearEmpty(); } }
 		private string _state;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-		public string Details { get { return _details; } set { _details = value.Nullify(); } }
+		public string Details { get { return _details; } set { _details = value.ClearEmpty(); } }
 		private string _details;
 		
 		[JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
@@ -96,28 +96,28 @@ namespace DiscordRPC
 		/// Max 32 Bytes.
 		/// </summary>
 		[JsonProperty("large_image")]//, NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.Nullify(); } }
+		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.ClearEmpty(); } }
 		private string _largeimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("large_text")]//, NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.Nullify(); } }
+		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.ClearEmpty(); } }
 		private string _largeimagetext;
 
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
 		[JsonProperty("small_image")]//, NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageKey { get { return _smallimagekey; } set { _smallimagekey = value.Nullify(); } }
+		public string SmallImageKey { get { return _smallimagekey; } set { _smallimagekey = value.ClearEmpty(); } }
 		private string _smallimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("small_text")]//, NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageText { get { return _smallimagetext; } set { _smallimagetext = value.Nullify(); } }
+		public string SmallImageText { get { return _smallimagetext; } set { _smallimagetext = value.ClearEmpty(); } }
 		private string _smallimagetext;
 	}
 
@@ -148,7 +148,7 @@ namespace DiscordRPC
 		/// A optional unique ID for the party. Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string ID { get { return _partyid; } set { _partyid = value.Nullify(); } }
+		public string ID { get { return _partyid; } set { _partyid = value.ClearEmpty(); } }
 		private string _partyid;
 
 		/// <summary>

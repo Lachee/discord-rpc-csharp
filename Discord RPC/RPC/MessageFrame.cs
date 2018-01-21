@@ -27,7 +27,7 @@ namespace DiscordRPC.RPC
 			Opcode = opcode;
 			Message = JsonConvert.SerializeObject(obj, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
 
-			Console.WriteLine(Message);
+			//Console.WriteLine(Message);
 		}
 
 		/// <summary>
