@@ -65,11 +65,13 @@ namespace DiscordRPC.Test
 						switch (parts[0])
 						{
 							case "size":
-								presence.Party.Size = Parse(parts[1]);
+								int? size = Parse(parts[1]);
+								if (size.HasValue) presence.Party.Size = size.Value;
 								break;
 
 							case "maxsize":
-								presence.Party.Max = Parse(parts[1]);
+								int? maxsize = Parse(parts[1]);
+								if (maxsize.HasValue) presence.Party.Max = maxsize.Value;
 								break;
 
 							case "partyid":

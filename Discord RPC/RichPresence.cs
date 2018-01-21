@@ -106,31 +106,30 @@ namespace DiscordRPC
 	public class Party
 	{
 		/// <summary>
-		/// Max 128 Bytes.
+		/// A optional unique ID for the party. Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public string ID { get; set; }
 
+		/// <summary>
+		/// The current size of the party
+		/// </summary>
 		[JsonIgnore]
-		public int? Size { get; set; }
+		public int Size { get; set; }
 
+		/// <summary>
+		/// The maxium size of the party. This is required to be larger than <see cref="Size"/>. If it is smaller than the current party size, it will automatically be set too <see cref="Size"/> when the presence is sent.
+		/// </summary>
 		[JsonIgnore]
-		public int? Max { get; set; }
+		public int Max { get; set; }
 
 		[JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
 		private int[] _size
 		{
 			get
 			{
-				//We have no size, so its null
-				if (!Size.HasValue) return null;
-
-				//It does not have a max size, so just return the size
-				if (!Max.HasValue)
-					return new int[] { Size.Value, Size.Value };
-
 				//It has max size, return both
-				return new int[] { Size.Value, Max.Value };
+				return new int[] { Size, Math.Max(Size, Max) };
 			}
 		}
 	}
