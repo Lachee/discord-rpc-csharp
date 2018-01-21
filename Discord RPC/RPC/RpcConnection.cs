@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace DiscordRPC.RPC
 {
@@ -31,6 +32,7 @@ namespace DiscordRPC.RPC
 		public bool IsOpen { get { return state == State.Connected && connection.IsOpen; } }
 		public State CurrentState { get { return state; } }
 		public string ApplicationID { get; }
+		public int ProcessID { get; }
 		public string LastErrorMessage { get { return lastErrorMessage; } }
 		public ErrorCode LastErrorCode { get { return lastErrorCode; } }
 		#endregion
@@ -51,10 +53,11 @@ namespace DiscordRPC.RPC
 		#endregion
 
 
-		public RpcConnection(string appid)
+		public RpcConnection(string appid, int processid)
 		{
 			this.connection = new PipeConnection();
 			this.ApplicationID = appid;
+			this.ProcessID = processid;
 			this.state = State.Disconnected;
 			_instance = this;
 		}
@@ -102,7 +105,7 @@ namespace DiscordRPC.RPC
 				case State.SentHandshake:
 
 					DiscordClient.WriteLog("Waiting for handshake, checking events");
-
+					
 					//Try to read the handshake
 					ResponsePayload payload = await ReadEventAsync();
 					if (payload == null)
@@ -116,7 +119,7 @@ namespace DiscordRPC.RPC
 					DiscordClient.WriteLog("Found an event!");
 
 					//It was a connect event
-					if (payload.Command == Command.Dispatch && payload.Event == SubscriptionEvent.Ready)
+					if (payload.Command == Command.Dispatch && payload.Event.HasValue && payload.Event.Value == SubscriptionEvent.Ready)
 					{
 						DiscordClient.WriteLog("Connection established with RPC.");
 
@@ -125,7 +128,7 @@ namespace DiscordRPC.RPC
 						OnConnect?.Invoke(this, new RpcConnectEventArgs() { Payload = payload });
 						return true;
 					}
-
+					
 					//It was not a connect event, so ignore
 					return false;
 
@@ -152,16 +155,16 @@ namespace DiscordRPC.RPC
 					frame = MessageFrame.Read(connection);
 					if (frame == null) return false;
 				}
-				catch (IOException ioe)
+				catch (IOException e)
 				{
-					lastErrorCode = ErrorCode.PipeException;
-					lastErrorMessage = ioe.Message;
+					SetError(ErrorCode.PipeException, e.Message);
+					Close();
 					return false;
 				}
 				catch (Exception e)
 				{
-					lastErrorCode = ErrorCode.ReadCorrupt;
-					lastErrorMessage = e.Message;
+					SetError(ErrorCode.ReadCorrupt, e.Message);
+					Close();
 					return false;
 				}
 
@@ -226,11 +229,13 @@ namespace DiscordRPC.RPC
 				catch (IOException e)
 				{
 					SetError(ErrorCode.PipeException, e.Message);
+					Close();
 					return null;
 				}
 				catch (Exception e)
 				{
 					SetError(ErrorCode.ReadCorrupt, e.Message);
+					Close();
 					return null;
 				}
 
@@ -296,14 +301,63 @@ namespace DiscordRPC.RPC
 			}
 			catch (Exception e)
 			{
-				DiscordClient.WriteLog("Exception while trying to write frame: {0} ", e.Message);
-
-				lastErrorCode = ErrorCode.UnkownError;
-				lastErrorMessage = "Exception while trying to write frame: " + e.Message;
+				DiscordClient.WriteLog("Exception while trying to write frame: {0} ", e.Message);				
+				SetError(ErrorCode.UnkownError, "Exception while trying to write frame: " + e.Message);
 				this.Close();
 			}
 		}
 	
+		internal async Task<RichPresenceResponse> WritePresenceAsync(RichPresence presence)
+		{
+			DiscordClient.WriteLog("Writing persence async");
+
+			//Write the presence
+			await WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = ProcessID, Presence = presence });
+
+			//attempt to get the responseDiscord
+			DiscordClient.WriteLog("Attempting to fetch response back");
+			ResponsePayload payload = await ReadEventAsync();
+			if (payload != null)
+			{
+				//Return the acknowledgement
+				var jobject = (JObject)payload.Data;
+
+				//Is this an event? If not, we are a response payload
+				if (!payload.Event.HasValue)
+				{
+					DiscordClient.WriteLog("Acknowledged Succesfully");
+
+					//Convert  us to a response
+					var ack = jobject.ToObject<RichPresenceResponse>();
+					return ack;
+				}
+
+				//Something else happened, so we better act on it
+				switch (payload.Event.Value)
+				{
+					default:
+						DiscordClient.WriteLog("Something happened and we don't know what it was!");
+						SetError(ErrorCode.UnkownError, "RPC received " + payload.Event.Value + " event during validation");
+						break;
+
+					case SubscriptionEvent.Error:
+						DiscordClient.WriteLog("We received a error response!");
+						var code = (ErrorCode)jobject.GetValue("code").Value<int>();
+						var message = jobject.GetValue("message").Value<string>();
+						SetError(code, message);
+						break;
+
+				}
+
+				return null;
+			}
+			else
+			{
+				SetError(ErrorCode.InvalidPayload, "Response payload was incorrect");
+				return null;
+			}
+			
+		}
 		internal async Task WriteCommandAsync(Command command, object args)
 		{
 			//The request payload
@@ -321,13 +375,13 @@ namespace DiscordRPC.RPC
 		{
 			try
 			{
+				//Write the frame
 				await frame.WriteAsync(connection);
 			}
 			catch (Exception e)
 			{
 				DiscordClient.WriteLog("Exception while trying to write frame async: {0} ", e.Message);
-				lastErrorCode = ErrorCode.UnkownError;
-				lastErrorMessage = "Exception while trying to write frame async: " + e.Message;
+				SetError(ErrorCode.UnkownError, "Exception while trying to write frame: " + e.Message);
 				this.Close();
 			}
 		}

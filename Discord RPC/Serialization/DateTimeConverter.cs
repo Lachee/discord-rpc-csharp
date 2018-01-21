@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.Serialization
 {
-	public class DateTimeSerializer : JsonConverter
+	public class DateTimeConverter : JsonConverter
 	{
 		public override bool CanConvert(Type objectType) { return objectType == typeof(DateTime); }
 

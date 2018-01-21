@@ -1,4 +1,5 @@
-﻿using DiscordRPC.Serialization;
+﻿using DiscordRPC.Helper;
+using DiscordRPC.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,19 +9,24 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC
 {
+
 	[JsonObject(MemberSerialization = MemberSerialization.OptIn, ItemNullValueHandling = NullValueHandling.Ignore)]
+	[Serializable]
 	public class RichPresence
 	{
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-		public string State { get; set; }
+		public string State { get { return _state; } set { _state = value.Nullify(); } }
+		private string _state;
+
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-		public string Details { get; set; }
+		public string Details { get { return _details; } set { _details = value.Nullify(); } }
+		private string _details;
 		
 		[JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
 		public Timestamps Timestamps { get; set; }
@@ -31,28 +37,57 @@ namespace DiscordRPC
 		[JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
 		public Party Party { get; set; }
 
+		#region Not Yet Implemented
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-		public string MatchSecret { get; set; }
+		private string MatchSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
-		public string JoinSecret { get; set; }
+		private string JoinSecret { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		public string SpectateSecret { get; set; }
+		private string SpectateSecret { get; set; }
 
 		[JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
-		public bool Instance { get; set; }
-
+		private bool Instance { get; set; }
+		#endregion
 		
+	}
+
+	/// <summary>
+	/// A rich presence that has been parsed from the pipe as a response.
+	/// </summary>
+	internal class RichPresenceResponse : RichPresence
+	{
+		/// <summary>
+		/// ID of the client
+		/// </summary>
+		public string ClientID { get { return _clientid; } }
+
+		/// <summary>
+		/// Name of the bot
+		/// </summary>
+		public string Name { get { return _name; } }
+
+		//Disabling warning that these are never assigned. These are assigned by the JSON converter.
+#pragma warning disable 0649
+
+		[JsonProperty("application_id")]
+		private string _clientid;
+
+		[JsonProperty("name")]
+		private string _name;
+
+#pragma warning restore 0649
+
 	}
 
 	public class Assets
@@ -60,26 +95,30 @@ namespace DiscordRPC
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageKey { get; set; }
+		[JsonProperty("large_image")]//, NullValueHandling = NullValueHandling.Ignore)]
+		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.Nullify(); } }
+		private string _largeimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageText { get; set; }
+		[JsonProperty("large_text")]//, NullValueHandling = NullValueHandling.Ignore)]
+		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.Nullify(); } }
+		private string _largeimagetext;
 
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageKey { get; set; }
+		[JsonProperty("small_image")]//, NullValueHandling = NullValueHandling.Ignore)]
+		public string SmallImageKey { get { return _smallimagekey; } set { _smallimagekey = value.Nullify(); } }
+		private string _smallimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageText { get; set; }
+		[JsonProperty("small_text")]//, NullValueHandling = NullValueHandling.Ignore)]
+		public string SmallImageText { get { return _smallimagetext; } set { _smallimagetext = value.Nullify(); } }
+		private string _smallimagetext;
 	}
 
 	public class Timestamps
@@ -109,7 +148,8 @@ namespace DiscordRPC
 		/// A optional unique ID for the party. Max 128 Bytes.
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string ID { get; set; }
+		public string ID { get { return _partyid; } set { _partyid = value.Nullify(); } }
+		private string _partyid;
 
 		/// <summary>
 		/// The current size of the party

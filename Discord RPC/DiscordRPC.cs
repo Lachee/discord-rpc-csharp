@@ -74,7 +74,7 @@ namespace DiscordRPC
 			if (rpc == null)
 			{
 				//create the connection. In the future this will have to autosubscribe to events too
-				rpc = new RpcConnection(_appid);
+				rpc = new RpcConnection(_appid, PID);
 				rpc.OnDisconnect += (s, a) => IncrementReconnectDelay();
 				rpc.OnError += (s, a) => this.OnError?.Invoke(this, a);
 				rpc.OnConnect += async (s, a) => 
@@ -109,11 +109,13 @@ namespace DiscordRPC
 			while (!presenceQueue.IsEmpty)
 			{
 				//Try to get the element
-				if (!presenceQueue.TryDequeue(out _currentPresence))
+				RichPresence next;
+				if (!presenceQueue.TryDequeue(out next))
 					continue;
 
 				//Send it off
-				await rpc.WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = _currentPresence });
+				RichPresence response = await rpc.WritePresenceAsync(next);
+				if (response != null) _currentPresence = response;
 			}
 		}
 
@@ -153,21 +155,21 @@ namespace DiscordRPC
 			//Clear the presence
 			await ClearPresence();
 
-			//Stop the running clock
-			if (runtime != null)
-			{
-				runtime.Stop();
-				runtime = null;
-			}
-
 			//Stop the RPC socket
 			if (rpc != null)
 			{
 				rpc.Dispose();
 				rpc = null;
 			}
+
+			//Stop the running clock
+			if (runtime != null)
+			{
+				runtime.Stop();
+				runtime = null;
+			}
 		}
-		
+
 		internal static void WriteLog(string format, params object[] objs)
 		{
 			if (OnLog != null)

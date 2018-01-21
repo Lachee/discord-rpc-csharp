@@ -26,26 +26,17 @@ namespace DiscordRPC.Test
 				//Create the presence
 				presence = new RichPresence()
 				{
-					Details = "Testing Library",
-					State = "In Editor",
-					Instance = false,
+					State = "                s",
+					Timestamps = new Timestamps()
+					{
+						Start = DateTime.UtcNow,
+					},
 					Assets = new Assets()
 					{
 						LargeImageKey = "default_large",
-						LargeImageText = "Where's Perry?",
+						LargeImageText = "  ",
 						SmallImageKey = "default_small",
-						SmallImageText = "THREADS RULE",
-					},
-
-					Party = new Party()
-					{
-						ID = "dickwaffles",
-						Size = 1
-					},
-
-					Timestamps = new Timestamps()
-					{
-						Start = new DateTime(1970, 1, 1, 0, 0, 1, System.DateTimeKind.Utc)
+						SmallImageText = "  "
 					}
 				};
 
@@ -53,7 +44,7 @@ namespace DiscordRPC.Test
 				Console.WriteLine("Establishing Client...");
 				using (DiscordClient rpc = new DiscordClient(key))
 				{
-					//DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
+					DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
 					rpc.OnError += (s, e) => Console.WriteLine("ERR: An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
 
 					while (true)
