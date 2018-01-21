@@ -23,13 +23,13 @@ namespace DiscordRPC
 		public string Details { get; set; }
 		
 		[JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
-		public Timestamps? Timestamps { get; set; }
+		public Timestamps Timestamps { get; set; }
 
 		[JsonProperty("assets", NullValueHandling = NullValueHandling.Ignore)]
-		public Assets? Assets { get; set; }
+		public Assets Assets { get; set; }
 		
 		[JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
-		public Party? Party { get; set; }
+		public Party Party { get; set; }
 
 		/// <summary>
 		/// Max 128 Bytes.
@@ -55,7 +55,7 @@ namespace DiscordRPC
 		
 	}
 
-	public struct Assets
+	public class Assets
 	{
 		/// <summary>
 		/// Max 32 Bytes.
@@ -82,7 +82,7 @@ namespace DiscordRPC
 		public string SmallImageText { get; set; }
 	}
 
-	public struct Timestamps
+	public class Timestamps
 	{
 		[JsonIgnore]
 		public DateTime? Start { get; set; }
@@ -103,7 +103,7 @@ namespace DiscordRPC
 		}
 	}
 
-	public struct Party
+	public class Party
 	{
 		/// <summary>
 		/// Max 128 Bytes.
@@ -123,15 +123,14 @@ namespace DiscordRPC
 			get
 			{
 				//We have no size, so its null
-				if (!Size.HasValue)
-					return null;
+				if (!Size.HasValue) return null;
 
-				//We have a size and a max size, so return the full lsit
-				if (Max.HasValue)
-					return new int[] { Size.Value, Max.Value };
+				//It does not have a max size, so just return the size
+				if (!Max.HasValue)
+					return new int[] { Size.Value, Size.Value };
 
-				//We only have size
-				return new int[] { Size.Value };
+				//It has max size, return both
+				return new int[] { Size.Value, Max.Value };
 			}
 		}
 	}

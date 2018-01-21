@@ -31,6 +31,7 @@ namespace DiscordRPC
 		private long nextReconnectAttempt = 0;
 		private int PID;
 
+		private RichPresence _currentPresence;
 		private ConcurrentQueue<RichPresence> presenceQueue;
 		#endregion
 
@@ -108,23 +109,24 @@ namespace DiscordRPC
 			while (!presenceQueue.IsEmpty)
 			{
 				//Try to get the element
-				RichPresence presence;
-				if (!presenceQueue.TryDequeue(out presence))
+				if (!presenceQueue.TryDequeue(out _currentPresence))
 					continue;
 
 				//Send it off
-				await rpc.WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = presence });
+				await rpc.WriteCommandAsync(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = _currentPresence });
 			}
 		}
 
 		#region Helpers
 		
-		public async void UpdatePresence()
+		public RichPresence GetPresence()
 		{
-			await ProcessPresenceQueue();
+			return _currentPresence;
 		}
 
-		public async void SetPresence(RichPresence presence)
+		public async Task UpdatePresence() { await ProcessPresenceQueue(); }
+		public async Task ClearPresence() { await SetPresence(null); }
+		public async Task SetPresence(RichPresence presence)
 		{
 			//Check the status
 			if (!await CheckConnection())
@@ -146,14 +148,19 @@ namespace DiscordRPC
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();
 		}
 
-		public void Dispose()
+		public async void Dispose()
 		{
+			//Clear the presence
+			await ClearPresence();
+
+			//Stop the running clock
 			if (runtime != null)
 			{
 				runtime.Stop();
 				runtime = null;
 			}
 
+			//Stop the RPC socket
 			if (rpc != null)
 			{
 				rpc.Dispose();
@@ -163,7 +170,8 @@ namespace DiscordRPC
 		
 		internal static void WriteLog(string format, params object[] objs)
 		{
-			OnLog?.Invoke(format, objs);
+			if (OnLog != null)
+				OnLog(format, objs);
 		}
 		#endregion
 	}
