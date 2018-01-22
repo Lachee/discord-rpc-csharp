@@ -151,11 +151,12 @@ namespace DiscordRPC
 				if (!presenceQueue.TryDequeue(out next))
 					continue;
 
+
                 WriteLog("Sending Presence {0}", next != null ? next.State : "null (clear)");
 
                 //Send it off
                 RichPresence response = await rpc.WritePresenceAsync(next);
-                if (next == null || response != null)
+                if (response != null)
                 {
                     WriteLog("Success, updating current presence.");
                     _currentPresence = response;
