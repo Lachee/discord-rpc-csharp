@@ -7,17 +7,18 @@ using UnityEngine;
 [System.Serializable]
 public class UnityPresence
 {
-	/// <summary>
-	/// The current state of the game (In Game, In Menu etc). Appears next to the party size
-	/// </summary>
-	[Tooltip("The current state of the game (In Game, In Menu). It appears next to the party size.")]
+    /// <summary>
+    /// The details about the game. Appears underneath the game name
+    /// </summary>
+    [Tooltip("The details about the game")]
+    public string details = "Playing a game";
+
+    /// <summary>
+    /// The current state of the game (In Game, In Menu etc). Appears next to the party size
+    /// </summary>
+    [Tooltip("The current state of the game (In Game, In Menu). It appears next to the party size.")]
 	public string state = "In Game";
 
-	/// <summary>
-	/// The details about the game. Appears underneath the game name
-	/// </summary>
-	[Tooltip("The details about the game")]
-	public string details = "Playing a game";
 
 	/// <summary>
 	/// The images used for the presence.
@@ -60,10 +61,10 @@ public class UnityPresence
 			timestamps = new Timestamps();
 
 			if (presence.Timestamps.Start.HasValue)
-				timestamps.start = new Stamp(presence.Timestamps.Start.Value);
+				timestamps.start = new Time(presence.Timestamps.Start.Value);
 
 			if (presence.Timestamps.End.HasValue)
-				timestamps.end = new Stamp(presence.Timestamps.End.Value);
+				timestamps.end = new Time(presence.Timestamps.End.Value);
 		}
 
 		//Read the assets
@@ -133,14 +134,14 @@ public class UnityPresence
 	public class Timestamps
 	{
 		[Tooltip("Time the game started. Leave as 0 to ignore it.")]
-		public Stamp start = new Stamp(0);
+		public Time start = new Time(0);
 
 		[Tooltip("Time the game will end. Leave as 0 to ignore it.")]
-		public Stamp end = new Stamp(0);		
+		public Time end = new Time(0);		
 	}
 
 	[System.Serializable]
-	public class Stamp
+	public class Time
 	{
 		/// <summary>
 		/// The stored timestamp
@@ -151,31 +152,31 @@ public class UnityPresence
 		/// <summary>
 		/// Creates a new stamp of the current time.
 		/// </summary>
-		public Stamp() : this(DateTime.UtcNow) { }
+		public Time() : this(DateTime.UtcNow) { }
 
 		/// <summary>
 		/// Creates a new stamp with the supplied datetime
 		/// </summary>
 		/// <param name="time">The DateTime</param>
-		public Stamp(DateTime time) : this(ToUnixTime(DateTime.UtcNow)) { }
+		public Time(DateTime time) : this(ToUnixTime(DateTime.UtcNow)) { }
 
 		/// <summary>
 		/// Creates a new stamp with the specified unix epoch
 		/// </summary>
 		/// <param name="timestamp">The time in unix epoch</param>
-		public Stamp(long timestamp)
+		public Time(long timestamp)
 		{
 			this.timestamp = timestamp;
 		}
 
 		/// <summary>
-		/// Creates a new stamp that is relative to the Unity Startup time. See <see cref="Time.time"/>
+		/// Creates a new stamp that is relative to the Unity Startup time. See <see cref="UnityEngine.Time.time"/>
 		/// </summary>
-		/// <param name="time">The time relative to <see cref="Time.time"/></param>
-		public Stamp(float time)
+		/// <param name="time">The time relative to <see cref="UnityEngine.Time.time"/></param>
+		public Time(float time)
 		{
 			//Calculate the difference
-			float diff = time - Time.time;
+			float diff = time - UnityEngine.Time.time;
 
 			//Miliseconds
 			TimeSpan timespan = TimeSpan.FromSeconds(diff);
@@ -192,32 +193,45 @@ public class UnityPresence
 		}
 
 		/// <summary>
-		/// Converss the timestamp into a <see cref="Time.time"/> relative time.
+		/// Converss the timestamp into a <see cref="UnityEngine.Time.time"/> relative time.
 		/// </summary>
 		/// <returns></returns>
 		public float GetTime()
 		{
 			DateTime time = GetDateTime();
 			TimeSpan timespan = time - DateTime.UtcNow;
-			return Time.time + (float)timespan.TotalSeconds;
+			return UnityEngine.Time.time + (float)timespan.TotalSeconds;
 		}
 
-		public static implicit operator long(Stamp stamp)
+		#region Value Conversions
+		public static implicit operator long(Time stamp)
 		{
 			return stamp.timestamp;
 		}
-		public static implicit operator Stamp(long time)
+		public static implicit operator float(Time stamp)
 		{
-			return new Stamp(time);
+			return stamp.GetTime();
 		}
-		public static implicit operator Stamp(DateTime time)
+		public static implicit operator DateTime(Time stamp)
 		{
-			return new Stamp(time);
+			return stamp.GetDateTime();
 		}
-		public static implicit operator Stamp(float time)
+		#endregion
+
+		#region Stamp Conversions
+		public static implicit operator Time(long time)
 		{
-			return new Stamp(time);
+			return new Time(time);
 		}
+		public static implicit operator Time(DateTime time)
+		{
+			return new Time(time);
+		}
+		public static implicit operator Time(float time)
+		{
+			return new Time(time);
+		}
+		#endregion
 
 
 		private static DateTime FromUnixTime(long unixTime)

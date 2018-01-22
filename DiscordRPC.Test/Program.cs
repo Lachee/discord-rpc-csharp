@@ -81,6 +81,8 @@ namespace DiscordRPC.Test
 								await rpc.SetPresence(presence);
 								break;
 
+							//LEave the loop
+							case "exit": return;
 
 							case "size":
 								int? size = Parse(parts[1]);
@@ -141,16 +143,16 @@ namespace DiscordRPC.Test
 								presence.Timestamps.Start = null;
 								break;
 
-                            case "dispose":
-                                await rpc.ClearPresence();
-                                rpc.Dispose();
-                                return;
 
 							default:
 								Console.WriteLine("Unkown Command");
 								break;
 
 						}
+
+
+						//Before we dispose, we will send a Clear Presence update. This will prevent ghosting
+						if (rpc.IsConnected) await rpc.ClearPresence();
 					}
 				}
 

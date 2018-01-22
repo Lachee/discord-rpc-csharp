@@ -36,8 +36,10 @@ public class ExampleInterface : MonoBehaviour {
 		presence.party.identifer = presence.party.maxSize > 0 ? GetHashCode().ToString() : "";
 		presence.party.size = GetPartySize(presence.party.maxSize);
 
-		presence.timestamps.start = new UnityPresence.Stamp();
-		presence.timestamps.end = new UnityPresence.Stamp(Time.time + float.Parse(gameLength.text));
+		presence.timestamps.start = new UnityPresence.Time();
+
+		if (!string.IsNullOrEmpty(gameLength.text)) 
+			presence.timestamps.end = new UnityPresence.Time(Time.time + float.Parse(gameLength.text));
 
 
 		//Update the presence
