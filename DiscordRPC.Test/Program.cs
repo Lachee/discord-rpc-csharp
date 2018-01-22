@@ -23,12 +23,12 @@ namespace DiscordRPC.Test
 				//Read the key from a file
 				string key = System.IO.File.ReadAllText("discord.key");
                 Console.WriteLine("Key: {0}", key);
-                Console.ReadKey();
 
 				//Create the presence
 				presence = new RichPresence()
 				{
-					State = Helper.StringTools.CreateWhitespace(50) + "Space",
+                    Details = "Testing Cleanup",
+					State = "Testing",
 					Timestamps = new Timestamps()
 					{
 						Start = DateTime.UtcNow,
@@ -141,6 +141,10 @@ namespace DiscordRPC.Test
 								presence.Timestamps.Start = null;
 								break;
 
+                            case "dispose":
+                                await rpc.ClearPresence();
+                                rpc.Dispose();
+                                return;
 
 							default:
 								Console.WriteLine("Unkown Command");

@@ -327,6 +327,10 @@ namespace DiscordRPC.RPC
 				{
 					DiscordClient.WriteLog("Acknowledged Succesfully");
 
+                    //We can get a null rich presence. This can occur when we clear it.
+                    if (jobject == null)
+                        return null;
+
 					//Convert  us to a response
 					var ack = jobject.ToObject<RichPresenceResponse>();
 					return ack;

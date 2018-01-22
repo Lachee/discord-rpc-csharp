@@ -130,7 +130,7 @@ namespace DiscordRPC
             }
 
             //Loop until the queue is empty
-            while (!presenceQueue.IsEmpty)
+            while (presenceQueue != null && !presenceQueue.IsEmpty)
             {
 
                 //Try to get the element
@@ -138,11 +138,11 @@ namespace DiscordRPC
 				if (!presenceQueue.TryDequeue(out next))
 					continue;
 
-                WriteLog("Sending Presence {0}", next.State);
+                WriteLog("Sending Presence {0}", next != null ? next.State : "null (clear)");
 
                 //Send it off
                 RichPresence response = await rpc.WritePresenceAsync(next);
-                if (response != null)
+                if (next == null || response != null)
                 {
                     WriteLog("Success, updating current presence.");
                     _currentPresence = response;
@@ -181,7 +181,12 @@ namespace DiscordRPC
 			//Send the current presence
 			return _currentPresence;
 		}
-		public async Task ClearPresence() { await SetPresence(null); }
+
+        /// <summary>
+        /// Clears the current presence
+        /// </summary>
+        /// <returns></returns>
+		public async Task ClearPresence() { await SetPresence(null);  }
 
 		/// <summary>
 		/// Sets the presence of the Discord client. Returns the presence current set and null if no connection was established.
@@ -215,11 +220,11 @@ namespace DiscordRPC
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();
 		}
 
-		public async void Dispose()
+		public void Dispose()
 		{
 			//Clear the presence
             //TODO: Should this be removed?
-			await ClearPresence();
+			//await ClearPresence();
 
 			//Stop the RPC socket
 			if (rpc != null)
@@ -234,6 +239,8 @@ namespace DiscordRPC
 				runtime.Stop();
 				runtime = null;
 			}
+
+            
 		}
 
 		internal static void WriteLog(string format, params object[] objs)
