@@ -24,7 +24,7 @@ For a quick start:
 DiscordClient rpc = new DiscordClient(clientid);
 
 //Sets the current presence
-await SetPresence(new RichPresence() {
+await rpc.SetPresence(new RichPresence() {
 	State = "In Editor",
 	Details = "Rich Presence Example",
 	Timestamps = new Timestamps()
@@ -48,6 +48,9 @@ await SetPresence(new RichPresence() {
 
 //Do some other things
 DoThings();
+
+//Clear the presence. This helps remove ghosting :)
+await rpc.ClearPresence();
 
 //Dispose of the connection
 rpc.Dispose();
