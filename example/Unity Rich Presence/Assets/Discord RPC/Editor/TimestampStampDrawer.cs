@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(UnityPresence.Time))]
+[CustomPropertyDrawer(typeof(UnityPresence.Timestamp))]
 public class TimestampStampDrawer : PropertyDrawer
 {
 	// Draw the property inside the given rect
@@ -28,7 +28,7 @@ public class TimestampStampDrawer : PropertyDrawer
 		// Draw fields - passs GUIContent.none to each so they are drawn without labels
 		EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("timestamp"), GUIContent.none);
 		if (GUI.Button(nowRect, "Set Now"))
-			property.FindPropertyRelative("timestamp").longValue = new UnityPresence.Time(System.DateTime.UtcNow);
+			property.FindPropertyRelative("timestamp").longValue = new UnityPresence.Timestamp(System.DateTime.UtcNow);
 
 		// Set indent back to what it was
 		EditorGUI.indentLevel = indent;
