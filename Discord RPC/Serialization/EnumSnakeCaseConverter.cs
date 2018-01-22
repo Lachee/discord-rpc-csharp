@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DiscordRPC.Helper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace DiscordRPC.Serialization
 		{
 			var enumtype = value.GetType();
 			var name =	enumtype.GetEnumName(value);
-			writer.WriteValue(ToSnakeCase(name));
+			writer.WriteValue(name.ToSnakeCase());
 		}
 
 
@@ -37,20 +38,9 @@ namespace DiscordRPC.Serialization
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
 				type = type.GetGenericArguments().First();
 
-			string line = ToCamelCase(str);
+            string line = str.ToCamelCase();
 			return Enum.Parse(type, line, ignoreCase: true);
 		}
 		
-		public string ToCamelCase(string str)
-		{
-			if (str == null) return null;
-			return str.ToLowerInvariant().Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries).Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1, s.Length - 1)).Aggregate(string.Empty, (s1, s2) => s1 + s2);
-		}
-
-		public string ToSnakeCase(string str)
-		{
-			if (str == null) return null;
-			return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToUpper();
-		}
 	}
 }
