@@ -22,6 +22,8 @@ namespace DiscordRPC.Test
 			{
 				//Read the key from a file
 				string key = System.IO.File.ReadAllText("discord.key");
+                Console.WriteLine("Key: {0}", key);
+                Console.ReadKey();
 
 				//Create the presence
 				presence = new RichPresence()
@@ -152,6 +154,8 @@ namespace DiscordRPC.Test
 			catch (Exception e)
 			{
 				Console.WriteLine("Exception! {0}", e.Message);
+                Console.WriteLine("Press anykey to continue");
+                Console.ReadKey();
 				return;
 			}
 		}

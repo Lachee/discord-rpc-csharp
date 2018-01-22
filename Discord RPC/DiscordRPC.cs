@@ -120,31 +120,49 @@ namespace DiscordRPC
 		/// </summary>
 		private async Task ProcessPresenceQueue()
 		{
+            WriteLog("Processing Queue");
+
 			//Make sure the RPC is connected
 			if (!await CheckConnection())
-				return;
+            {
+                WriteLog("Connection Failed");
+                return;
+            }
 
-			//Loop until the queue is empty
-			while (!presenceQueue.IsEmpty)
-			{
-				//Try to get the element
-				RichPresence next;
+            //Loop until the queue is empty
+            while (!presenceQueue.IsEmpty)
+            {
+
+                //Try to get the element
+                RichPresence next;
 				if (!presenceQueue.TryDequeue(out next))
 					continue;
 
-				//Send it off
-				RichPresence response = await rpc.WritePresenceAsync(next);
-				if (response != null) _currentPresence = response;
-			}
-		}
+                WriteLog("Sending Presence {0}", next.State);
 
-		#region Helpers
-		
-		/// <summary>
-		/// Gets the current presence that is being used by Discord
-		/// </summary>
-		/// <returns>The latest presence</returns>
-		public RichPresence GetPresence()
+                //Send it off
+                RichPresence response = await rpc.WritePresenceAsync(next);
+                if (response != null)
+                {
+                    WriteLog("Success, updating current presence.");
+                    _currentPresence = response;
+                }
+                else
+                {
+                    WriteLog("Failure, continuing to next presence");
+                }
+            }
+
+            WriteLog("Finish processing queue");
+        }
+
+        #region Helpers
+
+        /// <summary>
+        /// Gets the current presence that is being used by Discord
+        /// </summary>
+        /// <returns>The latest presence</returns>
+        public RichPresence GetPresence()
 		{
 			return _currentPresence;
 		}
@@ -155,6 +173,8 @@ namespace DiscordRPC
 		/// <returns>Returns the presence current set.</returns>
 		public async Task<RichPresence> UpdatePresence()
 		{
+            WriteLog("Updating Presence");
+
 			//Process the queue
 			await ProcessPresenceQueue();
 
@@ -174,17 +194,18 @@ namespace DiscordRPC
 		/// <returns>Returns the presence current set and null if no connection was established.</returns>
 		public async Task<RichPresence> SetPresence(RichPresence presence)
 		{
-			//Check the status
-			if (!await CheckConnection())
+            //Enqueue the status
+            WriteLog("Setting Presence");
+            presenceQueue.Enqueue(presence);
+
+            //Check the status
+            if (!await CheckConnection())
 			{
 				//We failed to connect, just queue the presence for now
-				Console.WriteLine("Enquing Presence Update Instead");
+				WriteLog("Connection failed, presence only enqueued. Manually call Update Presence.");
 				return null;
 			}
-
-			//Enqueue the status
-			presenceQueue.Enqueue(presence);
-
+            
 			//We are connected, so process the queue
 			return await UpdatePresence();
 		}
@@ -197,6 +218,7 @@ namespace DiscordRPC
 		public async void Dispose()
 		{
 			//Clear the presence
+            //TODO: Should this be removed?
 			await ClearPresence();
 
 			//Stop the RPC socket
