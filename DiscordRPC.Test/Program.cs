@@ -57,7 +57,8 @@ namespace DiscordRPC.Test
 					DiscordClient.OnLog += (f, objs) => Console.WriteLine("LOG: {0}", string.Format(f, objs));
 					rpc.OnError += (s, e) => Console.WriteLine("ERR: An error has occured! ({0}) {1}", e.ErrorCode, e.Message);
 
-					while (true)
+					bool isRunning = true;
+					while (isRunning)
 					{
 						//Read the command
 						Console.Write("Command Line: ");
@@ -81,6 +82,10 @@ namespace DiscordRPC.Test
 								await rpc.SetPresence(presence);
 								break;
 
+							//LEave the loop
+							case "exit":
+								isRunning = false;
+								break; 
 
 							case "size":
 								int? size = Parse(parts[1]);
@@ -141,10 +146,6 @@ namespace DiscordRPC.Test
 								presence.Timestamps.Start = null;
 								break;
 
-                            case "dispose":
-                                await rpc.ClearPresence();
-                                rpc.Dispose();
-                                return;
 
 							default:
 								Console.WriteLine("Unkown Command");
@@ -152,6 +153,9 @@ namespace DiscordRPC.Test
 
 						}
 					}
+
+					//Before we dispose, we will send a Clear Presence update. This will prevent ghosting
+					if (rpc.IsConnected) await rpc.ClearPresence();
 				}
 
 			}

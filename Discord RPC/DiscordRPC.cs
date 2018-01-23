@@ -17,6 +17,12 @@ namespace DiscordRPC
 		#region Properties
 
 		/// <summary>
+		/// Is the client connect to the discord?
+		/// </summary>
+		public bool IsConnected { get { return _isconnected; } }
+		private bool _isconnected;
+
+		/// <summary>
 		/// The ID being used by the client
 		/// </summary>
 		public string ApplicationID { get { return _appid; } }
@@ -61,10 +67,17 @@ namespace DiscordRPC
 		{
 			_appid = applicationID;
 			//_steamid = steamID;
+
 			PID = Process.GetCurrentProcess().Id;
-
 			presenceQueue = new ConcurrentQueue<RichPresence>();
-
+			
+			//Create the reconnext time
+			reconnectDelay = new BackoffDelay(500, 60 * 1000);
+			
+			//Create the runtime stopwatch
+			runtime = new Stopwatch();
+			runtime.Start();
+			
 			/*
 			//TODO: Implement this
 			if (autoRegsiter)
@@ -75,13 +88,6 @@ namespace DiscordRPC
 					IO.Register.RegisterApp(ApplicationID, null);
 			}
 			*/
-
-			//Create the reconnext time
-			reconnectDelay = new BackoffDelay(500, 60 * 1000);
-			
-			//Create the runtime stopwatch
-			runtime = new Stopwatch();
-			runtime.Start();
 		}
 
 		/// <summary>
@@ -94,10 +100,17 @@ namespace DiscordRPC
 			{
 				//create the connection. In the future this will have to autosubscribe to events too
 				rpc = new RpcConnection(_appid, PID);
-				rpc.OnDisconnect += (s, a) => IncrementReconnectDelay();
 				rpc.OnError += (s, a) => this.OnError?.Invoke(this, a);
+
+				rpc.OnDisconnect += (s, a) =>
+				{
+					_isconnected = false;
+					IncrementReconnectDelay();
+				};
+
 				rpc.OnConnect += async (s, a) => 
 				{
+					_isconnected = true;
 					reconnectDelay.Reset();
 					await ProcessPresenceQueue();
 				};
@@ -138,11 +151,12 @@ namespace DiscordRPC
 				if (!presenceQueue.TryDequeue(out next))
 					continue;
 
+
                 WriteLog("Sending Presence {0}", next != null ? next.State : "null (clear)");
 
                 //Send it off
                 RichPresence response = await rpc.WritePresenceAsync(next);
-                if (next == null || response != null)
+                if (response != null)
                 {
                     WriteLog("Success, updating current presence.");
                     _currentPresence = response;
@@ -187,7 +201,7 @@ namespace DiscordRPC
         /// </summary>
         /// <returns></returns>
 		public async Task ClearPresence() { await SetPresence(null);  }
-
+		
 		/// <summary>
 		/// Sets the presence of the Discord client. Returns the presence current set and null if no connection was established.
 		/// <para>
@@ -219,7 +233,7 @@ namespace DiscordRPC
 		{
 			nextReconnectAttempt = runtime.ElapsedMilliseconds + reconnectDelay.NextDelay();
 		}
-
+		
 		public void Dispose()
 		{
 			//Clear the presence

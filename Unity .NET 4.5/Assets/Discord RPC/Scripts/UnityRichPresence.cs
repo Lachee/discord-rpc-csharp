@@ -7,17 +7,29 @@ using UnityEngine;
 [System.Serializable]
 public class UnityPresence
 {
-	/// <summary>
-	/// The current state of the game (In Game, In Menu etc). Appears next to the party size
-	/// </summary>
-	[Tooltip("The current state of the game (In Game, In Menu). It appears next to the party size.")]
+    /// <summary>
+    /// The details about the game. Appears underneath the game name
+    /// </summary>
+    [Tooltip("The details about the game")]
+    public string details = "Playing a game";
+
+    /// <summary>
+    /// The current state of the game (In Game, In Menu etc). Appears next to the party size
+    /// </summary>
+    [Tooltip("The current state of the game (In Game, In Menu). It appears next to the party size.")]
 	public string state = "In Game";
+	
+	/// <summary>
+	/// The time the game started. 0 if the game hasn't started
+	/// </summary>
+	[Tooltip("The time the game started. Leave as 0 if the game has not yet started.")]
+	public Timestamp startTime = 0;
 
 	/// <summary>
-	/// The details about the game. Appears underneath the game name
+	/// The time the game will end in. 0 to ignore endtime.
 	/// </summary>
-	[Tooltip("The details about the game")]
-	public string details = "Playing a game";
+	[Tooltip("Time the game will end. Leave as 0 to ignore it.")]
+	public Timestamp endTime = 0;
 
 	/// <summary>
 	/// The images used for the presence.
@@ -25,11 +37,6 @@ public class UnityPresence
 	[Tooltip("The images used for the presence")]
 	public Assets assets = new Assets();
 
-	/// <summary>
-	/// The timestamps
-	/// </summary>
-	[Tooltip("The current timestamps")]
-	public Timestamps timestamps = new Timestamps();
 
 	/// <summary>
 	/// The current party
@@ -57,13 +64,11 @@ public class UnityPresence
 		//Read the timestamps
 		if (presence.Timestamps != null)
 		{
-			timestamps = new Timestamps();
-
 			if (presence.Timestamps.Start.HasValue)
-				timestamps.start = new Stamp(presence.Timestamps.Start.Value);
+				startTime = new Timestamp(presence.Timestamps.Start.Value);
 
 			if (presence.Timestamps.End.HasValue)
-				timestamps.end = new Stamp(presence.Timestamps.End.Value);
+				endTime = new Timestamp(presence.Timestamps.End.Value);
 		}
 
 		//Read the assets
@@ -86,6 +91,10 @@ public class UnityPresence
 
 	}
 
+	/// <summary>
+	/// Converts the Unity Presence into a Discord ready RichPresence.
+	/// </summary>
+	/// <returns></returns>
 	public DiscordRPC.RichPresence ToRichPresence()
 	{
 		//Create a new presence
@@ -96,11 +105,11 @@ public class UnityPresence
 		};
 
 		//Set the timestamps
-		if (timestamps != null && timestamps.start > 0 && timestamps.end > 0)
+		if (startTime > 0 && endTime > 0)
 		{
 			presence.Timestamps = new DiscordRPC.Timestamps();
-			if (timestamps.start > 0) presence.Timestamps.Start = timestamps.start.GetDateTime();
-			if (timestamps.end > 0) presence.Timestamps.End = timestamps.end.GetDateTime();
+			if (startTime > 0) presence.Timestamps.Start = startTime.GetDateTime();
+			if (endTime > 0) presence.Timestamps.End = endTime.GetDateTime();
 		}
 		
 		//Set the assets
@@ -128,19 +137,12 @@ public class UnityPresence
 
 		return presence;
 	}
-
+	
+	/// <summary>
+	/// A special time class that can convert all manners of time into timestamps.
+	/// </summary>
 	[System.Serializable]
-	public class Timestamps
-	{
-		[Tooltip("Time the game started. Leave as 0 to ignore it.")]
-		public Stamp start = new Stamp(0);
-
-		[Tooltip("Time the game will end. Leave as 0 to ignore it.")]
-		public Stamp end = new Stamp(0);		
-	}
-
-	[System.Serializable]
-	public class Stamp
+	public class Timestamp
 	{
 		/// <summary>
 		/// The stored timestamp
@@ -151,31 +153,31 @@ public class UnityPresence
 		/// <summary>
 		/// Creates a new stamp of the current time.
 		/// </summary>
-		public Stamp() : this(DateTime.UtcNow) { }
+		public Timestamp() : this(DateTime.UtcNow) { }
 
 		/// <summary>
 		/// Creates a new stamp with the supplied datetime
 		/// </summary>
 		/// <param name="time">The DateTime</param>
-		public Stamp(DateTime time) : this(ToUnixTime(DateTime.UtcNow)) { }
+		public Timestamp(DateTime time) : this(ToUnixTime(DateTime.UtcNow)) { }
 
 		/// <summary>
 		/// Creates a new stamp with the specified unix epoch
 		/// </summary>
 		/// <param name="timestamp">The time in unix epoch</param>
-		public Stamp(long timestamp)
+		public Timestamp(long timestamp)
 		{
 			this.timestamp = timestamp;
 		}
 
 		/// <summary>
-		/// Creates a new stamp that is relative to the Unity Startup time. See <see cref="Time.time"/>
+		/// Creates a new stamp that is relative to the Unity Startup time. See <see cref="UnityEngine.Time.realtimeSinceStartup"/>
 		/// </summary>
-		/// <param name="time">The time relative to <see cref="Time.time"/></param>
-		public Stamp(float time)
+		/// <param name="time">The time relative to <see cref="UnityEngine.Time.realtimeSinceStartup"/></param>
+		public Timestamp(float time)
 		{
 			//Calculate the difference
-			float diff = time - Time.time;
+			float diff = time - UnityEngine.Time.realtimeSinceStartup;
 
 			//Miliseconds
 			TimeSpan timespan = TimeSpan.FromSeconds(diff);
@@ -192,32 +194,45 @@ public class UnityPresence
 		}
 
 		/// <summary>
-		/// Converss the timestamp into a <see cref="Time.time"/> relative time.
+		/// Converss the timestamp into a <see cref="UnityEngine.Time.realtimeSinceStartup"/> relative time.
 		/// </summary>
 		/// <returns></returns>
 		public float GetTime()
 		{
 			DateTime time = GetDateTime();
 			TimeSpan timespan = time - DateTime.UtcNow;
-			return Time.time + (float)timespan.TotalSeconds;
+			return UnityEngine.Time.realtimeSinceStartup + (float)timespan.TotalSeconds;
 		}
 
-		public static implicit operator long(Stamp stamp)
+		#region Value Conversions
+		public static implicit operator long(Timestamp stamp)
 		{
 			return stamp.timestamp;
 		}
-		public static implicit operator Stamp(long time)
+		public static implicit operator float(Timestamp stamp)
 		{
-			return new Stamp(time);
+			return stamp.GetTime();
 		}
-		public static implicit operator Stamp(DateTime time)
+		public static implicit operator DateTime(Timestamp stamp)
 		{
-			return new Stamp(time);
+			return stamp.GetDateTime();
 		}
-		public static implicit operator Stamp(float time)
+		#endregion
+
+		#region Stamp Conversions
+		public static implicit operator Timestamp(long time)
 		{
-			return new Stamp(time);
+			return new Timestamp(time);
 		}
+		public static implicit operator Timestamp(DateTime time)
+		{
+			return new Timestamp(time);
+		}
+		public static implicit operator Timestamp(float time)
+		{
+			return new Timestamp(time);
+		}
+		#endregion
 
 
 		private static DateTime FromUnixTime(long unixTime)
