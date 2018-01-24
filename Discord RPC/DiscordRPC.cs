@@ -125,7 +125,7 @@ namespace DiscordRPC
 			//We are allowed to open it, we better open it then!
 			DiscordClient.WriteLog("Attempting to connect to the RPC");
 			IncrementReconnectDelay();
-			return await rpc.AttemptConnection();
+			return await rpc.AttemptConnectionAsync();
 		}
 
 		/// <summary>

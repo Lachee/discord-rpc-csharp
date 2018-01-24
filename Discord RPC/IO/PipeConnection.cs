@@ -24,7 +24,10 @@ namespace DiscordRPC.IO
 		public int PipeNumber { get { return _pipeno; } }
 		private int _pipeno;
 
+		internal NamedPipeClientStream Stream { get { return stream; } }
+
 		private NamedPipeClientStream stream;
+		private StreamReader reader;
 
 		/// <summary>
 		/// Opens a new pipe stream to discord
@@ -43,6 +46,8 @@ namespace DiscordRPC.IO
 					//Create the client
 					stream = new NamedPipeClientStream(pipename);
 					stream.Connect(100);
+
+					reader = new StreamReader(stream);
 
 					while (!stream.IsConnected) { Task.Delay(100); }
 

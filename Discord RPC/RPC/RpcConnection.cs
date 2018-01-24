@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DiscordRPC.RPC
 {
-	class RpcConnection : IDisposable
+	internal class RpcConnection : IDisposable
 	{
 		public enum State
 		{
@@ -66,7 +66,7 @@ namespace DiscordRPC.RPC
 		/// Confirms the connection is established and will connect if it is not.
 		/// </summary>
 		/// <returns>True if connected.</returns>
-		internal async Task<bool> AttemptConnection()
+		public async Task<bool> AttemptConnectionAsync()
 		{
 			switch (state)
 			{
@@ -134,8 +134,13 @@ namespace DiscordRPC.RPC
 
 			}
 		}
+		public bool AttemptConnection()
+		{
+			var task = AttemptConnectionAsync();
+			return task.Result;
+		}
 
-		internal bool ReadEvent(out ResponsePayload payload)
+		private bool ReadEvent(out ResponsePayload payload)
 		{
 			//Set the inital payload
 			payload = null;
@@ -208,7 +213,7 @@ namespace DiscordRPC.RPC
 				}
 			}
 		}
-		internal async Task<ResponsePayload> ReadEventAsync()
+		private async Task<ResponsePayload> ReadEventAsync()
 		{
 			//We are not in a valid state
 			if (state != State.Connected && state != State.SentHandshake) return null;
@@ -282,7 +287,7 @@ namespace DiscordRPC.RPC
 		}
 
 		#region Writers
-		internal void WriteCommand(Command command, object args)
+		private void WriteCommand(Command command, object args)
 		{
 			RequestPayload request = new RequestPayload()
 			{
@@ -307,7 +312,12 @@ namespace DiscordRPC.RPC
 			}
 		}
 	
-		internal async Task<RichPresenceResponse> WritePresenceAsync(RichPresence presence)
+		public RichPresenceResponse WritePresence(RichPresence presence)
+		{
+			var task = WritePresenceAsync(presence);
+			return task.Result;
+		}
+		public async Task<RichPresenceResponse> WritePresenceAsync(RichPresence presence)
 		{
 			DiscordClient.WriteLog("Writing persence async");
 
@@ -362,7 +372,8 @@ namespace DiscordRPC.RPC
 			}
 			
 		}
-		internal async Task WriteCommandAsync(Command command, object args)
+
+		private async Task WriteCommandAsync(Command command, object args)
 		{
 			//The request payload
 			RequestPayload request = new RequestPayload()
