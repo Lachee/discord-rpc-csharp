@@ -54,7 +54,6 @@
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\Register.cs" />
-    <Compile Include="IO\ThreadedPipeConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RichPresence.cs" />
     <Compile Include="RPC\CloseCode.cs" />

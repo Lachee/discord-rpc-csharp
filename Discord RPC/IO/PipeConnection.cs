@@ -46,7 +46,7 @@ namespace DiscordRPC.IO
 					//Create the client
 					stream = new NamedPipeClientStream(pipename);
 					stream.Connect(100);
-
+					
 					reader = new StreamReader(stream);
 
 					while (!stream.IsConnected) { Task.Delay(100); }
