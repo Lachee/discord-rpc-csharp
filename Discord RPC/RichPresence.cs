@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using DiscordRPC.Helper;
 
 namespace DiscordRPC
 {
