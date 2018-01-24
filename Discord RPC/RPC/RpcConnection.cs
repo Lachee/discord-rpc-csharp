@@ -100,7 +100,7 @@ namespace DiscordRPC.RPC
 
 					await Task.Delay(1000);
 
-					return await AttemptConnection();
+					return await AttemptConnectionAsync();
 
 				case State.SentHandshake:
 
