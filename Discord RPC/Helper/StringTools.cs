@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordRPC.Helper
 {
@@ -41,7 +39,7 @@ namespace DiscordRPC.Helper
         public static string ToSnakeCase(this string str)
         {
             if (str == null) return null;
-            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToUpper();
+            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()).ToArray()).ToUpper();
         }
     }
 }

@@ -55,6 +55,36 @@ namespace DiscordRPC
 		private bool Instance { get; set; }
 		#endregion
 		
+		/// <summary>
+		/// Clones the presence into a new instance.
+		/// </summary>
+		/// <returns></returns>
+		public RichPresence Clone()
+		{
+			return new RichPresence()
+			{
+				State = this._state.Clone() as string,
+				Details = this._details.Clone() as string,
+				Timestamps = this.Timestamps == null ? null : new Timestamps()
+				{
+					Start = this.Timestamps.Start,
+					End = this.Timestamps.End
+				},
+				Assets = this.Assets == null ? null : new Assets()
+				{
+					LargeImageKey = this.Assets.LargeImageKey.Clone() as string,
+					LargeImageText = this.Assets.LargeImageText.Clone() as string,
+					SmallImageKey = this.Assets.SmallImageKey.Clone() as string,
+					SmallImageText = this.Assets.SmallImageText.Clone() as string
+				},
+				Party = this.Party == null ? null : new Party()
+				{
+					ID = this.Party.ID as string,
+					Size = this.Party.Size,
+					Max = this.Party.Max
+				}
+			};
+		}
 	}
 
 	/// <summary>
