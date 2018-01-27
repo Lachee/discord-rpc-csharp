@@ -44,15 +44,25 @@ namespace DiscordRPC.RPC
 
 		public void SetPresence(RichPresence p)
 		{
+			LogDebug("Setting Presence... waiting for presence lock...");
+
 			//Clone the presence into the queue
 			lock (preslock)
+			{
 				_queue = p.Clone();
+			}
+
+			LogDebug("Trying to initialize server...");
 
 			//Make sure we are connected
 			TryInitialize();
 
+			LogDebug("Writing Queue...");
+
 			//Write the queue. Probably should be in the new thread, but meh.		
 			WriteQueue();
+
+			LogDebug("Done");
 		}
 
 		public void TryInitialize()
@@ -131,14 +141,23 @@ namespace DiscordRPC.RPC
 			if (State != ConnectionState.Connected) return;
 			if (!IsRunning) return;
 
+			LogDebug("Trying to get presence lock...");
 			RichPresence temp;
 			lock (preslock)
 			{
+
+				LogDebug("Copying...");
 				temp = _queue;
 				_queue = null;
 			}
 
-			if (temp == null) return;
+			if (temp == null)
+			{
+				LogDebug("We have nothing in the queue apparently");
+				return;
+			}
+
+			LogDebug("Done... Trying to write request.");
 			WriteRequest(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = temp });
 		}
 
@@ -239,11 +258,14 @@ namespace DiscordRPC.RPC
 		
 		private void WriteRequest(Command command, object data)
 		{
+			LogDebug("Trying to write request {0}", command);
 			WriteFrame(Opcode.Frame, new RequestPayload() { Command = command, Args = data, Nonce = (this._nonce++).ToString() });
 		}
 
 		private void WriteFrame(Opcode opcode, object obj)
 		{
+			LogDebug("Trying to write frame {0}", opcode);
+
 			//Prepare the frame
 			PipeFrame frame = new PipeFrame()
 			{
@@ -253,6 +275,7 @@ namespace DiscordRPC.RPC
 
 			//Send to the pipe
 			pipe.WriteFrame(frame);
+			LogDebug("Done {0}", opcode);
 		}
 
 		#endregion

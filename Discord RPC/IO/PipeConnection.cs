@@ -29,7 +29,7 @@ namespace DiscordRPC.IO
 					string pipename = string.Format(PIPE_NAME, i);
 
 					//Create the client
-					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut);
+					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
 					_stream.Connect(1000);
 
 					//Spin for a bit while we wait for it to finish connecting
