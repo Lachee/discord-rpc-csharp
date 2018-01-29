@@ -65,11 +65,24 @@ namespace DiscordRPC.IO
 		#region IO Operation
 		
 		#region Read
+		[System.Obsolete("Use TryReadFrame instead.")]
 		public PipeFrame ReadFrame()
 		{
 			int op = ReadInt32();
 			int len = ReadInt32();
 
+			if (op < 0)
+			{
+				//TODO: Throw Error Event
+				return new PipeFrame() { Opcode = Opcode.Close };
+			}
+
+			if (len < 0)
+			{
+				//TODO: THrow Error Event
+				return new PipeFrame() { Opcode = Opcode.Close };
+			}
+			
 			byte[] buff = new byte[len];
 			Read(buff, len);
 
@@ -80,12 +93,40 @@ namespace DiscordRPC.IO
 			};
 		}
 
+		public bool TryReadFrame(out PipeFrame frame)
+		{
+			//Set the pipe frame to default
+			frame = default(PipeFrame);
+
+			//Try to read the values
+			int op = ReadInt32();
+			if (op < 0) return false;
+
+			int len = ReadInt32();
+			if (len < 0) return false;
+
+			//Read the data
+			byte[] buff = new byte[len];
+			Read(buff, len);
+
+			//Create the frame
+			frame = new PipeFrame()
+			{
+				Opcode = (Opcode)op,
+				Data = buff
+			};
+
+			//Success!
+			return true;
+		}
+
 		private int Read(byte[] buff, int length) { return _stream.Read(buff, 0, length); }
 		private int ReadInt32()
 		{
 			//Read the bytes
 			byte[] bytes = new byte[4];
-			if (Read(bytes, 4) != 4) return -1;
+			int cnt = Read(bytes, 4);
+			if (cnt != 4) return -1;
 			
 			//Convert to int
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);

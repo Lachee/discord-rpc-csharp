@@ -1,6 +1,7 @@
 ﻿using DiscordRPC.IO;
 using DiscordRPC.RPC.Payloads;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +104,18 @@ namespace DiscordRPC.RPC
 						WriteQueue();
 
 						LogDebug("Waiting for frame...");
-						PipeFrame frame = pipe.ReadFrame();
+						
+						//Read the frame. TryReadFrame might not be 100% blocking if we read bad data!						
+						PipeFrame frame;
+						if (!pipe.TryReadFrame(out frame))
+						{
+							LogError("Pipe failed to read a frame. Potentially broken pipe.");
+							break;
+							//Console.Write(".");
+							//Thread.Sleep(500);
+						}
+
+						//Process the frame
 						ProcessFrame(frame);
 					}
 					catch(ThreadAbortException)
@@ -202,11 +214,12 @@ namespace DiscordRPC.RPC
 			//Send some response
 			lock (objlock)
 			{
+				//Check if its a handshake
 				if (_state == ConnectionState.SentHandshake)
 				{
 					if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == SubscriptionType.Ready)
 					{
-						LogDebug("Connectino established with the RPC");
+						LogDebug("Connection established with the RPC");
 						_state = ConnectionState.Connected;
 
 						//TODO: Send potential OnConnectEvent?
@@ -214,10 +227,34 @@ namespace DiscordRPC.RPC
 
 					return;
 				}
+
+				//It wasn't a handshake and we are not connected, so we should prob just ignore this.
+				if (_state != ConnectionState.Connected)
+				{
+					LogDebug("Received a non-handshake frame while we are still connecting? {0}", response);
+					return;
+				}
 			}
 
-			//Some other response was received apparently
-			LogDebug("Found Item");
+			//Prepare the internal data
+			JObject jobj = response.Data as JObject;
+
+			if (response.Command == Command.SetActivity)
+			{
+				LogDebug("Presence Found!");
+
+				//prepare the new presence
+				RichPresence newpres = null;
+				if (jobj != null)
+				{
+					//Get the presence response
+					RichPresenceResponse presresponse = jobj.ToObject<RichPresenceResponse>();
+					if (presresponse != null) newpres = (RichPresence) presresponse;
+				}
+
+				//Set the presence
+				lock (preslock) _currentPresence = newpres;
+			}
 		}
 
 		/// <summary>
