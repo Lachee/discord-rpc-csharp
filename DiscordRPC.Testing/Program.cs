@@ -34,6 +34,7 @@ namespace DiscordRPC.Testing
 				}
 			};
 
+			DiscordRpcClient client = new DiscordRpcClient("259970131059408897");
 
 			using (var rpc = new RpcConnection("259970131059408897"))
 			{

@@ -16,7 +16,6 @@ namespace DiscordRPC.RPC
 
 		private Thread thread;
 		private PipeConnection pipe;
-		private bool waitingForHandshake = false;
 
 		private int PID;
 		private int _nonce = 1;
@@ -27,10 +26,11 @@ namespace DiscordRPC.RPC
 		public string ApplicationID { get { string tmp; lock (objlock) tmp = (string)_applicationid.Clone(); return tmp; } }
 		private string _applicationid;
 
-		public enum ConnectionState { Disconnected, SentHandshake, Connected }
+		public enum ConnectionState { Disconnected, Connecting, Connected }
 		public ConnectionState State { get { ConnectionState tmp; lock (objlock) tmp = _state; return tmp; } }
 		private ConnectionState _state = ConnectionState.Disconnected;
 
+		public RichPresence CurrentPresence { get { RichPresence temp; lock (preslock) temp = _currentPresence.Clone(); return temp; } }
 		private RichPresence _currentPresence;
 		private RichPresence _queue;
 		
@@ -48,22 +48,15 @@ namespace DiscordRPC.RPC
 			LogDebug("Setting Presence... waiting for presence lock...");
 
 			//Clone the presence into the queue
-			lock (preslock)
-			{
-				_queue = p.Clone();
-			}
-
-			LogDebug("Trying to initialize server...");
-
+			lock (preslock) _queue = p.Clone();
+			
 			//Make sure we are connected
+			LogDebug("Trying to initialize server...");
 			TryInitialize();
 
-			LogDebug("Writing Queue...");
-
 			//Write the queue. Probably should be in the new thread, but meh.		
+			LogDebug("Writing Queue...");
 			WriteQueue();
-
-			LogDebug("Done");
 		}
 
 		public void TryInitialize()
@@ -163,6 +156,7 @@ namespace DiscordRPC.RPC
 				_queue = null;
 			}
 
+			//TODO: This is a bug. What if we set the presence to null to clear it?
 			if (temp == null)
 			{
 				LogDebug("We have nothing in the queue apparently");
@@ -215,7 +209,7 @@ namespace DiscordRPC.RPC
 			lock (objlock)
 			{
 				//Check if its a handshake
-				if (_state == ConnectionState.SentHandshake)
+				if (_state == ConnectionState.Connecting)
 				{
 					if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == SubscriptionType.Ready)
 					{
@@ -287,7 +281,7 @@ namespace DiscordRPC.RPC
 			});
 
 			//Set our new state
-			lock (objlock) _state = ConnectionState.SentHandshake;
+			lock (objlock) _state = ConnectionState.Connecting;
 			return true;
 		}
 
