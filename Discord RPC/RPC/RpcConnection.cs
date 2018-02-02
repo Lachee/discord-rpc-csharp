@@ -10,56 +10,132 @@ using System.Threading;
 
 namespace DiscordRPC.RPC
 {
-	public class RpcConnection : IDisposable
+	internal class RpcConnection : IDisposable
 	{
+		/// <summary>
+		/// Version of the RPC Protocol
+		/// </summary>
 		public static readonly int VERSION = 1;
 
+		//The thread and the pipe we use
 		private Thread thread;
 		private PipeConnection pipe;
 
+		//Process ID to handshake with and the current nonce
 		private int PID;
 		private int _nonce = 1;
 
+		/// <summary>
+		/// Gets a value indicating if the connection is reading and processing  messages from Discord
+		/// </summary>
 		public bool IsRunning { get { bool tmp; lock (objlock) tmp = _isrunning; return tmp; } }
 		private bool _isrunning = false;
 
+		/// <summary>
+		/// Gets the application used to connect too.
+		/// </summary>
 		public string ApplicationID { get { string tmp; lock (objlock) tmp = (string)_applicationid.Clone(); return tmp; } }
 		private string _applicationid;
 
-		public enum ConnectionState { Disconnected, Connecting, Connected }
+		/// <summary>
+		/// A state of connection between the RPC Connection and Discord.
+		/// </summary>
+		public enum ConnectionState { Disconnected, Connecting, Connected, Disconnecting }
+
+		/// <summary>
+		/// Gets a value indicating the current state of the connection.
+		/// </summary>
 		public ConnectionState State { get { ConnectionState tmp; lock (objlock) tmp = _state; return tmp; } }
 		private ConnectionState _state = ConnectionState.Disconnected;
 
+		/// <summary>
+		/// Gets a value indicating the current rich presence.
+		/// </summary>
 		public RichPresence CurrentPresence { get { RichPresence temp; lock (preslock) temp = _currentPresence.Clone(); return temp; } }
 		private RichPresence _currentPresence;
-		private RichPresence _queue;
+
+		//The current queue.
+		//TODO: Make this an actual queue with messages instead of just RichPresesnce
+		private Queue<RichPresence> _queue;
 		
 		private object preslock = new object();
 		private object objlock = new object();
 
-		public RpcConnection(string applicationID)
+		/// <summary>
+		/// Creates a new RPC Connection 
+		/// </summary>
+		/// <param name="applicationID"></param>
+		/// <param name="process"></param>
+		public RpcConnection(string applicationID, int process)
 		{
 			this._applicationid = applicationID;
-			PID = System.Diagnostics.Process.GetCurrentProcess().Id;
+			PID = process;
+			_queue = new Queue<RichPresence>();
 		}
 
-		public void SetPresence(RichPresence p)
+		/// <summary>
+		/// Adds a presence update to the current queue
+		/// </summary>
+		/// <param name="presence">The presence to add</param>
+		/// <param name="attemptConnection">If true, a connection will be established with the server</param>
+		public void SetPresence(RichPresence presence, bool attemptConnection = true)
 		{
 			LogDebug("Setting Presence... waiting for presence lock...");
 
 			//Clone the presence into the queue
-			lock (preslock) _queue = p.Clone();
-			
-			//Make sure we are connected
-			LogDebug("Trying to initialize server...");
-			TryInitialize();
+			lock (preslock) _queue.Enqueue(presence != null ? presence.Clone() : null);
 
-			//Write the queue. Probably should be in the new thread, but meh.		
-			LogDebug("Writing Queue...");
-			WriteQueue();
+			//Make sure we are connected before we send the queue off
+			if (!IsRunning)
+			{
+				if (attemptConnection)
+				{
+					//attempt a connection
+					LogDebug("Trying to initialize server...");
+					AttemptInitialization();
+				}
+				else
+				{
+					//We have been told don't bother with a connection. Probably a clear presence.
+					LogDebug("Could not initialize the server as requested... aborting presence set.");
+					return;
+				}
+			}
+			else
+			{
+				//We are already running and waiting for a message. We will just process the queue now
+				WriteQueue();
+			}
+		}
+		public void Close()
+		{
+			LogDebug("Closing server!");
+
+
+			//Set the state to disconnecting
+			lock (objlock)
+			{
+				//If we are already disconnected, there isn't much we can do.
+				if (_state == ConnectionState.Connected)
+				{
+					//Now close everything
+					_state = ConnectionState.Disconnecting;
+
+					//Set the presence to null
+					//if (thread != null) thread.Abort();
+				}
+				else
+				{
+					LogError("Cannot close server as we are not connected!");
+				}
+			}
+
 		}
 
-		public void TryInitialize()
+		/// <summary>
+		/// Creates the thread and initializes a new pipe
+		/// </summary>
+		private void AttemptInitialization()
 		{
 			if (thread != null)
 			{
@@ -73,13 +149,21 @@ namespace DiscordRPC.RPC
 				return;
 			}
 
+			//If the pipe isn't null, we obviously havn't disposed of it yet.
+			if (pipe != null)
+				pipe.Dispose();
+			
+			//Create a new pipe and thread
 			pipe = new PipeConnection();
-			thread = new Thread(MainLoop);
+			thread = new Thread(ReadLoop);
+
+			//Start  the main loop
 			thread.Start();
 		}
 
-		private void MainLoop()
+		private void ReadLoop()
 		{
+			//Update the _isrunning flag to tue
 			LogDebug("Entering main loop");
 			lock (objlock) _isrunning = true;
 
@@ -92,32 +176,38 @@ namespace DiscordRPC.RPC
 				{
 					try
 					{
-						//Write any queue we have aquired
+						//Write any queue we have collected during our downtime
 						LogDebug("Writing any queued items...");
 						WriteQueue();
 
+						Thread.Sleep(1000);
+
+						//Read the frame. TryReadFrame might not be 100% blocking if we read bad data!	
 						LogDebug("Waiting for frame...");
-						
-						//Read the frame. TryReadFrame might not be 100% blocking if we read bad data!						
+											
 						PipeFrame frame;
 						if (!pipe.TryReadFrame(out frame))
 						{
+							//We have failed to read, this shouldn't really occur unless the pipe is bad
 							LogError("Pipe failed to read a frame. Potentially broken pipe.");
 							break;
-							//Console.Write(".");
-							//Thread.Sleep(500);
 						}
 
 						//Process the frame
 						ProcessFrame(frame);
+
+						//Has the server been told to terminate?
+						if (State == ConnectionState.Disconnecting) break;
 					}
 					catch(ThreadAbortException)
 					{
+						//We have been aborted, so reset the abort
 						Thread.ResetAbort();
 						break;
 					}
 					catch (Exception e)
 					{
+						//A unkown exception has occured, this isn't good.
 						LogError("An exception occured while processing a frame: {0}", e.Message);
 						break;
 					}
@@ -125,46 +215,56 @@ namespace DiscordRPC.RPC
 
 			}
 
+
+
 			lock (objlock)
 			{
+				if (_state == ConnectionState.Disconnecting)
+				{
+					LogDebug("Sending last request...");
+					WriteRequest(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = null });
+				}
+
+				//Set our state to disconnected and we are no longer running in the thread
 				_isrunning = false;
 				_state = ConnectionState.Disconnected;
 			}
-
-			LogDebug("Left main loop!");
-			thread = null;
-
+			
+			//Dispose of the pipe
 			if (pipe != null)
 			{
+				LogDebug("Disposing of the pipe object...");
 				pipe.Dispose();
 				pipe = null;
 			}
+
+			//Clear the thread object
+			thread = null;
+
+			LogDebug("Finished stopping thread.");
 		}
 
+		/// <summary>
+		/// Processes the current queue and writes the frames to the server
+		/// </summary>
 		private void WriteQueue()
 		{
-			if (State != ConnectionState.Connected) return;
+			LogDebug("Attempting to write queue");
 			if (!IsRunning) return;
+			if (State != ConnectionState.Connected && State != ConnectionState.Disconnecting) return;
 
-			LogDebug("Trying to get presence lock...");
-			RichPresence temp;
+			LogDebug(" - Trying to get presence lock...");
 			lock (preslock)
 			{
-
-				LogDebug("Copying...");
-				temp = _queue;
-				_queue = null;
+				while (_queue.Count > 0)
+				{
+					LogDebug(" - Writing queue item");
+					RichPresence presence = _queue.Dequeue();
+					WriteRequest(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = presence });
+				}
 			}
 
-			//TODO: This is a bug. What if we set the presence to null to clear it?
-			if (temp == null)
-			{
-				LogDebug("We have nothing in the queue apparently");
-				return;
-			}
-
-			LogDebug("Done... Trying to write request.");
-			WriteRequest(Command.SetActivity, new PresenceUpdate() { PID = this.PID, Presence = temp });
+			LogDebug("Done");
 		}
 
 		/// <summary>
@@ -217,6 +317,9 @@ namespace DiscordRPC.RPC
 						_state = ConnectionState.Connected;
 
 						//TODO: Send potential OnConnectEvent?
+
+						//Process the queue we have
+						WriteQueue();
 					}
 
 					return;
@@ -287,12 +390,22 @@ namespace DiscordRPC.RPC
 
 		#region IO
 		
-		private void WriteRequest(Command command, object data)
+		/// <summary>
+		/// Writes a Request to the server
+		/// </summary>
+		/// <param name="command">The command to send to the server</param>
+		/// <param name="args">The arguments of the command</param>
+		private void WriteRequest(Command command, object args)
 		{
 			LogDebug("Trying to write request {0}", command);
-			WriteFrame(Opcode.Frame, new RequestPayload() { Command = command, Args = data, Nonce = (this._nonce++).ToString() });
+			WriteFrame(Opcode.Frame, new RequestPayload() { Command = command, Args = args, Nonce = (this._nonce++).ToString() });
 		}
 
+		/// <summary>
+		/// Writes a frame to the sever
+		/// </summary>
+		/// <param name="opcode">The OpCode of the frame</param>
+		/// <param name="obj">The body of the frame</param>
 		private void WriteFrame(Opcode opcode, object obj)
 		{
 			LogDebug("Trying to write frame {0}", opcode);
@@ -314,10 +427,11 @@ namespace DiscordRPC.RPC
 		#region Utils
 		public void Dispose()
 		{
+			Close();
 			if (thread != null)
 			{
 				thread.Abort();
-				thread = null;
+				thread.Join();
 			}
 		}
 	

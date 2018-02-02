@@ -31,10 +31,10 @@ namespace DiscordRPC.IO
 					//Create the client
 					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
 					_stream.Connect(1000);
-
+				
 					//Spin for a bit while we wait for it to finish connecting
-					while (!_stream.IsConnected) { Thread.Sleep(100); }
-
+					while (!_stream.IsConnected) { Thread.Sleep(250); }
+					
 					//Store the value
 					return true;
 				}
