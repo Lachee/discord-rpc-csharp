@@ -11,41 +11,42 @@ namespace DiscordRPC.IO
 		/// Discord Pipe Name
 		/// </summary>
 		const string PIPE_NAME = @"discord-ipc-{0}";
-
 		private NamedPipeClientStream _stream;
-		private int _pipeno;
-
-		public event PipeReadEvent OnPipeRead;
-
+		
 		#region Pipe Management
 
-		public bool Connect()
+		public bool AttemptConnection()
 		{
 			for (int i = 0; i < 10; i++)
 			{
+				//Prepare the pipe name
+				string pipename = string.Format(PIPE_NAME, i);
+				Console.WriteLine("Attempting to connect to " + pipename);
+
 				try
 				{
-					//Prepare the pipe name
-					string pipename = string.Format(PIPE_NAME, i);
-
 					//Create the client
 					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
 					_stream.Connect(1000);
-				
+
 					//Spin for a bit while we wait for it to finish connecting
+					Console.WriteLine("Waiting for connection...");
 					while (!_stream.IsConnected) { Thread.Sleep(250); }
-					
+
 					//Store the value
+					Console.WriteLine("Connected to " + pipename);
 					return true;
 				}
-				catch (Exception)
+				catch (Exception e)
 				{
 					//Something happened, try again
 					//TODO: Log the failure condition
+					Console.WriteLine("Failed connection to {0}. {1}", pipename, e.Message);
 					_stream = null;
 				}
 			}
 
+			//We are succesfull if the stream isn't null
 			return _stream == null;
 		}
 
@@ -54,10 +55,10 @@ namespace DiscordRPC.IO
 
 		#region Frame Write
 
-		public void WriteFrame(PipeFrame frame)
+		public bool WriteFrame(PipeFrame frame)
 		{
 			//u_stream is multithread friendly, so we can just write directly
-			Write(frame);
+			return Write(frame);
 		}
 
 		#endregion
@@ -65,34 +66,6 @@ namespace DiscordRPC.IO
 		#region IO Operation
 		
 		#region Read
-		[System.Obsolete("Use TryReadFrame instead.")]
-		public PipeFrame ReadFrame()
-		{
-			int op = ReadInt32();
-			int len = ReadInt32();
-
-			if (op < 0)
-			{
-				//TODO: Throw Error Event
-				return new PipeFrame() { Opcode = Opcode.Close };
-			}
-
-			if (len < 0)
-			{
-				//TODO: THrow Error Event
-				return new PipeFrame() { Opcode = Opcode.Close };
-			}
-			
-			byte[] buff = new byte[len];
-			Read(buff, len);
-
-			return new PipeFrame()
-			{
-				Opcode = (Opcode)op,
-				Data = buff
-			};
-		}
-
 		public bool TryReadFrame(out PipeFrame frame)
 		{
 			//Set the pipe frame to default
@@ -135,21 +108,32 @@ namespace DiscordRPC.IO
 		#endregion
 
 		#region Write
-		private void Write(PipeFrame frame)
+		private bool Write(PipeFrame frame)
 		{
-			Write((int)frame.Opcode);
-			Write(frame.Length);
-			Write(frame.Data);
+			if (!Write((int)frame.Opcode)) return false;
+			if (!Write(frame.Length)) return false;
+			if (!Write(frame.Data)) return false;
+			return true;
 		}
-		private void Write(byte[] buff)
+		private bool Write(byte[] buff)
 		{
-			_stream.Write(buff, 0, buff.Length);
+			try
+			{
+				_stream.Write(buff, 0, buff.Length);
+				return true;
+			}
+			catch (Exception e)
+			{
+				//TODO: Replace with error event
+				Console.WriteLine("An error has occured in the pipe: {0}", e.Message);
+				return false;
+			}
 		}
-		private void Write(int i)
+		private bool Write(int i)
 		{
 			byte[] bytes = BitConverter.GetBytes(i);
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			Write(bytes);
+			return Write(bytes);
 		}
 		#endregion
 	

@@ -26,7 +26,6 @@ namespace DiscordRPC.IO
 		private int u_pipeno;
 		private Thread _thread;
 
-		public event PipeReadEvent OnPipeRead;
 
 		#region Pipe Management
 
@@ -173,7 +172,7 @@ namespace DiscordRPC.IO
 			lock (l_readQueueLock)
 			{
 				u_readQueue.Enqueue(frame);
-				OnPipeRead?.Invoke(this, new PipeReadEventArgs() { Frame = new PipeFrame() { Opcode = frame.Opcode, Data = frame.Data } });
+				//OnPipeRead?.Invoke(this, new PipeReadEventArgs() { Frame = new PipeFrame() { Opcode = frame.Opcode, Data = frame.Data } });
 			}
 		}
 		#endregion

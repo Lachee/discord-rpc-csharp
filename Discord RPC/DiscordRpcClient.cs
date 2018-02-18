@@ -34,7 +34,7 @@ namespace DiscordRPC
 		public int ProcessID { get; private set; }
 		#endregion
 
-		private RpcConnection connection;
+		private RpcConnectionPipe connection;
 
 		#region Initialization
 
@@ -73,7 +73,7 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID);
+			connection = new RpcConnectionPipe(ApplicationID, ProcessID);
 		}
 
 		/// <summary>
