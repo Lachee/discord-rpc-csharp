@@ -51,7 +51,14 @@ namespace DiscordRPC
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
 		private string SpectateSecret { get; set; }
 
+		/// <summary>
+		/// Indicates that the <see cref="MatchSecret"/> is a instance. This means the user is in a state that isn't a lobby or actual gameplay. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
+		/// <para>
+		/// "TLDR it marks the matchSecret field as an instance, that is to say a context in game that’s not like a lobby state/not in game state. It was gonna he used for notify me, but we scrapped that for ask to join. We may put it to another use in the future. For now, don’t worry about it" - Mason (Discord API Server 14 / 03 / 2018)
+		///	</para>
+		/// </summary>
 		[JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
+		[Obsolete("This was going to be used, but was replaced by JoinSecret instead")]
 		private bool Instance { get; set; }
 		#endregion
 		
