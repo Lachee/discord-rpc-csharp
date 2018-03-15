@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "DiscordRPC.csproj", "{819D20D6-8D88-45C1-A4D2-AA21F10ABD19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC.Testing", "..\DiscordRPC.Testing\DiscordRPC.Testing.csproj", "{F4B2E4AF-11DE-4B4F-9637-CDB6A498DBCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC.Example", "..\DiscordRPC.Example\DiscordRPC.Example.csproj", "{37FEE3CF-72FE-4450-A71A-373D3B298F0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{819D20D6-8D88-45C1-A4D2-AA21F10ABD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{819D20D6-8D88-45C1-A4D2-AA21F10ABD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{819D20D6-8D88-45C1-A4D2-AA21F10ABD19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4B2E4AF-11DE-4B4F-9637-CDB6A498DBCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4B2E4AF-11DE-4B4F-9637-CDB6A498DBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4B2E4AF-11DE-4B4F-9637-CDB6A498DBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4B2E4AF-11DE-4B4F-9637-CDB6A498DBCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37FEE3CF-72FE-4450-A71A-373D3B298F0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37FEE3CF-72FE-4450-A71A-373D3B298F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37FEE3CF-72FE-4450-A71A-373D3B298F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37FEE3CF-72FE-4450-A71A-373D3B298F0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

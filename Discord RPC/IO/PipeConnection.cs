@@ -12,7 +12,10 @@ namespace DiscordRPC.IO
 		/// </summary>
 		const string PIPE_NAME = @"discord-ipc-{0}";
 		private NamedPipeClientStream _stream;
-		
+
+		public bool IsConnected { get { return _isconnected; } }
+		private bool _isconnected = false;
+
 		#region Pipe Management
 
 		public bool AttemptConnection()
@@ -31,10 +34,11 @@ namespace DiscordRPC.IO
 
 					//Spin for a bit while we wait for it to finish connecting
 					Console.WriteLine("Waiting for connection...");
-					while (!_stream.IsConnected) { Thread.Sleep(250); }
+					do { Thread.Sleep(250); } while (!_stream.IsConnected);
 
 					//Store the value
 					Console.WriteLine("Connected to " + pipename);
+					_isconnected = true;
 					return true;
 				}
 				catch (Exception e)
@@ -42,6 +46,7 @@ namespace DiscordRPC.IO
 					//Something happened, try again
 					//TODO: Log the failure condition
 					Console.WriteLine("Failed connection to {0}. {1}", pipename, e.Message);
+					_isconnected = false;
 					_stream = null;
 				}
 			}
@@ -129,9 +134,9 @@ namespace DiscordRPC.IO
 				return false;
 			}
 		}
-		private bool Write(int i)
+		private bool Write(int int32)
 		{
-			byte[] bytes = BitConverter.GetBytes(i);
+			byte[] bytes = BitConverter.GetBytes(int32);
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			return Write(bytes);
 		}
@@ -146,6 +151,7 @@ namespace DiscordRPC.IO
 			{
 				_stream.Dispose();
 				_stream = null;
+				_isconnected = false;
 			}
 		}
 	}

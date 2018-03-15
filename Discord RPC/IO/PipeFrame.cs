@@ -32,7 +32,6 @@ namespace DiscordRPC.IO
 			set { SetData(value); }
 		}
 		
-
 		/// <summary>
 		/// Gets the encoding used for the pipe frames
 		/// </summary>

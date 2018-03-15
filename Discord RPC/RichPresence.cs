@@ -70,8 +70,8 @@ namespace DiscordRPC
 		{
 			return new RichPresence()
 			{
-				State = this._state.Clone() as string,
-				Details = this._details.Clone() as string,
+				State = this._state?.Clone() as string,
+				Details = this._details?.Clone() as string,
 				Timestamps = this.Timestamps == null ? null : new Timestamps()
 				{
 					Start = this.Timestamps.Start,
@@ -79,12 +79,12 @@ namespace DiscordRPC
 				},
 				Assets = this.Assets == null ? null : new Assets()
 				{
-					LargeImageKey = this.Assets.LargeImageKey.Clone() as string,
-					LargeImageText = this.Assets.LargeImageText.Clone() as string,
-					SmallImageKey = this.Assets.SmallImageKey.Clone() as string,
-					SmallImageText = this.Assets.SmallImageText.Clone() as string
+					LargeImageKey = this.Assets.LargeImageKey?.Clone() as string,
+					LargeImageText = this.Assets.LargeImageText?.Clone() as string,
+					SmallImageKey = this.Assets.SmallImageKey?.Clone() as string,
+					SmallImageText = this.Assets.SmallImageText?.Clone() as string
 				},
-				Party = this.Party == null ? null : new Party()
+				Party = this.Party == null || this.Party.ID == null ? null : new Party()
 				{
 					ID = this.Party.ID as string,
 					Size = this.Party.Size,
@@ -127,28 +127,28 @@ namespace DiscordRPC
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("large_image")]//, NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
 		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.ClearEmpty(); } }
 		private string _largeimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("large_text")]//, NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.ClearEmpty(); } }
 		private string _largeimagetext;
 
 		/// <summary>
 		/// Max 32 Bytes.
 		/// </summary>
-		[JsonProperty("small_image")]//, NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
 		public string SmallImageKey { get { return _smallimagekey; } set { _smallimagekey = value.ClearEmpty(); } }
 		private string _smallimagekey;
 
 		/// <summary>
 		/// Max 128 Bytes.
 		/// </summary>
-		[JsonProperty("small_text")]//, NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string SmallImageText { get { return _smallimagetext; } set { _smallimagetext = value.ClearEmpty(); } }
 		private string _smallimagetext;
 	}

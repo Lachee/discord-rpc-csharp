@@ -1,9 +1,6 @@
 ﻿using DiscordRPC.Registry;
 using DiscordRPC.RPC;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC
 {
@@ -34,7 +31,8 @@ namespace DiscordRPC
 		public int ProcessID { get; private set; }
 		#endregion
 
-		private RpcConnectionPipe connection;
+		private RpcConnectionPipe connectionPipe;
+		private RpcConnection connection;
 
 		#region Initialization
 
@@ -73,7 +71,9 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnectionPipe(ApplicationID, ProcessID);
+			//connectionPipe = new RpcConnectionPipe(ApplicationID, ProcessID);
+			connection = new RpcConnection(ApplicationID, ProcessID);
+			connection.AttemptConnection();
 		}
 
 		/// <summary>
@@ -82,6 +82,7 @@ namespace DiscordRPC
 		/// <param name="presence">The rich presence to send to discord</param>
 		public void SetPresence(RichPresence presence)
 		{
+			//connectionPipe.SetPresence(presence);
 			connection.SetPresence(presence);
 		}
 
@@ -90,7 +91,8 @@ namespace DiscordRPC
 		/// </summary>
 		public void ClearPresence()
 		{
-			connection.SetPresence(null, false);
+			//connectionPipe.SetPresence(null, false);
+			connection.SetPresence(null);
 		}
 
 		/// <summary>
@@ -98,6 +100,7 @@ namespace DiscordRPC
 		/// </summary>
 		public void Close()
 		{
+			//connectionPipe.Close();
 			connection.Close();
 		}
 
@@ -106,6 +109,7 @@ namespace DiscordRPC
 		/// </summary>
 		public void Dispose()
 		{
+			//connectionPipe.Close();
 			connection.Close();
 		}
 

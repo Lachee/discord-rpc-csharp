@@ -1,7 +1,7 @@
-﻿using System;
-using DiscordRPC.RPC;
+﻿using DiscordRPC;
+using System;
 
-namespace DiscordRPC.Testing
+namespace DiscordRPC.Example
 {
 	class Program
 	{
@@ -66,7 +66,7 @@ namespace DiscordRPC.Testing
 						case "help":
 							Console.WriteLine("apply, clear, close, help, exit");
 							break;
-											
+
 						//Exit the loop
 						case "exit":
 							isRunning = false;

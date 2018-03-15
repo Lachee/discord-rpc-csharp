@@ -3,6 +3,7 @@ using DiscordRPC.IO;
 using DiscordRPC.RPC.Payloads;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,11 +39,17 @@ namespace DiscordRPC.RPC
 		private string applicationID;
 		private int processID;
 
+		private long nonce;
+
 		private Thread thread;
 		private PipeConnection pipe;
 
+		private object l_sendqueue = new object();
+		private Queue<RichPresence> _sendqueue;
+
 		private BackoffDelay delay;
 		#endregion
+
 
 		public RpcConnection(string applicationID, int processID)
 		{
@@ -50,14 +57,29 @@ namespace DiscordRPC.RPC
 			this.processID = processID;
 
 			delay = new BackoffDelay(500, 60 * 1000);
+			_sendqueue = new Queue<RichPresence>();
 		}
 
 
 		#region Publics
 
-		public void SetPresence(RichPresence presence) { }
-		public void DequeueEvent() { }
-		public void DequeueEvents() { }
+		public void SetPresence(RichPresence presence)
+		{
+			lock (_sendqueue)
+				_sendqueue.Enqueue(presence.Clone());
+
+			//If we are not aborted, we might as well execute it straight up
+			if (pipe.IsConnected) WriteQueue();
+		}
+		public void DequeueEvent()
+		{
+			throw new NotImplementedException();
+		}
+		public void DequeueEvents()
+		{
+			throw new NotImplementedException();
+		}
+
 		public void Close()
 		{
 			if (!IsRunning || thread == null)
@@ -75,9 +97,11 @@ namespace DiscordRPC.RPC
 		
 		#region Read Loop
 
-		public void ThreadStart()
+		/// <summary>
+		/// Main thread loop
+		/// </summary>
+		private void MainLoop()
 		{
-
 			//initialize the pipe
 			Console.WriteLine("Initializing Thread. Creating pipe object.");
 			_inMainLoop = true;
@@ -87,7 +111,7 @@ namespace DiscordRPC.RPC
 			{
 				//Wrap everything up in a try get
 				try
-				{
+				{	
 					//Dispose of the pipe if we have any (could be broken)
 					if (pipe != null)
 					{
@@ -100,20 +124,22 @@ namespace DiscordRPC.RPC
 					pipe = new PipeConnection();
 					if (pipe.AttemptConnection())
 					{
-						Console.WriteLine("Connected to the pipe!");
-
 						//We connected to a pipe! Reset the delay
+						Console.WriteLine("Connected to the pipe. Attempting to establish handshake...");
 						delay.Reset();
 
 						//Attempt to establish a handshake
 						if (EstablishHandshake())
 						{
+							Console.WriteLine("Connection Established. Starting reading loop...");
+
 							//Being the main read loop. This will return true if it exits for an abort.
 							if (ReadLoop())
 							{
 								//The loop has exited because of an abort,
 								// so we should exit out of this loop too.
 								Console.WriteLine("Handled Thread Abort: Read Loop has returned true, main loop is now exiting.");
+								_inMainLoop = false;
 								break;
 							}
 						}
@@ -132,7 +158,7 @@ namespace DiscordRPC.RPC
 					// so we are going to wait a bit before doing it again
 					long sleep = delay.NextDelay();
 
-					Console.Write("Waiting {0}ms", sleep);
+					Console.WriteLine("Waiting {0}ms", sleep);
 					Thread.Sleep((int)delay.NextDelay());
 				}
 				catch(ThreadAbortException e)
@@ -140,10 +166,12 @@ namespace DiscordRPC.RPC
 					//We have been given an abort, so exit out of the main loop after reseting the exception
 					Thread.ResetAbort();
 					Console.WriteLine("Thread Abort: {0}", e.Message);
+					_inMainLoop = false;
 					break;
 				}
 				catch (Exception e)
 				{
+					//We have just had a unkown error. We will repeat the loop again for saftey.
 					Console.WriteLine("Something seriously went wrong! {0}", e.Message);
 					Console.WriteLine(e.StackTrace);
 				}
@@ -151,24 +179,16 @@ namespace DiscordRPC.RPC
 
 			//We are no longer in the main loop
 			_inMainLoop = false;
-
-			//Lock all the properties up while we decide whats happening
-			lock (l_property)
-			{
-				//Set the state
-				_state = RpcState.Disconnected;
-				_inMainLoop = false;
-
-				//We have disconnected
-				if (thread != null) thread = null;
-				if (pipe != null)
-				{
-					pipe.Dispose();
-					pipe = null;
-				}
-			}
+			
+			//We have disconnected, so dispose of the thread and the pipe.
+			if (thread != null) thread = null;
+			DisposePipe();
 		}
 
+		/// <summary>
+		/// Establishes the handshake with the server. 
+		/// </summary>
+		/// <returns></returns>
 		private bool EstablishHandshake()
 		{
 			Console.WriteLine("Attempting to establish a handshake...");
@@ -196,18 +216,42 @@ namespace DiscordRPC.RPC
 				_state = RpcState.Connecting;
 			}
 
-			//Wait for a response now
-			PipeFrame ackFrame;
-			if (!pipe.TryReadFrame(out ackFrame))
+			try
 			{
-				//We failed to read anything, probably broken pipe
-				Console.WriteLine("Failed to read anything from the pipe, probably a broken pipe");
+				do
+				{
+					Console.WriteLine("Waiting for handshake frame...");
+
+					//Continously read the frames until we get our handshake.
+					PipeFrame ackFrame;
+					if (!pipe.TryReadFrame(out ackFrame))
+					{
+						//We failed to read anything, probably broken pipe
+						Console.WriteLine("Failed to read anything from the pipe, probably a broken pipe");
+						return false;
+					}
+
+					//Make sure we got a frame then process it.
+					if (ackFrame.Opcode == Opcode.Frame)
+						ProcessFrame(ackFrame.GetPayload<ResponsePayload>());
+
+					//Keep going until we are not longer connecting
+				} while (State == RpcState.Connecting);
+			}
+			catch(ThreadAbortException abort)
+			{
+				//Throw the abort upwards (this will go into our main thread).
+				throw abort;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Exception occured while saying hello: {0}", e);
+				Console.WriteLine(e.StackTrace);
 				return false;
 			}
 
-
-
-			return false;
+			//Success
+			return true;
 		}
 
 		/// <summary>
@@ -268,18 +312,19 @@ namespace DiscordRPC.RPC
 
 							//We have a frame, so we are going to process the payload and add it to the stack
 							ResponsePayload response = frame.GetPayload<ResponsePayload>();
-							//TODO: Make this do things.
-							// More speficially, finish the handshake protocol
-
-							//ProcessResponse(response);
+							ProcessFrame(response);
 							break;
+
 					}
 
 					//If we aborted in the switch statement above, we will continue to abort.
 					if (isAbort) break;
 
-					//Add the frame to our message queue
-					//If we are still connecting, attempt to decypher it
+					//Now we just need to write all remaining items
+					//Well, we could do this.... but the pipe is asyncronous, so we can read and write at the same time.
+					//
+					//We are writing now just incase we had any messages while the pipe wasn't available.
+					WriteQueue();
 
 				}
 				catch (ThreadAbortException e)
@@ -306,7 +351,7 @@ namespace DiscordRPC.RPC
 			//its an abort, so we will clear our presence if we are able
 			if(isAbort && State == RpcState.Connected)
 			{
-				//TODO: Send the null presence
+				WritePresence(null);
 				return true;
 			}
 
@@ -314,11 +359,119 @@ namespace DiscordRPC.RPC
 			return false;
 		}
 
+		/// <summary>Handles the response from the pipe and calls appropriate events and changes states.</summary>
+		/// <param name="response">The response received by the server.</param>
+		private void ProcessFrame(ResponsePayload response)
+		{
+			Console.WriteLine("Handling Response. Cmd: {0}, Event: {1}", response.Command, response.Event);
+
+			//Check if its a handshake
+			if (State == RpcState.Connecting)
+			{
+				if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == SubscriptionType.Ready)
+				{
+					Console.WriteLine("Connection established with the RPC");
+					lock (l_property) _state = RpcState.Connected;
+
+					//TODO: Send a OnReady event
+					Console.WriteLine("Invoke: OnReady");
+					Console.WriteLine("Ready");
+
+					//Process the queue we have
+					//We will do this later
+					//WriteQueue();
+				}
+			}
+			else if (State == RpcState.Connected)
+			{
+				//TODO: Make event queue
+				//TODO: Use a ProcessResponse
+				Console.WriteLine("Received Frame. Cmd: {0}, Event: {1}", response.Command, response.Event);
+			}
+			else
+			{
+				Console.WriteLine("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);
+			}
+		}
+
+		#endregion
+
+		#region Writing
+
+		/// <summary>Sends a rich presence through the pipe. Creating the Frame and the Message data.</summary>
+		/// <param name="presence">The presence to send. Can be null.</param>
+		private void WritePresence(RichPresence presence)
+		{
+			try
+			{
+				//Prepare the frame
+				PipeFrame frame = new PipeFrame();
+				frame.SetPayload(Opcode.Frame, new RequestPayload()
+				{
+					Command = Command.SetActivity,
+					Nonce = (this.nonce++).ToString(),
+					Args = new PresenceUpdate()
+					{
+						PID = this.processID,
+						Presence = presence
+					}
+				});
+
+				//Write the frame
+				pipe.WriteFrame(frame);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
+
+		/// <summary>Goes through the send queue one item at a time and sends them through the pipe</summary>
+		private void WriteQueue()
+		{
+			//Prepare some variabels we will clone into with locks
+			bool needsWriting = true;
+			RichPresence item = null;
+
+			//Continue looping until we dont need anymore messages
+			while (true)
+			{
+				lock (l_sendqueue)
+				{
+					//Pull the value and update our writing needs
+					// If we have nothing to write, exit the loop
+					needsWriting = _sendqueue.Count > 0;
+					if (!needsWriting) break;	
+
+					//Dequeue the item
+					item = _sendqueue.Dequeue();
+				}
+
+				try
+				{
+					//Write the item
+					WritePresence(item);
+				}
+				catch (Exception e)
+				{
+					//Something has happened, so abort the entire writing sequence. Probably needs a reconnect
+					Console.WriteLine("An exception has occured while trying to write.");
+					Console.WriteLine(e.Message);
+					Console.WriteLine(e.StackTrace);
+					break;
+				}
+			}
+		}
+
 		#endregion
 
 		#region Connection
 
-		private bool AttemptConnection()
+		/// <summary>
+		/// Attempts to connect to the pipe. Returns true on success
+		/// </summary>
+		/// <returns></returns>
+		public bool AttemptConnection()
 		{
 			//The thread mustn't exist already
 			if (thread != null)
@@ -335,17 +488,22 @@ namespace DiscordRPC.RPC
 			}
 
 			//Start the thread up
-			thread = new Thread(ThreadStart);
+			thread = new Thread(MainLoop);
 			thread.Start();
 
 			return true;
 		}
 
+		/// <summary>
+		/// Disposes the pipe if available
+		/// </summary>
 		private void DisposePipe()
 		{
+			Console.WriteLine("Disposing of pipe and updating state");
+			lock (l_property) _state = RpcState.Disconnected;
+
 			if (pipe != null)
 			{
-				Console.WriteLine("Disposing of pipe");
 				pipe.Dispose();
 				pipe = null;
 			}
