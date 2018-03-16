@@ -66,6 +66,7 @@ namespace DiscordRPC.Helper
 
 			//Update the current delay, maxing it out
 			_current = Math.Min(_current + delay, Maximum);
+			_current = Math.Max(_current, Minimum);
 			return _current;
 		}
 
