@@ -286,4 +286,12 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-discord.key
+
+# Ignore any key files
+*.key
+
+* Ignore the resources except for .png
+[Rr]esources/*
+![Rr]esources/*.png
+![Rr]esources/*.md
+![Rr]esources/*.txt

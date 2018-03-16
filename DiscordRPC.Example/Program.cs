@@ -32,7 +32,7 @@ namespace DiscordRPC.Example
 
 
 			//Creates a new Discord RPC Client
-			using (DiscordRpcClient client = new DiscordRpcClient("259970131059408897", true))
+			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true))
 			{
 				//This is our main loop. This can be what ever your application uses to stay alive, doesn't matter
 				bool isRunning = true;
