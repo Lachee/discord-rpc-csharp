@@ -34,22 +34,25 @@ namespace DiscordRPC
 
 		#region Not Yet Implemented
 		/// <summary>
-		/// Max 128 Bytes.
+		/// Secret code for requesting to join the game. Max 128 Bytes. Use <see cref="Secret.CreateSecret()"/> to get an appropriately sized secret.
 		/// </summary>
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-		private string MatchSecret { get; set; }
+		public string MatchSecret { get { return _matchSecret; } set { _matchSecret = value.ClearEmpty(); } }
+		private string _matchSecret;
 
 		/// <summary>
-		/// Max 128 Bytes.
+		/// Secret code for actually joining the game. Max 128 Bytes. Use <see cref="Secret.CreateSecret()"/> to get an appropriately sized secret.
 		/// </summary>
 		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
-		private string JoinSecret { get; set; }
+		public string JoinSecret { get { return _joinSecret; } set { _joinSecret = value.ClearEmpty(); } }
+		private string _joinSecret;
 
 		/// <summary>
-		/// Max 128 Bytes.
+		/// Secret code for spectators. Max 128 Bytes. Use <see cref="Secret.CreateSecret()"/> to get an appropriately sized secret.
 		/// </summary>
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		private string SpectateSecret { get; set; }
+		public string SpectateSecret { get { return _spectateSecret; } set { _spectateSecret = value.ClearEmpty(); } }
+		private string _spectateSecret;
 
 		/// <summary>
 		/// Indicates that the <see cref="MatchSecret"/> is a instance. This means the user is in a state that isn't a lobby or actual gameplay. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
@@ -72,6 +75,11 @@ namespace DiscordRPC
 			{
 				State = this._state?.Clone() as string,
 				Details = this._details?.Clone() as string,
+
+				MatchSecret = this._matchSecret?.Clone() as string,
+				JoinSecret = this._joinSecret?.Clone() as string,
+				SpectateSecret = this._spectateSecret?.Clone() as string,
+			
 				Timestamps = this.Timestamps == null ? null : new Timestamps()
 				{
 					Start = this.Timestamps.Start,

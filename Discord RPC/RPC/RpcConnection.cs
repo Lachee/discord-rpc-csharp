@@ -69,6 +69,7 @@ namespace DiscordRPC.RPC
 				_sendqueue.Enqueue(presence.Clone());
 
 			//If we are not aborted, we might as well execute it straight up
+			if (thread == null) AttemptConnection();
 			if (pipe.IsConnected) WriteQueue();
 		}
 		public void DequeueEvent()
@@ -289,12 +290,6 @@ namespace DiscordRPC.RPC
 							_inReadLoop = false;
 							break;
 							
-						default:
-						case Opcode.Handshake:
-							//We have a invalid opcode, better terminate to be safe
-							Console.WriteLine("Invalid opcode: {0}", frame.Opcode);
-							_inReadLoop = false;
-							break;
 							
 						case Opcode.Ping:
 							//We have pinged, so we will flip it and respond back with pong
@@ -313,6 +308,13 @@ namespace DiscordRPC.RPC
 							//We have a frame, so we are going to process the payload and add it to the stack
 							ResponsePayload response = frame.GetPayload<ResponsePayload>();
 							ProcessFrame(response);
+							break;
+
+						default:
+						case Opcode.Handshake:
+							//We have a invalid opcode, better terminate to be safe
+							Console.WriteLine("Invalid opcode: {0}", frame.Opcode);
+							_inReadLoop = false;
 							break;
 
 					}
@@ -379,7 +381,7 @@ namespace DiscordRPC.RPC
 
 					//Process the queue we have
 					//We will do this later
-					//WriteQueue();
+					WriteQueue();
 				}
 			}
 			else if (State == RpcState.Connected)
@@ -467,6 +469,16 @@ namespace DiscordRPC.RPC
 
 		#region Connection
 
+		public bool Reconnect()
+		{
+			//Abort the thread and wait for it to finish aborting
+			thread.Abort();
+			thread.Join();
+
+			//Now start it again
+			return AttemptConnection();
+		}
+
 		/// <summary>
 		/// Attempts to connect to the pipe. Returns true on success
 		/// </summary>
@@ -499,14 +511,17 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		private void DisposePipe()
 		{
-			Console.WriteLine("Disposing of pipe and updating state");
+			Console.WriteLine("Disposing Pipe");
+			Console.WriteLine(" - Setting State to DC..");
 			lock (l_property) _state = RpcState.Disconnected;
 
 			if (pipe != null)
 			{
+				Console.WriteLine(" - Removing Pipe...");
 				pipe.Dispose();
 				pipe = null;
 			}
+			Console.WriteLine(" - Done");
 		}
 
 		#endregion

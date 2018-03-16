@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using DiscordRPC.Helper;
 using System;
 
 namespace DiscordRPC.Example
@@ -17,9 +18,9 @@ namespace DiscordRPC.Example
 				},
 				Assets = new Assets()
 				{
-					LargeImageKey = "default_large",
+					LargeImageKey = "image_large_2",
 					LargeImageText = " Some Text ",
-					SmallImageKey = "default_small",
+					SmallImageKey = "image_small_1",
 					SmallImageText = null
 				},
 				Party = new Party()
@@ -27,13 +28,20 @@ namespace DiscordRPC.Example
 					ID = "someuniqueid",
 					Size = 1,
 					Max = 10
-				}
+				},
+
+				//Create a match secret, using the secret generator provided by the library
+				//MatchSecret = Secret.CreateSecret(),
+				SpectateSecret = "somesecret",// Secret.CreateSecret()
 			};
 
 
 			//Creates a new Discord RPC Client
 			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true))
 			{
+				//Send the presence
+				client.SetPresence(presence);
+
 				//This is our main loop. This can be what ever your application uses to stay alive, doesn't matter
 				bool isRunning = true;
 				while (isRunning)
@@ -55,6 +63,10 @@ namespace DiscordRPC.Example
 							client.ClearPresence();
 							break;
 
+						case "reconnect":
+							client.Reconnect();
+							break;
+
 						//Close the server
 						case "close":
 							Console.WriteLine("Closing Server");
@@ -64,7 +76,7 @@ namespace DiscordRPC.Example
 						//Some unkown command happened
 						default:
 						case "help":
-							Console.WriteLine("apply, clear, close, help, exit");
+							Console.WriteLine("apply, clear, close, reconnect, help, exit");
 							break;
 
 						//Exit the loop

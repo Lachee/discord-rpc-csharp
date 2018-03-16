@@ -50,6 +50,7 @@
     <Compile Include="DiscordRpcClient.cs" />
     <Compile Include="FixedString.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
+    <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Events\PipeErrorEvent.cs" />
     <Compile Include="IO\Opcode.cs" />

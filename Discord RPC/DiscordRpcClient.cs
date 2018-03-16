@@ -76,6 +76,9 @@ namespace DiscordRPC
 			connection.AttemptConnection();
 		}
 
+		#endregion
+
+
 		/// <summary>
 		/// Sets the Rich Presences
 		/// </summary>
@@ -96,6 +99,14 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
+		/// Causes the Rich Presence Connection to force a reconnection.
+		/// </summary>
+		public void Reconnect()
+		{
+			connection.Reconnect();
+		}
+
+		/// <summary>
 		/// Disconnects the server, forcing a new connection to be established on next <see cref="SetPresence(RichPresence)"/>
 		/// </summary>
 		public void Close()
@@ -113,6 +124,5 @@ namespace DiscordRPC
 			connection.Close();
 		}
 
-		#endregion
 	}
 }
