@@ -9,34 +9,7 @@ using System.Threading;
 using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC
-{
-
-
-
-
-	/*
-
-
-
-
-
-		TODO:
-
-		Make sure I dont send any messages until I get a response back
-
-
-
-
-
-
-
-
-
-	*/
-
-
-
-
+{	
 	/// <summary>
 	/// Communicates between the client and discord through RPC
 	/// </summary>
@@ -52,42 +25,48 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		public static readonly bool LOCK_STEP = true;
 
-		#region States
+		#region Privates
 
-		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_property) tmp = _state; return tmp; } }
+		#region States
+		private object l_states = new object();
+
+		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_states) tmp = _state; return tmp; } }
 		private RpcState _state;
 		
 		public bool IsRunning { get { return thread != null; } }
 		private bool _inMainLoop = false;
 		private bool _inReadLoop = false;
 		#endregion
+		
+		private string applicationID;					//ID of the Discord APP
+		private int processID;							//ID of the process to track
 
-		#region Locks
-		private object l_property = new object();
-		#endregion
+		private long nonce;								//Current command index
 
-		#region Privates
-		private string applicationID;
-		private int processID;
+		private Thread thread;							//The current thread
+		private PipeConnection pipe;                    //The current pipe
+		private int targetPipe;							//The pipe to taget. Leave as -1 for any available pipe.
 
-		private long nonce;
+		private object l_rtqueue = new object();		//Lock for the send queue
+		private Queue<ICommand> _rtqueue;				//The send queue
 
-		private Thread thread;
-		private PipeConnection pipe;
+		private object l_rxqueue = new object();		//Lock for the receive queue
+		private Queue<IMessage> _rxqueue;				//The receive queue
 
-		private object l_rtqueue = new object();
-		private Queue<ICommand> _rtqueue;
-
-		private object l_rxqueue = new object();
-		private Queue<IMessage> _rxqueue;
-
-		private BackoffDelay delay;
+		private BackoffDelay delay;						//The backoff delay before reconnecting.
 		#endregion
 		
-		public RpcConnection(string applicationID, int processID)
+		/// <summary>
+		/// Creates a new instance of the RPC.
+		/// </summary>
+		/// <param name="applicationID">The ID of the Discord App</param>
+		/// <param name="processID">The ID of the currently running process</param>
+		/// <param name="targetPipe">The target pipe to connect too</param>
+		public RpcConnection(string applicationID, int processID, int targetPipe)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
+			this.targetPipe = targetPipe;
 
 			delay = new BackoffDelay(500, 60 * 1000);
 			_rtqueue = new Queue<ICommand>();
@@ -192,7 +171,7 @@ namespace DiscordRPC.RPC
 					//Connect to a new pipe
 					Console.WriteLine("Connecting to a new pipe...");
 					pipe = new PipeConnection();
-					if (pipe.AttemptConnection())
+					if (pipe.AttemptConnection(targetPipe))
 					{
 						//We connected to a pipe! Reset the delay
 						Console.WriteLine("Connected to the pipe. Attempting to establish handshake...");
@@ -402,7 +381,7 @@ namespace DiscordRPC.RPC
 				if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == ServerEvent.Ready)
 				{
 					Console.WriteLine("Connection established with the RPC");
-					lock (l_property) _state = RpcState.Connected;
+					lock (l_states) _state = RpcState.Connected;
 
 					//Enqueue a ready event
 					ReadyMessage ready = response.GetObject<ReadyMessage>();
@@ -618,7 +597,7 @@ namespace DiscordRPC.RPC
 
 			//We are establishing a lock and not releasing it until we sent the handshake message.
 			// We need to set the key, and it would not be nice if someone did things between us setting the key.
-			lock (l_property)
+			lock (l_states)
 			{
 				//Check its state
 				if (_state != RpcState.Disconnected)
@@ -717,7 +696,7 @@ namespace DiscordRPC.RPC
 		{
 			Console.WriteLine("Disposing Pipe");
 			Console.WriteLine(" - Setting State to DC..");
-			lock (l_property) _state = RpcState.Disconnected;
+			lock (l_states) _state = RpcState.Disconnected;
 
 			if (pipe != null)
 			{

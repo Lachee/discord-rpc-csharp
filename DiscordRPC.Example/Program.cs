@@ -38,7 +38,6 @@ namespace DiscordRPC.Example
 				Console.WriteLine("What port would you like to use: ");
 			}
 			while (!int.TryParse(Console.ReadLine(), out pipe));
-			DiscordRPC.IO.PipeConnection.MIN_PIPE = pipe;
 			
 			//Read if we want to tbe secretivie
 			Console.WriteLine("Would you like to make a secret? [Y/n]: ");
@@ -61,7 +60,7 @@ namespace DiscordRPC.Example
 			}
 
 			//Creates a new Discord RPC Client
-			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true))
+			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
 			{
 				//Send the presence
 				client.SetPresence(presence);

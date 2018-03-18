@@ -9,9 +9,6 @@ namespace DiscordRPC.IO
 	//TODO: Make Internal
 	public class PipeConnection : IDisposable
 	{
-		//TODO: Remove This
-		public static int MIN_PIPE = 0;
-
 		/// <summary>
 		/// Discord Pipe Name
 		/// </summary>
@@ -23,43 +20,62 @@ namespace DiscordRPC.IO
 
 		#region Pipe Management
 
-		public bool AttemptConnection()
+		/// <summary>
+		/// Attempts to establish a connection to the Discord Client
+		/// </summary>
+		/// <param name="pipe">The pipe the discord client is located on. Set to -1 for any available pipe.</param>
+		/// <returns></returns>
+		public bool AttemptConnection(int pipe)
 		{
-			for (int i = MIN_PIPE; i < 10; i++)
+			if (pipe < 0)
 			{
-				//Prepare the pipe name
-				string pipename = string.Format(PIPE_NAME, i);
-				Console.WriteLine("Attempting to connect to " + pipename);
+				//Iterate over each pipe, trying to connect. If we connect, end the loop and return true.
+				for (int i = 0; i < 10; i++)
+					if (CreateConnection(i)) return true;
 
-				try
-				{
-					//Create the client
-					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
-					_stream.Connect(1000);
+				//We failed to conect, so return false
+				return false;
+			}
+			else
+			{
+				//Attempt to connect to the target pipe
+				return CreateConnection(pipe);
+			}
+		}
 
-					//Spin for a bit while we wait for it to finish connecting
-					Console.WriteLine("Waiting for connection...");
-					do { Thread.Sleep(250); } while (!_stream.IsConnected);
+		private bool CreateConnection(int pipe)
+		{
+			//Prepare the pipe name
+			string pipename = string.Format(PIPE_NAME, pipe);
+			Console.WriteLine("Attempting to connect to " + pipename);
 
-					//Store the value
-					Console.WriteLine("Connected to " + pipename);
-					_isconnected = true;
-					return true;
-				}
-				catch (Exception e)
-				{
-					//Something happened, try again
-					//TODO: Log the failure condition
-					Console.WriteLine("Failed connection to {0}. {1}", pipename, e.Message);
-					_isconnected = false;
-					_stream = null;
-				}
+			try
+			{
+				//Create the client
+				_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
+				_stream.Connect(1000);
+
+				//Spin for a bit while we wait for it to finish connecting
+				Console.WriteLine("Waiting for connection...");
+				do { Thread.Sleep(250); } while (!_stream.IsConnected);
+
+				//Store the value
+				Console.WriteLine("Connected to " + pipename);
+				_isconnected = true;
+				return true;
+			}
+			catch (Exception e)
+			{
+				//Something happened, try again
+				//TODO: Log the failure condition
+				Console.WriteLine("Failed connection to {0}. {1}", pipename, e.Message);
+				_isconnected = false;
+				_stream = null;
 			}
 
 			//We are succesfull if the stream isn't null
 			return _stream == null;
 		}
-
 		#endregion
 		
 		#region Frame Write
