@@ -59,6 +59,7 @@ namespace DiscordRPC.Example
 				};
 			}
 
+
 			//Creates a new Discord RPC Client
 			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
 			{
