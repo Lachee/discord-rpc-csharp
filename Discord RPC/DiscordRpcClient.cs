@@ -211,42 +211,42 @@ namespace DiscordRPC
 				HandleMessage(message);
 
 				//Invoke the appropriate methods
-				switch(message.Type)
+				switch (message.Type)
 				{
 					case MessageType.Ready:
-						OnReady?.Invoke(this, message as ReadyMessage);
+						if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
 						break;
 
 					case MessageType.Close:
-						OnClose?.Invoke(this, message as CloseMessage);
+						if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
 						break;
 
 					case MessageType.Error:
-						OnError?.Invoke(this, message as ErrorMessage);
+						if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
 						break;
 
 					case MessageType.PresenceUpdate:
-						OnPresenceUpdate?.Invoke(this, message as PresenceMessage);
+						if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
 						break;
 
 					case MessageType.Subscribe:
-						OnSubscribe?.Invoke(this, message as SubscribeMessage);
+						if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
 						break;
 
 					case MessageType.Unsubscribe:
-						OnUnsubscribe?.Invoke(this, message as UnsubscribeMessage);
+						if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
 						break;
 
 					case MessageType.Join:
-						OnJoin?.Invoke(this, message as JoinMessage);
+						if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
 						break;
 
 					case MessageType.Spectate:
-						OnSpectate?.Invoke(this, message as SpectateMessage);
+						if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
 						break;
 
 					case MessageType.JoinRequest:
-						OnJoinRequested?.Invoke(this, message as JoinRequestMessage);
+						if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
 						break;
 
 					default:
@@ -340,7 +340,7 @@ namespace DiscordRPC
 		{
 			//Enqueue the presence command to be sent
 			_presence = presence;
-			connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence?.Clone() });
+			connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence ? presence.Clone() : null });
 		}
 
 		/// <summary>

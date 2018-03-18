@@ -76,14 +76,14 @@ namespace DiscordRPC
 		{
 			return new RichPresence()
 			{
-				State = this._state?.Clone() as string,
-				Details = this._details?.Clone() as string,
+				State = this._state != null ? _state.Clone() as string : null,
+				Details = this._details != null ? _details.Clone() as string : null,
 
 				Secrets = this.Secrets == null || string.IsNullOrEmpty(this.Secrets.MatchSecret) ? null : new Secrets()
 				{
-					MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
-					JoinSecret = this.Secrets.JoinSecret?.Clone() as string,
-					SpectateSecret = this.Secrets.SpectateSecret?.Clone() as string,
+					MatchSecret = this.Secrets.MatchSecret != null ? this.Secrets.MatchSecret.Clone() as string : null,
+					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
+					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
 				},
 
 				Timestamps = this.Timestamps == null ? null : new Timestamps()
@@ -94,10 +94,10 @@ namespace DiscordRPC
 
 				Assets = this.Assets == null ? null : new Assets()
 				{
-					LargeImageKey = this.Assets.LargeImageKey?.Clone() as string,
-					LargeImageText = this.Assets.LargeImageText?.Clone() as string,
-					SmallImageKey = this.Assets.SmallImageKey?.Clone() as string,
-					SmallImageText = this.Assets.SmallImageText?.Clone() as string
+					LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string  : null,
+					LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
+					SmallImageKey = this.Assets.SmallImageKey != null ? this.Assets.SmallImageKey.Clone() as string : null,
+					SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
 				},
 
 				Party = this.Party == null || this.Party.ID == null ? null : new Party()
@@ -107,6 +107,16 @@ namespace DiscordRPC
 					Max = this.Party.Max
 				}
 			};
+		}
+
+
+		/// <summary>
+		/// Operator that converts a presence into a boolean for null checks.
+		/// </summary>
+		/// <param name="presesnce"></param>
+		public static implicit operator bool(RichPresence presesnce)
+		{
+			return presesnce == null;
 		}
 	}
 	

@@ -76,7 +76,7 @@ namespace DiscordRPC
 		public string GetAvatarURL(AvatarFormat format, AvatarSize size = AvatarSize.x128)
 		{
 			//Prepare the endpoint
-			string endpoint = $"/avatars/{ID}/{Avatar}";
+			string endpoint = "/avatars/" + ID + "/" + Avatar;
 
 			//The user has no avatar, so we better replace it with the default
 			if (string.IsNullOrEmpty(Avatar))
@@ -87,7 +87,7 @@ namespace DiscordRPC
 
 				//Get the endpoint
 				int descrim = Descriminator % 5;
-				endpoint = $"/embed/avatars/{descrim}";
+				endpoint = "/embed/avatars/" + descrim;
 			}
 
 			//Finish of the endpoint

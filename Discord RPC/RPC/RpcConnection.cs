@@ -77,8 +77,17 @@ namespace DiscordRPC.RPC
 
 			//Assign a default logger
 			Logger = new ConsoleLogger();
+
+			Random rand = new Random();
+			nonce = rand.Next(0, 10000000);
 		}
 			
+		private long GetNextNonce()
+		{
+			nonce += 7;
+			return nonce;
+		}
+
 		#region Queues
 		/// <summary>
 		/// Enqueues a command
@@ -346,7 +355,7 @@ namespace DiscordRPC.RPC
 			{
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
-				frame.SetObject(Opcode.Frame, (new PresenceCommand() { PID = processID, Presence = null }).PreparePayload(nonce++));
+				frame.SetObject(Opcode.Frame, (new PresenceCommand() { PID = processID, Presence = null }).PreparePayload(GetNextNonce()));
 
 				//Write it
 				if (pipe != null && !pipe.WriteFrame(frame))
@@ -516,7 +525,7 @@ namespace DiscordRPC.RPC
 			try
 			{
 				//Prepare the payload
-				IPayload payload = item.PreparePayload(nonce++);
+				IPayload payload = item.PreparePayload(GetNextNonce());
 				
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
@@ -569,7 +578,7 @@ namespace DiscordRPC.RPC
 				try
 				{
 					//Prepare the payload
-					IPayload payload = item.PreparePayload(nonce++);
+					IPayload payload = item.PreparePayload(GetNextNonce());
 
 					//Prepare the frame
 					PipeFrame frame = new PipeFrame();
@@ -746,7 +755,7 @@ namespace DiscordRPC.RPC
 
 			//Abort the thread and wait for it to finish aborting
 			thread.Abort();
-			thread.Join();
+			//thread.Join();
 		}
 		#endregion
 		

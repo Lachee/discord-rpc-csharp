@@ -28,7 +28,7 @@ namespace DiscordRPC.RPC.Payload
 
 		public override string ToString()
 		{
-			return "Payload || Command: " + Command.ToString() + ", Nonce: " + Nonce?.ToString();
+			return "Payload || Command: " + Command.ToString() + ", Nonce: " + (Nonce != null ? Nonce.ToString() : "NULL");
 		}
 	}
 }

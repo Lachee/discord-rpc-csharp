@@ -11,12 +11,12 @@ namespace DiscordRPC.Helper
 		/// <summary>
 		/// The maximum time the backoff can reach
 		/// </summary>
-		public int Maximum { get; }
+		public int Maximum { get; private set; }
 
 		/// <summary>
 		/// The minimum time the backoff can start at
 		/// </summary>
-		public int Minimum { get; }
+		public int Minimum { get; private set; }
 
 		/// <summary>
 		/// The current time of the backoff

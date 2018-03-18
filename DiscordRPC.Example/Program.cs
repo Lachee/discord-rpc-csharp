@@ -64,7 +64,7 @@ namespace DiscordRPC.Example
 			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
 			{
 				//Set the loggers
-				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Error };
+				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Info };
 
 				//Initialize the connection
 				client.Initialize();

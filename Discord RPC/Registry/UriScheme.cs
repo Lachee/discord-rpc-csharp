@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -50,8 +51,6 @@ namespace DiscordRPC.Registry
 			{
 				throw e;
 			}
-
-			return null;
 		}
 	
 		/// <summary>
@@ -60,7 +59,7 @@ namespace DiscordRPC.Registry
 		/// <returns></returns>
 		public static string GetApplicationLocation()
 		{
-			return Assembly.GetEntryAssembly().Location;
+			return Process.GetCurrentProcess().MainModule.FileName;
 		}
 
 		/// <summary>
