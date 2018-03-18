@@ -1,16 +1,42 @@
 ﻿using DiscordRPC.Helper;
+using DiscordRPC.Message;
 using DiscordRPC.IO;
-using DiscordRPC.RPC.Payloads;
-using Newtonsoft.Json;
+using DiscordRPC.RPC.Commands;
+using DiscordRPC.RPC.Payload;
 using System;
-using System.Collections.Specialized;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC
 {
+
+
+
+
+	/*
+
+
+
+
+
+		TODO:
+
+		Make sure I dont send any messages until I get a response back
+
+
+
+
+
+
+
+
+
+	*/
+
+
+
+
 	/// <summary>
 	/// Communicates between the client and discord through RPC
 	/// </summary>
@@ -20,6 +46,11 @@ namespace DiscordRPC.RPC
 		/// Version of the RPC Protocol
 		/// </summary>
 		public static readonly int VERSION = 1;
+
+		/// <summary>
+		/// Should we only send once we finished receiving one?
+		/// </summary>
+		public static readonly bool LOCK_STEP = true;
 
 		#region States
 
@@ -44,60 +75,98 @@ namespace DiscordRPC.RPC
 		private Thread thread;
 		private PipeConnection pipe;
 
-		private object l_sendqueue = new object();
-		private Queue<RichPresence> _sendqueue;
+		private object l_rtqueue = new object();
+		private Queue<ICommand> _rtqueue;
+
+		private object l_rxqueue = new object();
+		private Queue<IMessage> _rxqueue;
 
 		private BackoffDelay delay;
 		#endregion
-
-
+		
 		public RpcConnection(string applicationID, int processID)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
 
 			delay = new BackoffDelay(500, 60 * 1000);
-			_sendqueue = new Queue<RichPresence>();
+			_rtqueue = new Queue<ICommand>();
+			_rxqueue = new Queue<IMessage>();
 		}
-
-
-		#region Publics
-
-		public void SetPresence(RichPresence presence)
+			
+		#region Queues
+		/// <summary>
+		/// Enqueues a command
+		/// </summary>
+		/// <param name="presence"></param>
+		internal void EnqueueCommand(ICommand command)
 		{
-			lock (_sendqueue)
-				_sendqueue.Enqueue(presence.Clone());
-
-			//If we are not aborted, we might as well execute it straight up
-			if (thread == null) AttemptConnection();
-			if (pipe.IsConnected) WriteQueue();
-		}
-		public void DequeueEvent()
-		{
-			throw new NotImplementedException();
-		}
-		public void DequeueEvents()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Close()
-		{
-			if (!IsRunning || thread == null)
+			int count = 0;
+			lock (_rtqueue)
 			{
-				Console.WriteLine("Cannot close as it is not available!");
-				return;
+				//Enqueue the set presence argument
+				_rtqueue.Enqueue(command);
+				count = _rtqueue.Count;
 			}
 
-			//Abort the thread and wait for it to finish aborting
-			thread.Abort();
-			thread.Join();
+			//If we are not aborted, we might as well execute it straight up
+			if (thread == null) { AttemptConnection(); return; }
+			if (pipe != null && pipe.IsConnected)
+			{
+				if (!LOCK_STEP || (LOCK_STEP && count == 1))
+				{
+					Console.WriteLine("Sneding Queue Process");
+					ProcessCommandQueue();
+				}
+			}
 		}
-		
-		#endregion
-		
-		#region Read Loop
 
+		/// <summary>
+		/// Adds a message to the message queue. Does not copy the message, so besure to copy it yourself or dereference it.
+		/// </summary>
+		/// <param name="message">The message to add</param>
+		private void EnqueueMessage(IMessage message)
+		{
+			lock (l_rxqueue)
+				_rxqueue.Enqueue(message);
+		}
+
+		/// <summary>
+		/// Dequeues a single message from the event stack. Returns null if none are available.
+		/// </summary>
+		/// <returns></returns>
+		internal IMessage DequeueMessage()
+		{
+			lock (l_rxqueue)
+			{
+				//We have nothing, so just return null.
+				if (_rxqueue.Count == 0) return null;
+
+				//Get the value and remove it from the list at the same time
+				return _rxqueue.Dequeue();
+			}
+		}
+
+		/// <summary>
+		/// Dequeues all messages from the event stack. 
+		/// </summary>
+		/// <returns></returns>
+		internal IMessage[] DequeueMessages()
+		{
+			lock (l_rxqueue)
+			{
+				//Copy the messages into an array
+				IMessage[] messages = _rxqueue.ToArray();
+
+				//Clear the entire queue
+				_rxqueue.Clear();
+
+				//return the array
+				return messages;
+			}
+		}
+		#endregion
+				
 		/// <summary>
 		/// Main thread loop
 		/// </summary>
@@ -140,6 +209,7 @@ namespace DiscordRPC.RPC
 								//The loop has exited because of an abort,
 								// so we should exit out of this loop too.
 								Console.WriteLine("Handled Thread Abort: Read Loop has returned true, main loop is now exiting.");
+								EnqueueMessage(new CloseMessage("Connection terminated by game"));
 								_inMainLoop = false;
 								break;
 							}
@@ -160,13 +230,14 @@ namespace DiscordRPC.RPC
 					long sleep = delay.NextDelay();
 
 					Console.WriteLine("Waiting {0}ms", sleep);
-					Thread.Sleep((int)delay.NextDelay());
+					Thread.Sleep(delay.NextDelay());
 				}
 				catch(ThreadAbortException e)
 				{
 					//We have been given an abort, so exit out of the main loop after reseting the exception
 					Thread.ResetAbort();
 					Console.WriteLine("Thread Abort: {0}", e.Message);
+					EnqueueMessage(new CloseMessage("Connection terminated by game"));
 					_inMainLoop = false;
 					break;
 				}
@@ -174,8 +245,10 @@ namespace DiscordRPC.RPC
 				{
 					//We have just had a unkown error. We will repeat the loop again for saftey.
 					Console.WriteLine("Something seriously went wrong! {0}", e.Message);
+					EnqueueMessage(new CloseMessage(e.Message));
 					Console.WriteLine(e.StackTrace);
 				}
+
 			}
 
 			//We are no longer in the main loop
@@ -186,74 +259,7 @@ namespace DiscordRPC.RPC
 			DisposePipe();
 		}
 
-		/// <summary>
-		/// Establishes the handshake with the server. 
-		/// </summary>
-		/// <returns></returns>
-		private bool EstablishHandshake()
-		{
-			Console.WriteLine("Attempting to establish a handshake...");
-
-			//We are establishing a lock and not releasing it until we sent the handshake message.
-			// We need to set the key, and it would not be nice if someone did things between us setting the key.
-			lock (l_property)
-			{
-				//Check its state
-				if (_state != RpcState.Disconnected)
-				{
-					Console.WriteLine("State must be disconnected in order to start a handshake!");
-					return false;
-				}
-
-				
-				Console.WriteLine("Sending Handshake...");
-
-				//Prepare the handshake and send it
-				PipeFrame handshakeFrame = new PipeFrame();
-				handshakeFrame.SetPayload(Opcode.Handshake, new Handshake() { ClientID = applicationID, Version = VERSION });
-
-				//Send it off to the server
-				pipe.WriteFrame(handshakeFrame);
-				_state = RpcState.Connecting;
-			}
-
-			try
-			{
-				do
-				{
-					Console.WriteLine("Waiting for handshake frame...");
-
-					//Continously read the frames until we get our handshake.
-					PipeFrame ackFrame;
-					if (!pipe.TryReadFrame(out ackFrame))
-					{
-						//We failed to read anything, probably broken pipe
-						Console.WriteLine("Failed to read anything from the pipe, probably a broken pipe");
-						return false;
-					}
-
-					//Make sure we got a frame then process it.
-					if (ackFrame.Opcode == Opcode.Frame)
-						ProcessFrame(ackFrame.GetPayload<ResponsePayload>());
-
-					//Keep going until we are not longer connecting
-				} while (State == RpcState.Connecting);
-			}
-			catch(ThreadAbortException abort)
-			{
-				//Throw the abort upwards (this will go into our main thread).
-				throw abort;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Exception occured while saying hello: {0}", e);
-				Console.WriteLine(e.StackTrace);
-				return false;
-			}
-
-			//Success
-			return true;
-		}
+		#region Reading
 
 		/// <summary>
 		/// The main pipe reading loop. This should not exit until an exception occurs. If the exception is a ThreadAbort, this will return a true,  otherwise false. 
@@ -286,7 +292,8 @@ namespace DiscordRPC.RPC
 						case Opcode.Close:
 							//We have been told by discord to close, so we will consider it an abort
 							Console.WriteLine("We have been told to terminate by discord.");
-							isAbort = true;
+							Console.WriteLine(frame.Message);
+							//isAbort = true;
 							_inReadLoop = false;
 							break;
 							
@@ -306,7 +313,7 @@ namespace DiscordRPC.RPC
 						case Opcode.Frame:
 
 							//We have a frame, so we are going to process the payload and add it to the stack
-							ResponsePayload response = frame.GetPayload<ResponsePayload>();
+							EventPayload response = frame.GetObject<EventPayload>();
 							ProcessFrame(response);
 							break;
 
@@ -321,13 +328,6 @@ namespace DiscordRPC.RPC
 
 					//If we aborted in the switch statement above, we will continue to abort.
 					if (isAbort) break;
-
-					//Now we just need to write all remaining items
-					//Well, we could do this.... but the pipe is asyncronous, so we can read and write at the same time.
-					//
-					//We are writing now just incase we had any messages while the pipe wasn't available.
-					WriteQueue();
-
 				}
 				catch (ThreadAbortException e)
 				{
@@ -347,13 +347,27 @@ namespace DiscordRPC.RPC
 					isAbort = false;
 					break;
 				}
+
+
+				//Now we just need to write all remaining items
+				//Well, we could do this.... but the pipe is asyncronous, so we can read and write at the same time.
+				//
+				//We are writing now just incase we had any messages while the pipe wasn't available.
+				ProcessCommandQueue();
 			}
 			_inReadLoop = false;
 
 			//its an abort, so we will clear our presence if we are able
 			if(isAbort && State == RpcState.Connected)
 			{
-				WritePresence(null);
+				//Prepare the frame
+				PipeFrame frame = new PipeFrame();
+				frame.SetObject(Opcode.Frame, (new PresenceCommand() { PID = processID, Presence = null }).PreparePayload(nonce++));
+
+				//Write it
+				if (pipe != null && !pipe.WriteFrame(frame))
+					Console.WriteLine("Failed to clear the presence. Pipe was probably already removed or was the cause of the failure.");
+					
 				return true;
 			}
 
@@ -363,96 +377,221 @@ namespace DiscordRPC.RPC
 
 		/// <summary>Handles the response from the pipe and calls appropriate events and changes states.</summary>
 		/// <param name="response">The response received by the server.</param>
-		private void ProcessFrame(ResponsePayload response)
+		private void ProcessFrame(EventPayload response)
 		{
 			Console.WriteLine("Handling Response. Cmd: {0}, Event: {1}", response.Command, response.Event);
+
+			//Check if it is an error
+			if (response.Event.HasValue && response.Event.Value == ServerEvent.Error)
+			{
+				//We have an error
+				Console.WriteLine("Error received from the RPC");
+
+				//Create the event objetc and push it to the queue
+				ErrorMessage err = response.GetObject<ErrorMessage>();
+				Console.WriteLine("Server responded with an error message: ({0}) {1}", err.Code.ToString(), err.Message);
+
+				//Enqueue the messsage and then end
+				EnqueueMessage(err);
+				return;
+			}
 
 			//Check if its a handshake
 			if (State == RpcState.Connecting)
 			{
-				if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == SubscriptionType.Ready)
+				if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == ServerEvent.Ready)
 				{
 					Console.WriteLine("Connection established with the RPC");
 					lock (l_property) _state = RpcState.Connected;
 
-					//TODO: Send a OnReady event
-					Console.WriteLine("Invoke: OnReady");
-					Console.WriteLine("Ready");
+					//Enqueue a ready event
+					ReadyMessage ready = response.GetObject<ReadyMessage>();
+					EnqueueMessage(ready);
 
 					//Process the queue we have
 					//We will do this later
-					WriteQueue();
+					ProcessCommandQueue();
+
+					return;
 				}
 			}
-			else if (State == RpcState.Connected)
+
+			if (State == RpcState.Connected)
 			{
-				//TODO: Make event queue
-				//TODO: Use a ProcessResponse
-				Console.WriteLine("Received Frame. Cmd: {0}, Event: {1}", response.Command, response.Event);
+				switch(response.Command)
+				{
+					//We were sent a dispatch, better process it
+					case Command.Dispatch:
+						ProcessDispatch(response);
+						break;
+
+					//We were sent a Activity Update, better enqueue it
+					case Command.SetActivity:
+						RichPresenceResponse rp = response.GetObject<RichPresenceResponse>();
+						EnqueueMessage(new PresenceMessage(rp));
+						break;
+
+					case Command.Subscribe:
+						JsonSerializer serializer = new JsonSerializer();
+						serializer.Converters.Add(new Converters.EnumSnakeCaseConverter());
+
+						var evt = response.Data.GetValue("evt").ToObject<ServerEvent>(serializer);
+						EnqueueMessage(new SubscribeMessage(evt));
+						break;
+
+					case Command.SendActivityJoinInvite:
+						Console.WriteLine("Got invite response ack.");
+						break;
+
+					case Command.CloseActivityJoinRequest:
+						Console.WriteLine("Got invite response reject ack.");
+						break;
+						
+					//we have no idea what we were sent
+					default:
+						Console.WriteLine("Unkown frame was received! {0}", response.Command);
+						return;
+				}
+				return;
+			}
+
+			Console.WriteLine("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);			
+		}
+
+		private void ProcessDispatch(EventPayload response)
+		{
+			if (response.Command != Command.Dispatch) return;
+			if (!response.Event.HasValue) return;
+
+			switch(response.Event.Value)
+			{
+				//We are to join the server
+				case ServerEvent.ActivitySpectate:
+					var spectate = response.Data.ToObject<SpectateMessage>();
+					EnqueueMessage(spectate);
+					break;
+
+				case ServerEvent.ActivityJoin:
+					var join = response.Data.ToObject<JoinMessage>();
+					EnqueueMessage(join);
+					break;
+
+				case ServerEvent.ActivityJoinRequest:
+					var request = response.Data.ToObject<JoinRequestMessage>();
+					EnqueueMessage(request);
+					break;
+
+				//Unkown dispatch event received. We should just ignore it.
+				default:
+					Console.WriteLine("Ignoring {0}", response.Event.Value);
+					break;
+			}
+		}
+		
+		#endregion
+
+		#region Writting
+
+		private bool ProcessCommandQueue()
+		{
+			if (LOCK_STEP)
+			{
+				Console.WriteLine("Processing Lockstep Queue");
+				return ProcessSingleCommandQueue();
 			}
 			else
 			{
-				Console.WriteLine("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);
+				Console.WriteLine("Processing Entire Queue");
+				return ProcessEntireCommandQueue();
 			}
 		}
-
-		#endregion
-
-		#region Writing
-
-		/// <summary>Sends a rich presence through the pipe. Creating the Frame and the Message data.</summary>
-		/// <param name="presence">The presence to send. Can be null.</param>
-		private void WritePresence(RichPresence presence)
+		private bool ProcessSingleCommandQueue()
 		{
+			//Get the item if its available
+			ICommand item = null;
+			lock (l_rtqueue)
+			{
+				if (_rtqueue.Count > 0)
+					item = _rtqueue.Peek();
+			}
+
+			//We have no items available
+			if (item == null) return true;
+
 			try
 			{
+				//Prepare the payload
+				IPayload payload = item.PreparePayload(nonce++);
+				
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
-				frame.SetPayload(Opcode.Frame, new RequestPayload()
-				{
-					Command = Command.SetActivity,
-					Nonce = (this.nonce++).ToString(),
-					Args = new PresenceUpdate()
-					{
-						PID = this.processID,
-						Presence = presence
-					}
-				});
+				frame.SetObject(Opcode.Frame, payload);
 
-				//Write the frame
-				pipe.WriteFrame(frame);
+				//Write it and if it wrote perfectly fine, we will dequeue it
+				Console.WriteLine("------ Sending Payload: " + payload.Command);
+				if (pipe.WriteFrame(frame))
+				{
+					//Remove it from the queue and return true
+					lock (l_rtqueue) _rtqueue.Dequeue();
+					return true;
+				}
+				else
+				{
+					//Something bad happened. Bad pipe?
+					Console.WriteLine("Something went wrong during writing!");
+					return false;
+				}
 			}
 			catch (Exception e)
 			{
-				throw e;
+				//Something has happened, so abort the entire writing sequence. Probably needs a reconnect
+				Console.WriteLine("An exception has occured while trying to write.");
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+				return false;
 			}
 		}
-
-		/// <summary>Goes through the send queue one item at a time and sends them through the pipe</summary>
-		private void WriteQueue()
+		private bool ProcessEntireCommandQueue()
 		{
 			//Prepare some variabels we will clone into with locks
 			bool needsWriting = true;
-			RichPresence item = null;
+			ICommand item = null;
 
 			//Continue looping until we dont need anymore messages
 			while (true)
 			{
-				lock (l_sendqueue)
+				lock (l_rtqueue)
 				{
 					//Pull the value and update our writing needs
 					// If we have nothing to write, exit the loop
-					needsWriting = _sendqueue.Count > 0;
-					if (!needsWriting) break;	
+					needsWriting = _rtqueue.Count > 0;
+					if (!needsWriting) return true;	
 
-					//Dequeue the item
-					item = _sendqueue.Dequeue();
+					//Peek at the item
+					item = _rtqueue.Peek();
 				}
 
 				try
 				{
-					//Write the item
-					WritePresence(item);
+					//Prepare the payload
+					IPayload payload = item.PreparePayload(nonce++);
+
+					//Prepare the frame
+					PipeFrame frame = new PipeFrame();
+					frame.SetObject(Opcode.Frame, payload);
+
+					//Write it and if it wrote perfectly fine, we will dequeue it
+					Console.WriteLine("++++++ Sending payloads: " + payload.Command);
+					if (pipe.WriteFrame(frame))
+					{
+						lock (l_rtqueue) _rtqueue.Dequeue();
+						return true;
+					}
+					else
+					{
+						Console.WriteLine("Something went wrong during writing!");
+						return false;
+					}
 				}
 				catch (Exception e)
 				{
@@ -460,7 +599,7 @@ namespace DiscordRPC.RPC
 					Console.WriteLine("An exception has occured while trying to write.");
 					Console.WriteLine(e.Message);
 					Console.WriteLine(e.StackTrace);
-					break;
+					return false;
 				}
 			}
 		}
@@ -468,6 +607,71 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Connection
+
+		/// <summary>
+		/// Establishes the handshake with the server. 
+		/// </summary>
+		/// <returns></returns>
+		private bool EstablishHandshake()
+		{
+			Console.WriteLine("Attempting to establish a handshake...");
+
+			//We are establishing a lock and not releasing it until we sent the handshake message.
+			// We need to set the key, and it would not be nice if someone did things between us setting the key.
+			lock (l_property)
+			{
+				//Check its state
+				if (_state != RpcState.Disconnected)
+				{
+					Console.WriteLine("State must be disconnected in order to start a handshake!");
+					return false;
+				}
+
+				//Send it off to the server
+				Console.WriteLine("Sending Handshake...");
+				if (!pipe.WriteHandshake(VERSION, applicationID))
+					return false;
+				_state = RpcState.Connecting;
+			}
+
+			try
+			{
+				do
+				{
+					Console.WriteLine("Waiting for handshake frame...");
+
+					//Continously read the frames until we get our handshake.
+					PipeFrame ackFrame;
+					if (!pipe.TryReadFrame(out ackFrame))
+					{
+						//We failed to read anything, probably broken pipe
+						Console.WriteLine("Failed to read anything from the pipe, probably a broken pipe");
+						return false;
+					}
+
+					//Make sure we got a frame then process it.
+					if (ackFrame.Opcode == Opcode.Frame)
+						ProcessFrame(ackFrame.GetObject<EventPayload>());
+
+					//Keep going until we are not longer connecting
+				} while (State == RpcState.Connecting);
+			}
+			catch (ThreadAbortException abort)
+			{
+				//Throw the abort upwards (this will go into our main thread).
+				throw abort;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Exception occured while saying hello: {0}", e);
+				Console.WriteLine(e.StackTrace);
+				return false;
+			}
+
+			//Success
+			return true;
+		}
+
 
 		public bool Reconnect()
 		{
@@ -524,10 +728,23 @@ namespace DiscordRPC.RPC
 			Console.WriteLine(" - Done");
 		}
 
+		/// <summary>
+		/// Closes the connection
+		/// </summary>
+		public void Close()
+		{
+			if (!IsRunning || thread == null)
+			{
+				Console.WriteLine("Cannot close as it is not available!");
+				return;
+			}
+
+			//Abort the thread and wait for it to finish aborting
+			thread.Abort();
+			thread.Join();
+		}
 		#endregion
-
-
-
+		
 	}
 
 	public enum RpcState

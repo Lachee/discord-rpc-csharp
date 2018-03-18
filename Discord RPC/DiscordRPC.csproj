@@ -45,33 +45,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="Converters\DateTimeConverter.cs" />
     <Compile Include="Converters\EnumSnakeCaseConverter.cs" />
     <Compile Include="DiscordRpcClient.cs" />
-    <Compile Include="FixedString.cs" />
+    <Compile Include="EventType.cs" />
+    <Compile Include="Helper\FixedString.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
     <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Events\PipeErrorEvent.cs" />
+    <Compile Include="IO\Handshake.cs" />
     <Compile Include="IO\Opcode.cs" />
     <Compile Include="IO\PipeConnection.cs" />
-    <Compile Include="IO\ThreadPipeConnection.cs" />
     <Compile Include="IO\PipeFrame.cs" />
+    <Compile Include="Message\PresenceMessage.cs" />
+    <Compile Include="Message\CloseMessage.cs" />
+    <Compile Include="Message\JoinMessage.cs" />
+    <Compile Include="Message\JoinRequestMessage.cs" />
+    <Compile Include="Message\SpectateMessage.cs" />
+    <Compile Include="Message\SubscribeMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registry\UriScheme.cs" />
     <Compile Include="RichPresence.cs" />
-    <Compile Include="RPC\Command.cs" />
-    <Compile Include="RPC\ErrorCode.cs" />
-    <Compile Include="RPC\Payloads\ErrorMessage.cs" />
-    <Compile Include="RPC\Payloads\Handshake.cs" />
-    <Compile Include="RPC\Payloads\Payload.cs" />
-    <Compile Include="RPC\Payloads\PresenceUpdate.cs" />
+    <Compile Include="RPC\Commands\ICommand.cs" />
+    <Compile Include="RPC\Commands\RespondCommand.cs" />
+    <Compile Include="RPC\Commands\PresenceCommand.cs" />
+    <Compile Include="RPC\Commands\SubscribeCommand.cs" />
+    <Compile Include="Message\ReadyMessage.cs" />
+    <Compile Include="RPC\Payload\Command.cs" />
+    <Compile Include="Message\IMessage.cs" />
+    <Compile Include="Message\MessageType.cs" />
+    <Compile Include="Message\ErrorMessage.cs" />
+    <Compile Include="RPC\Payload\PayloadArgument.cs" />
+    <Compile Include="RPC\Payload\IPayload.cs" />
+    <Compile Include="RPC\Payload\PayloadEvent.cs" />
     <Compile Include="RPC\RpcConnection.cs" />
-    <Compile Include="RPC\RpcConnectionPipe.cs" />
-    <Compile Include="RPC\SubscriptionType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="RPC\Payload\ServerEvent.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

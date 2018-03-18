@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DiscordRPC
+namespace DiscordRPC.Helper
 {
 	/// <summary>
 	/// This class prevents strings from being larger than the specified max. Will implicitly cast into a string.

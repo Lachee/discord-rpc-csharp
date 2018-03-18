@@ -1,12 +1,17 @@
 ﻿using DiscordRPC.IO.Events;
 using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 
 namespace DiscordRPC.IO
 {
-	internal class PipeConnection : IDisposable
+	//TODO: Make Internal
+	public class PipeConnection : IDisposable
 	{
+		//TODO: Remove This
+		public static int MIN_PIPE = 0;
+
 		/// <summary>
 		/// Discord Pipe Name
 		/// </summary>
@@ -20,7 +25,7 @@ namespace DiscordRPC.IO
 
 		public bool AttemptConnection()
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = MIN_PIPE; i < 10; i++)
 			{
 				//Prepare the pipe name
 				string pipename = string.Format(PIPE_NAME, i);
@@ -57,13 +62,34 @@ namespace DiscordRPC.IO
 
 		#endregion
 		
-
 		#region Frame Write
 
+		/// <summary>
+		/// Writes the handshake to the connection
+		/// </summary>
+		/// <param name="version">Version of the IPC protocol</param>
+		/// <param name="client">The client ID</param>
+		/// <returns></returns>
+		public bool WriteHandshake(int version, string client)
+		{
+			PipeFrame frame = new PipeFrame();
+			frame.SetObject(Opcode.Handshake, new Handshake() { Version = version, ClientID = client });
+
+			return WriteFrame(frame);
+		}
+
+		/// <summary>
+		/// Writes the frame to the connection
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
 		public bool WriteFrame(PipeFrame frame)
 		{
 			//u_stream is multithread friendly, so we can just write directly
-			return Write(frame);
+			bool success =  Write(frame);
+			//_stream.WaitForPipeDrain();
+
+			return success;
 		}
 
 		#endregion
@@ -77,15 +103,31 @@ namespace DiscordRPC.IO
 			frame = default(PipeFrame);
 
 			//Try to read the values
-			int op = ReadInt32();
-			if (op < 0) return false;
+			uint op;
+			if (!TryReadUInt32(out op))
+			{
+				Console.WriteLine("Bad OpCode");
+				return false;
+			}
 
-			int len = ReadInt32();
-			if (len < 0) return false;
+			uint len;
+			if (!TryReadUInt32(out len))
+			{
+				Console.WriteLine("Bad Length");
+				return false;
+			}
 
-			//Read the data
+
+			//Read the data. This could potentially cause issues if we ever get anything greater than a int.
+			//TODO: Better implementation of this read using uints
 			byte[] buff = new byte[len];
-			Read(buff, len);
+			int bytesread = Read(buff, (int)len);
+
+			if (bytesread != len)
+			{
+				Console.WriteLine("Bad Data");
+				return false;
+			}
 
 			//Create the frame
 			frame = new PipeFrame()
@@ -99,49 +141,71 @@ namespace DiscordRPC.IO
 		}
 
 		private int Read(byte[] buff, int length) { return _stream.Read(buff, 0, length); }
-		private int ReadInt32()
+		private bool TryReadUInt32(out uint value)
 		{
 			//Read the bytes
 			byte[] bytes = new byte[4];
 			int cnt = Read(bytes, 4);
-			if (cnt != 4) return -1;
-			
+			if (cnt != 4)
+			{
+				Console.WriteLine("Did not ready 4 bytes!");
+				value = 0;
+				return false;
+			}
+
 			//Convert to int
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			return BitConverter.ToInt32(bytes, 0);
+			value = BitConverter.ToUInt32(bytes, 0);
+			return true;
 		}
 		#endregion
 
 		#region Write
 		private bool Write(PipeFrame frame)
 		{
-			if (!Write((int)frame.Opcode)) return false;
-			if (!Write(frame.Length)) return false;
-			if (!Write(frame.Data)) return false;
-			return true;
-		}
-		private bool Write(byte[] buff)
-		{
 			try
 			{
-				_stream.Write(buff, 0, buff.Length);
-				return true;
+				//Get all the bytes
+				byte[] op = ConvertBytes((uint)frame.Opcode);
+				byte[] len = ConvertBytes(frame.Length);
+				byte[] data = frame.Data;
+
+				//Copy it all into a buffer
+				byte[] buffer = new byte[op.Length + len.Length + data.Length];
+				op.CopyTo(buffer, 0);
+				len.CopyTo(buffer, op.Length);
+				data.CopyTo(buffer, op.Length + len.Length);
+
+				//Write it to the stream
+				_stream.Write(buffer, 0, buffer.Length);
+
 			}
 			catch (Exception e)
 			{
-				//TODO: Replace with error event
-				Console.WriteLine("An error has occured in the pipe: {0}", e.Message);
+				Console.WriteLine("Exception has occured while writing a frame: {0}", e);
 				return false;
 			}
+
+			return true;
 		}
-		private bool Write(int int32)
+		
+		/// <summary>
+		/// Gets the bytes of a uint32 value in LE format.
+		/// </summary>
+		/// <param name="uint32"></param>
+		/// <returns></returns>
+		private byte[] ConvertBytes(uint uint32)
 		{
-			byte[] bytes = BitConverter.GetBytes(int32);
+			byte[] bytes = BitConverter.GetBytes(uint32);
+
+			//If we are already in LE, we dont need to flip it
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			return Write(bytes);
+
+			//Give back the bytes
+			return bytes;
 		}
+
 		#endregion
-	
 		#endregion
 
 		public void Dispose()

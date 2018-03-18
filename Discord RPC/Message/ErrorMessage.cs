@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC
+namespace DiscordRPC.Message
 {
 	/// <summary>
-	/// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
+	/// Created when a error occurs within the ipc and it is sent to the client.
+	/// </summary>
+	public class ErrorMessage : IMessage
+	{
+		public override MessageType Type { get { return MessageType.Error; } }
+
+		[JsonProperty("code")]
+		public ErrorCode Code { get; set; }
+
+		[JsonProperty("message")]
+		public string Message { get; set; }
+
+	}
+
+	/// <summary>
+	/// The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
 	/// </summary>
 	public enum ErrorCode
 	{

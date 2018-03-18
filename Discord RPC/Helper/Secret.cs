@@ -48,5 +48,32 @@ namespace DiscordRPC.Helper
 			if (Random == null) Random = new Random();
 			return CreateSecret(Random);
 		}
+
+		/// <summary>
+		/// Creates a secret word using more readable friendly characters. Useful for debugging purposes. This is not a cryptographic function and should NOT be used for sensitive information.
+		/// </summary>
+		/// <param name="random">The random used to generate the characters</param>
+		/// <returns></returns>
+		public static string CreateFriendlySecret(Random random)
+		{
+			string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			string secret = "";
+
+			for (int i = 0; i < SecretLength; i++)
+				secret += charset[random.Next(charset.Length)];
+
+			return secret;
+		}
+
+		/// <summary>
+		/// Creates a secret word using more readable friendly characters using the <see cref="Random"/>. Not recommended, but useful for quick generation and for debugging purposes. This is not a cryptographic function and should NOT be used for sensitive information.
+		/// </summary>
+		/// <param name="random">The random used to generate the characters</param>
+		/// <returns></returns>
+		public static string CreateFriendlySecret()
+		{
+			if (Random == null) Random = new Random();
+			return CreateFriendlySecret(Random);
+		}
 	}
 }

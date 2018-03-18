@@ -11,18 +11,18 @@ namespace DiscordRPC.Helper
 		/// <summary>
 		/// The maximum time the backoff can reach
 		/// </summary>
-		public long Maximum { get; }
+		public int Maximum { get; }
 
 		/// <summary>
 		/// The minimum time the backoff can start at
 		/// </summary>
-		public long Minimum { get; }
+		public int Minimum { get; }
 
 		/// <summary>
 		/// The current time of the backoff
 		/// </summary>
-		public long Current { get { return _current; } }
-		private long _current;
+		public int Current { get { return _current; } }
+		private int _current;
 
 		/// <summary>
 		/// The current number of failures
@@ -36,8 +36,8 @@ namespace DiscordRPC.Helper
 		public Random Random { get; set; }
 
 		private BackoffDelay() { }
-		public BackoffDelay(long min, long max) : this(min, max, new Random()) { }
-		public BackoffDelay(long min, long max, Random random)
+		public BackoffDelay(int min, int max) : this(min, max, new Random()) { }
+		public BackoffDelay(int min, int max, Random random)
 		{
 			this.Minimum = min;
 			this.Maximum = max;
@@ -56,18 +56,26 @@ namespace DiscordRPC.Helper
 			_current = Minimum;
 		}
 
-		public long NextDelay()
+		public int NextDelay()
 		{
 			//Increment the failures
 			_fails++;
 
+			double diff = (Maximum - Minimum) / 100f;
+			_current = (int)Math.Floor(diff * _fails) + Minimum;
+
+
+			return Math.Min(Math.Max(_current, Minimum), Maximum);
+
+			/*
 			//Calculate the new delay
-			long delay = (long)((double)_current * 2.0 * NextValue());
+			int delay = (int)((double)_current * 2.0 * NextValue());
 
 			//Update the current delay, maxing it out
 			_current = Math.Min(_current + delay, Maximum);
 			_current = Math.Max(_current, Minimum);
 			return _current;
+			*/
 		}
 
 		private double NextValue()

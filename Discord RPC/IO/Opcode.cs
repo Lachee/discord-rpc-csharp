@@ -1,6 +1,7 @@
 ﻿namespace DiscordRPC.IO
 {
-	internal enum Opcode
+	//TODO: Make Internal
+	public enum Opcode : uint
 	{
 		Handshake = 0,
 		Frame = 1,
