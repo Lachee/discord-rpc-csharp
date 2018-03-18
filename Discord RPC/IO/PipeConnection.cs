@@ -1,4 +1,4 @@
-﻿using DiscordRPC.IO.Events;
+﻿using DiscordRPC.Logging;
 using System;
 using System.IO;
 using System.IO.Pipes;
@@ -17,6 +17,9 @@ namespace DiscordRPC.IO
 
 		public bool IsConnected { get { return _isconnected; } }
 		private bool _isconnected = false;
+
+		public ILogger Logger { get { return _logger; } set { _logger = value; } }
+		public ILogger _logger = new NullLogger();
 
 		#region Pipe Management
 
@@ -47,7 +50,7 @@ namespace DiscordRPC.IO
 		{
 			//Prepare the pipe name
 			string pipename = string.Format(PIPE_NAME, pipe);
-			Console.WriteLine("Attempting to connect to " + pipename);
+			Logger.Info("Attempting to connect to " + pipename);
 
 			try
 			{
@@ -56,11 +59,11 @@ namespace DiscordRPC.IO
 				_stream.Connect(1000);
 
 				//Spin for a bit while we wait for it to finish connecting
-				Console.WriteLine("Waiting for connection...");
+				Logger.Info("Waiting for connection...");
 				do { Thread.Sleep(250); } while (!_stream.IsConnected);
 
 				//Store the value
-				Console.WriteLine("Connected to " + pipename);
+				Logger.Info("Connected to " + pipename);
 				_isconnected = true;
 				return true;
 			}
@@ -68,7 +71,7 @@ namespace DiscordRPC.IO
 			{
 				//Something happened, try again
 				//TODO: Log the failure condition
-				Console.WriteLine("Failed connection to {0}. {1}", pipename, e.Message);
+				Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
 				_isconnected = false;
 				_stream = null;
 			}
@@ -122,14 +125,14 @@ namespace DiscordRPC.IO
 			uint op;
 			if (!TryReadUInt32(out op))
 			{
-				Console.WriteLine("Bad OpCode");
+				Logger.Error("Bad OpCode");
 				return false;
 			}
 
 			uint len;
 			if (!TryReadUInt32(out len))
 			{
-				Console.WriteLine("Bad Length");
+				Logger.Error("Bad Length");
 				return false;
 			}
 
@@ -141,7 +144,7 @@ namespace DiscordRPC.IO
 
 			if (bytesread != len)
 			{
-				Console.WriteLine("Bad Data");
+				Logger.Error("Bad Data");
 				return false;
 			}
 
@@ -164,7 +167,7 @@ namespace DiscordRPC.IO
 			int cnt = Read(bytes, 4);
 			if (cnt != 4)
 			{
-				Console.WriteLine("Did not ready 4 bytes!");
+				Logger.Error("Did not ready 4 bytes!");
 				value = 0;
 				return false;
 			}
@@ -198,7 +201,7 @@ namespace DiscordRPC.IO
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Exception has occured while writing a frame: {0}", e);
+				Logger.Error("Exception has occured while writing a frame: {0}", e);
 				return false;
 			}
 

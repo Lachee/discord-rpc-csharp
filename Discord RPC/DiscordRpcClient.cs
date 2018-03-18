@@ -1,4 +1,6 @@
-﻿using DiscordRPC.Message;
+﻿using DiscordRPC.Events;
+using DiscordRPC.Logging;
+using DiscordRPC.Message;
 using DiscordRPC.Registry;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Commands;
@@ -31,6 +33,20 @@ namespace DiscordRPC
 		/// Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination.
 		/// </summary>
 		public int ProcessID { get; private set; }
+
+		/// <summary>
+		/// The logger used this client and its associated components. <see cref="ILogger"/> are not called safely and can come from any thread. It is upto the <see cref="ILogger"/> to account for this and apply appropriate thread safe methods.
+		/// </summary>
+		public ILogger Logger
+		{
+			get { return _logger; }
+			set
+			{
+				this._logger = value;
+				if (connection != null) connection.Logger = value;
+			}
+		}
+		private ILogger _logger = new NullLogger();
 		#endregion
 
 		/// <summary>
@@ -53,8 +69,62 @@ namespace DiscordRPC
 		public Configuration Configuration { get { return _configuration; } }
 		private Configuration _configuration;
 
+		#region Events
+		
+		/// <summary>
+		/// Called when the discord client is ready to send and receive messages.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnReadyEvent OnReady;
 
-		//TODO: Include events
+		/// <summary>
+		/// Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnCloseEvent OnClose;
+
+		/// <summary>
+		/// Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnErrorEvent OnError;
+
+		/// <summary>
+		/// Called when the Discord Client has updated the presence.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnPresenceUpdateEvent OnPresenceUpdate;
+
+		/// <summary>
+		/// Called when the Discord Client has subscribed to an event.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnSubscribeEvent OnSubscribe;
+
+		/// <summary>
+		/// Called when the Discord Client has unsubscribed from an event.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnUnsubscribeEvent OnUnsubscribe;
+
+		/// <summary>
+		/// Called when the Discord Client wishes for this process to join a game.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnJoinEvent OnJoin;
+
+		/// <summary>
+		/// Called when the Discord Client wishes for this process to spectate a game.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnSpectateEvent OnSpectate;
+
+		/// <summary>
+		/// Called when another discord user requests permission to join this game.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnJoinRequestedEvent OnJoinRequested;
+		#endregion
 
 		#region Initialization
 
@@ -120,19 +190,74 @@ namespace DiscordRPC
 
 			//Create the RPC client
 			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
-			connection.AttemptConnection();
+			connection.Logger = this._logger;
 		}
 
 		#endregion
 
 		#region Message Handling
 		/// <summary>
-		/// Deques all messages from discord and invokes appropriate events.
+		/// Dequeues all the messages from Discord and invokes appropriate methods. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked and in the order they were invoked.
 		/// </summary>
-		public void Invoke()
+		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
+		public IMessage[] Invoke()
 		{
-			//TODO: Make Invoke() go through each message from the pipe and invoke an event
-			throw new NotImplementedException();
+			//Dequeue all the messages and process them
+			IMessage[] messages = connection.DequeueMessages();
+			for (int i = 0; i < messages.Length; i++)
+			{
+				//Do a bit of pre-processing
+				var message = messages[i];
+				HandleMessage(message);
+
+				//Invoke the appropriate methods
+				switch(message.Type)
+				{
+					case MessageType.Ready:
+						OnReady?.Invoke(this, message as ReadyMessage);
+						break;
+
+					case MessageType.Close:
+						OnClose?.Invoke(this, message as CloseMessage);
+						break;
+
+					case MessageType.Error:
+						OnError?.Invoke(this, message as ErrorMessage);
+						break;
+
+					case MessageType.PresenceUpdate:
+						OnPresenceUpdate?.Invoke(this, message as PresenceMessage);
+						break;
+
+					case MessageType.Subscribe:
+						OnSubscribe?.Invoke(this, message as SubscribeMessage);
+						break;
+
+					case MessageType.Unsubscribe:
+						OnUnsubscribe?.Invoke(this, message as UnsubscribeMessage);
+						break;
+
+					case MessageType.Join:
+						OnJoin?.Invoke(this, message as JoinMessage);
+						break;
+
+					case MessageType.Spectate:
+						OnSpectate?.Invoke(this, message as SpectateMessage);
+						break;
+
+					case MessageType.JoinRequest:
+						OnJoinRequested?.Invoke(this, message as JoinRequestMessage);
+						break;
+
+					default:
+						//This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
+						Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
+						break;
+				}
+			}
+
+			//Finally, return the messages
+			return messages;
 		}
 
 		/// <summary>
@@ -258,7 +383,25 @@ namespace DiscordRPC
 		/// </summary>
 		public void Reconnect()
 		{
+			if (connection == null)
+			{
+				Initialize();
+				return;
+			}
+
 			connection.Reconnect();
+		}
+
+		/// <summary>
+		/// Attempts to initalize a connection to the Discord IPC.
+		/// </summary>
+		/// <returns></returns>
+		public bool Initialize()
+		{
+			if (connection == null)
+				connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
+
+			return connection.AttemptConnection();
 		}
 
 		/// <summary>

@@ -12,9 +12,9 @@ namespace DiscordRPC.Message
 		public override MessageType Type { get { return MessageType.Ready; } }
 		
 		[JsonProperty("config")]
-		public Configuration Configuration { get; set; }
+		public Configuration Configuration { get; internal set; }
 
 		[JsonProperty("v")]
-		public int Version { get; set; }
+		public int Version { get; internal set; }
 	}
 }

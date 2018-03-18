@@ -5,13 +5,13 @@ namespace DiscordRPC.Message
 	/// <summary>
 	/// Called as validation of a subscribe
 	/// </summary>
-	public class SubscribeMessage : IMessage
+	public class UnsubscribeMessage : IMessage
 	{
-		public override MessageType Type { get { return MessageType.Subscribe; } }
+		public override MessageType Type { get { return MessageType.Unsubscribe; } }
 		public EventType Event { get; internal set; }
-
-		public SubscribeMessage() { }
-		internal SubscribeMessage(ServerEvent evt)
+		
+		public UnsubscribeMessage() { }
+		internal UnsubscribeMessage(ServerEvent evt)
 		{
 			switch (evt)
 			{

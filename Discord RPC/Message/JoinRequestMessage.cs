@@ -17,6 +17,6 @@ namespace DiscordRPC.Message
 		/// The discord user that is requesting access.
 		/// </summary>
 		[JsonProperty("user")]
-		public User User { get; set; }		
+		public User User { get; internal set; }
 	}
 }

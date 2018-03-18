@@ -7,43 +7,48 @@ namespace DiscordRPC.Message
 	public enum MessageType
 	{
 		/// <summary>
-		/// The presence has been updated
-		/// </summary>
-		PresenceUpdate,
-
-		/// <summary>
-		/// A error message has been sent back
-		/// </summary>
-		Error,
-
-		/// <summary>
-		/// Called when some other person has requested access to this game. C -> D -> C.
-		/// </summary>
-		JoinRequest,
-
-		/// <summary>
-		/// Called when the Discord Client wishes for this process to join a game. D -> C.
-		/// </summary>
-		Join,
-
-		/// <summary>
-		/// Called when the Discord Client wishes for this process to spectate a game. D -> C. 
-		/// </summary>
-		Spectate,
-
-		/// <summary>
-		/// Confirmation of a subscription
-		/// </summary>
-		Subscribe,
-
-		/// <summary>
-		/// The server is ready
+		/// The Discord Client is ready to send and receive messages.
 		/// </summary>
 		Ready,
 
 		/// <summary>
-		/// The server has closed
+		/// The connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
 		/// </summary>
-		Close
+		Close,
+
+		/// <summary>
+		/// A error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
+		/// </summary>
+		Error,
+
+		/// <summary>
+		/// The Discord Client has updated the presence.
+		/// </summary>
+		PresenceUpdate,
+
+		/// <summary>
+		/// The Discord Client has subscribed to an event.
+		/// </summary>
+		Subscribe,
+
+		/// <summary>
+		/// The Discord Client has unsubscribed from an event.
+		/// </summary>
+		Unsubscribe,
+		
+		/// <summary>
+		/// The Discord Client wishes for this process to join a game.
+		/// </summary>
+		Join,
+
+		/// <summary>
+		/// The Discord Client wishes for this process to spectate a game. 
+		/// </summary>
+		Spectate,
+
+		/// <summary>
+		/// Another discord user requests permission to join this game.
+		/// </summary>
+		JoinRequest
 	}
 }

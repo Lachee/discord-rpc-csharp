@@ -8,7 +8,7 @@ namespace DiscordRPC.Message
 	public class CloseMessage : IMessage
 	{
 		public override MessageType Type { get { return MessageType.Close; } }
-		public string Reason { get; set; }
+		public string Reason { get; internal set; }
 
 		public CloseMessage() { }
 		internal CloseMessage(string reason) { this.Reason = reason; }
