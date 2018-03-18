@@ -1,41 +1,58 @@
-﻿using System;
+﻿using DiscordRPC.Logging;
+using System;
 using System.IO;
 using System.IO.Pipes;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DiscordRPC.IO
 {
-	internal class PipeConnection
+	//TODO: Make Internal
+	public class PipeConnection : IDisposable
 	{
 		/// <summary>
 		/// Discord Pipe Name
 		/// </summary>
 		const string PIPE_NAME = @"discord-ipc-{0}";
+		private NamedPipeClientStream _stream;
+
+		public bool IsConnected { get { return _isconnected; } }
+		private bool _isconnected = false;
+
+		public ILogger Logger { get { return _logger; } set { _logger = value; } }
+		public ILogger _logger = new NullLogger();
+
+		#region Pipe Management
 
 		/// <summary>
-		/// Has the pipe connectced to discord?
+		/// Attempts to establish a connection to the Discord Client
 		/// </summary>
-		public bool IsOpen {  get { return stream != null && stream.IsConnected; } }
-
-		/// <summary>
-		/// The current pipe we are connected to
-		/// </summary>
-		public int PipeNumber { get { return _pipeno; } }
-		private int _pipeno;
-
-		internal NamedPipeClientStream Stream { get { return stream; } }
-
-		private NamedPipeClientStream stream;
-		private StreamReader reader;
-
-		/// <summary>
-		/// Opens a new pipe stream to discord
-		/// </summary>
+		/// <param name="pipe">The pipe the discord client is located on. Set to -1 for any available pipe.</param>
 		/// <returns></returns>
-		public bool Open()
+		public bool AttemptConnection(int pipe)
 		{
-			for (int i = 0; i < 10; i++)
+			if (pipe < 0)
+			{
+				//Iterate over each pipe, trying to connect. If we connect, end the loop and return true.
+				for (int i = 0; i < 10; i++)
+					if (CreateConnection(i)) return true;
+
+				//We failed to conect, so return false
+				return false;
+			}
+			else
+			{
+				//Attempt to connect to the target pipe
+				return CreateConnection(pipe);
+			}
+		}
+
+		private bool CreateConnection(int pipe)
+		{
+			//Prepare the pipe name
+			string pipename = string.Format(PIPE_NAME, pipe);
+			Logger.Info("Attempting to connect to " + pipename);
+
+			try
 			{
 				try
 				{
@@ -66,156 +83,166 @@ namespace DiscordRPC.IO
 				}
 			}
 
-			//Check if we succeded
-			return stream != null;
+			//We are succesfull if the stream isn't null
+			return _stream == null;
 		}
+		#endregion
 		
+		#region Frame Write
+
 		/// <summary>
-		/// Opens a new pipe stream to discord asyncronously
+		/// Writes the handshake to the connection
 		/// </summary>
+		/// <param name="version">Version of the IPC protocol</param>
+		/// <param name="client">The client ID</param>
 		/// <returns></returns>
-		public async Task<bool> OpenAsync()
+		public bool WriteHandshake(int version, string client)
 		{
-			return await Task<bool>.Run(() => Open());
+			PipeFrame frame = new PipeFrame();
+			frame.SetObject(Opcode.Handshake, new Handshake() { Version = version, ClientID = client });
+
+			return WriteFrame(frame);
 		}
 
-		#region Disposal
 		/// <summary>
-		/// Closes the pipe stream.
+		/// Writes the frame to the connection
 		/// </summary>
+		/// <param name="frame"></param>
 		/// <returns></returns>
-		public bool Close()
+		public bool WriteFrame(PipeFrame frame)
 		{
-			DiscordClient.WriteLog("Closing Pipe");
+			//u_stream is multithread friendly, so we can just write directly
+			bool success =  Write(frame);
+			//_stream.WaitForPipeDrain();
+
+			return success;
+		}
+
+		#endregion
+
+		#region IO Operation
 		
-			if (stream != null)
+		#region Read
+		public bool TryReadFrame(out PipeFrame frame)
+		{
+			//Set the pipe frame to default
+			frame = default(PipeFrame);
+
+			//Try to read the values
+			uint op;
+			if (!TryReadUInt32(out op))
 			{
-				stream.Dispose();
-				stream = null;
+				Logger.Error("Bad OpCode");
+				return false;
 			}
-			
+
+			uint len;
+			if (!TryReadUInt32(out len))
+			{
+				Logger.Error("Bad Length");
+				return false;
+			}
+
+
+			//Read the data. This could potentially cause issues if we ever get anything greater than a int.
+			//TODO: Better implementation of this read using uints
+			byte[] buff = new byte[len];
+			int bytesread = Read(buff, (int)len);
+
+			if (bytesread != len)
+			{
+				Logger.Error("Bad Data");
+				return false;
+			}
+
+			//Create the frame
+			frame = new PipeFrame()
+			{
+				Opcode = (Opcode)op,
+				Data = buff
+			};
+
+			//Success!
+			return true;
+		}
+
+		private int Read(byte[] buff, int length) { return _stream.Read(buff, 0, length); }
+		private bool TryReadUInt32(out uint value)
+		{
+			//Read the bytes
+			byte[] bytes = new byte[4];
+			int cnt = Read(bytes, 4);
+			if (cnt != 4)
+			{
+				Logger.Error("Did not ready 4 bytes!");
+				value = 0;
+				return false;
+			}
+
+			//Convert to int
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			value = BitConverter.ToUInt32(bytes, 0);
+			return true;
+		}
+		#endregion
+
+		#region Write
+		private bool Write(PipeFrame frame)
+		{
+			try
+			{
+				//Get all the bytes
+				byte[] op = ConvertBytes((uint)frame.Opcode);
+				byte[] len = ConvertBytes(frame.Length);
+				byte[] data = frame.Data;
+
+				//Copy it all into a buffer
+				byte[] buffer = new byte[op.Length + len.Length + data.Length];
+				op.CopyTo(buffer, 0);
+				len.CopyTo(buffer, op.Length);
+				data.CopyTo(buffer, op.Length + len.Length);
+
+				//Write it to the stream
+				_stream.Write(buffer, 0, buffer.Length);
+
+			}
+			catch (Exception e)
+			{
+				Logger.Error("Exception has occured while writing a frame: {0}", e);
+				return false;
+			}
+
 			return true;
 		}
 		
 		/// <summary>
-		/// Disposes the pipe stream. 
+		/// Gets the bytes of a uint32 value in LE format.
 		/// </summary>
+		/// <param name="uint32"></param>
+		/// <returns></returns>
+		private byte[] ConvertBytes(uint uint32)
+		{
+			byte[] bytes = BitConverter.GetBytes(uint32);
+
+			//If we are already in LE, we dont need to flip it
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+
+			//Give back the bytes
+			return bytes;
+		}
+
+		#endregion
+		#endregion
+
 		public void Dispose()
 		{
-			this.Close();
+			//Abort the thread. The thread will manage everything else automatically
+			if (_stream != null)
+			{
+				_stream.Dispose();
+				_stream = null;
+				_isconnected = false;
+			}
 		}
-		#endregion
-
-		#region Read
-		public int Read(byte[] buff, int length)
-		{
-			if (!IsOpen) return -1;
-			return stream.Read(buff, 0, length);
-		}
-		public int ReadInt()
-		{
-			if (!IsOpen) return -1;
-
-			//Read the bytes
-			byte[] buff = new byte[4];
-			Read(buff, buff.Length);
-
-			//Flip if required
-			if (!BitConverter.IsLittleEndian) Array.Reverse(buff);
-
-			//Convert to a int
-			int value = BitConverter.ToInt32(buff, 0);
-			return value;
-		}
-		public string ReadString(Encoding encoding)
-		{
-			if (!IsOpen) return null;
-
-			//Read the length
-			int length = ReadInt();
-
-			//Read the bytes
-			byte[] buff = new byte[length];
-			Read(buff, length);
-
-			string message = encoding.GetString(buff);
-			return message;
-		}
-
-
-		public async Task<int> ReadAsync(byte[] buff, int length)
-		{
-			if (!IsOpen) return -1;
-			return await stream.ReadAsync(buff, 0, length);
-		}
-		public async Task<int> ReadIntAsync()
-		{
-			if (!IsOpen) return -1;
-
-			//Read the bytes
-			byte[] buff = new byte[4];
-			await ReadAsync(buff, buff.Length);
-
-			//Flip if required
-			if (!BitConverter.IsLittleEndian) Array.Reverse(buff);
-
-			//Convert to a int
-			int value = BitConverter.ToInt32(buff, 0);
-			return value;
-		}
-		public async Task<string> ReadStringAsync(Encoding encoding)
-		{
-			if (!IsOpen) return null;
-
-			//Read the length
-			int length = await ReadIntAsync();
-
-			//Read the bytes
-			byte[] buff = new byte[length];
-			Read(buff, length);
-
-			string message = encoding.GetString(buff);
-			return message;
-		}
-		#endregion
-		#region Write
-		public bool Write(byte[] data)
-		{
-			if (!IsOpen) return false;
-
-			stream.Write(data, 0, data.Length);
-			return true;
-		}
-		public bool Write(string data, Encoding encoding)
-		{
-			byte[] bytes = encoding.GetBytes(data);
-			Write(bytes.Length);
-			return Write(bytes);
-		}
-		public bool Write(int data)
-		{
-			byte[] bytes = BitConverter.GetBytes(data);
-			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			return Write(bytes);
-		}
-		
-		public async Task WriteAsync(byte[] data)
-		{
-			if (!IsOpen) return;
-			await stream.WriteAsync(data, 0, data.Length);
-		}
-		public async Task WriteAsync(int data)
-		{
-			byte[] bytes = BitConverter.GetBytes(data);
-			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			await WriteAsync(bytes);
-		}
-		public async Task WriteAsync(string data, Encoding encoding)
-		{
-			byte[] bytes = encoding.GetBytes(data);
-			await WriteAsync(bytes.Length);
-			await WriteAsync(bytes);
-		}
-		#endregion
 	}
 }
