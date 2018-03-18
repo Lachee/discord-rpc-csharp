@@ -116,6 +116,7 @@ namespace DiscordRPC
 	/// <para>You should send discord data that someone else's game client would need to join or spectate their friend. If you can't or don't want to support those actions, you don't need to send secrets.</para>
 	/// <para>Visit the <see href="https://discordapp.com/developers/docs/rich-presence/how-to#secrets">Rich Presence How-To</see> for more information.</para>
 	/// </summary>
+	[Serializable]
 	public class Secrets
 	{
 		/// <summary>
@@ -126,6 +127,7 @@ namespace DiscordRPC
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
 		public string MatchSecret { get { return _matchSecret; } set { _matchSecret = value.ClearEmpty(); } }
 		private string _matchSecret;
+
 
 		/// <summary>
 		/// The secret data that will tell the client how to connect to the game to play. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.
@@ -150,6 +152,7 @@ namespace DiscordRPC
 		private string _spectateSecret;
 	}
 
+	[Serializable]
 	public class Assets
 	{
 		/// <summary>
@@ -157,7 +160,7 @@ namespace DiscordRPC
 		/// <para>Max 32 Bytes.</para>
 		/// </summary>
 		[JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.ClearEmpty(); } }
+		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.ClearEmpty(); } }		
 		private string _largeimagekey;
 
 		/// <summary>
@@ -167,6 +170,7 @@ namespace DiscordRPC
 		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
 		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.ClearEmpty(); } }
 		private string _largeimagetext;
+
 
 		/// <summary>
 		/// Name of the uploaded image for the small profile artwork.
@@ -188,6 +192,7 @@ namespace DiscordRPC
 	/// <summary>
 	/// Structure representing the start and endtimes of a match.
 	/// </summary>
+	[Serializable]
 	public class Timestamps
 	{
 		/// <summary>
@@ -223,6 +228,7 @@ namespace DiscordRPC
 	/// <summary>
 	/// Structure representing the part the player is in.
 	/// </summary>
+	[Serializable]
 	public class Party
 	{
 		/// <summary>
@@ -257,9 +263,7 @@ namespace DiscordRPC
 		}
 	}
 
-
-
-
+	
 	/// <summary>
 	/// A rich presence that has been parsed from the pipe as a response.
 	/// </summary>
