@@ -54,33 +54,26 @@ namespace DiscordRPC.IO
 
 			try
 			{
-				try
-				{
-					//Prepare the pipe name
-					string pipename = string.Format(PIPE_NAME, i);
-					DiscordClient.WriteLog("Attempting {0}", pipename);
+				//Create the client
+				_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
+				_stream.Connect(1000);
 
-					//Create the client
-					stream = new NamedPipeClientStream(pipename);
-					stream.Connect(100);
-					
-					reader = new StreamReader(stream);
+				//Spin for a bit while we wait for it to finish connecting
+				Logger.Info("Waiting for connection...");
+				do { Thread.Sleep(250); } while (!_stream.IsConnected);
 
-					while (!stream.IsConnected) { Task.Delay(100); }
-
-					//We have made a connection, prepare the writers
-					DiscordClient.WriteLog("Connected to pipe " + pipename);
-					_pipeno = i;
-
-					//We have succesfully connected
-					return IsOpen;
-				}
-				catch (Exception e)
-				{
-					//Something happened, try again
-					DiscordClient.WriteLog("Connection Exception: {0}", e.Message);
-					stream = null;
-				}
+				//Store the value
+				Logger.Info("Connected to " + pipename);
+				_isconnected = true;
+				return true;
+			}
+			catch (Exception e)
+			{
+				//Something happened, try again
+				//TODO: Log the failure condition
+				Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
+				_isconnected = false;
+				_stream = null;
 			}
 
 			//We are succesfull if the stream isn't null
