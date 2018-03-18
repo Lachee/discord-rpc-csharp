@@ -148,7 +148,7 @@ namespace DiscordRPC.Test
 
 
 							default:
-								Console.WriteLine("Unkown Command");
+								Console.WriteLine("Unknown Command");
 								break;
 
 						}
