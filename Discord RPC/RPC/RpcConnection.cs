@@ -80,12 +80,12 @@ namespace DiscordRPC.RPC
 			Logger = new ConsoleLogger();
 
 			Random rand = new Random();
-			nonce = rand.Next(0, 10000000);
+			nonce = 0;// rand.Next(0, 10000000);
 		}
 			
 		private long GetNextNonce()
 		{
-			nonce += 7;
+			nonce += 1;
 			return nonce;
 		}
 
