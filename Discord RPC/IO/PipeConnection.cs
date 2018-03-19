@@ -248,8 +248,8 @@ namespace DiscordRPC.IO
 			data.CopyTo(buffer, op.Length + len.Length);
 
 			//Write it to the stream
-			_stream.Write(buffer, 0, buffer.Length);
-			//_stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(EndWriteCallback), _stream);
+			//_stream.Write(buffer, 0, buffer.Length);
+			_stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(EndWriteCallback), _stream);
 			return true;
 		}
 
