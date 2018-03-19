@@ -460,8 +460,19 @@ namespace DiscordRPC
 			if (Disposed) return;
 
 			connection.Close();
-			connection = null;
-			_disposed = true;
+
+			//connection.Close();
+			//connection = null;
+			//_disposed = true;
+		}
+
+		/// <summary>
+		/// Operator that converts the client into a boolean for null checks.
+		/// </summary>
+		/// <param name="client"></param>
+		public static implicit operator bool(DiscordRpcClient client)
+		{
+			return client != null;
 		}
 
 	}

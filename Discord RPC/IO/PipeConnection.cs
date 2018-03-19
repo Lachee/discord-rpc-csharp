@@ -1,5 +1,6 @@
 ﻿using DiscordRPC.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
@@ -23,6 +24,10 @@ namespace DiscordRPC.IO
 		public ILogger Logger { get { return _logger; } set { _logger = value; } }
 		public ILogger _logger = new NullLogger();
 
+		private object l_rxFrames = new object();
+		private Queue<PipeFrame> _rxFrames = new Queue<PipeFrame>();
+
+		public volatile bool isReading = false;
 		#region Pipe Management
 
 		/// <summary>
@@ -84,56 +89,88 @@ namespace DiscordRPC.IO
 		}
 		#endregion
 		
-		#region Frame Write
-
-		/// <summary>
-		/// Writes the handshake to the connection
-		/// </summary>
-		/// <param name="version">Version of the IPC protocol</param>
-		/// <param name="client">The client ID</param>
-		/// <returns></returns>
-		public bool WriteHandshake(int version, string client)
-		{
-			PipeFrame frame = new PipeFrame();
-			frame.SetObject(Opcode.Handshake, new Handshake() { Version = version, ClientID = client });
-
-			return WriteFrame(frame);
-		}
-
-		/// <summary>
-		/// Writes the frame to the connection
-		/// </summary>
-		/// <param name="frame"></param>
-		/// <returns></returns>
-		public bool WriteFrame(PipeFrame frame)
-		{
-			//u_stream is multithread friendly, so we can just write directly
-			bool success =  Write(frame);
-			//_stream.WaitForPipeDrain();
-
-			return success;
-		}
-
-		#endregion
 
 		#region IO Operation
-		
+
 		#region Read
+
+		public bool DequeueFrame(out PipeFrame frame)
+		{
+			lock (l_rxFrames)
+			{
+				if (_rxFrames.Count == 0)
+				{
+					frame = default(PipeFrame);
+					return false;
+				}
+				else
+				{
+					frame = _rxFrames.Dequeue();
+					return true;
+				}
+			}
+		}
+
+		private byte[] buffer = new byte[PipeFrame.MAX_SIZE];
+		public void BeginRead()
+		{
+			if (_stream == null) return;
+			isReading = true;
+			_stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(EndReadCallback), _stream);
+		}
+
+		private void EndReadCallback(IAsyncResult result)
+		{
+			Logger.Info("Finished a callback");
+
+			//The stream has been closed, so dont continue anymore.
+			if (_stream == null) return;
+
+			Logger.Info(" ----");
+
+			//Get how many bytes we have read and chuck em into the memory stream
+			int bytesRead = _stream.EndRead(result);
+			using (MemoryStream mem = new MemoryStream(buffer, 0, bytesRead))
+			{
+				//Attempt to extract the frame from the stream
+				PipeFrame frame;
+				if (TryReadFrame(mem, out frame))
+				{
+					//Enqueue the frame we just read
+					lock (l_rxFrames)
+						_rxFrames.Enqueue(frame);
+				}
+				else
+				{
+					//Something went wrong. We could have potentially aborted.
+					Logger.Error("Something went wrong while trying to read a frame");
+				}
+			}
+
+			//Read more in the buffer
+			if (isReading) BeginRead();
+		}
+
 		public bool TryReadFrame(out PipeFrame frame)
+		{
+			return TryReadFrame(_stream, out frame);
+		}
+
+		private bool TryReadFrame(Stream stream, out PipeFrame frame)
 		{
 			//Set the pipe frame to default
 			frame = default(PipeFrame);
 			
 			//Try to read the values
 			uint op;
-			if (!TryReadUInt32(out op))
+			if (!TryReadUInt32(stream, out op))
 			{
 				Logger.Error("Bad OpCode");
 				return false;
 			}
 
 			uint len;
-			if (!TryReadUInt32(out len))
+			if (!TryReadUInt32(stream, out len))
 			{
 				Logger.Error("Bad Length");
 				return false;
@@ -143,7 +180,7 @@ namespace DiscordRPC.IO
 			//Read the data. This could potentially cause issues if we ever get anything greater than a int.
 			//TODO: Better implementation of this read using uints
 			byte[] buff = new byte[len];
-			int bytesread = Read(buff, (int)len);
+			int bytesread = Read(stream, buff, (int)len);
 
 			if (bytesread != len)
 			{
@@ -161,13 +198,13 @@ namespace DiscordRPC.IO
 			//Success!
 			return true;
 		}
-
-		private int Read(byte[] buff, int length) { return _stream.Read(buff, 0, length); }
-		private bool TryReadUInt32(out uint value)
+		
+		private int Read(Stream stream, byte[] buff, int length) { return stream.Read(buff, 0, length); }
+		private bool TryReadUInt32(Stream stream, out uint value)
 		{
 			//Read the bytes
 			byte[] bytes = new byte[4];
-			int cnt = Read(bytes, 4);
+			int cnt = Read(stream, bytes, 4);
 			if (cnt != 4)
 			{
 				Logger.Error("Did not ready 4 bytes!");
@@ -183,7 +220,21 @@ namespace DiscordRPC.IO
 		#endregion
 
 		#region Write
-		private bool Write(PipeFrame frame)
+		/// <summary>
+		/// Writes the handshake to the connection
+		/// </summary>
+		/// <param name="version">Version of the IPC protocol</param>
+		/// <param name="client">The client ID</param>
+		/// <returns></returns>
+		public bool WriteHandshake(int version, string client)
+		{
+			PipeFrame frame = new PipeFrame();
+			frame.SetObject(Opcode.Handshake, new Handshake() { Version = version, ClientID = client });
+
+			return WritePipeFrame(frame);
+		}
+
+		public bool WritePipeFrame(PipeFrame frame)
 		{
 			//Get all the bytes
 			byte[] op = ConvertBytes((uint)frame.Opcode);
@@ -198,10 +249,15 @@ namespace DiscordRPC.IO
 
 			//Write it to the stream
 			_stream.Write(buffer, 0, buffer.Length);
-
+			//_stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(EndWriteCallback), _stream);
 			return true;
 		}
-		
+
+		private void EndWriteCallback(IAsyncResult result)
+		{
+			_stream.EndWrite(result);
+		}
+
 		/// <summary>
 		/// Gets the bytes of a uint32 value in LE format.
 		/// </summary>
@@ -228,8 +284,9 @@ namespace DiscordRPC.IO
 		{
 			if (_stream != null)
 			{
-				Logger.Info("Dispoing stream...");
-				_stream.Dispose();
+				Logger.Info("Closing stream...");
+				_stream.Flush();
+				_stream.Close();
 			}
 		}
 

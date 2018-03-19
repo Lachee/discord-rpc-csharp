@@ -9,6 +9,8 @@ namespace DiscordRPC.IO
 	//TODO: Make Internal
 	public struct PipeFrame
 	{
+		public const int MAX_SIZE = 16 * 1024;
+
 		/// <summary>
 		/// The opcode of the frame
 		/// </summary>

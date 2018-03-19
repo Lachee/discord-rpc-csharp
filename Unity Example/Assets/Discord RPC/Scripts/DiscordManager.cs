@@ -62,17 +62,25 @@ public class DiscordManager : MonoBehaviour {
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.A))
 			Dispose();
 
-		//if (_client != null)
-		//	_client.Invoke();
+		if (Input.GetKeyDown(KeyCode.Space) && _client && !_client.Disposed)
+		{
+			presence.details = Random.value.ToString();
+			presence.assets.largeKey = "image_large_2";
+			presence.assets.smallKey = "image_large_1";
+			_client.SetPresence(presence.ToRichPresence());
+		}
+
+		if (_client != null)
+			_client.Invoke();
 	}
 
 	private void Dispose()
 	{
 		Debug.Log("Disposing Client...");
-		if (_client != null && !_client.Disposed)
+		if (_client != null)
 		{
 			Debug.Log("Actually Disposing Client...");
 			_client.Dispose();

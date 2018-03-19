@@ -24,7 +24,7 @@ namespace DiscordRPC.RPC
 		/// <summary>
 		/// Should we only send once we finished receiving one?
 		/// </summary>
-		public static readonly bool LOCK_STEP = true;
+		public static readonly bool LOCK_STEP = false;
 
 		public ILogger Logger { get; set; }
 
@@ -34,8 +34,7 @@ namespace DiscordRPC.RPC
 		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_states) tmp = _state; return tmp; } }
 		private RpcState _state;
 
-		public bool IsAborting { get { var tmp = false;  lock (l_states) tmp = _isAborting; return tmp; } }
-		private bool _isAborting = false;
+		private volatile bool aborting = false;
 
 		public bool IsRunning { get { return thread != null; } }
 		#endregion
@@ -55,8 +54,9 @@ namespace DiscordRPC.RPC
 		private Queue<ICommand> _rtqueue;				//The send queue
 
 		private object l_rxqueue = new object();		//Lock for the receive queue
-		private Queue<IMessage> _rxqueue;				//The receive queue
+		private Queue<IMessage> _rxqueue;               //The receive queue
 
+		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;						//The backoff delay before reconnecting.
 		#endregion
 		
@@ -96,24 +96,12 @@ namespace DiscordRPC.RPC
 		/// <param name="presence"></param>
 		internal void EnqueueCommand(ICommand command)
 		{
-			int count = 0;
+			//Enqueue the set presence argument
 			lock (_rtqueue)
-			{
-				//Enqueue the set presence argument
 				_rtqueue.Enqueue(command);
-				count = _rtqueue.Count;
-			}
 
-			//If we are not aborted, we might as well execute it straight up
-			if (thread == null) { AttemptConnection(); return; }
-			if (pipe != null && pipe.IsConnected)
-			{
-				if (!LOCK_STEP || (LOCK_STEP && count == 1))
-				{
-					Logger.Info("Sneding Queue Process");
-					ProcessCommandQueue();
-				}
-			}
+			//Tell the thread something happened
+			//if (State == RpcState.Connected) queueUpdatedEvent.Set();
 		}
 
 		/// <summary>
@@ -169,167 +157,144 @@ namespace DiscordRPC.RPC
 		{
 			//initialize the pipe
 			Logger.Info("Initializing Thread. Creating pipe object.");
-
-			try
+			
+			//Forever trying to connect unless the abort signal is sent
+			//Keep Alive Loop
+			while (!aborting)
 			{
-				//Forever trying to connect unless the abort signal is sent
-				while (!IsAborting)
+				//Wrap everything up in a try get
+				//Dispose of the pipe if we have any (could be broken)
+				if (pipe != null)
 				{
-					//Wrap everything up in a try get
-					//Dispose of the pipe if we have any (could be broken)
-					if (pipe != null)
-					{
-						Logger.Warning("Disposing of potentially broken pipe...");
-						DisposePipe();
-					}
+					Logger.Warning("Disposing of potentially broken pipe...");
+					DisposePipe();
+				}
 
-					//Connect to a new pipe
-					Logger.Info("Connecting to a new pipe...");
-					pipe = new PipeConnection() { Logger = this.Logger };
-					if (pipe.AttemptConnection(targetPipe))
-					{
-						//We connected to a pipe! Reset the delay
-						Logger.Info("Connected to the pipe. Attempting to establish handshake...");
-						EnqueueMessage(new ConnectionEstablishedMessage() { ConnectedPipe = pipe.ConnectedPipe });
-						delay.Reset();
+				//Connect to a new pipe
+				Logger.Info("Connecting to a new pipe...");
+				pipe = new PipeConnection() { Logger = this.Logger };
+				if (pipe.AttemptConnection(targetPipe))
+				{
+					//We connected to a pipe! Reset the delay
+					Logger.Info("Connected to the pipe. Attempting to establish handshake...");
+					EnqueueMessage(new ConnectionEstablishedMessage() { ConnectedPipe = pipe.ConnectedPipe });
+					delay.Reset();
+					
+					//Begin the initial asyncronous read from the pipe
+					pipe.BeginRead();
 
-						//Attempt to establish a handshake
-						if (EstablishHandshake())
+					//Attempt to establish a handshake
+					EstablishHandshake();
+					Logger.Info("Connection Established. Starting reading loop...");
+
+					//Being the main read loop. This will return true if it exits for an abort.
+					//ReadLoop();
+												
+					//Continously iterate, waiting for the frame
+					PipeFrame frame;
+					bool mainloop = true;
+					while (mainloop && !aborting)
+					{
+						//Iterate over every frame we have queued up, processing its contents
+						Logger.Info("Trying to read frames...");
+						while (pipe.DequeueFrame(out frame) && !aborting)
 						{
-							Logger.Info("Connection Established. Starting reading loop...");
+							Logger.Info("Read Payload: {0}", frame.Opcode);
 
-							//Being the main read loop. This will return true if it exits for an abort.
-							ReadLoop();
+							//Do some basic processing on the frame
+							switch (frame.Opcode)
+							{
+								case Opcode.Close:
+									//We have been told by discord to close, so we will consider it an abort
+									Logger.Warning("We have been told to terminate by discord. ", frame.Message);
+									mainloop = false;
+									break;
 
 
-							//We have exited out of the read loop for some reason.
-							/*
-							//The loop has exited because of an abort,
-							// so we should exit out of this loop too.
-							Logger.Info("Handled Thread Abort: Read Loop has returned true, main loop is now exiting.");
-							EnqueueMessage(new CloseMessage("Connection terminated by game"));
-							_inMainLoop = false;
-							break;
-							*/
+								case Opcode.Ping:
+									//We have pinged, so we will flip it and respond back with pong
+									Logger.Info("PING");
+									frame.Opcode = Opcode.Pong;
+									pipe.WritePipeFrame(frame);
+									break;
+
+								case Opcode.Pong:
+									//We have ponged? I have no idea if Discord actually sends ping/pongs.
+									Logger.Info("PONG");
+									break;
+
+								case Opcode.Frame:
+
+									//We have a frame, so we are going to process the payload and add it to the stack
+
+									if (frame.Data == null)
+									{
+										Logger.Info("NULL");
+									}
+
+									EventPayload response = frame.GetObject<EventPayload>();
+									ProcessFrame(response);
+									break;
+
+								default:
+								case Opcode.Handshake:
+									//We have a invalid opcode, better terminate to be safe
+									Logger.Error("Invalid opcode: {0}", frame.Opcode);
+									mainloop = false;
+									break;
+							}
 						}
-						else
+
+						//WE have been told to abort, so dont even bother with the rest
+						if (!aborting)
 						{
-							//We failed to establish the handshake
-							Logger.Error("Failed to establish a handshake for some reason.");
+							//Wait for some time, or until a command has been queued up
+							Logger.Info("Waiting for 10s or until some event occurs...");
+							queueUpdatedEvent.WaitOne(10000);
+
+							//Process any commands we have waiting
+							ProcessEntireCommandQueue();
+
 						}
-					}
-					else
-					{
-						Logger.Error("Failed to connect for some reason.");
-						EnqueueMessage(new ConnectionFailedMessage());
-					}
 
-
-					//If we are not aborting, we have to wait a bit
-					if (!IsAborting)
-					{
-						//We have disconnected for some reason, either a failed pipe or a bad reading,
-						// so we are going to wait a bit before doing it again
-						long sleep = delay.NextDelay();
-
-						Logger.Info("Waiting {0}ms", sleep);
-						Thread.Sleep(delay.NextDelay());
+						//We have exited out of the read loop for some reason.
+						/*
+						//The loop has exited because of an abort,
+						// so we should exit out of this loop too.
+						Logger.Info("Handled Thread Abort: Read Loop has returned true, main loop is now exiting.");
+						EnqueueMessage(new CloseMessage("Connection terminated by game"));
+						_inMainLoop = false;
+						break;
+						*/
 					}
 				}
-			}
-			catch (ThreadAbortException abort)
-			{
-				Thread.ResetAbort();
-			}
-			finally
-			{
-				Logger.Info("Left Main Loop");
-
-				//We have disconnected, so dispose of the thread and the pipe.
-				if (thread != null) thread = null;
-				DisposePipe();
+				else
+				{
+					Logger.Error("Failed to connect for some reason.");
+					EnqueueMessage(new ConnectionFailedMessage());
+				}
 
 
-				Logger.Info("Fully Closed. Goodbye o/");
+				//If we are not aborting, we have to wait a bit
+				if (!aborting)
+				{
+					//We have disconnected for some reason, either a failed pipe or a bad reading,
+					// so we are going to wait a bit before doing it again
+					long sleep = delay.NextDelay();
+
+					Logger.Info("Waiting {0}ms", sleep);
+					Thread.Sleep(delay.NextDelay());
+				}
 			}
+				
+			//We have disconnected, so dispose of the thread and the pipe.
+			Logger.Info("Left Main Loop");
+
+			DisposePipe();
+			Logger.Info("Fully Closed. Goodbye o/");
 		}
 
 		#region Reading
-
-		/// <summary>
-		/// The main pipe reading loop. This should not exit until an exception occurs. If the exception is a ThreadAbort, this will return a true,  otherwise false. 
-		/// </summary>
-		/// <returns>True if the thread was aborted</returns>
-		private bool ReadLoop()
-		{
-			//Enter the main loop
-			bool doReadLoop = true;
-			while (doReadLoop && !IsAborting)
-			{
-				//Read the frame
-				PipeFrame frame;
-				if (!pipe.TryReadFrame(out frame))
-				{
-					//It failed to read, so abort
-					Logger.Warning("Failed to read a frame. Potentially broken pipe.");
-					doReadLoop = false;
-					break;
-				}
-					
-				//Do some basic processing on the frame
-				switch (frame.Opcode)
-				{
-					case Opcode.Close:
-						//We have been told by discord to close, so we will consider it an abort
-						Logger.Warning("We have been told to terminate by discord. ", frame.Message);
-						doReadLoop = false;
-						break;
-							
-							
-					case Opcode.Ping:
-						//We have pinged, so we will flip it and respond back with pong
-						Logger.Info("PING");
-						frame.Opcode = Opcode.Pong;
-						pipe.WriteFrame(frame);
-						break;
-
-					case Opcode.Pong:
-						//We have ponged? I have no idea if Discord actually sends ping/pongs.
-						Logger.Info("PONG");
-						break;
-							
-					case Opcode.Frame:
-
-						//We have a frame, so we are going to process the payload and add it to the stack
-
-						if (frame.Data == null)
-						{
-							Logger.Info("NULL");
-						}
-						EventPayload response = frame.GetObject<EventPayload>();
-						ProcessFrame(response);
-						break;
-
-					default:
-					case Opcode.Handshake:
-						//We have a invalid opcode, better terminate to be safe
-						Logger.Error("Invalid opcode: {0}", frame.Opcode);
-						doReadLoop = false;
-						break;
-
-				}
-
-
-				//Now we just need to write all remaining items
-				//Well, we could do this.... but the pipe is asyncronous, so we can read and write at the same time.
-				//
-				//We are writing now just incase we had any messages while the pipe wasn't available.
-				ProcessCommandQueue();
-			}
-			
-			//Something else happened, return false
-			return false;
-		}
 
 		/// <summary>Handles the response from the pipe and calls appropriate events and changes states.</summary>
 		/// <param name="response">The response received by the server.</param>
@@ -363,11 +328,6 @@ namespace DiscordRPC.RPC
 					//Enqueue a ready event
 					ReadyMessage ready = response.GetObject<ReadyMessage>();
 					EnqueueMessage(ready);
-
-					//Process the queue we have
-					//We will do this later
-					ProcessCommandQueue();
-
 					return;
 				}
 			}
@@ -465,70 +425,29 @@ namespace DiscordRPC.RPC
 		#endregion
 
 		#region Writting
-
-		private bool ProcessCommandQueue()
+		
+		private void ProcessEntireCommandQueue()
 		{
-			if (LOCK_STEP)
+			Logger.Info("Checking Write Queue");
+			if (aborting)
 			{
-				Logger.Info("Processing Lockstep Queue");
-				return ProcessSingleCommandQueue();
-			}
-			else
-			{
-				Logger.Info("Processing Entire Queue");
-				return ProcessEntireCommandQueue();
-			}
-		}
-		private bool ProcessSingleCommandQueue()
-		{
-			//Get the item if its available
-			ICommand item = null;
-			lock (l_rtqueue)
-			{
-				if (_rtqueue.Count > 0)
-					item = _rtqueue.Peek();
+				Logger.Warning("We have been told to write a queue but we have also been aborted.");
+				return;
 			}
 
-			//We have no items available
-			if (item == null) return true;
-			
-			//Prepare the payload
-			IPayload payload = item.PreparePayload(GetNextNonce());
-				
-			//Prepare the frame
-			PipeFrame frame = new PipeFrame();
-			frame.SetObject(Opcode.Frame, payload);
-
-			//Write it and if it wrote perfectly fine, we will dequeue it
-			Logger.Info("------ Sending Payload: " + payload.Command);
-			if (pipe.WriteFrame(frame))
-			{
-				//Remove it from the queue and return true
-				lock (l_rtqueue) _rtqueue.Dequeue();
-				return true;
-			}
-			else
-			{
-				//Something bad happened. Bad pipe?
-				Logger.Error("Something went wrong during writing!");
-				return false;
-			}
-		}
-		private bool ProcessEntireCommandQueue()
-		{
 			//Prepare some variabels we will clone into with locks
 			bool needsWriting = true;
 			ICommand item = null;
-
+			
 			//Continue looping until we dont need anymore messages
-			while (true)
+			while (needsWriting)
 			{
 				lock (l_rtqueue)
 				{
 					//Pull the value and update our writing needs
 					// If we have nothing to write, exit the loop
 					needsWriting = _rtqueue.Count > 0;
-					if (!needsWriting) return true;	
+					if (!needsWriting) break;	
 
 					//Peek at the item
 					item = _rtqueue.Peek();
@@ -539,19 +458,18 @@ namespace DiscordRPC.RPC
 
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
-				frame.SetObject(Opcode.Frame, payload);
+				frame.SetObject(item is CloseCommand ? Opcode.Handshake : Opcode.Frame, payload);
 
 				//Write it and if it wrote perfectly fine, we will dequeue it
 				Logger.Info("++++++ Sending payloads: " + payload.Command);
-				if (pipe.WriteFrame(frame))
+				if (pipe.WritePipeFrame(frame))
 				{
 					lock (l_rtqueue) _rtqueue.Dequeue();
-					return true;
 				}
 				else
 				{
 					Logger.Warning("Something went wrong during writing!");
-					return false;
+					Thread.Sleep(100);
 				}
 			}
 		}
@@ -589,7 +507,10 @@ namespace DiscordRPC.RPC
 
 				_state = RpcState.Connecting;
 			}
-			
+
+			Logger.Info("Waiting for handshake frame...");
+
+			/*
 			do
 			{
 				Logger.Info("Waiting for handshake frame...");
@@ -609,6 +530,7 @@ namespace DiscordRPC.RPC
 
 				//Keep going until we are not longer connecting
 			} while (State == RpcState.Connecting);
+			*/
 
 			//Success
 			return true;
@@ -640,6 +562,7 @@ namespace DiscordRPC.RPC
 			//Start the thread up
 			thread = new Thread(MainLoop);
 			thread.Name = "Discord IPC Thread";
+			//thread.IsBackground = true;
 			thread.Start();
 
 			return true;
@@ -669,32 +592,27 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		public void Close()
 		{
-			if (!IsRunning || thread == null)
+			if (thread == null)
 			{
 				Logger.Error("Cannot close as it is not available!");
 				return;
 			}
 
-			//Set the abort state
-			Logger.Info("Updating Abort State...");
-			lock (l_states) _isAborting = true;
-			
-			//Close the pipe. The thread will lsiten for closed pipes and handle the rest
-			if (pipe != null)
+			if (aborting)
 			{
-				Logger.Info("Closing Pipe...");
-				pipe.Close();
-				Logger.Info("Closed");
+				Logger.Error("Cannot abort as it has already been aborted");
+				return;
 			}
 
-			/*
-			Logger.Info("Thread Aborting...");
-			thread.Abort();
-			thread.Join();
-			Logger.Info("Thread Aborted");
-			*/
-			
+			//Set the abort state
+			Logger.Info("Updating Abort State...");
+			aborting = true;
+			pipe.isReading = false;
 
+			//Sending a version of 0 will make discord abort for us
+			// muahahah, purposely malforming payloads
+			//EnqueueCommand(new CloseCommand());
+			queueUpdatedEvent.Set();
 		}
 		#endregion
 		

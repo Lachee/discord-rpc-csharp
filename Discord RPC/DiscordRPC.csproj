@@ -82,6 +82,7 @@
     <Compile Include="Registry\UriScheme.cs" />
     <Compile Include="RichPresence.cs" />
     <Compile Include="RPC\Commands\ICommand.cs" />
+    <Compile Include="RPC\Commands\CloseCommand.cs" />
     <Compile Include="RPC\Commands\RespondCommand.cs" />
     <Compile Include="RPC\Commands\PresenceCommand.cs" />
     <Compile Include="RPC\Commands\SubscribeCommand.cs" />
@@ -102,7 +103,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(TargetFileName)"
+    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)\$(TargetFileName)"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
