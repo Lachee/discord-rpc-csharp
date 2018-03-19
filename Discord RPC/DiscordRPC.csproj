@@ -69,6 +69,8 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Message\ConnectionFailedMessage.cs" />
+    <Compile Include="Message\ConnectionEstablishedMessage.cs" />
     <Compile Include="Message\PresenceMessage.cs" />
     <Compile Include="Message\CloseMessage.cs" />
     <Compile Include="Message\JoinMessage.cs" />

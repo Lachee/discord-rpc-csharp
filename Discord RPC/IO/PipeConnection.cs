@@ -15,6 +15,8 @@ namespace DiscordRPC.IO
 		const string PIPE_NAME = @"discord-ipc-{0}";
 		private NamedPipeClientStream _stream;
 
+		public int ConnectedPipe { get; private set; }
+
 		public bool IsConnected { get { return _isconnected; } }
 		private bool _isconnected = false;
 
@@ -57,13 +59,14 @@ namespace DiscordRPC.IO
 				//Create the client
 				_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
 				_stream.Connect(1000);
-
+				
 				//Spin for a bit while we wait for it to finish connecting
 				Logger.Info("Waiting for connection...");
 				do { Thread.Sleep(250); } while (!_stream.IsConnected);
 
 				//Store the value
 				Logger.Info("Connected to " + pipename);
+				ConnectedPipe = pipe;
 				_isconnected = true;
 				return true;
 			}
@@ -120,7 +123,7 @@ namespace DiscordRPC.IO
 		{
 			//Set the pipe frame to default
 			frame = default(PipeFrame);
-
+			
 			//Try to read the values
 			uint op;
 			if (!TryReadUInt32(out op))
@@ -182,28 +185,19 @@ namespace DiscordRPC.IO
 		#region Write
 		private bool Write(PipeFrame frame)
 		{
-			try
-			{
-				//Get all the bytes
-				byte[] op = ConvertBytes((uint)frame.Opcode);
-				byte[] len = ConvertBytes(frame.Length);
-				byte[] data = frame.Data;
+			//Get all the bytes
+			byte[] op = ConvertBytes((uint)frame.Opcode);
+			byte[] len = ConvertBytes(frame.Length);
+			byte[] data = frame.Data;
 
-				//Copy it all into a buffer
-				byte[] buffer = new byte[op.Length + len.Length + data.Length];
-				op.CopyTo(buffer, 0);
-				len.CopyTo(buffer, op.Length);
-				data.CopyTo(buffer, op.Length + len.Length);
+			//Copy it all into a buffer
+			byte[] buffer = new byte[op.Length + len.Length + data.Length];
+			op.CopyTo(buffer, 0);
+			len.CopyTo(buffer, op.Length);
+			data.CopyTo(buffer, op.Length + len.Length);
 
-				//Write it to the stream
-				_stream.Write(buffer, 0, buffer.Length);
-
-			}
-			catch (Exception e)
-			{
-				Logger.Error("Exception has occured while writing a frame: {0}", e);
-				return false;
-			}
+			//Write it to the stream
+			_stream.Write(buffer, 0, buffer.Length);
 
 			return true;
 		}
@@ -227,6 +221,21 @@ namespace DiscordRPC.IO
 		#endregion
 		#endregion
 
+		/// <summary>
+		/// Closes the pipe (but does not dispose of this object).
+		/// </summary>
+		public void Close()
+		{
+			if (_stream != null)
+			{
+				Logger.Info("Dispoing stream...");
+				_stream.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// Disposes the pipe and this object.
+		/// </summary>
 		public void Dispose()
 		{
 			//Abort the thread. The thread will manage everything else automatically

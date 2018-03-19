@@ -101,11 +101,24 @@ namespace DiscordRPC.Example
 			while (dorun)
 			{
 				//Invoke the clients events
-				client.Invoke();
+				if (client != null)
+					client.Invoke();
+
+				if (Console.KeyAvailable)
+				{
+					Console.ReadKey();
+					client.Dispose();
+					client = null;
+					dorun = false;
+				}
 
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
+				Console.Write("+");
 				Thread.Sleep(100);
 			}
+
+			Console.WriteLine("Press any key to terminate");
+			Console.ReadKey();
 		}
 
 		private static void OnReady(object sender, ReadyMessage args)
@@ -125,7 +138,7 @@ namespace DiscordRPC.Example
 
 		private static void OnPresenceUpdate(object sender, PresenceMessage args)
 		{
-			Console.WriteLine("Rich Presence Updated: {0}", args.Presence.State);
+			Console.WriteLine("Rich Presence Updated: {0}", args.Presence == null ? "NULL" : args.Presence.State);
 		}
 
 		private static void OnSubscribe(object sender, SubscribeMessage args)

@@ -116,7 +116,7 @@ namespace DiscordRPC
 		/// <param name="presesnce"></param>
 		public static implicit operator bool(RichPresence presesnce)
 		{
-			return presesnce == null;
+			return presesnce != null;
 		}
 	}
 	

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Commands
 {
-	class PresenceCommand : ICommand
+	internal class PresenceCommand : ICommand
 	{
 		/// <summary>
 		/// The process ID

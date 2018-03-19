@@ -9,12 +9,21 @@ namespace DiscordRPC.Message
 	{
 		public override MessageType Type { get { return MessageType.PresenceUpdate; } }
 
-		private PresenceMessage() { }
+		internal PresenceMessage() : this(null) { }
 		internal PresenceMessage(RichPresenceResponse rpr)
 		{
-			Presence = (RichPresence)rpr;
-			Name = rpr.Name;
-			ApplicationID = rpr.ClientID;
+			if (rpr == null)
+			{
+				Presence = null;
+				Name = "No Rich Presence";
+				ApplicationID = "";
+			}
+			else
+			{
+				Presence = (RichPresence)rpr;
+				Name = rpr.Name;
+				ApplicationID = rpr.ClientID;
+			}
 		}
 
 		/// <summary>
