@@ -79,11 +79,11 @@ namespace DiscordRPC
 				State = this._state != null ? _state.Clone() as string : null,
 				Details = this._details != null ? _details.Clone() as string : null,
 
-				Secrets = this.Secrets == null || string.IsNullOrEmpty(this.Secrets.MatchSecret) ? null : new Secrets()
+				Secrets = this.Secrets == null ? null : new Secrets()
 				{
-					MatchSecret = this.Secrets.MatchSecret != null ? this.Secrets.MatchSecret.Clone() as string : null,
-					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
-					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
+					//MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
+					JoinSecret = this.Secrets.JoinSecret?.Clone() as string,
+					SpectateSecret = this.Secrets.SpectateSecret?.Clone() as string,
 				},
 
 				Timestamps = this.Timestamps == null ? null : new Timestamps()
@@ -134,6 +134,7 @@ namespace DiscordRPC
 		/// <para>This cannot be null and must be supplied for the  Join / Spectate feature to work.</para>
 		/// <para>Max Length of 128 Bytes</para>
 		/// </summary>
+		[Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.")]
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
 		public string MatchSecret { get { return _matchSecret; } set { _matchSecret = value.ClearEmpty(); } }
 		private string _matchSecret;
