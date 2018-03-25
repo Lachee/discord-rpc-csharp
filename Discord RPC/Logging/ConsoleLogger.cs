@@ -20,13 +20,13 @@ namespace DiscordRPC.Logging
 
 		public void Warning(string message, params object[] args)
 		{
-			if (Level != LogLevel.Warning && Level != LogLevel.Error) return;
+			if (Level != LogLevel.Info && Level != LogLevel.Warning) return;
 			Console.WriteLine("WARN: " + message, args);
 		}
 
 		public void Error(string message, params object[] args)
 		{
-			if (Level != LogLevel.Error) return;
+			if (Level != LogLevel.Info && Level != LogLevel.Warning && Level != LogLevel.Error) return;
 			Console.WriteLine("ERR : " + message, args);
 		}
 

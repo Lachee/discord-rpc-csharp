@@ -71,4 +71,19 @@ namespace DiscordRPC.Events
 	/// <param name="sender">The Discord client handler that sent this event</param>
 	/// <param name="args">The arguments supplied with the event</param>
 	public delegate void OnJoinRequestedEvent(object sender, JoinRequestMessage args);
+
+
+	/// <summary>
+	/// The connection to the discord client was succesfull. This is called before <see cref="Ready"/>.
+	/// </summary>
+	/// <param name="sender">The Discord client handler that sent this event</param>
+	/// <param name="args">The arguments supplied with the event</param>
+	public delegate void OnConnectionEstablishedEvent(object sender, ConnectionEstablishedMessage args);
+
+	/// <summary>
+	/// Failed to establish any connection with discord. Discord is potentially not running?
+	/// </summary>
+	/// <param name="sender">The Discord client handler that sent this event</param>
+	/// <param name="args">The arguments supplied with the event</param>
+	public delegate void OnConnectionFailedEvent(object sende, ConnectionFailedMessage args);
 }

@@ -64,7 +64,7 @@ namespace DiscordRPC.Example
 			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
 			{
 				//Set the loggers
-				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Error };
+				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Info };
 
 				//Initialize the connection
 				client.Initialize();
@@ -77,7 +77,7 @@ namespace DiscordRPC.Example
 			}
 		}
 
-
+		static bool dorun = true;
 		static void PollInterface(DiscordRpcClient client)
 		{
 			//Add listeners to all the events
@@ -97,15 +97,42 @@ namespace DiscordRPC.Example
 			client.Subscribe(EventType.JoinRequest);
 
 			//Enter a continuous loop, pooling the invoke.
-			bool dorun = true;
 			while (dorun)
 			{
 				//Invoke the clients events
-				client.Invoke();
+				if (client != null)
+					client.Invoke();
+
+				if (Console.KeyAvailable)
+				{
+					var key = Console.ReadKey();
+					if (key.Key == ConsoleKey.A)
+					{
+						client.Dispose();
+					}
+
+					if (key.Key == ConsoleKey.B)
+					{
+						Console.WriteLine("BREAK POINT");
+					}
+
+					if (key.Key == ConsoleKey.Spacebar)
+					{
+						var p = client.CurrentPresence;
+						p.Details = "Tiesjgkldjg kldr";
+						client.SetPresence(p);
+					}
+					//client = null;
+					//dorun = false;
+				}
 
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
+				//Console.Write("+");
 				Thread.Sleep(100);
 			}
+
+			Console.WriteLine("Press any key to terminate");
+			Console.ReadKey();
 		}
 
 		private static void OnReady(object sender, ReadyMessage args)
@@ -116,6 +143,7 @@ namespace DiscordRPC.Example
 		private static void OnClose(object sender, CloseMessage args)
 		{
 			Console.WriteLine("Lost Connection with client: {0}", args.Reason);
+			dorun = false;
 		}
 
 		private static void OnError(object sender, ErrorMessage args)
@@ -125,7 +153,7 @@ namespace DiscordRPC.Example
 
 		private static void OnPresenceUpdate(object sender, PresenceMessage args)
 		{
-			Console.WriteLine("Rich Presence Updated: {0}", args.Presence.State);
+			Console.WriteLine("Rich Presence Updated: {0}", args.Presence == null ? "NULL" : args.Presence.State);
 		}
 
 		private static void OnSubscribe(object sender, SubscribeMessage args)

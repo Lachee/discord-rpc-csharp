@@ -1,4 +1,5 @@
 ﻿using DiscordRPC.Events;
+using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
 using DiscordRPC.Registry;
@@ -33,6 +34,12 @@ namespace DiscordRPC
 		/// Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination.
 		/// </summary>
 		public int ProcessID { get; private set; }
+
+		/// <summary>
+		/// The dispose state of the client object.
+		/// </summary>
+		public bool Disposed { get { return _disposed; } }
+		private bool _disposed = false;
 
 		/// <summary>
 		/// The logger used this client and its associated components. <see cref="ILogger"/> are not called safely and can come from any thread. It is upto the <see cref="ILogger"/> to account for this and apply appropriate thread safe methods.
@@ -124,6 +131,17 @@ namespace DiscordRPC
 		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
 		/// </summary>
 		public event OnJoinRequestedEvent OnJoinRequested;
+
+		/// <summary>
+		/// The connection to the discord client was succesfull. This is called before <see cref="MessageType.Ready"/>.
+		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// </summary>
+		public event OnConnectionEstablishedEvent OnConnectionEstablished;
+
+		/// <summary>
+		/// Failed to establish any connection with discord. Discord is potentially not running?
+		/// </summary>
+		public event OnConnectionFailedEvent OnConnectionFailed;
 		#endregion
 
 		#region Initialization
@@ -172,7 +190,17 @@ namespace DiscordRPC
 		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
 		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
 		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe)
+		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe) : this(applicationID, steamID, registerUriScheme, pipe, new ManagedNamedPipeClient()) { }
+
+		/// <summary>
+		/// Creates a new Discord RPC Client using the steam uri scheme.
+		/// </summary>
+		/// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
+		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+		/// <param name="client">The pipe client to use and communicate to discord through</param>
+		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe, INamedPipeClient client)
 		{
 
 			//Store our values
@@ -189,7 +217,7 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client);
 			connection.Logger = this._logger;
 		}
 
@@ -202,6 +230,9 @@ namespace DiscordRPC
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			//Dequeue all the messages and process them
 			IMessage[] messages = connection.DequeueMessages();
 			for (int i = 0; i < messages.Length; i++)
@@ -211,42 +242,50 @@ namespace DiscordRPC
 				HandleMessage(message);
 
 				//Invoke the appropriate methods
-				switch(message.Type)
+				switch (message.Type)
 				{
 					case MessageType.Ready:
-						OnReady?.Invoke(this, message as ReadyMessage);
+						if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
 						break;
 
 					case MessageType.Close:
-						OnClose?.Invoke(this, message as CloseMessage);
+						if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
 						break;
 
 					case MessageType.Error:
-						OnError?.Invoke(this, message as ErrorMessage);
+						if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
 						break;
 
 					case MessageType.PresenceUpdate:
-						OnPresenceUpdate?.Invoke(this, message as PresenceMessage);
+						if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
 						break;
 
 					case MessageType.Subscribe:
-						OnSubscribe?.Invoke(this, message as SubscribeMessage);
+						if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
 						break;
 
 					case MessageType.Unsubscribe:
-						OnUnsubscribe?.Invoke(this, message as UnsubscribeMessage);
+						if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
 						break;
 
 					case MessageType.Join:
-						OnJoin?.Invoke(this, message as JoinMessage);
+						if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
 						break;
 
 					case MessageType.Spectate:
-						OnSpectate?.Invoke(this, message as SpectateMessage);
+						if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
 						break;
 
 					case MessageType.JoinRequest:
-						OnJoinRequested?.Invoke(this, message as JoinRequestMessage);
+						if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
+						break;
+
+					case MessageType.ConnectionEstablished:
+						if (OnConnectionEstablished != null) OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
+						break;
+
+					case MessageType.ConnectionFailed:
+						if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
 						break;
 
 					default:
@@ -266,6 +305,9 @@ namespace DiscordRPC
 		/// <returns></returns>
 		public IMessage Dequeue()
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			//Dequeue the message and do some preprocessing
 			IMessage message = connection.DequeueMessage();
 			HandleMessage(message);
@@ -280,6 +322,9 @@ namespace DiscordRPC
 		/// <returns></returns>
 		public IMessage[] DequeueAll()
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			//Dequeue all the messages and process them
 			IMessage[] messages = connection.DequeueMessages();
 			for (int i = 0; i < messages.Length; i++) HandleMessage(messages[i]);
@@ -290,6 +335,9 @@ namespace DiscordRPC
 
 		private void HandleMessage(IMessage message)
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			if (message == null) return;
 			switch (message.Type)
 			{
@@ -321,6 +369,7 @@ namespace DiscordRPC
 			}
 		}
 		#endregion
+		
 
 		/// <summary>
 		/// Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="Dequeue"/> frequently enough.
@@ -329,6 +378,9 @@ namespace DiscordRPC
 		/// <param name="acceptRequest">Is the request accepted?</param>
 		public void Respond(JoinRequestMessage request, bool acceptRequest)
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			connection.EnqueueCommand(new RespondCommand() { Accept = acceptRequest, UserID = request.User.ID.ToString() });
 		}
 
@@ -338,9 +390,18 @@ namespace DiscordRPC
 		/// <param name="presence">The rich presence to send to discord</param>
 		public void SetPresence(RichPresence presence)
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			//Enqueue the presence command to be sent
 			_presence = presence;
-			connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence?.Clone() });
+			var command = new PresenceCommand()
+			{
+				PID = this.ProcessID,
+				Presence = presence ? presence.Clone() : null
+			};
+
+			connection.EnqueueCommand(command);
 		}
 
 		/// <summary>
@@ -348,6 +409,9 @@ namespace DiscordRPC
 		/// </summary>
 		public void ClearPresence()
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			//Just a wrapper function for sending null
 			SetPresence(null);
 		}
@@ -358,6 +422,9 @@ namespace DiscordRPC
 		/// <param name="type"></param>
 		public void Subscribe(EventType type)
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			if (!HasRegisteredUriScheme)
 				throw new Exception("Cannot subscribe to an event as this application has not registered a URI scheme.");
 
@@ -371,55 +438,53 @@ namespace DiscordRPC
 		/// <param name="type"></param>
 		public void Unubscribe(EventType type)
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			if (!HasRegisteredUriScheme)
 				throw new Exception("Cannot unsubscribe to an event as this application has not registered a URI scheme.");
 
 			//Add the subscribe command to be sent when the connection is able too
 			connection.EnqueueCommand(new SubscribeCommand() { Event = type, IsUnsubscribe = true });
 		}
-
-		/// <summary>
-		/// Causes the Rich Presence Connection to force a reconnection.
-		/// </summary>
-		public void Reconnect()
-		{
-			if (connection == null)
-			{
-				Initialize();
-				return;
-			}
-
-			connection.Reconnect();
-		}
-
+		
 		/// <summary>
 		/// Attempts to initalize a connection to the Discord IPC.
 		/// </summary>
 		/// <returns></returns>
 		public bool Initialize()
 		{
+			if (Disposed)
+				throw new ObjectDisposedException("Discord IPC Client");
+
 			if (connection == null)
-				connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
+				throw new Exception("Cannot initialize as the connection has been deinitialized");
 
 			return connection.AttemptConnection();
 		}
-
-		/// <summary>
-		/// Disconnects the server, forcing a new connection to be established on next <see cref="SetPresence(RichPresence)"/>
-		/// </summary>
-		public void Close()
-		{
-			//connectionPipe.Close();
-			connection.Close();
-		}
-
+		
 		/// <summary>
 		/// Terminates the connection to Discord and disposes of the object.
 		/// </summary>
 		public void Dispose()
 		{
 			//connectionPipe.Close();
+			if (Disposed) return;
+
 			connection.Close();
+
+			//connection.Close();
+			//connection = null;
+			//_disposed = true;
+		}
+
+		/// <summary>
+		/// Operator that converts the client into a boolean for null checks.
+		/// </summary>
+		/// <param name="client"></param>
+		public static implicit operator bool(DiscordRpcClient client)
+		{
+			return client != null;
 		}
 
 	}

@@ -49,6 +49,16 @@ namespace DiscordRPC.Message
 		/// <summary>
 		/// Another discord user requests permission to join this game.
 		/// </summary>
-		JoinRequest
+		JoinRequest,
+
+		/// <summary>
+		/// The connection to the discord client was succesfull. This is called before <see cref="Ready"/>.
+		/// </summary>
+		ConnectionEstablished,
+
+		/// <summary>
+		/// Failed to establish any connection with discord. Discord is potentially not running?
+		/// </summary>
+		ConnectionFailed
 	}
 }

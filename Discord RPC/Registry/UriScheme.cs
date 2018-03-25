@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -11,25 +12,17 @@ namespace DiscordRPC.Registry
 	{
 		private static void CreateUriScheme(string scheme, string friendlyName, string defaultIcon, string command)
 		{
-			try
+			using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + scheme))
 			{
-				using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + scheme))
-				{
-					key.SetValue("", "URL:" + friendlyName);
-					key.SetValue("URL Protocol", "");
+				key.SetValue("", "URL:" + friendlyName);
+				key.SetValue("URL Protocol", "");
 
-					using (var iconKey = key.CreateSubKey("DefaultIcon"))
-						iconKey.SetValue("", defaultIcon);
+				using (var iconKey = key.CreateSubKey("DefaultIcon"))
+					iconKey.SetValue("", defaultIcon);
 
-					using (var commandKey = key.CreateSubKey("shell\\open\\command"))
-						commandKey.SetValue("", command);
-				}
+				using (var commandKey = key.CreateSubKey("shell\\open\\command"))
+					commandKey.SetValue("", command);
 			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-			//TODO: Error Logging
 		}
 
 		/// <summary>
@@ -38,20 +31,11 @@ namespace DiscordRPC.Registry
 		/// <returns></returns>
 		public static string GetSteamLocation()
 		{
-			try
+			using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam"))
 			{
-				using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam"))
-				{
-					if (key == null) return null;
-					return key.GetValue("SteamExe") as string;
-				}
+				if (key == null) return null;
+				return key.GetValue("SteamExe") as string;
 			}
-			catch(Exception e)
-			{
-				throw e;
-			}
-
-			return null;
 		}
 	
 		/// <summary>
@@ -60,7 +44,7 @@ namespace DiscordRPC.Registry
 		/// <returns></returns>
 		public static string GetApplicationLocation()
 		{
-			return Assembly.GetEntryAssembly().Location;
+			return Process.GetCurrentProcess().MainModule.FileName;
 		}
 
 		/// <summary>
@@ -72,35 +56,28 @@ namespace DiscordRPC.Registry
 		/// <param name="arguments">Optional arguments to be appended to the end.</param>
 		public static void RegisterUriScheme(string appid, string steamid = null, string arguments = null)
 		{
-			try
+			//Prepare our location
+			string location = GetApplicationLocation();
+			if (location == null) { return; }   //Some sort of error occured. TODO: Log Error
+
+			//Prepare the Scheme, Friendly name, default icon and default command
+			string scheme = "discord-" + appid;
+			string friendlyName = "Run game " + appid + " protocol";
+			string defaultIcon = location;
+			string command = string.Format("{0} {1}", location, arguments);
+
+			//We have a steam ID, so attempt to replce the command with a steam command
+			if (!string.IsNullOrEmpty(steamid))
 			{
-				//Prepare our location
-				string location = GetApplicationLocation();
-				if (location == null) { return; }   //Some sort of error occured. TODO: Log Error
+				//Try to get the steam location. If found, set the command to a run steam instead.
+				string steam = GetSteamLocation();
+				if (steam != null)
+					command = string.Format("\"{0}\" steam://rungameid/{1}", steam, steamid);
 
-				//Prepare the Scheme, Friendly name, default icon and default command
-				string scheme = "discord-" + appid;
-				string friendlyName = "Run game " + appid + " protocol";
-				string defaultIcon = location;
-				string command = string.Format("{0} {1}", location, arguments);
-
-				//We have a steam ID, so attempt to replce the command with a steam command
-				if (!string.IsNullOrEmpty(steamid))
-				{
-					//Try to get the steam location. If found, set the command to a run steam instead.
-					string steam = GetSteamLocation();
-					if (steam != null)
-						command = string.Format("\"{0}\" steam://rungameid/{1}", steam, steamid);
-
-				}
-
-				//Okay, now actually register it
-				CreateUriScheme(scheme, friendlyName, defaultIcon, command);
 			}
-			catch (Exception e)
-			{
-				throw e;
-			}
+
+			//Okay, now actually register it
+			CreateUriScheme(scheme, friendlyName, defaultIcon, command);
 		}
 
 	}

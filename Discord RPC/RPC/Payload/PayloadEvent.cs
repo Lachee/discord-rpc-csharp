@@ -40,6 +40,7 @@ namespace DiscordRPC.RPC.Payload
 		/// <returns></returns>
 		public T GetObject<T>()
 		{
+			if (Data == null) return default(T);
 			return Data.ToObject<T>();
 		}
 
