@@ -82,8 +82,8 @@ namespace DiscordRPC
 				Secrets = this.Secrets == null ? null : new Secrets()
 				{
 					//MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
-					JoinSecret = this.Secrets.JoinSecret?.Clone() as string,
-					SpectateSecret = this.Secrets.SpectateSecret?.Clone() as string,
+					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
+					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
 				},
 
 				Timestamps = this.Timestamps == null ? null : new Timestamps()

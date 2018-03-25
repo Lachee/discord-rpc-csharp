@@ -1,4 +1,5 @@
 ﻿using DiscordRPC.Events;
+using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
 using DiscordRPC.Registry;
@@ -189,7 +190,17 @@ namespace DiscordRPC
 		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
 		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
 		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe)
+		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe) : this(applicationID, steamID, registerUriScheme, pipe, new ManagedNamedPipeClient()) { }
+
+		/// <summary>
+		/// Creates a new Discord RPC Client using the steam uri scheme.
+		/// </summary>
+		/// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
+		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+		/// <param name="client">The pipe client to use and communicate to discord through</param>
+		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe, INamedPipeClient client)
 		{
 
 			//Store our values
@@ -206,7 +217,7 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client);
 			connection.Logger = this._logger;
 		}
 
@@ -358,6 +369,7 @@ namespace DiscordRPC
 			}
 		}
 		#endregion
+		
 
 		/// <summary>
 		/// Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="Dequeue"/> frequently enough.
@@ -444,9 +456,9 @@ namespace DiscordRPC
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
-			
+
 			if (connection == null)
-				connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe);
+				throw new Exception("Cannot initialize as the connection has been deinitialized");
 
 			return connection.AttemptConnection();
 		}

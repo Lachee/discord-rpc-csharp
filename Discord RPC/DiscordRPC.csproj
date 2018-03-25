@@ -62,6 +62,8 @@
     <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
+    <Compile Include="IO\INamedPipeClient.cs" />
+    <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
     <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\PipeFrame.cs" />

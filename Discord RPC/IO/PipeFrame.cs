@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -35,6 +36,16 @@ namespace DiscordRPC.IO
 			set { SetMessage(value); }
 		}
 		
+		public PipeFrame(Opcode opcode, object data)
+		{
+			//Set the opcode and a temp field for data
+			Opcode = opcode;
+			Data = null;
+
+			//Set the data
+			SetObject(data);
+		}
+
 		/// <summary>
 		/// Gets the encoding used for the pipe frames
 		/// </summary>
@@ -84,6 +95,98 @@ namespace DiscordRPC.IO
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 
-				
+		/// <summary>
+		/// Attempts to read the contents of the frame from the stream
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <returns></returns>
+		internal bool ReadStream(Stream stream)
+		{
+			//Try to read the opcode
+			uint op;
+			if (!TryReadUInt32(stream, out op))
+				return false;
+
+			//Try to read the length
+			uint len;
+			if (!TryReadUInt32(stream, out len))
+				return false;
+
+			//Read the data. This could potentially cause issues if we ever get anything greater than a int.
+			//TODO: Better implementation of this read using uints
+			byte[] buff = new byte[len];
+			int bytesread = stream.Read(buff, 0, buff.Length);
+
+			//Make sure we actually read data.
+			if (bytesread != len)
+				return false;
+
+			//Apply the values we read
+			Opcode = (Opcode)op;
+			Data = buff;
+			return true;
+		}
+
+		/// <summary>
+		/// Attempts to read a UInt32
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		private bool TryReadUInt32(Stream stream, out uint value)
+		{
+			//Read the bytes available to us
+			byte[] bytes = new byte[4];
+			int cnt = stream.Read(bytes, 0, bytes.Length);
+
+			//Make sure we actually have a valid value
+			if (cnt != 4)
+			{
+				value = default(uint);
+				return false;
+			}
+
+			//Flip the endianess if required then convert it to a number
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			value = BitConverter.ToUInt32(bytes, 0);
+			return true;
+		}
+
+		/// <summary>
+		/// Writes the frame into the target frame as one big byte block.
+		/// </summary>
+		/// <param name="stream"></param>
+		internal void WriteStream(Stream stream)
+		{
+			//Get all the bytes
+			byte[] op = ConvertBytes((uint) Opcode);
+			byte[] len = ConvertBytes(Length);
+
+			//Copy it all into a buffer
+			byte[] buffer = new byte[op.Length + len.Length + Data.Length];
+			op.CopyTo(buffer, 0);
+			len.CopyTo(buffer, op.Length);
+			Data.CopyTo(buffer, op.Length + len.Length);
+
+			//Write it to the stream
+			stream.Write(buffer, 0, buffer.Length);
+		}
+
+
+		/// <summary>
+		/// Gets the bytes of a uint32 value in LE format.
+		/// </summary>
+		/// <param name="uint32"></param>
+		/// <returns></returns>
+		private byte[] ConvertBytes(uint uint32)
+		{
+			byte[] bytes = BitConverter.GetBytes(uint32);
+
+			//If we are already in LE, we dont need to flip it
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+
+			//Give back the bytes
+			return bytes;
+		}
 	}
 }
