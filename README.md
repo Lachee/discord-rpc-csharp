@@ -1,5 +1,7 @@
 # Discord Rich Presence
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger)
+
 This is a C# implementation of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. You will be able to set the Rich Presence of your game directly in C# without an DllImport nonsence. 
 
 Please note that Join/Spectate features are not yet supported by this library, but they are planned in the future.
