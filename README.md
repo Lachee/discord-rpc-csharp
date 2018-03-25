@@ -10,48 +10,16 @@ Please note that Join/Spectate features are not yet supported by this library, b
 Installation is super easy. You just need to build the project with .NET 4.6
 **Dependencies:**
  - Newtonsoft.Json 
-- (For Unity) Unity 2017 in .NET 4.6 Runtime
-	- Potential branch for just .NET 3.5 to work with Unity 5 later.
+- (For Unity) Unity 5 with .NET 3.5 (aka .NET 2). Please note that .NET 2 Subset will **NOT** work.
+
 ## Usage
 
-The Discord.Test project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. 
+This usage is out of date. Please check the example project provided as a rough guide. 
+_want to help out and improve on this documentation? Check out https://github.com/Lachee/discord-rpc-csharp/issues/9 _
 
 **Always remember to Dispose of the client on shutdown!**
 
 For a quick start:
 ```csharp
-//Create a discord client
-DiscordClient rpc = new DiscordClient(clientid);
-
-//Sets the current presence
-await rpc.SetPresence(new RichPresence() {
-	State = "In Editor",
-	Details = "Rich Presence Example",
-	Timestamps = new Timestamps()
-	{
-		Start = DateTime.UtcNow
-	},
-	Assets = new Assets()
-	{
-		LargeImageKey = "default_large",
-		LargeImageText = "Default Large Image",
-		SmallImageKey = "default_small",
-		SmallImageText = "Default Small Image"
-	},
-	Party= new Party()
-	{
-		ID = "someuniqueid",
-		Size = 1,
-		Max = 10
-	}
-});
-
-//Do some other things
-DoThings();
-
-//Clear the presence. This helps remove ghosting :)
-await rpc.ClearPresence();
-
-//Dispose of the connection
-rpc.Dispose();
+//TODO: Update the quick start
 ```
