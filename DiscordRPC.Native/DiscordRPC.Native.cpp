@@ -12,7 +12,7 @@ extern "C" DISCORDRPCNATIVE_API bool isConnected()
 	return false;
 }
 
-extern "C" DISCORDRPCNATIVE_API bool readFrame(int* buffer, int length)
+extern "C" DISCORDRPCNATIVE_API bool readFrame(unsigned char* buffer, int length)
 {
 	/*
 	if (!PeekNamedPipe(handle)) return false;
@@ -22,7 +22,7 @@ extern "C" DISCORDRPCNATIVE_API bool readFrame(int* buffer, int length)
 	return false;
 }
 
-extern "C" DISCORDRPCNATIVE_API bool writeFrame(int* buffer, int length)
+extern "C" DISCORDRPCNATIVE_API bool writeFrame(unsigned char* buffer, int length)
 {
 	/*
 	Write(handle, buffer, 0, length);
