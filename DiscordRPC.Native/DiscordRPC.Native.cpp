@@ -33,7 +33,7 @@ extern "C" DISCORDRPCNATIVE_API int readFrame(unsigned char* buffer, int length)
 	if (::PeekNamedPipe(pipe, nullptr, 0, nullptr, &bytesAvailable, nullptr)) 
 	{
 		//Check if we have bytes available to read
-		if (bytesAvailable >= 0) 
+		if (bytesAvailable > 0) 
 		{
 			//Read the bytes. 
 			//TODO: Make the Bytes Read appart of the output
