@@ -11,6 +11,11 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
+			int v = NativePipe.Example();
+			Console.WriteLine("Example: {0}", v);
+		}
+		static void Example()
+		{
 			RichPresence presence = new RichPresence()
 			{
 				Details = "Testing .NET 3.5",

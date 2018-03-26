@@ -65,7 +65,6 @@
     <Compile Include="IO\INamedPipeClient.cs" />
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
-    <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\PipeFrame.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
