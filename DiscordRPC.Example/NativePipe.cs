@@ -8,7 +8,10 @@ namespace DiscordRPC.Example
 {
 	class NativePipe
 	{
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "fnDiscordRPCNative")]
-		internal static extern int Example();
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "fnGetValue")]
+		internal static extern int GetValue();
+
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "fnSetValue")]
+		internal static extern void SetValue(int value);
 	}
 }

@@ -4,14 +4,29 @@
 #include "stdafx.h"
 #include "DiscordRPC.Native.h"
 
-
-// This is an example of an exported variable
-DISCORDRPCNATIVE_API int nDiscordRPCNative=0;
-
-// This is an example of an exported function.
-DISCORDRPCNATIVE_API int fnDiscordRPCNative(void)
+extern "C" DISCORDRPCNATIVE_API bool isConnected(int* buffer, int length)
 {
-    return 42;
+	return false;
+}
+
+extern "C" DISCORDRPCNATIVE_API bool readFrame(int* buffer, int length)
+{
+	return false;
+}
+
+extern "C" DISCORDRPCNATIVE_API bool writeFrame(int* buffer, int length)
+{
+	return false;
+}
+
+extern "C" DISCORDRPCNATIVE_API bool close()
+{
+	return false;
+}
+
+extern "C" DISCORDRPCNATIVE_API bool open(char* pipename) 
+{
+	return false;
 }
 
 // This is the constructor of a class that has been exported.

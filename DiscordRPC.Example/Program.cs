@@ -11,8 +11,11 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
-			int v = NativePipe.Example();
-			Console.WriteLine("Example: {0}", v);
+			Console.WriteLine("A: {0}", NativePipe.GetValue());
+
+			NativePipe.SetValue(10);
+			Console.WriteLine("B: {0}", NativePipe.GetValue());
+			Console.ReadKey();
 		}
 		static void Example()
 		{
