@@ -32,19 +32,13 @@ namespace DiscordRPC.IO
 
 			//Attempt to connect to the specific pipe
 			if (pipe >= 0 && AttemptConnection(pipe))
-			{
-				BeginRead();
 				return true;
-			}
 
 			//Iterate until we connect to a pipe
 			for (int i = 0; i < 9; i++)
 			{
 				if (AttemptConnection(i))
-				{
-					BeginRead();
 					return true;
-				}
 			}
 
 			//We failed to connect

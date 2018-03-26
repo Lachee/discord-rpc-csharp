@@ -23,7 +23,47 @@ extern "C" DISCORDRPCNATIVE_API bool readFrame(unsigned char* buffer, int length
 	Read(handle, buffer, 0, length);
 	*/
 
-	return false;
+	if (length == 0) { return false; }
+	if (!isConnected()) { return false; }
+
+	//Prepare how many bytes we have read
+	DWORD bytesAvailable = 0;
+
+	//Attempt to peek at the available pipe
+	if (::PeekNamedPipe(pipe, nullptr, 0, nullptr, &bytesAvailable, nullptr)) 
+	{
+		//Check if we have bytes available to read
+		if (bytesAvailable >= length) 
+		{
+			//Read the bytes. 
+			//TODO: Make the Bytes Read appart of the output
+			DWORD bytesToRead = (DWORD)length;
+			DWORD bytesRead = 0;
+
+			//Attempt to read the bytes
+			if (!::ReadFile(pipe, buffer, bytesToRead, &bytesRead, nullptr) == TRUE)
+			{
+				return true;
+			}
+			else 
+			{
+				//We failed to read anything, close the pipe (broken)
+				close();
+				return false;
+			}
+		}
+		else 
+		{
+			//We failed to read as there were no bytes available
+			return false;
+		}
+	}
+	else 
+	{
+		//We have failed to peek. The pipe is probably broken
+		close();
+		return false;
+	}
 }
 
 extern "C" DISCORDRPCNATIVE_API bool writeFrame(unsigned char* buffer, int length)
@@ -31,7 +71,23 @@ extern "C" DISCORDRPCNATIVE_API bool writeFrame(unsigned char* buffer, int lengt
 	/*
 	Write(handle, buffer, 0, length);
 	*/
-	return false;
+	if (length == 0) 
+	{
+		return true;
+	}
+
+	if (!isConnected()) 
+	{
+		return false;
+	}
+
+	//Prepare the size
+	const DWORD bytesLength = (DWORD)length;
+	DWORD bytesWritten = 0;
+
+	//Write and return its success
+	bool success = ::WriteFile(pipe, buffer, bytesLength, &bytesWritten, nullptr);
+	return success && bytesWritten == bytesLength;
 }
 
 extern "C" DISCORDRPCNATIVE_API void close()
@@ -39,6 +95,9 @@ extern "C" DISCORDRPCNATIVE_API void close()
 	/*
 	Close(handle);
 	*/
+	::CloseHandle(pipe);
+	pipe = INVALID_HANDLE_VALUE;
+	isOpen = false;
 }
 
 extern "C" DISCORDRPCNATIVE_API bool open(char* pipename) 
