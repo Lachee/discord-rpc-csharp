@@ -4,28 +4,44 @@
 #include "stdafx.h"
 #include "DiscordRPC.Native.h"
 
-extern "C" DISCORDRPCNATIVE_API bool isConnected(int* buffer, int length)
+extern "C" DISCORDRPCNATIVE_API bool isConnected()
 {
+	/*
+	bool connected = handle != nullptr && PipeConnected(handle);
+	*/
 	return false;
 }
 
 extern "C" DISCORDRPCNATIVE_API bool readFrame(int* buffer, int length)
 {
+	/*
+	if (!PeekNamedPipe(handle)) return false;
+	Read(handle, buffer, 0, length);
+	*/
+
 	return false;
 }
 
 extern "C" DISCORDRPCNATIVE_API bool writeFrame(int* buffer, int length)
 {
+	/*
+	Write(handle, buffer, 0, length);
+	*/
 	return false;
 }
 
-extern "C" DISCORDRPCNATIVE_API bool close()
+extern "C" DISCORDRPCNATIVE_API void close()
 {
-	return false;
+	/*
+	Close(handle);
+	*/
 }
 
 extern "C" DISCORDRPCNATIVE_API bool open(char* pipename) 
 {
+	/*
+	handle = OpenFile(pipename);
+	*/
 	return false;
 }
 

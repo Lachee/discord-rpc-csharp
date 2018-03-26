@@ -1,6 +1,7 @@
 ﻿using DiscordRPC.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -22,7 +23,7 @@ namespace DiscordRPC.IO
 		public int ConnectedPipe { get { return _connectedPipe; } }
 		private int _connectedPipe;
 		
-		private int[] _buffer = new int[PipeFrame.MAX_SIZE];
+		private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
 		
 		public bool Connect(int pipe)
 		{
@@ -55,18 +56,37 @@ namespace DiscordRPC.IO
 			string pipename = string.Format(PIPE_NAME, pipe);
 			Logger.Info("Attempting to connect to " + pipename);
 
-			throw new NotImplementedException();
+			return NativePipe.Open(pipename.ToCharArray());
 		}
 		
 		public bool ReadFrame(out PipeFrame frame)
 		{
+			//Make sure we are connected
 			if (!IsConnected)
 			{
 				frame = default(PipeFrame);
 				return false;
 			}
+			
+			//Try and read the frame from the native pipe
+			if (!NativePipe.ReadFrame(_buffer, _buffer.Length))
+			{
+				frame = default(PipeFrame);
+				return false;
+			}
 
-			throw new NotImplementedException();
+			//Parse the pipe
+			using (MemoryStream stream = new MemoryStream(_buffer, 0, _buffer.Length))
+			{
+				//Try to parse the stream
+				frame = new PipeFrame();
+				if (frame.ReadStream(stream))
+					return true;
+				
+				//We failed
+				Logger.Error("Pipe failed to read from the data received by the stream.");
+				return false;
+			}
 		}
 
 		public bool WriteFrame(PipeFrame frame)
@@ -77,12 +97,21 @@ namespace DiscordRPC.IO
 				return false;
 			}
 
-			throw new NotImplementedException();
+			//Create a memory stream so we can write it to the pipe
+			using (MemoryStream stream = new MemoryStream())
+			{
+				//Write the stream and the send it to the pipe
+				frame.WriteStream(stream);
+
+				//Get the bytes and send it
+				byte[] bytes = stream.ToArray();
+				return NativePipe.WriteFrame(bytes, bytes.Length);
+			}
 		}
 
 		public void Close()
 		{
-			throw new NotImplementedException();
+			NativePipe.Close();
 		}
 
 		public void Dispose()
@@ -98,13 +127,13 @@ namespace DiscordRPC.IO
 		public static extern bool IsConnected();
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "readFrame")]
-		public static extern bool ReadFrame(int[] buffer, int length);
+		public static extern bool ReadFrame(byte[] buffer, int length);
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "writeFrame")]
-		public static extern bool WriteFrame(int[] buffer, int length);
+		public static extern bool WriteFrame(byte[] buffer, int length);
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "close")]
-		public static extern bool Close();
+		public static extern void Close();
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "open")]
 		public static extern bool Open(char[] pipename);

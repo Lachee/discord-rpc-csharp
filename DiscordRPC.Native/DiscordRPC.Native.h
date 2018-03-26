@@ -18,8 +18,8 @@ public:
 
 
 //Example Variable
-extern "C" DISCORDRPCNATIVE_API bool isConnected();
+extern "C" DISCORDRPCNATIVE_API bool isConnected(void);
 extern "C" DISCORDRPCNATIVE_API bool readFrame(int* buffer, int length);
 extern "C" DISCORDRPCNATIVE_API bool writeFrame(int* buffer, int length);
-extern "C" DISCORDRPCNATIVE_API bool close();
+extern "C" DISCORDRPCNATIVE_API void close(void);
 extern "C" DISCORDRPCNATIVE_API bool open(char* pipename);
