@@ -17,6 +17,9 @@ public:
 	// TODO: add your methods here.
 };
 
+
+//Example Variable
 extern DISCORDRPCNATIVE_API int nDiscordRPCNative;
 
-DISCORDRPCNATIVE_API int fnDiscordRPCNative(void);
+//Example Function
+extern "C" DISCORDRPCNATIVE_API int fnDiscordRPCNative(void);
