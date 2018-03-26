@@ -13,12 +13,11 @@ namespace DiscordRPC.IO
 	/// </summary>
 	public class NativeNamedPipeClient : INamedPipeClient
 	{
-		const string PIPE_NAME = @"discord-ipc-{0}";
+		const string PIPE_NAME = @"\\?\pipe\discord-ipc-{0}";
 
 		public ILogger Logger { get; set; }
 
-		public bool IsConnected { get { return e_isconnected; } }
-		private static bool e_isconnected = false;
+		public bool IsConnected { get { return NativePipe.IsConnected(); } }
 
 		public int ConnectedPipe { get { return _connectedPipe; } }
 		private int _connectedPipe;
@@ -50,7 +49,13 @@ namespace DiscordRPC.IO
 			string pipename = string.Format(PIPE_NAME, pipe);
 			Logger.Info("Attempting to connect to " + pipename);
 
-			return NativePipe.Open(pipename.ToCharArray());
+			if (NativePipe.Open(pipename.ToCharArray()))
+			{
+				_connectedPipe = pipe;
+				return true;
+			}
+
+			return false;
 		}
 		
 		public bool ReadFrame(out PipeFrame frame)
@@ -58,23 +63,29 @@ namespace DiscordRPC.IO
 			//Make sure we are connected
 			if (!IsConnected)
 			{
+				Logger.Error("Cannot read as we are not connected.");
 				frame = default(PipeFrame);
 				return false;
 			}
-			
+
 			//Try and read the frame from the native pipe
-			if (!NativePipe.ReadFrame(_buffer, _buffer.Length))
+			int bytesRead = NativePipe.ReadFrame(_buffer, _buffer.Length);
+			if (bytesRead <= 0)
 			{
+				//A error actively occured. If it is 0 we just read no bytes.
+				if (bytesRead < 0)
+					Logger.Error("Native pipe failed to read. {0}", bytesRead);
+
 				frame = default(PipeFrame);
 				return false;
 			}
 
 			//Parse the pipe
-			using (MemoryStream stream = new MemoryStream(_buffer, 0, _buffer.Length))
+			using (MemoryStream stream = new MemoryStream(_buffer, 0, bytesRead))
 			{
 				//Try to parse the stream
 				frame = new PipeFrame();
-				if (frame.ReadStream(stream))
+				if (frame.ReadStream(stream) && frame.Length != 0)
 					return true;
 				
 				//We failed
@@ -87,6 +98,8 @@ namespace DiscordRPC.IO
 		{
 			if (!IsConnected)
 			{
+				Logger.Error("Failed to write as it is not connected!");
+
 				frame = default(PipeFrame);
 				return false;
 			}
@@ -121,7 +134,7 @@ namespace DiscordRPC.IO
 		public static extern bool IsConnected();
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "readFrame")]
-		public static extern bool ReadFrame(byte[] buffer, int length);
+		public static extern int ReadFrame(byte[] buffer, int length);
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "writeFrame")]
 		public static extern bool WriteFrame(byte[] buffer, int length);

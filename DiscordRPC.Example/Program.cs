@@ -11,12 +11,9 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
-			Console.WriteLine("A: {0}", NativePipe.GetValue());
-
-			NativePipe.SetValue(10);
-			Console.WriteLine("B: {0}", NativePipe.GetValue());
-			Console.ReadKey();
+			Example();
 		}
+
 		static void Example()
 		{
 			RichPresence presence = new RichPresence()
@@ -69,7 +66,7 @@ namespace DiscordRPC.Example
 
 
 			//Creates a new Discord RPC Client
-			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
+			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, pipe, new IO.NativeNamedPipeClient()))
 			{
 				//Set the loggers
 				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Info };

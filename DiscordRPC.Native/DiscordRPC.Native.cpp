@@ -16,15 +16,15 @@ extern "C" DISCORDRPCNATIVE_API bool isConnected()
 	return pipe != INVALID_HANDLE_VALUE && isOpen;
 }
 
-extern "C" DISCORDRPCNATIVE_API bool readFrame(unsigned char* buffer, int length)
+extern "C" DISCORDRPCNATIVE_API int readFrame(unsigned char* buffer, int length)
 {
 	/*
 	if (!PeekNamedPipe(handle)) return false;
 	Read(handle, buffer, 0, length);
 	*/
 
-	if (length == 0) { return false; }
-	if (!isConnected()) { return false; }
+	if (length == 0) { return -1; }
+	if (!isConnected()) { return -2; }
 
 	//Prepare how many bytes we have read
 	DWORD bytesAvailable = 0;
@@ -33,7 +33,7 @@ extern "C" DISCORDRPCNATIVE_API bool readFrame(unsigned char* buffer, int length
 	if (::PeekNamedPipe(pipe, nullptr, 0, nullptr, &bytesAvailable, nullptr)) 
 	{
 		//Check if we have bytes available to read
-		if (bytesAvailable >= length) 
+		if (bytesAvailable >= 0) 
 		{
 			//Read the bytes. 
 			//TODO: Make the Bytes Read appart of the output
@@ -41,28 +41,28 @@ extern "C" DISCORDRPCNATIVE_API bool readFrame(unsigned char* buffer, int length
 			DWORD bytesRead = 0;
 
 			//Attempt to read the bytes
-			if (!::ReadFile(pipe, buffer, bytesToRead, &bytesRead, nullptr) == TRUE)
+			if (::ReadFile(pipe, buffer, bytesToRead, &bytesRead, nullptr) == TRUE)
 			{
-				return true;
+				return bytesRead;
 			}
 			else 
 			{
 				//We failed to read anything, close the pipe (broken)
 				close();
-				return false;
+				return -3;
 			}
 		}
 		else 
 		{
 			//We failed to read as there were no bytes available
-			return false;
+			return -4;
 		}
 	}
 	else 
 	{
 		//We have failed to peek. The pipe is probably broken
 		close();
-		return false;
+		return -5;
 	}
 }
 
