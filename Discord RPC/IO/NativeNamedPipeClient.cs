@@ -27,10 +27,17 @@ namespace DiscordRPC.IO
 		public bool Connect(int pipe)
 		{
 			if (IsConnected)
+			{
+				Logger.Error("Cannot connect as the pipe is already connected");
 				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
+			}
 
 			if (pipe > 9)
+			{
+				Logger.Error("Argument cannot be greater than 9");
 				throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
+			}
+			
 
 			//Attempt to connect to the specific pipe
 			if (pipe >= 0 && AttemptConnection(pipe))
@@ -49,35 +56,27 @@ namespace DiscordRPC.IO
 		private bool AttemptConnection(int pipe)
 		{
 			if (IsConnected)
+			{
+				Logger.Error("Cannot connect as the pipe is already connected");
 				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
-
-			try
-			{
-				//Prepare the pipe name
-				string pipename = string.Format(PIPE_NAME, pipe);
-				Logger.Info("Attempting to connect to " + pipename);
-
-				//byte[] bytes = Encoding.ASCII.GetBytes(pipename);
-				uint err = NativePipe.Open(pipename);
-				if (err == 0 && IsConnected)
-				{
-					_connectedPipe = pipe;
-					return true;
-				}
-				else
-				{
-					Logger.Error("Failed to connect to native pipe. Err: {0}", err);
-					return false;
-				}
-
-			}
-			catch (Exception e)
-			{
-				Logger.Error("Error occured while connecting to native pipe. {0}", e.Message);
 			}
 
-
-			return false;
+			//Prepare the pipe name
+			string pipename = string.Format(PIPE_NAME, pipe);
+			Logger.Info("Attempting to connect to " + pipename);
+			
+			uint err = NativePipe.Open(pipename);
+			if (err == 0 && IsConnected)
+			{
+				Logger.Info("Succesfully connected to " + pipename);
+				_connectedPipe = pipe;
+				return true;
+			}
+			else
+			{
+				Logger.Error("Failed to connect to native pipe. Err: {0}", err);
+				return false;
+			}
 		}
 		
 		public bool ReadFrame(out PipeFrame frame)

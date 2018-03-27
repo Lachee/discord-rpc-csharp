@@ -298,11 +298,12 @@ namespace DiscordRPC.RPC
 				{
 					Logger.Error("Invalid Pipe Exception: {0}", e.Message);
 				}
-				//catch (Exception e)
-				//{
-				//	Logger.Error("A unhandled exception has occured during the connection to the RPC: {0}", e.Message);
-				//	Logger.Error(e.StackTrace);
-				//}
+				catch (Exception e)
+				{
+					Logger.Error("Unhandled Exception: {0}", e.GetType().FullName);
+					Logger.Error(e.Message);
+					Logger.Error(e.StackTrace);
+				}
 				finally
 				{
 					//Disconnect from the pipe because something bad has happened. An exception has been thrown or the main read loop has terminated.

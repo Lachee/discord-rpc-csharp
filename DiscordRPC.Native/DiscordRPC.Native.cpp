@@ -13,7 +13,7 @@ extern "C" DISCORDRPCNATIVE_API bool isConnected()
 	/*
 	bool connected = handle != nullptr && PipeConnected(handle);
 	*/
-	return pipe != INVALID_HANDLE_VALUE && isOpen;
+	return isOpen && pipe != INVALID_HANDLE_VALUE;
 }
 
 extern "C" DISCORDRPCNATIVE_API int readFrame(unsigned char* buffer, int length)
@@ -125,7 +125,7 @@ extern "C" DISCORDRPCNATIVE_API unsigned int open(const char* pipename)
 	//Pipe is just busy
 	if (lasterr == ERROR_PIPE_BUSY) 
 	{
-		if (!WaitNamedPipeA(pipename, 10000))
+		if (!WaitNamedPipeA(pipename, 1000))
 		{
 			//Failed to open, terminate
 			return lasterr;
