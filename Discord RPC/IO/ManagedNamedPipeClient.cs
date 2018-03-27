@@ -39,7 +39,7 @@ namespace DiscordRPC.IO
 			}
 
 			//Iterate until we connect to a pipe
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				if (AttemptConnection(i))
 				{

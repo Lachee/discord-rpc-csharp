@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Unity Rich Presence", menuName = "Discord/Rich Presence", order = -1)]
-public class UnityPresence : ScriptableObject {
+//[CreateAssetMenu(fileName = "Unity Rich Presence", menuName = "Discord/Rich Presence", order = -1)]
+[Serializable]
+public class UnityPresence
+{
 	/// <summary>
 	/// The details about the game. Appears underneath the game name
 	/// </summary>
