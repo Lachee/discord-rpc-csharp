@@ -65,7 +65,6 @@
     <Compile Include="IO\INamedPipeClient.cs" />
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
-    <Compile Include="IO\PipeConnection.cs" />
     <Compile Include="IO\PipeFrame.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -105,7 +104,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)\$(TargetFileName)"
+    <PostBuildEvent>mkdir "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)"
+copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)\$(TargetFileName)"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
