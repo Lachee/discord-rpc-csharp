@@ -26,14 +26,12 @@ public class DiscordManager : MonoBehaviour {
 	{
 		Debug.Log("OnEnable");
 		
-
-
 		if (!enabled) return;
 		if (!Application.isPlaying) return;
 
 		//We only want to enable in the play mode
 		Debug.Log("Starting Client...");
-		_client = new DiscordRpcClient(applicationID, steamID, registerUriScheme, targetPipe);
+		_client = new DiscordRpcClient(applicationID, steamID, registerUriScheme, targetPipe, new DiscordRPC.IO.NativeNamedPipeClient());
 		_client.Logger = new UnityLogger() { Level = logLevel };
 
 		//Add listeners to all the events
@@ -48,8 +46,8 @@ public class DiscordManager : MonoBehaviour {
 		client.OnJoinRequested += OnJoinRequested;
 				
 		Debug.Log("Initializing Client...");
-		_client.Initialize();
-		_client.SetPresence(presence.ToRichPresence());		
+		client.Initialize();
+		client.SetPresence(presence.ToRichPresence());		
 
 	}
 
@@ -70,20 +68,20 @@ public class DiscordManager : MonoBehaviour {
 			presence.details = Random.value.ToString();
 			presence.assets.largeKey = "image_large_2";
 			presence.assets.smallKey = "image_large_1";
-			_client.SetPresence(presence.ToRichPresence());
+			client.SetPresence(presence.ToRichPresence());
 		}
 
-		if (_client != null)
-			_client.Invoke();
+		if (client != null)
+			client.Invoke();
 	}
 
 	private void Dispose()
 	{
 		Debug.Log("Disposing Client...");
-		if (_client != null)
+		if (client != null)
 		{
 			Debug.Log("Actually Disposing Client...");
-			_client.Dispose();
+			client.Dispose();
 		}
 
 		Debug.Log("Setting client to null...");

@@ -294,6 +294,10 @@ namespace DiscordRPC.RPC
 						Thread.Sleep(delay.NextDelay());
 					}
 				}
+				catch(InvalidPipeException e)
+				{
+					Logger.Error("Invalid Pipe Exception: {0}", e.Message);
+				}
 				//catch (Exception e)
 				//{
 				//	Logger.Error("A unhandled exception has occured during the connection to the RPC: {0}", e.Message);
@@ -309,6 +313,8 @@ namespace DiscordRPC.RPC
 			//We have disconnected, so dispose of the thread and the pipe.
 			Logger.Info("Left Main Loop");
 			namedPipe.Dispose();
+
+			Logger.Info("Thread Terminated");
 		}
 
 		#region Reading

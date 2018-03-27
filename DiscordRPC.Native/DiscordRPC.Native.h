@@ -21,5 +21,5 @@ public:
 extern "C" DISCORDRPCNATIVE_API bool isConnected(void);
 extern "C" DISCORDRPCNATIVE_API int readFrame(unsigned char* buffer, int length);
 extern "C" DISCORDRPCNATIVE_API bool writeFrame(unsigned char* buffer, int length);
+extern "C" DISCORDRPCNATIVE_API unsigned int open(const char* pipename);
 extern "C" DISCORDRPCNATIVE_API void close(void);
-extern "C" DISCORDRPCNATIVE_API bool open(char* pipename);

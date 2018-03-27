@@ -1,0 +1,2 @@
+2
+\\?\pipe\discord-ipc-9g

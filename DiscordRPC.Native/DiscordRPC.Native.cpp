@@ -5,6 +5,9 @@
 #include <windows.h>
 #include "DiscordRPC.Native.h"
 
+#include <iostream>
+#include <fstream>
+
 HANDLE pipe;
 bool isOpen;
 
@@ -55,7 +58,7 @@ extern "C" DISCORDRPCNATIVE_API int readFrame(unsigned char* buffer, int length)
 		else 
 		{
 			//We failed to read as there were no bytes available
-			return -4;
+			return 0;
 		}
 	}
 	else 
@@ -100,22 +103,35 @@ extern "C" DISCORDRPCNATIVE_API void close()
 	isOpen = false;
 }
 
-extern "C" DISCORDRPCNATIVE_API bool open(char* pipename) 
+
+extern "C" DISCORDRPCNATIVE_API unsigned int open(const char* pipename) 
 {
 	//Creates a connection to the pipe
 	pipe = ::CreateFileA(pipename, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
 	if (pipe != INVALID_HANDLE_VALUE) 
 	{
+		printf("NATIVE: Connected to '%s'\n", pipename);
 		isOpen = true;
-		return true;
+		return 0;
 	}
 
 	//We have a error, better find out why.
 	auto lasterr = GetLastError();
+	printf("NATIVE: Could not open file (error %d)\n", lasterr);
+	printf("NATIVE: The path is '%s'\n", pipename);
+	
+	std::ofstream myfile;
+	myfile.open("pipe.txt");
+	myfile << lasterr << "\n" << pipename << "\n";
+	myfile.close();
 
 	//Pipe wasnt found
 	if (lasterr == ERROR_FILE_NOT_FOUND)
-		return false;
+		return lasterr;
+
+	//The path wasnt found?
+	if (lasterr == ERROR_PATH_NOT_FOUND)
+		return lasterr;
 
 	//Pipe is just busy
 	if (lasterr == ERROR_PIPE_BUSY) 
@@ -123,7 +139,7 @@ extern "C" DISCORDRPCNATIVE_API bool open(char* pipename)
 		if (!WaitNamedPipeA(pipename, 10000))
 		{
 			//Failed to open, terminate
-			return false;
+			return lasterr;
 		}
 		else 
 		{
@@ -133,7 +149,7 @@ extern "C" DISCORDRPCNATIVE_API bool open(char* pipename)
 	}
 
 	//Some other magically error occured
-	return false;
+	return lasterr;
 }
 
 // This is the constructor of a class that has been exported.

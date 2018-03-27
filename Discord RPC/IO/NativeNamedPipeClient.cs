@@ -26,6 +26,9 @@ namespace DiscordRPC.IO
 		
 		public bool Connect(int pipe)
 		{
+			if (IsConnected)
+				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
+
 			if (pipe > 9)
 				throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
 
@@ -34,7 +37,7 @@ namespace DiscordRPC.IO
 				return true;
 
 			//Iterate until we connect to a pipe
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				if (AttemptConnection(i))
 					return true;
@@ -45,15 +48,34 @@ namespace DiscordRPC.IO
 		}
 		private bool AttemptConnection(int pipe)
 		{
-			//Prepare the pipe name
-			string pipename = string.Format(PIPE_NAME, pipe);
-			Logger.Info("Attempting to connect to " + pipename);
+			if (IsConnected)
+				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
 
-			if (NativePipe.Open(pipename.ToCharArray()))
+			try
 			{
-				_connectedPipe = pipe;
-				return true;
+				//Prepare the pipe name
+				string pipename = string.Format(PIPE_NAME, pipe);
+				Logger.Info("Attempting to connect to " + pipename);
+
+				byte[] bytes = Encoding.ASCII.GetBytes(pipename);
+				uint err = NativePipe.Open(bytes);
+				if (err == 0 && IsConnected)
+				{
+					_connectedPipe = pipe;
+					return true;
+				}
+				else
+				{
+					Logger.Error("Failed to connect to native pipe. Err: {0}", err);
+					return false;
+				}
+
 			}
+			catch (Exception e)
+			{
+				Logger.Error("Error occured while connecting to native pipe. {0}", e.Message);
+			}
+
 
 			return false;
 		}
@@ -62,11 +84,7 @@ namespace DiscordRPC.IO
 		{
 			//Make sure we are connected
 			if (!IsConnected)
-			{
-				Logger.Error("Cannot read as we are not connected.");
-				frame = default(PipeFrame);
-				return false;
-			}
+				throw new InvalidPipeException("Cannot read Native Stream as pipe is not connected");
 
 			//Try and read the frame from the native pipe
 			int bytesRead = NativePipe.ReadFrame(_buffer, _buffer.Length);
@@ -74,7 +92,7 @@ namespace DiscordRPC.IO
 			{
 				//A error actively occured. If it is 0 we just read no bytes.
 				if (bytesRead < 0)
-					Logger.Error("Native pipe failed to read. {0}", bytesRead);
+					Logger.Error("Native pipe failed to read. Err: {0}", bytesRead);
 
 				frame = default(PipeFrame);
 				return false;
@@ -97,12 +115,7 @@ namespace DiscordRPC.IO
 		public bool WriteFrame(PipeFrame frame)
 		{
 			if (!IsConnected)
-			{
-				Logger.Error("Failed to write as it is not connected!");
-
-				frame = default(PipeFrame);
-				return false;
-			}
+				throw new InvalidPipeException("Cannot write Native Stream as pipe is not connected");
 
 			//Create a memory stream so we can write it to the pipe
 			using (MemoryStream stream = new MemoryStream())
@@ -130,19 +143,19 @@ namespace DiscordRPC.IO
 
 	internal static class NativePipe
 	{
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "isConnected")]
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "isConnected", CallingConvention =  CallingConvention.Cdecl)]
 		public static extern bool IsConnected();
 
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "readFrame")]
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "readFrame", CallingConvention = CallingConvention.Cdecl)]
 		public static extern int ReadFrame(byte[] buffer, int length);
 
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "writeFrame")]
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "writeFrame", CallingConvention = CallingConvention.Cdecl)]
 		public static extern bool WriteFrame(byte[] buffer, int length);
 
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "close")]
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "close", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void Close();
 
-		[DllImport("DiscordRPC.Native.dll", EntryPoint = "open")]
-		public static extern bool Open(char[] pipename);
+		[DllImport("DiscordRPC.Native.dll", EntryPoint = "open", CallingConvention = CallingConvention.Cdecl)]
+		public static extern UInt32 Open(byte[] pipename);
 	}
 }

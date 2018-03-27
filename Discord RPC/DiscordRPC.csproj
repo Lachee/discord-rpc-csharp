@@ -118,6 +118,7 @@
     <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
+    <Compile Include="IO\InvalidPipeException.cs" />
     <Compile Include="IO\NativeNamedPipeClient.cs" />
     <Compile Include="IO\INamedPipeClient.cs" />
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
@@ -161,8 +162,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)\$(TargetFileName)"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
