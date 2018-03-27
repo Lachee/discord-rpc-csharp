@@ -2,11 +2,8 @@
 //
 
 #include "stdafx.h"
-#include <windows.h>
 #include "DiscordRPC.Native.h"
-
-#include <iostream>
-#include <fstream>
+#include <windows.h>
 
 HANDLE pipe;
 bool isOpen;
@@ -110,21 +107,13 @@ extern "C" DISCORDRPCNATIVE_API unsigned int open(const char* pipename)
 	pipe = ::CreateFileA(pipename, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
 	if (pipe != INVALID_HANDLE_VALUE) 
 	{
-		printf("NATIVE: Connected to '%s'\n", pipename);
 		isOpen = true;
 		return 0;
 	}
 
 	//We have a error, better find out why.
 	auto lasterr = GetLastError();
-	printf("NATIVE: Could not open file (error %d)\n", lasterr);
-	printf("NATIVE: The path is '%s'\n", pipename);
 	
-	std::ofstream myfile;
-	myfile.open("pipe.txt");
-	myfile << lasterr << "\n" << pipename << "\n";
-	myfile.close();
-
 	//Pipe wasnt found
 	if (lasterr == ERROR_FILE_NOT_FOUND)
 		return lasterr;
