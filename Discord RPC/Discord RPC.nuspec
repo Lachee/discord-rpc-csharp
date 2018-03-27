@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/21.0.07/nuspec.xsd">
+    <id>DiscordRichPresence</id>
+    <version>0.0.0</version>
+    <authors>Lachee</authors>
+    <owners>Lachee</owners>
+    <title>Discord Rich Presence</title>
+    <description>This is a C# implementation of the Discord RPC library which was originally written in C++. You will be able to set the Rich Presence of your game directly in C# without an DllImport nonsence.</description>
+    <summary>This is a C# implementation of the Discord RPC library which was originally written in C++. You will be able to set the Rich Presence of your game directly in C# without an DllImport nonsence.</summary>
+    <licenseUrl>https://raw.githubusercontent.com/Lachee/discord-rpc-csharp/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Lachee/discord-rpc-csharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright (c) Lachee 2018</copyright>
+    <releaseNotes></releaseNotes>
+    <tags>C# Discord Discord Rich Presence</tags>
+
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.1" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="./bin/Release/Discord RPC.dll" target="lib\net35" />
+    <file src="./bin/Release/Discord RPC.pdb" target="lib\net35" />
+    <file src="./bin/Release/Discord RPC.xml" target="lib\net35" />
+  </files>
+</package>

@@ -295,3 +295,6 @@ __pycache__/
 ![Rr]esources/*.png
 ![Rr]esources/*.md
 ![Rr]esources/*.txt
+
+# Cake - Uncomment if you are using it
+tools/
