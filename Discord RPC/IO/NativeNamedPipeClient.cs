@@ -57,8 +57,8 @@ namespace DiscordRPC.IO
 				string pipename = string.Format(PIPE_NAME, pipe);
 				Logger.Info("Attempting to connect to " + pipename);
 
-				byte[] bytes = Encoding.ASCII.GetBytes(pipename);
-				uint err = NativePipe.Open(bytes);
+				//byte[] bytes = Encoding.ASCII.GetBytes(pipename);
+				uint err = NativePipe.Open(pipename);
 				if (err == 0 && IsConnected)
 				{
 					_connectedPipe = pipe;
@@ -156,6 +156,6 @@ namespace DiscordRPC.IO
 		public static extern void Close();
 
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "open", CallingConvention = CallingConvention.Cdecl)]
-		public static extern UInt32 Open(byte[] pipename);
+		public static extern UInt32 Open(string pipename);
 	}
 }
