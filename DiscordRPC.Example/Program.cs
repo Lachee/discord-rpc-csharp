@@ -11,6 +11,11 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
+			Example();
+		}
+
+		static void Example()
+		{
 			RichPresence presence = new RichPresence()
 			{
 				Details = "Testing .NET 3.5",
@@ -61,7 +66,7 @@ namespace DiscordRPC.Example
 
 
 			//Creates a new Discord RPC Client
-			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true, pipe))
+			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, pipe, new IO.NativeNamedPipeClient()))
 			{
 				//Set the loggers
 				client.Logger = new Logging.ConsoleLogger() { Level = Logging.LogLevel.Info };
