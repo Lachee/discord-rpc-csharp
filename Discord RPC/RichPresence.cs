@@ -44,8 +44,7 @@ namespace DiscordRPC
 		/// </summary>
 		[JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
 		public Party Party { get; set; }
-
-
+		
 		/// <summary>
 		/// The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.
 		/// <para>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</para>
@@ -53,10 +52,7 @@ namespace DiscordRPC
 		/// </summary>
 		[JsonProperty("secrets", NullValueHandling = NullValueHandling.Ignore)]
 		public Secrets Secrets { get; set; }
-
-		#region Not Yet Implemented
-
-
+		
 		/// <summary>
 		/// Marks the <see cref="Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
 		/// <para>
@@ -66,7 +62,6 @@ namespace DiscordRPC
 		[JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
 		[Obsolete("This was going to be used, but was replaced by JoinSecret instead")]
 		private bool Instance { get; set; }
-		#endregion
 		
 		/// <summary>
 		/// Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.
@@ -79,20 +74,20 @@ namespace DiscordRPC
 				State = this._state != null ? _state.Clone() as string : null,
 				Details = this._details != null ? _details.Clone() as string : null,
 
-				Secrets = this.Secrets == null ? null : new Secrets()
+				Secrets = !HasSecrets() ? null : new Secrets()
 				{
 					//MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
 					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
 					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
 				},
 
-				Timestamps = this.Timestamps == null ? null : new Timestamps()
+				Timestamps = !HasTimestamps() ? null : new Timestamps()
 				{
 					Start = this.Timestamps.Start,
 					End = this.Timestamps.End
 				},
 
-				Assets = this.Assets == null ? null : new Assets()
+				Assets = !HasAssets() ? null : new Assets()
 				{
 					LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string  : null,
 					LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
@@ -100,7 +95,7 @@ namespace DiscordRPC
 					SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
 				},
 
-				Party = this.Party == null || this.Party.ID == null ? null : new Party()
+				Party = !HasParty() ? null : new Party()
 				{
 					ID = this.Party.ID as string,
 					Size = this.Party.Size,
@@ -109,6 +104,41 @@ namespace DiscordRPC
 			};
 		}
 
+		/// <summary>
+		/// Does the Rich Presence have valid timestamps?
+		/// </summary>
+		/// <returns></returns>
+		public bool HasTimestamps()
+		{
+			return this.Timestamps != null && (Timestamps.Start != null || Timestamps.End != null);
+		}
+
+		/// <summary>
+		/// Does the Rich Presence have valid assets?
+		/// </summary>
+		/// <returns></returns>
+		public bool HasAssets()
+		{
+			return this.Assets != null;
+		}
+
+		/// <summary>
+		/// Does the Rich Presence have a valid party?
+		/// </summary>
+		/// <returns></returns>
+		public bool HasParty()
+		{
+			return this.Party != null && this.Party.ID != null;
+		}
+
+		/// <summary>
+		/// Does the Rich Presence have valid secrets?
+		/// </summary>
+		/// <returns></returns>
+		public bool HasSecrets()
+		{
+			return Secrets != null && (Secrets.JoinSecret != null || Secrets.SpectateSecret != null);
+		}
 
 		/// <summary>
 		/// Operator that converts a presence into a boolean for null checks.

@@ -11,11 +11,6 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
-			Example();
-		}
-
-		static void Example()
-		{
 			RichPresence presence = new RichPresence()
 			{
 				Details = "Testing .NET 3.5",

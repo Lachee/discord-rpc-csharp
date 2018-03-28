@@ -370,7 +370,6 @@ namespace DiscordRPC
 		}
 		#endregion
 		
-
 		/// <summary>
 		/// Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="Dequeue"/> frequently enough.
 		/// </summary>
@@ -380,6 +379,9 @@ namespace DiscordRPC
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
+
+			if (connection == null)
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			connection.EnqueueCommand(new RespondCommand() { Accept = acceptRequest, UserID = request.User.ID.ToString() });
 		}
@@ -393,15 +395,27 @@ namespace DiscordRPC
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
-			//Enqueue the presence command to be sent
-			_presence = presence;
-			var command = new PresenceCommand()
-			{
-				PID = this.ProcessID,
-				Presence = presence ? presence.Clone() : null
-			};
+			if (connection == null)
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
-			connection.EnqueueCommand(command);
+			//Update our internal store of the presence
+			_presence = presence;
+
+			if (!_presence)
+			{
+				//Clear the presence
+				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = null });
+			}
+			else
+			{
+				//Send valid presence
+				//Validate the presence with our settings
+				if (presence.HasSecrets() && !HasRegisteredUriScheme)
+					throw new Exception("Cannot send a presence with secrets as this object has not registered a URI scheme!");
+
+				//Send the presence
+				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
+			}
 		}
 
 		/// <summary>
@@ -411,6 +425,9 @@ namespace DiscordRPC
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
+
+			if (connection == null)
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			//Just a wrapper function for sending null
 			SetPresence(null);
@@ -424,6 +441,9 @@ namespace DiscordRPC
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
+
+			if (connection == null)
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			if (!HasRegisteredUriScheme)
 				throw new Exception("Cannot subscribe to an event as this application has not registered a URI scheme.");
@@ -440,6 +460,9 @@ namespace DiscordRPC
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
+
+			if (connection == null)
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			if (!HasRegisteredUriScheme)
 				throw new Exception("Cannot unsubscribe to an event as this application has not registered a URI scheme.");
@@ -458,7 +481,7 @@ namespace DiscordRPC
 				throw new ObjectDisposedException("Discord IPC Client");
 
 			if (connection == null)
-				throw new Exception("Cannot initialize as the connection has been deinitialized");
+				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			return connection.AttemptConnection();
 		}
@@ -477,15 +500,5 @@ namespace DiscordRPC
 			//connection = null;
 			//_disposed = true;
 		}
-
-		/// <summary>
-		/// Operator that converts the client into a boolean for null checks.
-		/// </summary>
-		/// <param name="client"></param>
-		public static implicit operator bool(DiscordRpcClient client)
-		{
-			return client != null;
-		}
-
 	}
 }
