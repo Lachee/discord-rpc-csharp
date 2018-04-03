@@ -1,6 +1,4 @@
 ﻿using DiscordRPC;
-using DiscordRPC.Example.Client;
-using DiscordRPC.Example.Server;
 using DiscordRPC.Helper;
 using DiscordRPC.Message;
 using System;
@@ -13,42 +11,6 @@ namespace DiscordRPC.Example
 
 		static void Main(string[] args)
 		{
-			bool isServer = false;
-			for (int i = 0; i < args.Length; i++)
-			{
-				switch (args[i].ToLowerInvariant())
-				{
-					default:
-						Console.WriteLine("Unkown Argument '{0}'", args[i]);
-						break;
-
-					case "-server":
-						isServer = true;
-						break;
-
-					case "-client":
-						isServer = false;
-						break;
-				}
-			}
-
-			if (isServer)
-			{
-				ChatServer server = new ChatServer();
-				server.Run();
-			}
-			else
-			{
-				ChatClient client = new ChatClient();
-				client.Run();
-			}
-		}
-
-		/// <summary>
-		/// A basic example showing how to connect
-		/// </summary>
-		static void Example()
-		{ 
 			RichPresence presence = new RichPresence()
 			{
 				Details = "Testing .NET 3.5",

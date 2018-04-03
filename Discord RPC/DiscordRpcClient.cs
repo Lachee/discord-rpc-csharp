@@ -419,25 +419,6 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
-		/// Updates the current rich presence with some modifications. Leave fields on the modification as null to ignore them. Performs a <see cref="RichPresence.Apply(RichPresence)"/>.
-		/// </summary>
-		/// <param name="modification">The modifications to apply. Leave fields as null to ignore them.</param>
-		public void UpdatePresence(RichPresence modification)
-		{
-			if (this.CurrentPresence == null)
-			{
-				//We dont have a rich presence yet, so just add the entire modification
-				SetPresence(modification);
-			}
-			else
-			{
-				//Apply the modification and update the presence to itself again.
-				CurrentPresence.Apply(modification);
-				SetPresence(CurrentPresence);
-			}
-		}
-
-		/// <summary>
 		/// Clears the Rich Presence. Use this just before disposal to prevent ghosting.
 		/// </summary>
 		public void ClearPresence()

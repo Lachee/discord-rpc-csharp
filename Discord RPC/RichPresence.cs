@@ -62,58 +62,46 @@ namespace DiscordRPC
 		[JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
 		[Obsolete("This was going to be used, but was replaced by JoinSecret instead")]
 		private bool Instance { get; set; }
-
 		
-		/// <summary>
-		/// Overrides all properties on this rich presence with the modifications if they are not null on the modification. This will perform a clone on each field.
-		/// </summary>
-		/// <param name="modification">The modifications to apply. Leave fields as null to ignore them.</param>
-		public void Apply(RichPresence modification)
-		{
-			State = modification.State != null ? modification.State.Clone() as string : State;
-			Details = modification.Details != null ? modification.Details.Clone() as string : Details;
-
-			Secrets = !modification.HasSecrets() ? Secrets : new Secrets()
-			{
-				//MatchSecret = modification.Secrets.MatchSecret?.Clone() as string,
-				JoinSecret = modification.Secrets.JoinSecret != null ? modification.Secrets.JoinSecret.Clone() as string : Secrets.JoinSecret,
-				SpectateSecret = modification.Secrets.SpectateSecret != null ? modification.Secrets.SpectateSecret.Clone() as string : Secrets.SpectateSecret
-			};
-
-			Timestamps = !modification.HasTimestamps() ? Timestamps : new Timestamps()
-			{
-				Start = modification.Timestamps.Start,
-				End = modification.Timestamps.End
-			};
-
-			Assets = !modification.HasAssets() ? Assets : new Assets()
-			{
-				LargeImageKey = modification.Assets.LargeImageKey != null ? modification.Assets.LargeImageKey.Clone() as string : Assets.LargeImageKey,
-				LargeImageText = modification.Assets.LargeImageText != null ? modification.Assets.LargeImageText.Clone() as string : Assets.LargeImageText,
-				SmallImageKey = modification.Assets.SmallImageKey != null ? modification.Assets.SmallImageKey.Clone() as string : Assets.SmallImageKey,
-				SmallImageText = modification.Assets.SmallImageText != null ? modification.Assets.SmallImageText.Clone() as string : Assets.SmallImageText
-			};
-
-			Party = !modification.HasParty() ? Party : new Party()
-			{
-				ID = modification.Party.ID as string,
-				Size = modification.Party.Size,
-				Max = modification.Party.Max
-			};
-		}
-
 		/// <summary>
 		/// Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.
 		/// </summary>
 		/// <returns></returns>
 		public RichPresence Clone()
 		{
-			//Create a new presence and copy over all our settings that are not null
-			RichPresence presence = new RichPresence();
-			presence.Apply(this);
+			return new RichPresence()
+			{
+				State = this._state != null ? _state.Clone() as string : null,
+				Details = this._details != null ? _details.Clone() as string : null,
 
-			//Return the clone
-			return presence;
+				Secrets = !HasSecrets() ? null : new Secrets()
+				{
+					//MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
+					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
+					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
+				},
+
+				Timestamps = !HasTimestamps() ? null : new Timestamps()
+				{
+					Start = this.Timestamps.Start,
+					End = this.Timestamps.End
+				},
+
+				Assets = !HasAssets() ? null : new Assets()
+				{
+					LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string  : null,
+					LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
+					SmallImageKey = this.Assets.SmallImageKey != null ? this.Assets.SmallImageKey.Clone() as string : null,
+					SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
+				},
+
+				Party = !HasParty() ? null : new Party()
+				{
+					ID = this.Party.ID as string,
+					Size = this.Party.Size,
+					Max = this.Party.Max
+				}
+			};
 		}
 
 		/// <summary>
