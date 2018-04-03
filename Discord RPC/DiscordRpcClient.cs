@@ -230,8 +230,8 @@ namespace DiscordRPC
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
+			//if (Disposed)
+			//	throw new ObjectDisposedException("Discord IPC Client");
 
 			//Dequeue all the messages and process them
 			IMessage[] messages = connection.DequeueMessages();
@@ -495,10 +495,7 @@ namespace DiscordRPC
 			if (Disposed) return;
 
 			connection.Close();
-
-			//connection.Close();
-			//connection = null;
-			//_disposed = true;
+			_disposed = true;			
 		}
 	}
 }

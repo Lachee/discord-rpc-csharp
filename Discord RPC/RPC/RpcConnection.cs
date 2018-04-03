@@ -196,6 +196,7 @@ namespace DiscordRPC.RPC
 					Logger.Info("Connecting to the pipe through the {0}", namedPipe.GetType().FullName);
 					if (namedPipe.Connect(targetPipe))
 					{
+						#region Connected
 						//We connected to a pipe! Reset the delay
 						Logger.Info("Connected to the pipe. Attempting to establish handshake...");
 						EnqueueMessage(new ConnectionEstablishedMessage() { ConnectedPipe = namedPipe.ConnectedPipe });
@@ -208,12 +209,15 @@ namespace DiscordRPC.RPC
 						//Continously iterate, waiting for the frame
 						PipeFrame frame;
 						bool mainloop = true;
-						while (mainloop && !aborting)
+						while (mainloop && !aborting && namedPipe.IsConnected)
 						{
+							#region Read Loop
+
 							//Iterate over every frame we have queued up, processing its contents
 							Logger.Info("Trying to read frames...");
-							if (namedPipe.IsConnected && namedPipe.ReadFrame(out frame))
+							if (namedPipe.ReadFrame(out frame))
 							{
+								#region Read Payload
 								Logger.Info("Read Payload: {0}", frame.Opcode);
 
 								//Do some basic processing on the frame
@@ -222,6 +226,7 @@ namespace DiscordRPC.RPC
 									case Opcode.Close:
 										//We have been told by discord to close, so we will consider it an abort
 										Logger.Warning("We have been told to terminate by discord. ", frame.Message);
+										EnqueueMessage(new CloseMessage() { Reason = frame.Message });
 										mainloop = false;
 										break;
 
@@ -260,6 +265,8 @@ namespace DiscordRPC.RPC
 										mainloop = false;
 										break;
 								}
+
+								#endregion
 							}
 
 							//Process the entire command queue we have left
@@ -273,14 +280,18 @@ namespace DiscordRPC.RPC
 								queueUpdatedEvent.WaitOne(POLL_RATE);
 
 							}
+
+							#endregion
 						}
+
+						#endregion
 
 						Logger.Warning("Left main read loop for some reason. IsAbort: {0}", aborting);
 					}
 					else
 					{
 						Logger.Error("Failed to connect for some reason.");
-						EnqueueMessage(new ConnectionFailedMessage());
+						EnqueueMessage(new ConnectionFailedMessage() { FailedPipe = targetPipe });
 					}
 
 					//If we are not aborting, we have to wait a bit before trying to connect again
@@ -454,17 +465,14 @@ namespace DiscordRPC.RPC
 		{
 			Logger.Info("Checking Write Queue");
 			if (aborting)
-			{
 				Logger.Warning("We have been told to write a queue but we have also been aborted.");
-				return;
-			}
 
 			//Prepare some variabels we will clone into with locks
 			bool needsWriting = true;
 			ICommand item = null;
 			
 			//Continue looping until we dont need anymore messages
-			while (needsWriting)
+			while (needsWriting && namedPipe.IsConnected)
 			{
 				lock (l_rtqueue)
 				{
@@ -482,18 +490,52 @@ namespace DiscordRPC.RPC
 
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
-				frame.SetObject(item is CloseCommand ? Opcode.Handshake : Opcode.Frame, payload);
-
-				//Write it and if it wrote perfectly fine, we will dequeue it
-				Logger.Info("++++++ Sending payloads: " + payload.Command);
-				if (namedPipe.WriteFrame(frame))
+				if (item is CloseCommand)
 				{
+					//We have been sent a close frame. We better just send a handwave
+					//Send it off to the server
+					Logger.Info("Sending Handwave...");
+					if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
+					{
+						Logger.Error("Failed to write a handwave.");
+						return;
+					}
+
+					//Queue the item
+					Logger.Info("Handwave sent, ending queue processing.");
 					lock (l_rtqueue) _rtqueue.Dequeue();
+
+					//Stop sending any more messages
+					return;
 				}
 				else
 				{
-					Logger.Warning("Something went wrong during writing!");
-					Thread.Sleep(100);
+					if (aborting)
+					{
+						//We are aborting, so just dequeue the message and dont bother sending it
+						Logger.Warning("- skipping frame because of abort.");
+						lock (l_rtqueue) _rtqueue.Dequeue();
+					}
+					else
+					{
+						//Prepare the frame
+						frame.SetObject(Opcode.Frame, item.PreparePayload(GetNextNonce()));
+
+						//Write it and if it wrote perfectly fine, we will dequeue it
+						Logger.Info("Sending payload: " + payload.Command);
+						if (namedPipe.WriteFrame(frame))
+						{
+							//We sent it, so now dequeue it
+							Logger.Info("Sent Successfully.");
+							lock (l_rtqueue) _rtqueue.Dequeue();
+						}
+						else
+						{
+							//Something went wrong, so just giveup and wait for the next time around.
+							Logger.Warning("Something went wrong during writing!");
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -556,6 +598,12 @@ namespace DiscordRPC.RPC
 			if (State != RpcState.Disconnected)
 			{
 				Logger.Warning("Cannot attempt a new connection as the previous connection hasn't changed state yet.");
+				return false;
+			}
+
+			if (aborting)
+			{
+				Logger.Error("Cannot attempt a new connection while aborting!");
 				return false;
 			}
 
