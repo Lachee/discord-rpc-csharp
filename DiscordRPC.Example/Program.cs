@@ -22,15 +22,34 @@ namespace DiscordRPC.Example
 		/// <summary>
 		/// The current presence to send to discord.
 		/// </summary>
-		private static RichPresence presence = new RichPresence();
+		private static RichPresence presence = new RichPresence()
+		{
+			Details = "Example Project",
+			State = "csharp example",
+			Assets = new Assets()
+			{
+				LargeImageKey = "image_large",
+				LargeImageText = "Lachee's Discord IPC Library",
+				SmallImageKey = "image_small"
+			}
+		};
+
+		/// <summary>
+		/// The discord client
+		/// </summary>
+		private static DiscordRpcClient client;
 
 		/// <summary>
 		/// Is the main loop currently running?
 		/// </summary>
 		private static bool isRunning = true;
 
+		/// <summary>
+		/// The string builder for the command
+		/// </summary>
 		private static StringBuilder word = new StringBuilder();
 		
+
 		//Main Loop
 		static void Main(string[] args)
 		{
@@ -38,11 +57,10 @@ namespace DiscordRPC.Example
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true))												//This will create a new client with a SteamID (null if no steam)
-			using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", true))														//This will create a new client that will register itself a URI scheme (for join / spectate)
+			using (client = new DiscordRpcClient("424087019149328395", true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
 				//Set the logger. This way we can see the output of the client.
 				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel };
-				client.Logger = new Logging.FancyConsoleLogger() { Level = DiscordLogLevel };
 
 				//Register to the events we care about. We are registering to everyone just to show off the events
 				client.OnReady += OnReady;
@@ -65,6 +83,28 @@ namespace DiscordRPC.Example
 				//It must be called before any updates are sent or received from the discord client.
 				client.Initialize();
 
+
+				//Before we send a initial presence, we will generate a random "game ID" for this example.
+				// For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 
+				// This is used for the Join / Specate feature. This can be ignored if you do not plan to implement that feature.
+				presence.Secrets = new Secrets()
+				{
+					//These secrets should contain enough data for external clients to be able to know which
+					// game to connect too. A simple approach would be just to use IP address, but this is highly discouraged
+					// and can leave your players vulnerable! 
+					JoinSecret = "join_myuniquegameid",
+					SpectateSecret = "spectate_myuniquegameid"
+				};
+
+				//We also need to generate a initial party. This is because Join requires the party to be created too.
+				// If no party is set, the join feature will not work and may cause errors within the discord client itself.
+				presence.Party = new Party()
+				{
+					ID = Secrets.CreateFriendlySecret(new Random()),
+					Size = 1,
+					Max = 4
+				};
+
 				//Set some new presence to tell Discord we are in a game.
 				// If the connection is not yet available, this will be queued until a Ready event is called, 
 				// then it will be sent. All messages are queued until Discord is ready to receive them.
@@ -78,11 +118,11 @@ namespace DiscordRPC.Example
 
 				//Start our main loop. In a normal game you probably don't have to do this step.
 				// Just make sure you call .Invoke() or some other dequeing event to receive your events.
-				MainLoop(client);
+				MainLoop();
 			}
 		}
 
-		static void MainLoop(DiscordRpcClient client)
+		static void MainLoop()
 		{
 			/*
 			 * Enter a infinite loop, polling the Discord Client for events.
@@ -100,21 +140,8 @@ namespace DiscordRPC.Example
 
 				//Try to read any keys if available
 				if (Console.KeyAvailable)
-				{
-					var key = Console.ReadKey(true);
-					if (key.Key == ConsoleKey.Enter)
-					{
-						Console.Write("\r                                                                            \r");
-						ExecuteCommand(word.ToString());
-						word.Clear();
-					}
-					else
-					{
-						Console.Write(key.KeyChar);
-						word.Append(key.KeyChar);
-					}
-				}
-
+					ProcessKey();
+				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
 				Thread.Sleep(100);
@@ -124,9 +151,158 @@ namespace DiscordRPC.Example
 			Console.ReadKey();
 		}
 
+		static int cursorIndex = 0;
+		static string previousCommand = "";
+		static void ProcessKey()
+		{
+			//Read they key
+			var key = Console.ReadKey(true);
+			switch(key.Key)
+			{
+				case ConsoleKey.Enter:
+					//Write the new line
+					Console.WriteLine();
+					cursorIndex = 0;
+					
+					//The enter key has been sent, so send the message
+					previousCommand = word.ToString();
+					ExecuteCommand(previousCommand);
+
+					word.Clear();
+					break;
+
+				case ConsoleKey.Backspace:
+					word.Remove(cursorIndex - 1, 1);
+					Console.Write("\r                                         \r");
+					Console.Write(word);
+					cursorIndex--;
+					break;
+
+				case ConsoleKey.Delete:
+					if (cursorIndex < word.Length)
+					{
+						word.Remove(cursorIndex, 1);
+						Console.Write("\r                                         \r");
+						Console.Write(word);
+					}
+					break;
+
+				case ConsoleKey.LeftArrow:
+					cursorIndex--;
+					break;
+
+				case ConsoleKey.RightArrow:
+					cursorIndex++;
+					break;
+
+				case ConsoleKey.UpArrow:
+					word.Clear().Append(previousCommand);
+					Console.Write("\r                                         \r");
+					Console.Write(word);
+					break;
+
+				default:
+					if (!Char.IsControl(key.KeyChar))
+					{
+						//Some other character key was sent
+						Console.Write(key.KeyChar);
+						word.Insert(cursorIndex, key.KeyChar);
+						Console.Write("\r                                         \r");
+						Console.Write(word);
+						cursorIndex++;
+					}
+					break;
+			}
+
+			if (cursorIndex < 0) cursorIndex = 0;
+			if (cursorIndex >= Console.BufferWidth) cursorIndex = Console.BufferWidth - 1;
+			Console.SetCursorPosition(cursorIndex, Console.CursorTop);
+		}
+
 		static void ExecuteCommand(string word)
 		{
-			Console.WriteLine("Sending Presence");
+			//Trim the extra spacing
+			word = word.Trim();
+
+			//Prepare the command and its body
+			string command = word;
+			string body = "";
+
+			//Split the command and the values.
+			int whitespaceIndex = word.IndexOf(' ');
+			if (whitespaceIndex >= 0)
+			{
+				command = word.Substring(0, whitespaceIndex);
+				if (whitespaceIndex < word.Length)
+					body = word.Substring(whitespaceIndex + 1);
+			}
+
+			//Parse the command
+			switch (command.ToLowerInvariant())
+			{
+				#region State & Details
+				case "state":
+					presence.State = body;
+					client.SetPresence(presence);
+					break;
+
+				case "details":
+					presence.Details = body;
+					client.SetPresence(presence);
+					break;
+				#endregion
+
+				#region Asset Examples
+				case "large_key":
+					//If we do not have a asset object already, we must create it
+					if (!presence.HasAssets())
+						presence.Assets = new Assets();
+
+					//Set the key then send it away
+					presence.Assets.LargeImageKey = body;
+					client.SetPresence(presence);
+					break;
+
+				case "large_text":
+					//If we do not have a asset object already, we must create it
+					if (!presence.HasAssets())
+						presence.Assets = new Assets();
+
+					//Set the key then send it away
+					presence.Assets.LargeImageText = body;
+					client.SetPresence(presence);
+					break;
+
+				case "small_key":
+					//If we do not have a asset object already, we must create it
+					if (!presence.HasAssets())
+						presence.Assets = new Assets();
+
+					//Set the key then send it away
+					presence.Assets.SmallImageKey = body;
+					client.SetPresence(presence);
+					break;
+
+				case "small_text":
+					//If we do not have a asset object already, we must create it
+					if (!presence.HasAssets())
+						presence.Assets = new Assets();
+
+					//Set the key then send it away
+					presence.Assets.SmallImageText = body;
+					client.SetPresence(presence);
+					break;
+				#endregion
+
+				case "help":
+					Console.WriteLine("Available Commands: state, details, large_key, large_text, small_key, small_text");
+					break;
+
+				default:
+					Console.WriteLine("Unkown Command '{0}'. Try 'help' for a list of commands", command);
+					break;
+			}
+
 		}
 
 		#region Events

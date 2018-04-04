@@ -214,7 +214,7 @@ namespace DiscordRPC.RPC
 							#region Read Loop
 
 							//Iterate over every frame we have queued up, processing its contents
-							Logger.Info("Trying to read frames...");
+							//Logger.Info("Trying to read frames...");
 							if (namedPipe.ReadFrame(out frame))
 							{
 								#region Read Payload
@@ -276,7 +276,7 @@ namespace DiscordRPC.RPC
 							if (!aborting)
 							{
 								//Wait for some time, or until a command has been queued up
-								Logger.Info("Waiting for {0}ms or until some event occurs...", POLL_RATE);
+								//Logger.Info("Waiting for {0}ms or until some event occurs...", POLL_RATE);
 								queueUpdatedEvent.WaitOne(POLL_RATE);
 
 							}
@@ -463,7 +463,11 @@ namespace DiscordRPC.RPC
 		
 		private void ProcessCommandQueue()
 		{
-			Logger.Info("Checking Write Queue");
+			//We are not ready yet, dont even try
+			if (State != RpcState.Connected)
+				return;
+
+			//We are aborting, so we will just log a warning so we know this is probably only going to send the CLOSE
 			if (aborting)
 				Logger.Warning("We have been told to write a queue but we have also been aborted.");
 

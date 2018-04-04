@@ -116,7 +116,6 @@
     <Compile Include="EventType.cs" />
     <Compile Include="Helper\FixedString.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
-    <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
     <Compile Include="IO\InvalidPipeException.cs" />
