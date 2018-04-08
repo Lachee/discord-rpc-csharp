@@ -6,9 +6,6 @@ namespace DiscordRPC.Helper
 {
 	public static class StringTools
 	{
-		//The following character is a character that discord won't trim.
-		//public const string Whitespace = "  ";
-
 		/// <summary>
 		/// Will return null if the string is empty, otherwise it will return the string. 
 		/// </summary>

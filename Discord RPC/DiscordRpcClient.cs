@@ -230,9 +230,6 @@ namespace DiscordRPC
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{
-			//if (Disposed)
-			//	throw new ObjectDisposedException("Discord IPC Client");
-
 			//Dequeue all the messages and process them
 			IMessage[] messages = connection.DequeueMessages();
 			for (int i = 0; i < messages.Length; i++)
@@ -500,7 +497,6 @@ namespace DiscordRPC
 		/// </summary>
 		public void Dispose()
 		{
-			//connectionPipe.Close();
 			if (Disposed) return;
 
 			connection.Close();

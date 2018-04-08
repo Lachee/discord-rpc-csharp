@@ -67,12 +67,5 @@ namespace DiscordRPC.Helper
 
 			return Math.Min(Math.Max(_current, Minimum), Maximum);
 		}
-
-		private double NextValue()
-		{
-			double mantissa = (Random.NextDouble() * 2.0) - 1.0;
-			double exponent = Math.Pow(2.0, Random.Next(-126, 128));
-			return (mantissa * exponent);
-		}
 	}
 }

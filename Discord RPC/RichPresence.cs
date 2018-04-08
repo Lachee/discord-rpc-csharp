@@ -114,7 +114,7 @@ namespace DiscordRPC
 
 				Party = !HasParty() ? null : new Party
 				{
-					ID = this.Party.ID as string,
+					ID = this.Party.ID,
 					Size = this.Party.Size,
 					Max = this.Party.Max
 				}

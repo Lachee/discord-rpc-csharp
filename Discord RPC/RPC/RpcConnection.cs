@@ -97,8 +97,7 @@ namespace DiscordRPC.RPC
 			_rtqueue = new Queue<ICommand>();
 			_rxqueue = new Queue<IMessage>();
 			
-			Random rand = new Random();
-			nonce = 0;// rand.Next(0, 10000000);
+			nonce = 0;
 		}
 		
 			
@@ -118,9 +117,6 @@ namespace DiscordRPC.RPC
 			//Enqueue the set presence argument
 			lock (_rtqueue)
 				_rtqueue.Enqueue(command);
-
-			//Tell the thread something happened
-			//if (State == RpcState.Connected) queueUpdatedEvent.Set();
 		}
 
 		/// <summary>
@@ -214,7 +210,6 @@ namespace DiscordRPC.RPC
 							#region Read Loop
 
 							//Iterate over every frame we have queued up, processing its contents
-							//Logger.Info("Trying to read frames...");
 							if (namedPipe.ReadFrame(out frame))
 							{
 								#region Read Payload
@@ -276,9 +271,7 @@ namespace DiscordRPC.RPC
 							if (!aborting)
 							{
 								//Wait for some time, or until a command has been queued up
-								//Logger.Info("Waiting for {0}ms or until some event occurs...", POLL_RATE);
 								queueUpdatedEvent.WaitOne(POLL_RATE);
-
 							}
 
 							#endregion
