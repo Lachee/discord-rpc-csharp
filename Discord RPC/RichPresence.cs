@@ -86,25 +86,25 @@ namespace DiscordRPC
 		/// <returns></returns>
 		public RichPresence Clone()
 		{
-			return new RichPresence()
+			return new RichPresence
 			{
 				State = this._state != null ? _state.Clone() as string : null,
 				Details = this._details != null ? _details.Clone() as string : null,
 
-				Secrets = !HasSecrets() ? null : new Secrets()
+				Secrets = !HasSecrets() ? null : new Secrets
 				{
 					//MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
 					JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
 					SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
 				},
 
-				Timestamps = !HasTimestamps() ? null : new Timestamps()
+				Timestamps = !HasTimestamps() ? null : new Timestamps
 				{
 					Start = this.Timestamps.Start,
 					End = this.Timestamps.End
 				},
 
-				Assets = !HasAssets() ? null : new Assets()
+				Assets = !HasAssets() ? null : new Assets
 				{
 					LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string  : null,
 					LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
@@ -112,7 +112,7 @@ namespace DiscordRPC
 					SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
 				},
 
-				Party = !HasParty() ? null : new Party()
+				Party = !HasParty() ? null : new Party
 				{
 					ID = this.Party.ID as string,
 					Size = this.Party.Size,
@@ -412,8 +412,8 @@ namespace DiscordRPC
 		/// <returns>The Unix Epoch of the passed DateTime.</returns>
 		public static long GetEpoch(DateTime time)
 		{
-			DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-			return (long)(time - epochStart).TotalSeconds;
+			DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+			return (long)(time - epoch).TotalSeconds;
 		}
 	}
 

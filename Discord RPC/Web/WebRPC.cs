@@ -74,7 +74,10 @@ namespace DiscordRPC.Web
 						if (TryParseResponse(result, out response))
 							return true;
 					}
-					catch (Exception) { }
+					catch (Exception)
+					{
+						//Something went wrong, but we are just going to ignore it and try the next port.
+					}
 				}
 			}
 

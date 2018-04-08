@@ -19,7 +19,6 @@ namespace DiscordRPC.IO
 
 		private int _connectedPipe;
 		private NamedPipeClientStream _stream;
-		private IAsyncResult _async;
 
 		private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
 
@@ -90,7 +89,7 @@ namespace DiscordRPC.IO
 			try
 			{
 				Logger.Info("Begining Read of {0} bytes", _buffer.Length);
-				_async = _stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
+				_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
 			}
 			catch(ObjectDisposedException)
 			{

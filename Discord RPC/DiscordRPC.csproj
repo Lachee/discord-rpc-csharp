@@ -114,7 +114,6 @@
     <Compile Include="DiscordRpcClient.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="EventType.cs" />
-    <Compile Include="Helper\FixedString.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
