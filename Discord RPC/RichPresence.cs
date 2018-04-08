@@ -17,7 +17,15 @@ namespace DiscordRPC
 		/// <para>Max 128 bytes</para>
 		/// </summary>
 		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-		public string State { get { return _state; } set { _state = value.ClearEmpty(); } }
+		public string State
+		{
+			get { return _state; }
+			set
+			{
+				if (!ValidateString(value, out _state, 128, Encoding.UTF8))
+					throw new Exception("State cannot be greater than 128 bytes!");
+			}
+		}
 		private string _state;
 
 		/// <summary>
@@ -25,7 +33,15 @@ namespace DiscordRPC
 		/// <para>Max 128 bytes</para>
 		/// </summary>
 		[JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-		public string Details { get { return _details; } set { _details = value.ClearEmpty(); } }
+		public string Details
+		{
+			get { return _details; }
+			set 
+			{
+				if (!ValidateString(value, out _details, 128, Encoding.UTF8))
+					throw new Exception("Details cannot be greater than 128 bytes!");
+			}
+		}
 		private string _details;
 		
 		/// <summary>
@@ -140,6 +156,30 @@ namespace DiscordRPC
 		{
 			return Secrets != null && (Secrets.JoinSecret != null || Secrets.SpectateSecret != null);
 		}
+		
+		/// <summary>
+		/// Attempts to call <see cref="NullEmpty(string)"/> on the string and return the result, if its within a valid length.
+		/// </summary>
+		/// <param name="str">The string to check</param>
+		/// <param name="result">The formatted string result</param>
+		/// <param name="bytes">The maximum number of bytes the string can take up</param>
+		/// <param name="encoding">The encoding to count the bytes with</param>
+		/// <returns>True if the string fits within the number of bytes</returns>
+		internal static bool ValidateString(string str, out string result, int bytes, Encoding encoding)
+		{
+			result = null;
+
+			//Trim the string, for the best chance of fitting
+			var s = str.Trim();
+
+			//Make sure it fits
+			if (!s.WithinLength(bytes, encoding))
+				return false;
+
+			//Make sure its not empty
+			result = s.NullEmpty();
+			return true;
+		}
 
 		/// <summary>
 		/// Operator that converts a presence into a boolean for null checks.
@@ -167,7 +207,15 @@ namespace DiscordRPC
 		/// </summary>
 		[Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.")]
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-		public string MatchSecret { get { return _matchSecret; } set { _matchSecret = value.ClearEmpty(); } }
+		public string MatchSecret
+		{
+			get { return _matchSecret; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _matchSecret, 128, Encoding.UTF8))
+					throw new Exception("Match secret cannot be greater than 128 bytes!");
+			}
+		}
 		private string _matchSecret;
 
 
@@ -179,7 +227,15 @@ namespace DiscordRPC
 		/// <para>Max Length of 128 Bytes</para>
 		/// </summary>
 		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
-		public string JoinSecret { get { return _joinSecret; } set { _joinSecret = value.ClearEmpty(); } }
+		public string JoinSecret
+		{
+			get { return _joinSecret; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _joinSecret, 128, Encoding.UTF8))
+					throw new Exception("Join secret cannot be greater than 128 bytes!");
+			}
+		}
 		private string _joinSecret;
 
 		/// <summary>
@@ -190,7 +246,15 @@ namespace DiscordRPC
 		/// <para>Max Length of 128 Bytes</para>
 		/// </summary>
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		public string SpectateSecret { get { return _spectateSecret; } set { _spectateSecret = value.ClearEmpty(); } }
+		public string SpectateSecret
+		{
+			get { return _spectateSecret; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _spectateSecret, 128, Encoding.UTF8))
+					throw new Exception("Spectate secret cannot be greater than 128 bytes!");
+			}
+		}
 		private string _spectateSecret;
 
 		#region Statics
@@ -248,7 +312,15 @@ namespace DiscordRPC
 		/// <para>Max 32 Bytes.</para>
 		/// </summary>
 		[JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageKey { get { return _largeimagekey; } set { _largeimagekey = value.ClearEmpty(); } }		
+		public string LargeImageKey
+		{
+			get { return _largeimagekey; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _largeimagekey, 32, Encoding.UTF8))
+					throw new Exception("Large image key cannot be greater than 32 bytes!");
+			}
+		}
 		private string _largeimagekey;
 
 		/// <summary>
@@ -256,7 +328,15 @@ namespace DiscordRPC
 		/// <para>Max 128 Bytes.</para>
 		/// </summary>
 		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageText { get { return _largeimagetext; } set { _largeimagetext = value.ClearEmpty(); } }
+		public string LargeImageText
+		{
+			get { return _largeimagetext; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _largeimagetext, 128, Encoding.UTF8))
+					throw new Exception("Large image text cannot be greater than 128 bytes!");
+			}
+		}
 		private string _largeimagetext;
 
 
@@ -265,7 +345,15 @@ namespace DiscordRPC
 		/// <para>Max 32 Bytes.</para>
 		/// </summary>
 		[JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageKey { get { return _smallimagekey; } set { _smallimagekey = value.ClearEmpty(); } }
+		public string SmallImageKey
+		{
+			get { return _smallimagekey; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _smallimagekey, 32, Encoding.UTF8))
+					throw new Exception("Small image key cannot be greater than 32 bytes!");
+			}
+		}
 		private string _smallimagekey;
 
 		/// <summary>
@@ -273,7 +361,15 @@ namespace DiscordRPC
 		/// <para>Max 128 Bytes.</para>
 		/// </summary>
 		[JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageText { get { return _smallimagetext; } set { _smallimagetext = value.ClearEmpty(); } }
+		public string SmallImageText
+		{
+			get { return _smallimagetext; }
+			set
+			{
+				if (!RichPresence.ValidateString(value, out _smallimagetext, 128, Encoding.UTF8))
+					throw new Exception("Small image text cannot be greater than 128 bytes!");
+			}
+		}
 		private string _smallimagetext;
 	}
 
@@ -284,20 +380,26 @@ namespace DiscordRPC
 	public class Timestamps
 	{
 		/// <summary>
-		/// The time that match started. Included this will show the time as "elapsed".
+		/// The time that match started. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
 		/// </summary>
 		[JsonIgnore]
 		public DateTime? Start { get; set; }
 
 		/// <summary>
-		/// The time the match will end. Including this will show the time as "remaining".
+		/// The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="Start"/> is set, this value will override the "elapsed" state to "remaining".
 		/// </summary>
 		[JsonIgnore]
 		public DateTime? End { get; set; }
 
+		/// <summary>
+		/// The <see cref="Start"/> of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
+		/// </summary>
 		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
 		private long? epochStart { get { return Start.HasValue ? GetEpoch(Start.Value) : (long?)null; } }
 
+		/// <summary>
+		/// The <see cref="End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="Start"/> is set, this value will override the "elapsed" state to "remaining".
+		/// </summary>
 		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
 		private long? epochEnd { get { return End.HasValue ? GetEpoch(End.Value) : (long?)null; } }
 
@@ -324,7 +426,7 @@ namespace DiscordRPC
 		/// <para>Max 128 Bytes</para>
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string ID { get { return _partyid; } set { _partyid = value.ClearEmpty(); } }
+		public string ID { get { return _partyid; } set { _partyid = value.NullEmpty(); } }
 		private string _partyid;
 
 		/// <summary>

@@ -6,36 +6,59 @@ namespace DiscordRPC.Helper
 {
 	public static class StringTools
 	{
-		public const string Whitespace = "  ";
+		//The following character is a character that discord won't trim.
+		//public const string Whitespace = "  ";
 
 		/// <summary>
-		/// If the string is empty, make it null instead. Otherwise return the string.
+		/// Will return null if the string is empty, otherwise it will return the string. 
 		/// </summary>
 		/// <param name="str">The string to check</param>
 		/// <returns>Null if the string is empty, otherwise the string</returns>
-		public static string ClearEmpty(this string str)
+		public static string NullEmpty(this string str)
 		{
 			return string.IsNullOrEmpty(str) ? null : str;
 		}
 
 		/// <summary>
-		/// Generates whitespaces that Discord doesn't remove.
+		/// Does the string fit within the given amount of bytes? Uses UTF8 encoding.
 		/// </summary>
-		/// <param name="count">The number of spaces.</param>
-		/// <returns>Returns the list of whitespaces</returns>
-		public static string CreateWhitespace(int count)
+		/// <param name="str">The string to check</param>
+		/// <param name="bytes">The maximum number of bytes the string can take up</param>
+		/// <returns>True if the string fits within the number of bytes</returns>
+		public static bool WithinLength(this string str, int bytes)
 		{
-			StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < count; i++) builder.Append(Whitespace);
-			return builder.ToString();
-        }
+			return str.WithinLength(bytes, Encoding.UTF8);
+		}
 
+		/// <summary>
+		/// Does the string fit within the given amount of bytes?
+		/// </summary>
+		/// <param name="str">The string to check</param>
+		/// <param name="bytes">The maximum number of bytes the string can take up</param>
+		/// <param name="encoding">The encoding to count the bytes with</param>
+		/// <returns>True if the string fits within the number of bytes</returns>
+		public static bool WithinLength(this string str, int bytes, Encoding encoding)
+		{
+			return encoding.GetByteCount(str) <= bytes;
+		}
+
+		
+		/// <summary>
+		/// Converts the string into CamelCase (Pascal Case).
+		/// </summary>
+		/// <param name="str">The string to convert</param>
+		/// <returns></returns>
         public static string ToCamelCase(this string str)
         {
             if (str == null) return null;
-            return str.ToLowerInvariant().Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries).Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1, s.Length - 1)).Aggregate(string.Empty, (s1, s2) => s1 + s2);
+            return str.ToLowerInvariant().Split(new[] { "_", " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => char.ToUpperInvariant(s[0]) + s.Substring(1, s.Length - 1)).Aggregate(string.Empty, (s1, s2) => s1 + s2);
         }
 
+		/// <summary>
+		/// Converts the string into UPPER_SNAKE_CASE
+		/// </summary>
+		/// <param name="str">The string to convert</param>
+		/// <returns></returns>
         public static string ToSnakeCase(this string str)
         {
             if (str == null) return null;

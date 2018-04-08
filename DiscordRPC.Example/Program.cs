@@ -2,6 +2,7 @@
 using DiscordRPC.Helper;
 using DiscordRPC.Message;
 using System;
+using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -13,6 +14,11 @@ namespace DiscordRPC.Example
 		/// The pipe Discord is located on. If set to -1, the client will scan for the first available pipe.
 		/// </summary>
 		private static int DiscordPipe = -1;
+
+		/// <summary>
+		/// ID of the client
+		/// </summary>
+		private static string ClientID = "424087019149328395";
 
 		/// <summary>
 		/// The level of logging to use.
@@ -48,16 +54,17 @@ namespace DiscordRPC.Example
 		/// The string builder for the command
 		/// </summary>
 		private static StringBuilder word = new StringBuilder();
-		
+
 
 		//Main Loop
 		static void Main(string[] args)
 		{
+
 			//Creates a new Discord RPC Client. Below are some of the ways to register:
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true))												//This will create a new client with a SteamID (null if no steam)
-			using (client = new DiscordRpcClient("424087019149328395", true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
+			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
 				//Set the logger. This way we can see the output of the client.
 				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel };
