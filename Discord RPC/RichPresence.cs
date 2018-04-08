@@ -167,7 +167,9 @@ namespace DiscordRPC
 		/// <returns>True if the string fits within the number of bytes</returns>
 		internal static bool ValidateString(string str, out string result, int bytes, Encoding encoding)
 		{
-			result = null;
+			result = str;
+			if (str == null)
+				return true;
 
 			//Trim the string, for the best chance of fitting
 			var s = str.Trim();

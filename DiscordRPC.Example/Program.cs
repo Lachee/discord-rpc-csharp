@@ -1,8 +1,6 @@
-﻿using DiscordRPC;
-using DiscordRPC.Helper;
+﻿
 using DiscordRPC.Message;
 using System;
-using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -59,7 +57,51 @@ namespace DiscordRPC.Example
 		//Main Loop
 		static void Main(string[] args)
 		{
+			HttpExample();
+			//FullClientExample();
 
+			Console.WriteLine("Press any key to terminate");
+			Console.ReadKey();
+		}
+
+		static void HttpExample()
+		{
+			//A simplified version, but is blocking. Its recommended to use some form of async or your prefered library for HTTP Post.
+			// Unity for example should use the WWW Class (or the new WebRequest.Post ).
+			//var response = DiscordRPC.Web.WebRPC.SetRichPresence(presence, ClientID);
+
+			//Here we are going to manually call the request to show how it works
+			//First get the data we should be sending and prepare the data we will receive
+			Web.WebRequest request = DiscordRPC.Web.WebRPC.PrepareRequest(presence, ClientID);
+			RichPresence response = null;
+
+			//Now we need to send it. We are using WebClient as a example
+			using (var web = new System.Net.WebClient())
+			{
+				//Copy over the headers
+				foreach (var kp in request.Headers)
+					web.Headers.Add(kp.Key, kp.Value);
+
+				//Make the request
+				string json = web.UploadString(request.URL, request.Data);
+
+				//Try to parse the request
+				if (!DiscordRPC.Web.WebRPC.TryParseResponse(json, out response))
+				{
+					//We failed to set the rich presence
+					Console.WriteLine("Something went wrong while trying to parse the response!");
+					Console.WriteLine("Received: {0}", json);
+				}
+				else
+				{
+					//We succesfully set the rich presence!
+					Console.WriteLine("Succesfully set Rich Presence! State: {0}", response.State);
+				}
+			}
+		}
+		
+		static void FullClientExample()
+		{
 			//Creates a new Discord RPC Client. Below are some of the ways to register:
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe

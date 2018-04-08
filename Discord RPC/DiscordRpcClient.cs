@@ -506,5 +506,6 @@ namespace DiscordRPC
 			connection.Close();
 			_disposed = true;			
 		}
+
 	}
 }

@@ -156,6 +156,7 @@
     <Compile Include="RPC\Payload\PayloadEvent.cs" />
     <Compile Include="RPC\RpcConnection.cs" />
     <Compile Include="RPC\Payload\ServerEvent.cs" />
+    <Compile Include="Web\WebRPC.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
