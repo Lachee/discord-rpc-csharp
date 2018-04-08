@@ -163,13 +163,13 @@ namespace DiscordRPC.IO
 			byte[] len = ConvertBytes(Length);
 
 			//Copy it all into a buffer
-			byte[] buffer = new byte[op.Length + len.Length + Data.Length];
-			op.CopyTo(buffer, 0);
-			len.CopyTo(buffer, op.Length);
-			Data.CopyTo(buffer, op.Length + len.Length);
+			byte[] buff = new byte[op.Length + len.Length + Data.Length];
+			op.CopyTo(buff, 0);
+			len.CopyTo(buff, op.Length);
+			Data.CopyTo(buff, op.Length + len.Length);
 
 			//Write it to the stream
-			stream.Write(buffer, 0, buffer.Length);
+			stream.Write(buff, 0, buff.Length);
 		}
 
 

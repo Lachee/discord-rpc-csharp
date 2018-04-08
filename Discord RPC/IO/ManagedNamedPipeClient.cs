@@ -92,6 +92,11 @@ namespace DiscordRPC.IO
 				Logger.Info("Begining Read of {0} bytes", _buffer.Length);
 				_async = _stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
 			}
+			catch(ObjectDisposedException)
+			{
+				Logger.Warning("Attempted to start reading from a disposed pipe");
+				return;
+			}
 			catch (InvalidOperationException)
 			{
 				//The pipe has been closed
@@ -121,6 +126,8 @@ namespace DiscordRPC.IO
 				return;
 			}
 
+			//How much did we read?
+			Logger.Info("Read {0} bytes", bytes);
 
 			//Did we read anything? If we did we should enqueue it.
 			if (bytes > 0)
@@ -131,6 +138,8 @@ namespace DiscordRPC.IO
 					PipeFrame frame = new PipeFrame();
 					if (frame.ReadStream(stream))
 					{
+						Logger.Info("Read a frame: {0}", frame.Opcode);
+
 						//Enqueue the stream
 						lock (_framequeuelock)
 							_framequeue.Enqueue(frame);
@@ -144,7 +153,11 @@ namespace DiscordRPC.IO
 			}
 
 			//We are still connected, so continue to read
-			if (IsConnected) BeginRead();
+			if (IsConnected)
+			{
+				Logger.Info("Starting another read");
+				BeginRead();
+			}
 		}
 
 		public bool ReadFrame(out PipeFrame frame)
@@ -199,15 +212,19 @@ namespace DiscordRPC.IO
 
 		public void Close()
 		{
-			//Cancel the wait on thea async
-			_async.AsyncWaitHandle.Close();
-
-			//flush and dispose
-			_stream.Flush();
-			_stream.Dispose();
+			//flush and dispose			
+			try
+			{
+				_stream.Flush();
+				_stream.Dispose();
+			}
+			catch (ObjectDisposedException)
+			{
+				Logger.Warning("Tried to dispose already disposed stream");
+				return;
+			}
 
 			//set the stream to null
-			_stream = null;
 			_connectedPipe = -1;
 		}
 

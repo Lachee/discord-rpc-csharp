@@ -230,8 +230,8 @@ namespace DiscordRPC
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
+			//if (Disposed)
+			//	throw new ObjectDisposedException("Discord IPC Client");
 
 			//Dequeue all the messages and process them
 			IMessage[] messages = connection.DequeueMessages();
@@ -400,7 +400,6 @@ namespace DiscordRPC
 
 			//Update our internal store of the presence
 			_presence = presence;
-
 			if (!_presence)
 			{
 				//Clear the presence
@@ -410,8 +409,18 @@ namespace DiscordRPC
 			{
 				//Send valid presence
 				//Validate the presence with our settings
-				if (presence.HasSecrets() && !HasRegisteredUriScheme)
-					throw new Exception("Cannot send a presence with secrets as this object has not registered a URI scheme!");
+				if (presence.HasSecrets())
+				{
+					if (!HasRegisteredUriScheme)
+						throw new Exception("Cannot send a presence with secrets as this object has not registered a URI scheme!");
+
+					if (!string.IsNullOrEmpty(presence.Secrets.JoinSecret) && !presence.HasParty())
+						throw new Exception("Presences that include Join Secrets must also include a party!"); 
+				}
+
+				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
+					throw new Exception("Presence maximum party size cannot be smaller than the current size.");
+
 
 				//Send the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
@@ -495,10 +504,8 @@ namespace DiscordRPC
 			if (Disposed) return;
 
 			connection.Close();
-
-			//connection.Close();
-			//connection = null;
-			//_disposed = true;
+			_disposed = true;			
 		}
+
 	}
 }

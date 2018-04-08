@@ -116,7 +116,6 @@
     <Compile Include="EventType.cs" />
     <Compile Include="Helper\FixedString.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
-    <Compile Include="Helper\Secret.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
     <Compile Include="IO\InvalidPipeException.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
     <Compile Include="IO\PipeFrame.cs" />
+    <Compile Include="Logging\FancyConsoleLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
@@ -156,6 +156,7 @@
     <Compile Include="RPC\Payload\PayloadEvent.cs" />
     <Compile Include="RPC\RpcConnection.cs" />
     <Compile Include="RPC\Payload\ServerEvent.cs" />
+    <Compile Include="Web\WebRPC.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
