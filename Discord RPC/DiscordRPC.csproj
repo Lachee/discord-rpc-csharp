@@ -164,8 +164,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)"
-copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(ConfigurationName)\$(TargetFileName)"
+    <PostBuildEvent>mkdir "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\"
+copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\$(TargetFileName)"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
