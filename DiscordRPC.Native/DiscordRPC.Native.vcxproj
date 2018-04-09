@@ -97,7 +97,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(ConfigurationName)\$(TargetFileName)"</Command>
+      <Command>mkdir "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86\"
+copy /Y "$(TargetPath)" "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86\$(TargetFileName)"
+copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration)\$(TargetFileName)"
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies DLL</Message>
@@ -116,8 +119,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\$(Platform)\"
-copy /Y "$(TargetPath)" "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\$(Platform)\$(TargetFileName)"
+      <Command>mkdir "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86_64\"
+copy /Y "$(TargetPath)" "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetFileName)"
 copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration)\$(TargetFileName)"
 </Command>
     </PostBuildEvent>

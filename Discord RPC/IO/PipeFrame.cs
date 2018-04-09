@@ -100,7 +100,7 @@ namespace DiscordRPC.IO
 		/// </summary>
 		/// <param name="stream"></param>
 		/// <returns></returns>
-		internal bool ReadStream(Stream stream)
+		public bool ReadStream(Stream stream)
 		{
 			//Try to read the opcode
 			uint op;
@@ -156,7 +156,7 @@ namespace DiscordRPC.IO
 		/// Writes the frame into the target frame as one big byte block.
 		/// </summary>
 		/// <param name="stream"></param>
-		internal void WriteStream(Stream stream)
+		public void WriteStream(Stream stream)
 		{
 			//Get all the bytes
 			byte[] op = ConvertBytes((uint) Opcode);
