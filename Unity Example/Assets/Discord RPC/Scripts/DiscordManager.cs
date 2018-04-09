@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using DiscordRPC.IO;
 using DiscordRPC.Message;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class DiscordManager : MonoBehaviour {
 	public static DiscordManager instance { get { return _instance; } }
 	private static DiscordManager _instance;
 
+	#region Properties and Configurations
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
 	public string applicationID = "424087019149328395";
 
@@ -44,46 +46,29 @@ public class DiscordManager : MonoBehaviour {
 	/// <summary>
 	/// The current presence displayed on the Discord Client.
 	/// </summary>
-	public UnityPresence Presence { get { return _presence; } }
+	public DiscordPresence CurrentPresence { get { return _currentPresence; } }
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
-	[SerializeField] private UnityPresence _presence;
+	[SerializeField] private DiscordPresence _currentPresence;
 	
+	[SerializeField]
+	[Tooltip("The enabled state of the IPC connection")]
+	private bool active = true;
+	#endregion
+
+
+	public DiscordEvents events;
+
 	/// <summary>
 	/// The current Discord Client.
 	/// </summary>
 	public DiscordRpcClient client { get { return _client; } }
 	private DiscordRpcClient _client;
-
-	[SerializeField]
-	[Tooltip("The enabled state of the IPC connection")]
-	private bool active = true;
-
+	
 	#region Unity Events
 	private void OnEnable()
 	{
-#if UNITY_EDITOR
-		//Make a copy in the assests folder if required
-		if (UnityEditor.PlayerSettings.GetApiCompatibilityLevel(UnityEditor.BuildTargetGroup.Standalone) == UnityEditor.ApiCompatibilityLevel.NET_2_0)
-		{
-			string file = Application.dataPath + "/Discord RPC/Plugins/DiscordRPC.Native.dll";
-			string target = Application.dataPath + "/../DiscordRPC.Native.dll";
-
-			if (!System.IO.File.Exists(target))
-			{
-				Debug.LogWarning("Since you are using the .NET 2.0 compatibility level, the native dll must be copied to the root of the project. Copying the file now.");
-				System.IO.File.Copy(file, target, true);
-			}
-		}
-
-		if (UnityEditor.PlayerSettings.GetApiCompatibilityLevel(UnityEditor.BuildTargetGroup.Standalone) == UnityEditor.ApiCompatibilityLevel.NET_2_0_Subset)
-		{
-			Debug.LogError("The Discord Rich Presence library cannot work with the .NET 2.0 'subset'. Please make sure you are running full .NET 2.0 or upgrade to the new .NET 4.5");
-			return;
-		}
-#endif
-
-			//Make sure we are allowed to be active.
-			if (!active) return;
+		//Make sure we are allowed to be active.
+		if (!active) return;
 		if (!Application.isPlaying) return;
 
 		//This has a instance already that isn't us
@@ -104,16 +89,18 @@ public class DiscordManager : MonoBehaviour {
 			steamID,										//The Steam App. This can be null or empty string to disable steam intergration.
 			registerUriScheme,								//Should the client register a custom URI Scheme? This must be true for endpoints
 			(int )targetPipe,								//The target pipe to connect too
-			new DiscordRPC.IO.NativeNamedPipeClient()		//The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+			new NativeNamedPipeClient()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
 		);
 
 		//Update the logger to the unity logger
 		_client.Logger = new UnityLogger() { Level = logLevel };
 
 		//Subscribe to some initial events
-		_client.OnReady += OnReady;
-		_client.OnError += OnError;
-		_client.OnPresenceUpdate += OnPresenceUpdated;
+		client.OnReady += ClientOnReady;
+		client.OnError += ClientOnError;
+		client.OnPresenceUpdate += ClientOnPresenceUpdate;
+
+		events.RegisterEvents(client);
 
 		//Start the client
 		_client.Initialize();
@@ -141,25 +128,26 @@ public class DiscordManager : MonoBehaviour {
 		//Invoke the client events
 		client.Invoke();
 	}
-
 	#endregion
 
 
-	private void OnReady(object sender, ReadyMessage args)
+
+
+	private void ClientOnReady(object sender, ReadyMessage args)
 	{
 		//We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
 		Debug.Log("Connection established and received READY from Discord IPC. Sending our previous Rich Presence.");
-		client.SetPresence(_presence.ToRichPresence());
+		client.SetPresence((RichPresence) _currentPresence);
 	}
 	
-	private void OnPresenceUpdated(object sender, PresenceMessage args)
+	private void ClientOnPresenceUpdate(object sender, PresenceMessage args)
 	{
 		//Our Rich Presence has updated, better update our reference
 		Debug.Log("Our Rich Presence has been updated. Applied changes to local store.");
-		_presence = new UnityPresence(args.Presence);
+		_currentPresence = (DiscordPresence) args.Presence;
 	}
 	
-	private void OnError(object sender, ErrorMessage args)
+	private void ClientOnError(object sender, ErrorMessage args)
 	{
 		//Something bad happened while we tried to send a event. We will just log this for clarity.
 		Debug.LogError("Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
