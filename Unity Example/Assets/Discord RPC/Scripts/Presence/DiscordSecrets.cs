@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class DiscordSecrets
+public struct DiscordSecrets
 {
 	/// <summary>
 	/// The secret data that will tell the client how to connect to the game to play. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.
@@ -10,8 +10,9 @@ public class DiscordSecrets
 	/// </para>
 	/// <para>Max Length of 128 Bytes</para>
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The secret data that will tell the client how to connect to the game to play. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.")]
-	public string joinSecret = "";
+	public string joinSecret;
 
 
 	/// <summary>
@@ -21,14 +22,10 @@ public class DiscordSecrets
 	/// </para>
 	/// <para>Max Length of 128 Bytes</para>
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The secret data that will tell the client how to connect to the game to spectate. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.")]
-	public string spectateSecret = "";
-
-	/// <summary>
-	/// Creates a new empty instance of the secrets.
-	/// </summary>
-	public DiscordSecrets() { }
-
+	public string spectateSecret;
+	
 	/// <summary>
 	/// Creates new instances of the secrets, using the <see cref="DiscordRPC.Secrets"/> as the base.
 	/// </summary>
@@ -39,12 +36,23 @@ public class DiscordSecrets
 		this.spectateSecret = secrets.SpectateSecret;
 	}
 
+
+	/// <summary>
+	/// Is the secret object empty?
+	/// </summary>
+	/// <returns></returns>
+	public bool IsEmpty()
+	{
+		return string.IsNullOrEmpty(joinSecret) && string.IsNullOrEmpty(spectateSecret);
+	}
+
 	/// <summary>
 	/// Converts this object into the DiscordRPC equivilent.
 	/// </summary>
 	/// <returns></returns>
 	public DiscordRPC.Secrets ToRichSecrets()
 	{
+		if (IsEmpty()) return null;
 		return new DiscordRPC.Secrets()
 		{
 			JoinSecret = joinSecret,

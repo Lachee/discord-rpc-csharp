@@ -1,65 +1,30 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class DiscordAssets
+public class DiscordAsset
 {
 	/// <summary>
-	/// The key of the image to be displayed in the large square.
+	/// The key of the image to be displayed.
+	/// <para>Max 32 Bytes.</para>
 	/// </summary>
-	[Header("Large Asset")]
+	[CharacterLimit(32)]
 	[Tooltip("The key of the image to be displayed in the large square.")]
-	public string largeKey;
+	public string image;
 
 	/// <summary>
-	/// The tooltip of the large image.
+	/// The tooltip of the image.
+	/// <para>Max 128 Bytes.</para>
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The tooltip of the large image.")]
-	public string largeTooltip;
-
+	public string tooltip;
+	
 	/// <summary>
-	/// The key of the image to be displayed in the small circle.
-	/// </summary>
-	[Header("Small Asset")]
-	[Tooltip("The key of the image to be displayed in the small circle.")]
-	public string smallKey;
-
-	/// <summary>
-	/// The tooltip of the small image.
-	/// </summary>
-	[Tooltip("The tooltip of the small image.")]
-	public string smallTooltip;
-
-	/// <summary>
-	/// Creates a new instances of the assets with empty values.
-	/// </summary>
-	public DiscordAssets() { }
-
-	/// <summary>
-	/// Creates new instances of the assets, using the <see cref="DiscordRPC.Assets"/> as the base.
-	/// </summary>
-	/// <param name="assets">The base to use the values from</param>
-	public DiscordAssets(DiscordRPC.Assets assets)
-	{
-		this.largeKey = assets.LargeImageKey;
-		this.smallKey = assets.SmallImageKey;
-		this.largeTooltip = assets.LargeImageText;
-		this.smallTooltip = assets.SmallImageText;
-	}
-
-	/// <summary>
-	/// Converts this object into the DiscordRPC equivilent.
+	/// Is the asset object empty?
 	/// </summary>
 	/// <returns></returns>
-	public DiscordRPC.Assets ToRichAssets()
+	public bool IsEmpty()
 	{
-		var assets = new DiscordRPC.Assets()
-		{
-			LargeImageKey = largeKey,
-			LargeImageText = largeTooltip,
-			SmallImageKey = smallKey,
-			SmallImageText = smallTooltip
-		};
-
-		return assets;
+		return string.IsNullOrEmpty(image) && string.IsNullOrEmpty(tooltip);
 	}
 }

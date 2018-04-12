@@ -3,9 +3,11 @@
 [System.Serializable]
 public class DiscordParty
 {
-	/// <summary>
-	/// The unique ID of the party. Leave empty for no party.
+	/// <summary> 
+	/// A unique ID for the player's current party / lobby / group. If this is not supplied, they player will not be in a party and the rest of the information will not be sent. 
+	/// <para>Max 128 Bytes</para>
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The unique ID of the party. Leave empty for no party.")]
 	public string identifer;
 
@@ -40,6 +42,15 @@ public class DiscordParty
 	public DiscordParty() { }
 
 	/// <summary>
+	/// Returns true if the party is not valid and has no ID.
+	/// </summary>
+	/// <returns></returns>
+	public bool IsEmpty()
+	{
+		return size <= 0 || maxSize <= 0 || string.IsNullOrEmpty(identifer);
+	}
+
+	/// <summary>
 	/// Creates new instances of the party, using the <see cref="DiscordRPC.Party"/> as the base.
 	/// </summary>
 	/// <param name="party">The base to use the values from</param>
@@ -67,5 +78,31 @@ public class DiscordParty
 			Max = maxSize,
 			Size = size
 		};
+	}
+
+	/// <summary>
+	/// Generates a random party identifier
+	/// </summary>
+	/// <returns></returns>
+	public static string GenerateRandomIdentifer()
+	{
+		const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		const int chunkSize = 16;
+
+		var builder = new System.Text.StringBuilder();
+		for (int i = 0; i < 128; i++)
+		{
+			if (i > 0 && i % chunkSize == 0)
+			{
+				builder.Append("-");
+			}
+			else
+			{
+				char c = valid[Random.Range(0, valid.Length)];
+				builder.Append(c);
+			}
+		}
+
+		return builder.ToString();
 	}
 }

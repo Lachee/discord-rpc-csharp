@@ -10,15 +10,13 @@ public class DiscordManager : MonoBehaviour {
 	private static DiscordManager _instance;
 
 	#region Properties and Configurations
+	[Header("Configuration")]
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
 	public string applicationID = "424087019149328395";
-
+	
 	[Tooltip("The Steam App ID. This is a optional field used to launch your game through steam instead of the executable.")]
 	public string steamID = "";
-
-	[Tooltip("Registers a custom URI scheme for your game. This is required for the Join / Specate features to work.")]
-	public bool registerUriScheme = false;
-
+	
 	[Tooltip("The pipe discord is located on. Useful for testing multiple clients.")]
 	public DiscordPipe targetPipe = DiscordPipe.First;
 
@@ -43,19 +41,25 @@ public class DiscordManager : MonoBehaviour {
 	[Tooltip("Logging level of the Discord IPC connection.")]
 	public DiscordRPC.Logging.LogLevel logLevel = DiscordRPC.Logging.LogLevel.Warning;
 
+	[Tooltip("Registers a custom URI scheme for your game. This is required for the Join / Specate features to work.")]
+	public bool registerUriScheme = false;
+
+	[SerializeField]
+	[Tooltip("The enabled state of the IPC connection")]
+	private bool active = true;
+
 	/// <summary>
 	/// The current presence displayed on the Discord Client.
 	/// </summary>
 	public DiscordPresence CurrentPresence { get { return _currentPresence; } }
+
+	[Header("Presence")]
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
 	[SerializeField] private DiscordPresence _currentPresence;
-	
-	[SerializeField]
-	[Tooltip("The enabled state of the IPC connection")]
-	private bool active = true;
+
 	#endregion
-
-
+	
+	[Header("Events")]
 	public DiscordEvents events;
 
 	/// <summary>

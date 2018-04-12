@@ -11,12 +11,14 @@ public class DiscordPresence
 	/// <summary>
 	/// The details about the game. Appears underneath the game name
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The details about the game")]
 	public string details = "Playing a game";
 
 	/// <summary>
 	/// The current state of the game (In Game, In Menu etc). Appears next to the party size
 	/// </summary>
+	[CharacterLimit(128)]
 	[Tooltip("The current state of the game (In Game, In Menu). It appears next to the party size.")]
 	public string state = "In Game";
 
@@ -40,7 +42,8 @@ public class DiscordPresence
 	/// The images used for the presence.
 	/// </summary>
 	[Tooltip("The images used for the presence")]
-	public DiscordAssets assets = new DiscordAssets();
+	public DiscordAsset smallAsset;
+	public DiscordAsset largeAsset;
 
 	[Header("Party Details")]
 
@@ -70,10 +73,29 @@ public class DiscordPresence
 		this.state = presence.State;
 		this.details = presence.Details;
 
-		this.party = presence.HasParty() ? new DiscordParty(presence.Party) : null;
-		this.assets = presence.HasAssets() ? new DiscordAssets(presence.Assets) : null;
-		this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : null;
+		this.party = presence.HasParty() ? new DiscordParty(presence.Party) : new DiscordParty();
+		this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : new DiscordSecrets();
 		
+		if (presence.HasAssets())
+		{
+			this.smallAsset = new DiscordAsset()
+			{
+				image = presence.Assets.SmallImageKey,
+				tooltip = presence.Assets.SmallImageText
+			};
+
+			this.largeAsset = new DiscordAsset()
+			{
+				image = presence.Assets.LargeImageKey,
+				tooltip = presence.Assets.LargeImageText
+			};
+		}
+		else
+		{
+			this.smallAsset = new DiscordAsset();
+			this.largeAsset = new DiscordAsset();
+		}
+
 		if (presence.HasTimestamps())
 		{
 			this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : new DiscordTimestamp(0);
@@ -90,11 +112,22 @@ public class DiscordPresence
 		var presence = new DiscordRPC.RichPresence();
 		presence.State		= this.state;
 		presence.Details	= this.details;
-
-		presence.Assets		= this.assets.ToRichAssets();
-		presence.Party		= this.party.ToRichParty();
-		presence.Secrets	= this.secrets.ToRichSecrets();
 		
+		presence.Party		= !this.party.IsEmpty() ? this.party.ToRichParty() : null;
+		presence.Secrets	= !this.secrets.IsEmpty() ? this.secrets.ToRichSecrets() : null;
+
+		if (!smallAsset.IsEmpty() || !largeAsset.IsEmpty())
+		{
+			presence.Assets = new DiscordRPC.Assets()
+			{
+				SmallImageKey = smallAsset.image,
+				SmallImageText = smallAsset.tooltip,
+
+				LargeImageKey = largeAsset.image,
+				LargeImageText = largeAsset.tooltip
+			};
+		}
+
 		if (startTime > 0 || endTime > 0)
 		{
 			presence.Timestamps = new DiscordRPC.Timestamps();
