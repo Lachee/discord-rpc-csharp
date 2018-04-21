@@ -1,4 +1,5 @@
 ﻿using DiscordRPC.Events;
+using DiscordRPC.Exceptions;
 using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
@@ -65,10 +66,16 @@ namespace DiscordRPC
 		private RpcConnection connection;
 
 		/// <summary>
-		/// The current presence that the client has.
+		/// The current presence that the client has. Gets set with <see cref="SetPresence(RichPresence)"/> and updated on <see cref="OnPresenceUpdate"/>.
 		/// </summary>
 		public RichPresence CurrentPresence { get { return _presence; } }
 		private RichPresence _presence;
+
+		/// <summary>
+		/// Current subscription to events. Gets set with <see cref="Subscribe(EventType)"/>, <see cref="UnsubscribeMessage"/> and updated on <see cref="OnSubscribe"/>, <see cref="OnUnsubscribe"/>.
+		/// </summary>
+		public EventType Subscription { get { return _subscription; } }
+		private EventType _subscription;
 
 		/// <summary>
 		/// The current configuration the connection is using. Only becomes available after a ready event.
@@ -76,8 +83,14 @@ namespace DiscordRPC
 		public Configuration Configuration { get { return _configuration; } }
 		private Configuration _configuration;
 
+		/// <summary>
+		/// Represents if the client has been <see cref="Initialize"/>
+		/// </summary>
+		public bool IsInitialized { get { return _initialized; } }
+		private bool _initialized;
+
 		#region Events
-		
+
 		/// <summary>
 		/// Called when the discord client is ready to send and receive messages.
 		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
@@ -165,7 +178,7 @@ namespace DiscordRPC
 		/// </summary>
 		/// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
 		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-		public DiscordRpcClient(string applicationID, bool registerUriScheme) : this(applicationID,  registerUriScheme, -1) { }
+		public DiscordRpcClient(string applicationID, bool registerUriScheme) : this(applicationID, registerUriScheme, -1) { }
 
 		/// <summary>
 		/// Creates a new Discord RPC Client using the default uri scheme.
@@ -360,13 +373,23 @@ namespace DiscordRPC
 					}
 					break;
 
+				case MessageType.Subscribe:
+					var sub = message as SubscribeMessage;
+					_subscription |= sub.Event;
+					break;
+
+				case MessageType.Unsubscribe:
+					var unsub = message as UnsubscribeMessage;
+					_subscription &= ~unsub.Event;
+					break;
+
 				//We got a message we dont know what to do with.
 				default:
 					break;
 			}
 		}
 		#endregion
-		
+
 		/// <summary>
 		/// Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="Dequeue"/> frequently enough.
 		/// </summary>
@@ -409,16 +432,15 @@ namespace DiscordRPC
 				if (presence.HasSecrets())
 				{
 					if (!HasRegisteredUriScheme)
-						throw new Exception("Cannot send a presence with secrets as this object has not registered a URI scheme!");
+						throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme!");
 
 					if (!string.IsNullOrEmpty(presence.Secrets.JoinSecret) && !presence.HasParty())
-						throw new Exception("Presences that include Join Secrets must also include a party!"); 
+						throw new BadPresenceException("Presences that include Join Secrets must also include a party!");
 				}
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
-					throw new Exception("Presence maximum party size cannot be smaller than the current size.");
-
-
+					throw new BadPresenceException("Presence maximum party size cannot be smaller than the current size.");
+				
 				//Send the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
 			}
@@ -443,26 +465,32 @@ namespace DiscordRPC
 		/// Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
 		/// </summary>
 		/// <param name="type"></param>
-		public void Subscribe(EventType type)
-		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
+		public void Subscribe(EventType type) { SetSubscription(_subscription | type); }
 
-			if (connection == null)
-				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
-
-			if (!HasRegisteredUriScheme)
-				throw new Exception("Cannot subscribe to an event as this application has not registered a URI scheme.");
-
-			//Add the subscribe command to be sent when the connection is able too
-			connection.EnqueueCommand(new SubscribeCommand() { Event = type, IsUnsubscribe = false });
-		}
-		
 		/// <summary>
 		/// Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
 		/// </summary>
 		/// <param name="type"></param>
-		public void Unubscribe(EventType type)
+		public void Unubscribe(EventType type) { SetSubscription(_subscription & ~type); }
+
+		/// <summary>
+		/// Sets the subscription flag, unsubscribing and then subscribing to the nessary events
+		/// </summary>
+		/// <param name="type">The events to subscribe too</param>
+		public void SetSubscription(EventType type)
+		{
+			//Calculate what needs to be unsubscrinbed
+			SubscribeToTypes(_subscription & ~type, true);
+			SubscribeToTypes(~_subscription & type, false);
+			_subscription = type;
+		}
+
+		/// <summary>
+		/// Simple helper function that will subscribe to the specified types in the flag.
+		/// </summary>
+		/// <param name="type">The flag to subscribe to</param>
+		/// <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
+		private void SubscribeToTypes(EventType type, bool isUnsubscribe)
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
@@ -471,12 +499,19 @@ namespace DiscordRPC
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			if (!HasRegisteredUriScheme)
-				throw new Exception("Cannot unsubscribe to an event as this application has not registered a URI scheme.");
-
+				throw new InvalidConfigurationException("Cannot subscribe to an event as this application has not registered a URI scheme.");
+			
 			//Add the subscribe command to be sent when the connection is able too
-			connection.EnqueueCommand(new SubscribeCommand() { Event = type, IsUnsubscribe = true });
+			if ((type & EventType.Spectate) == EventType.Spectate)
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = false });
+
+			if ((type & EventType.Join) == EventType.Join)
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = false });
+
+			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = false });
 		}
-		
+
 		/// <summary>
 		/// Attempts to initalize a connection to the Discord IPC.
 		/// </summary>
@@ -489,7 +524,7 @@ namespace DiscordRPC
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
-			return connection.AttemptConnection();
+			return _initialized = connection.AttemptConnection();
 		}
 		
 		/// <summary>

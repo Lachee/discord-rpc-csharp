@@ -47,12 +47,22 @@
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.CurrentPresence">
             <summary>
-            The current presence that the client has.
+            The current presence that the client has. Gets set with <see cref="M:DiscordRPC.DiscordRpcClient.SetPresence(DiscordRPC.RichPresence)"/> and updated on <see cref="E:DiscordRPC.DiscordRpcClient.OnPresenceUpdate"/>.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.Subscription">
+            <summary>
+            Current subscription to events. Gets set with <see cref="M:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)"/>, <see cref="T:DiscordRPC.Message.UnsubscribeMessage"/> and updated on <see cref="E:DiscordRPC.DiscordRpcClient.OnSubscribe"/>, <see cref="E:DiscordRPC.DiscordRpcClient.OnUnsubscribe"/>.
             </summary>
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.Configuration">
             <summary>
             The current configuration the connection is using. Only becomes available after a ready event.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.IsInitialized">
+            <summary>
+            Represents if the client has been <see cref="M:DiscordRPC.DiscordRpcClient.Initialize"/>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnReady">
@@ -223,6 +233,19 @@
             </summary>
             <param name="type"></param>
         </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.SetSubscription(DiscordRPC.EventType)">
+            <summary>
+            Sets the subscription flag, unsubscribing and then subscribing to the nessary events
+            </summary>
+            <param name="type">The events to subscribe too</param>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.SubscribeToTypes(DiscordRPC.EventType,System.Boolean)">
+            <summary>
+            Simple helper function that will subscribe to the specified types in the flag.
+            </summary>
+            <param name="type">The flag to subscribe to</param>
+            <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
+        </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Initialize">
             <summary>
             Attempts to initalize a connection to the Discord IPC.
@@ -313,7 +336,12 @@
         </member>
         <member name="T:DiscordRPC.EventType">
             <summary>
-            The type of event receieved by the RPC
+            The type of event receieved by the RPC. A flag type that can be combined.
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.EventType.None">
+            <summary>
+            No event
             </summary>
         </member>
         <member name="F:DiscordRPC.EventType.Spectate">
@@ -407,6 +435,11 @@
         <member name="P:DiscordRPC.IO.Handshake.ClientID">
             <summary>
             The ID of the app.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.IO.InvalidPipeException">
+            <summary>
+            The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
             </summary>
         </member>
         <member name="T:DiscordRPC.IO.NativeNamedPipeClient">

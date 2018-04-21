@@ -1,6 +1,7 @@
 ﻿using DiscordRPC;
 using DiscordRPC.Message;
 using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
@@ -38,8 +39,7 @@ public class DiscordEvents
 
 	[Serializable]
 	public class ConnectionFailedMessageEvent : UnityEvent<ConnectionFailedMessage> { }
-
-
+	
 	public ReadyMessageEvent OnReady;
 	public CloseMessageEvent OnClose;
 	public ErrorMessageEvent OnError;
@@ -51,7 +51,7 @@ public class DiscordEvents
 	public JoinRequestMessageEvent OnJoinRequest;
 	public ConnectionEstablishedMessageEvent OnConnectionEstablished;
 	public ConnectionFailedMessageEvent OnConnectionFailed;
-
+	
 	public void RegisterEvents(DiscordRpcClient client)
 	{
 		client.OnReady += (s, args) => OnReady.Invoke(args); 

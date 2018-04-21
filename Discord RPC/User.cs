@@ -83,7 +83,7 @@ namespace DiscordRPC
 			{
 				//Make sure we are only using PNG
 				if (format != AvatarFormat.PNG)
-					throw new Exception("The user has no avatar and the requested format " + format.ToString() + " is not supported. (Only supports PNG).");
+					throw new BadImageFormatException("The user has no avatar and the requested format " + format.ToString() + " is not supported. (Only supports PNG).");
 
 				//Get the endpoint
 				int descrim = Descriminator % 5;

@@ -1,4 +1,5 @@
-﻿using DiscordRPC.RPC;
+﻿using DiscordRPC.Exceptions;
+using DiscordRPC.RPC;
 using DiscordRPC.RPC.Commands;
 using DiscordRPC.RPC.Payload;
 using Newtonsoft.Json;
@@ -53,10 +54,10 @@ namespace DiscordRPC.Web
 				//Send valid presence
 				//Validate the presence with our settings
 				if (presence.HasSecrets())
-					throw new Exception("Cannot send a presence with secrets as HTTP endpoint does not suppport events.");
+					throw new BadPresenceException("Cannot send a presence with secrets as HTTP endpoint does not suppport events.");
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
-					throw new Exception("Presence maximum party size cannot be smaller than the current size.");
+					throw new BadPresenceException("Presence maximum party size cannot be smaller than the current size.");
 			}
 
 			//Iterate over the ports until the first succesfull one
@@ -129,10 +130,10 @@ namespace DiscordRPC.Web
 				//Send valid presence
 				//Validate the presence with our settings
 				if (presence.HasSecrets())
-					throw new Exception("Cannot send a presence with secrets as HTTP endpoint does not suppport events.");
+					throw new BadPresenceException("Cannot send a presence with secrets as HTTP endpoint does not suppport events.");
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
-					throw new Exception("Presence maximum party size cannot be smaller than the current size.");
+					throw new BadPresenceException("Presence maximum party size cannot be smaller than the current size.");
 			}
 
 			//Prepare some params

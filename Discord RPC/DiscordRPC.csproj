@@ -119,6 +119,9 @@
     <Compile Include="DiscordRpcClient.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="EventType.cs" />
+    <Compile Include="Exceptions\BadPresenceException.cs" />
+    <Compile Include="Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="Exceptions\StringOutOfRangeException.cs" />
     <Compile Include="Helper\BackoffDelay.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
