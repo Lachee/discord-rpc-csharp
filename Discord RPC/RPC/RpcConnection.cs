@@ -25,12 +25,7 @@ namespace DiscordRPC.RPC
 		/// The rate of poll to the discord pipe.
 		/// </summary>
 		public static readonly int POLL_RATE = 1000;
-
-		/// <summary>
-		/// Should we only send once we finished receiving one?
-		/// </summary>
-		public static readonly bool LOCK_STEP = false;
-
+		
 		/// <summary>
 		/// The logger used by the RPC connection
 		/// </summary>
@@ -53,17 +48,16 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_states) tmp = _state; return tmp; } }
 		private RpcState _state;
-		private object l_states = new object();
+		private readonly object l_states = new object();
 
 		/// <summary>
 		/// The configuration received by the Ready
 		/// </summary>
 		public Configuration Configuration { get { Configuration tmp = null;  lock (l_config) tmp = _configuration; return tmp; } }
 		private Configuration _configuration = null;
-		private object l_config = new object();
+		private readonly object l_config = new object();
 
 		private volatile bool aborting = false;
-		private bool disposed = false;
 
 		/// <summary>
 		/// Indiccates if the RPC connection is still running in the background
@@ -85,10 +79,10 @@ namespace DiscordRPC.RPC
 
 		private int targetPipe;							//The pipe to taget. Leave as -1 for any available pipe.
 
-		private object l_rtqueue = new object();		//Lock for the send queue
+		private readonly object l_rtqueue = new object();		//Lock for the send queue
 		private Queue<ICommand> _rtqueue;				//The send queue
 
-		private object l_rxqueue = new object();		//Lock for the receive queue
+		private readonly object l_rxqueue = new object();		//Lock for the receive queue
 		private Queue<IMessage> _rxqueue;               //The receive queue
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
@@ -665,7 +659,6 @@ namespace DiscordRPC.RPC
 
 		public void Dispose()
 		{
-			disposed = true;
 			Close();
 		}
 		#endregion

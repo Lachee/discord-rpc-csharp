@@ -55,14 +55,17 @@ public class DiscordEvents
 	public void RegisterEvents(DiscordRpcClient client)
 	{
 		client.OnReady += (s, args) => OnReady.Invoke(args); 
-		client.OnError += (s, args) => OnError.Invoke(args); 
-		client.OnPresenceUpdate += (s, args) => OnPresenceUpdate.Invoke(args); 
-
 		client.OnClose += (s, args) => OnClose.Invoke(args);
-		client.OnJoin += (s, args) => OnJoin.Invoke(args);
-		client.OnSpectate += (s, args) => OnSpectate.Invoke(args);
+		client.OnError += (s, args) => OnError.Invoke(args); 
+
+		client.OnPresenceUpdate += (s, args) => OnPresenceUpdate.Invoke(args); 
 		client.OnSubscribe += (s, args) => OnSubscribe.Invoke(args);
 		client.OnUnsubscribe += (s, args) => OnUnsubscribe.Invoke(args);
+
+		client.OnJoin += (s, args) => OnJoin.Invoke(args);
+		client.OnSpectate += (s, args) => OnSpectate.Invoke(args);
+		client.OnJoinRequested += (s, args) => OnJoinRequest.Invoke(args);
+
 		client.OnConnectionEstablished += (s, args) => OnConnectionEstablished.Invoke(args);
 		client.OnConnectionFailed += (s, args) => OnConnectionFailed.Invoke(args);
 	}

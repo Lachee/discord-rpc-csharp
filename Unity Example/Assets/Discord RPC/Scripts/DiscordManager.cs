@@ -1,6 +1,7 @@
 ﻿using DiscordRPC;
 using DiscordRPC.IO;
 using DiscordRPC.Message;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -9,12 +10,14 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class DiscordManager : MonoBehaviour {
 
+	public const string EXAMPLE_APPLICATION = "424087019149328395";
+
 	public static DiscordManager instance { get { return _instance; } }
 	private static DiscordManager _instance;
 
 	#region Properties and Configurations
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
-	public string applicationID = "424087019149328395";
+	public string applicationID = EXAMPLE_APPLICATION;
 	
 	[Tooltip("The Steam App ID. This is a optional field used to launch your game through steam instead of the executable.")]
 	public string steamID = "";
@@ -22,7 +25,6 @@ public class DiscordManager : MonoBehaviour {
 	[Tooltip("The pipe discord is located on. Useful for testing multiple clients.")]
 	public DiscordPipe targetPipe = DiscordPipe.FirstAvailable;
 
-	public DiscordEvent subscription = DiscordEvent.Join | DiscordEvent.Spectate;
 
 	/// <summary>
 	/// All possible pipes discord can be found on.
@@ -51,17 +53,30 @@ public class DiscordManager : MonoBehaviour {
 	[SerializeField]
 	[Tooltip("The enabled state of the IPC connection")]
 	private bool active = true;
+	
+	/// <summary>
+	/// The current Discord user. This does not get set until the first Ready event.
+	/// </summary>
+	public DiscordUser CurrentUser { get { return _currentUser; } }
+	[Tooltip("The current Discord user. This does not get set until the first Ready event.")]
+	[SerializeField] private DiscordUser _currentUser;
+
+	/// <summary>
+	/// The current event subscription flag.
+	/// </summary>
+	public DiscordEvent CurrentSubscription { get { return _currentSubscription; } }
+	[Tooltip("The current subscription flag")]
+	[SerializeField] private DiscordEvent _currentSubscription = DiscordEvent.Join | DiscordEvent.Spectate;
 
 	/// <summary>
 	/// The current presence displayed on the Discord Client.
 	/// </summary>
 	public DiscordPresence CurrentPresence { get { return _currentPresence; } }
-	
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
 	[SerializeField] private DiscordPresence _currentPresence;
 
 	#endregion
-	
+
 	public DiscordEvents events;
 
 	/// <summary>
@@ -69,13 +84,13 @@ public class DiscordManager : MonoBehaviour {
 	/// </summary>
 	public DiscordRpcClient client { get { return _client; } }
 	private DiscordRpcClient _client;
-
+	
 	#region Unity Events
 #if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN)
 	private void OnEnable()
 	{
 		//Make sure we are allowed to be active.
-		if (!active) return;
+		if (!active || !gameObject.activeSelf) return;
 		if (!Application.isPlaying) return;
 
 		//This has a instance already that isn't us
@@ -103,19 +118,44 @@ public class DiscordManager : MonoBehaviour {
 		_client.Logger = new UnityLogger() { Level = logLevel };
 
 		//Subscribe to some initial events
-		client.OnReady += ClientOnReady;
-		client.OnError += ClientOnError;
-		client.OnPresenceUpdate += ClientOnPresenceUpdate;
+		client.OnReady += (s, args) =>
+		{
+			//We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
+			Debug.Log("[DRP] Connection established and received READY from Discord IPC. Sending our previous Rich Presence and Subscription.");
 
+			//Set the user and cache their avatars
+			_currentUser = args.User;
+			_currentUser.CacheAvatar(this, DiscordAvatarSize.x128);
+
+			//Send the default presence and subscription
+			client.SetPresence((RichPresence)_currentPresence);
+			client.SetSubscription(_currentSubscription.ToDiscordRPC());
+		}; 
+		client.OnPresenceUpdate += (s, args) =>
+		{
+			Debug.Log("[DRP] Our Rich Presence has been updated. Applied changes to local store.");
+			_currentPresence = (DiscordPresence)args.Presence;
+		};
 		client.OnSubscribe += (s, a) =>
 		{
 			Debug.Log("[DRP] New Subscription. Updating local store.");
-			subscription = client.Subscription.ToUnity();
+			_currentSubscription = client.Subscription.ToUnity();
 		};
 		client.OnUnsubscribe += (s, a) =>
 		{
 			Debug.Log("[DRP] Removed Subscription. Updating local store.");
-			subscription = client.Subscription.ToUnity();
+			_currentSubscription = client.Subscription.ToUnity();
+		};
+		client.OnError += (s, args) =>
+		{
+			//Something bad happened while we tried to send a event. We will just log this for clarity.
+			Debug.LogError("[DRP] Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
+		};
+
+		client.OnJoinRequested += (s, args) =>
+		{
+			Debug.Log("[DRP] Join Requested");
+	
 		};
 
 		events.RegisterEvents(client);
@@ -149,7 +189,8 @@ public class DiscordManager : MonoBehaviour {
 #endregion
 
 	/// <summary>
-	/// Sets the Discord Rich Presence
+	/// Sets the Rich Presence of the Discord Client through the pipe connection. This differs from <see cref="SendPresence(DiscordPresence)"/> as the client will validate the presence update and the updated state will be tracked. 
+	/// <para>This will log a error if the client is null or not yet initiated.</para>
 	/// </summary>
 	/// <param name="presence">The Rich Presence to be shown to the client</param>
 	public void SetPresence(DiscordPresence presence)
@@ -167,30 +208,73 @@ public class DiscordManager : MonoBehaviour {
 		}
 
 		//Set the presence
+		_currentPresence = presence;
 		client.SetPresence(presence != null ? presence.ToRichPresence() : null);
 	}
-	
-	public void Subscribe(DiscordRPC.EventType e)
-	{
 
+	/// <summary>
+	/// Sets the subscription flag, unsubscribing and then subscribing to the nessary events. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
+	/// <para>This will log a error if the client is null or not yet initiated.</para>
+	/// </summary>
+	/// <param name="evt">The events to subscribe too</param>
+	public void SetSubscription(DiscordEvent evt)
+	{
+		if (client == null)
+		{
+			Debug.LogError("[DRP] Attempted to send a presence update but no client exists!");
+			return;
+		}
+
+		if (!client.IsInitialized)
+		{
+			Debug.LogError("[DRP] Attempted to send a presence update to a client that is not initialized!");
+			return;
+		}
+
+		this._currentSubscription = evt;
+		client.SetSubscription(evt.ToDiscordRPC());
 	}
 
-	private void ClientOnReady(object sender, ReadyMessage args)
+	/// <summary>
+	/// Resonds to a Join Request.
+	/// </summary>
+	/// <param name="request">The request being responded too</param>
+	/// <param name="acceptRequest">The result of the request. True to accept the request.</param>
+	public void Respond(JoinRequestMessage request, bool acceptRequest)
 	{
-		//We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
-		Debug.Log("[DRP] Connection established and received READY from Discord IPC. Sending our previous Rich Presence and Subscription.");
-		client.SetPresence((RichPresence) _currentPresence);
-		client.SetSubscription(subscription.ToDiscordRPC());
+		if (client == null)
+		{
+			Debug.LogError("[DRP] Attempted to send a presence update but no client exists!");
+			return;
+		}
+
+		if (!client.IsInitialized)
+		{
+			Debug.LogError("[DRP] Attempted to send a presence update to a client that is not initialized!");
+			return;
+		}
+
+
+		client.Respond(request, acceptRequest);
 	}
-	private void ClientOnPresenceUpdate(object sender, PresenceMessage args)
+
+	/// <summary>
+	/// Sets the Rich Presence of the Discord Client through a HTTP connection. This differs from <see cref="SetPresence(DiscordPresence)"/> as it does not attempt to connect to the websocket and is a write-only operation with no state validation.
+	/// </summary>
+	/// <param name="applicationID">The ID of this application</param>
+	/// <param name="presence">The presence to set the client</param>
+	/// <returns></returns>
+	public static IEnumerator SendPresence(string applicationID, DiscordPresence presence)
 	{
-		//Our Rich Presence has updated, better update our reference
-		Debug.Log("[DRP] Our Rich Presence has been updated. Applied changes to local store.");
-		_currentPresence = (DiscordPresence) args.Presence;
-	}
-	private void ClientOnError(object sender, ErrorMessage args)
-	{
-		//Something bad happened while we tried to send a event. We will just log this for clarity.
-		Debug.LogError("[DRP] Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
+		var req = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
+		byte[] data = System.Text.Encoding.UTF8.GetBytes(req.Data);
+		WWW www = new WWW(req.URL, data, req.Headers);
+		yield return www;
+
+		/*
+		RichPresence p;
+		string response = System.Text.Encoding.UTF8.GetString(www.bytes);
+		DiscordRPC.Web.WebRPC.TryParseResponse(response, out p);
+		*/
 	}
 }

@@ -127,8 +127,7 @@ namespace DiscordRPC
 			}
 
 			//Finish of the endpoint
-			string s = size.ToString().Trim('x');
-			return "https://" + CdnEndpoint + endpoint + GetAvatarExtension(format) + "?size=" + s;
+			return string.Format("https://{0}{1}{2}?size={3}", this.CdnEndpoint, endpoint, GetAvatarExtension(format), (int)size);
 		}
 
 		/// <summary>
@@ -139,6 +138,15 @@ namespace DiscordRPC
 		public string GetAvatarExtension(AvatarFormat format)
 		{
 			return "." + format.ToString().ToLowerInvariant();
+		}
+
+		/// <summary>
+		/// Formats the user into username#discriminator
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return Username + "#" + Discriminator;
 		}
 	}
 }

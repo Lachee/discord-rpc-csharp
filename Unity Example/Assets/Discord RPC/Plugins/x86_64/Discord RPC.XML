@@ -55,6 +55,11 @@
             Current subscription to events. Gets set with <see cref="M:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)"/>, <see cref="T:DiscordRPC.Message.UnsubscribeMessage"/> and updated on <see cref="E:DiscordRPC.DiscordRpcClient.OnSubscribe"/>, <see cref="E:DiscordRPC.DiscordRpcClient.OnUnsubscribe"/>.
             </summary>
         </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.CurrentUser">
+            <summary>
+            The current discord user. This is updated with the ready event and will be null until the event is fired from the connection.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.DiscordRpcClient.Configuration">
             <summary>
             The current configuration the connection is using. Only becomes available after a ready event.
@@ -733,6 +738,26 @@
             Called when the ipc is ready to send arguments.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Configuration">
+            <summary>
+            The configuration of the connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.User">
+            <summary>
+            User the connection belongs too
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Version">
+            <summary>
+            The version of the RPC
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.IMessage">
             <summary>
             Messages received from discord.
@@ -746,6 +771,11 @@
         <member name="P:DiscordRPC.Message.IMessage.TimeCreated">
             <summary>
             The time the message was created
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Message.IMessage.#ctor">
+            <summary>
+            Creates a new instance of the message
             </summary>
         </member>
         <member name="T:DiscordRPC.Message.MessageType">
@@ -1325,9 +1355,24 @@
             The rate of poll to the discord pipe.
             </summary>
         </member>
-        <member name="F:DiscordRPC.RPC.RpcConnection.LOCK_STEP">
+        <member name="P:DiscordRPC.RPC.RpcConnection.Logger">
             <summary>
-            Should we only send once we finished receiving one?
+            The logger used by the RPC connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.State">
+            <summary>
+            The current state of the RPC connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.Configuration">
+            <summary>
+            The configuration received by the Ready
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.IsRunning">
+            <summary>
+            Indiccates if the RPC connection is still running in the background
             </summary>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient)">
@@ -1342,7 +1387,7 @@
             <summary>
             Enqueues a command
             </summary>
-            <param name="presence"></param>
+            <param name="command">The command to enqueue</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueMessage(DiscordRPC.Message.IMessage)">
             <summary>
@@ -1460,35 +1505,89 @@
             Possible formats for avatars
             </summary>
         </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.PNG">
+            <summary>
+            Portable Network Graphics format (.png)
+            <para>Losses format that supports transparent avatars. Most recommended for stationary formats with wide support from many libraries.</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.JPEG">
+            <summary>
+            Joint Photographic Experts Group format (.jpeg)
+            <para>The format most cameras use. Lossy and does not support transparent avatars.</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.WebP">
+            <summary>
+            WebP format (.webp)
+            <para>Picture only version of WebM. Pronounced "weeb p".</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.GIF">
+            <summary>
+            Graphics Interchange Format (.gif)
+            <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
+            </summary>
+        </member>
         <member name="T:DiscordRPC.User.AvatarSize">
             <summary>
             Possible square sizes of avatars.
             </summary>
         </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x16">
+            <summary> 16 x 16 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x32">
+            <summary> 32 x 32 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x64">
+            <summary> 64 x 64 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x128">
+            <summary> 128 x 128 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x256">
+            <summary> 256 x 256 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x512">
+            <summary> 512 x 512 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x1024">
+            <summary> 1024 x 1024 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x2048">
+            <summary> 2048 x 2048 pixels.</summary>
+        </member>
         <member name="P:DiscordRPC.User.ID">
             <summary>
-            The snowflake ID of the user requesting to join
+            The snowflake ID of the user. 
             </summary>
         </member>
         <member name="P:DiscordRPC.User.Username">
             <summary>
-            The username of the user trying to join
+            The username of the player.
             </summary>
         </member>
-        <member name="P:DiscordRPC.User.Descriminator">
+        <member name="P:DiscordRPC.User.Discriminator">
             <summary>
-            The descriminator of the user trying to join
+            The discriminator of the user.
             </summary>
         </member>
         <member name="P:DiscordRPC.User.Avatar">
             <summary>
-            The avatar hash of the user trying to join. Too get a URI for the avatar, use the <see cref="!:GetAvatarURL(AvatarFormat)"/>. This can be null if the user has no avatar. The <see cref="!:GetAvatarURL(AvatarFormat)"/> will account for this and return the discord default.
+            The avatar hash of the user. Too get a URI for the avatar, use the <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/> will account for this and return the discord default.
             </summary>
         </member>
         <member name="P:DiscordRPC.User.CdnEndpoint">
             <summary>
-            The endpoint for the CDN
+            The endpoint for the CDN. Normally cdn.discordapp.com
             </summary>
+        </member>
+        <member name="M:DiscordRPC.User.SetConfiguration(DiscordRPC.Configuration)">
+            <summary>
+            Updates the URL paths to the appropriate configuration
+            </summary>
+            <param name="configuration">The configuration received by the OnReady event.</param>
         </member>
         <member name="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)">
             <summary>
@@ -1500,7 +1599,7 @@
         </member>
         <member name="M:DiscordRPC.User.GetAvatarExtension(DiscordRPC.User.AvatarFormat)">
             <summary>
-            Returns the file extension of the specified format
+            Returns the file extension of the specified format.
             </summary>
             <param name="format">The format to get the extention off</param>
             <returns>Returns a period prefixed file extension.</returns>
