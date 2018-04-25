@@ -458,8 +458,8 @@ namespace DiscordRPC.Example
 
 			//We have received a request, dump a bunch of information for the user
 			Console.WriteLine("'{0}' has requested to join our game.", args.User.Username);
-			Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarURL(User.AvatarFormat.PNG, User.AvatarSize.x2048));
-			Console.WriteLine(" - User's Descrim: {0}", args.User.Descriminator);
+			Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarURL(User.AvatarFormat.GIF, User.AvatarSize.x2048));
+			Console.WriteLine(" - User's Descrim: {0}", args.User.Discriminator);
 			Console.WriteLine(" - User's Snowflake: {0}", args.User.ID);
 			Console.WriteLine();
 

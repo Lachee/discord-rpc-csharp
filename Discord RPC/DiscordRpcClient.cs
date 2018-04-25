@@ -78,6 +78,12 @@ namespace DiscordRPC
 		private EventType _subscription;
 
 		/// <summary>
+		/// The current discord user. This is updated with the ready event and will be null until the event is fired from the connection.
+		/// </summary>
+		public User CurrentUser { get { return _user; } }
+		private User _user;
+
+		/// <summary>
 		/// The current configuration the connection is using. Only becomes available after a ready event.
 		/// </summary>
 		public Configuration Configuration { get { return _configuration; } }
@@ -360,7 +366,11 @@ namespace DiscordRPC
 				//Update our configuration
 				case MessageType.Ready:
 					var rm = message as ReadyMessage;
-					if (rm != null) _configuration = rm.Configuration;
+					if (rm != null)
+					{
+						_configuration = rm.Configuration;
+						_user = rm.User;
+					}
 					break;
 
 				//Update the request's CDN for the avatar helpers
@@ -369,7 +379,7 @@ namespace DiscordRPC
 					{
 						//Update the User object within the join request if the current Cdn
 						var jrm = message as JoinRequestMessage;
-						if (jrm != null) jrm.User.CdnEndpoint = Configuration.CdnHost;
+						if (jrm != null) jrm.User.SetConfiguration(Configuration);
 					}
 					break;
 

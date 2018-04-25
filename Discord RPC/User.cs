@@ -16,9 +16,28 @@ namespace DiscordRPC
 		/// </summary>
 		public enum AvatarFormat
 		{
+			/// <summary>
+			/// Portable Network Graphics format (.png)
+			/// <para>Losses format that supports transparent avatars. Most recommended for stationary formats with wide support from many libraries.</para>
+			/// </summary>
 			PNG,
+
+			/// <summary>
+			/// Joint Photographic Experts Group format (.jpeg)
+			/// <para>The format most cameras use. Lossy and does not support transparent avatars.</para>
+			/// </summary>
 			JPEG,
+
+			/// <summary>
+			/// WebP format (.webp)
+			/// <para>Picture only version of WebM. Pronounced "weeb p".</para>
+			/// </summary>
 			WebP,
+
+			/// <summary>
+			/// Graphics Interchange Format (.gif)
+			/// <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
+			/// </summary>
 			GIF
 		}
 
@@ -27,45 +46,62 @@ namespace DiscordRPC
 		/// </summary>
 		public enum AvatarSize
 		{
-			x16,
-			x32,
-			x64,
-			x128,
-			x256,
-			x512,
-			x1024,
-			x2048
+			/// <summary> 16 x 16 pixels.</summary>
+			x16 = 16,
+			/// <summary> 32 x 32 pixels.</summary>
+			x32 = 32,
+			/// <summary> 64 x 64 pixels.</summary>
+			x64 = 64,
+			/// <summary> 128 x 128 pixels.</summary>
+			x128 = 128,
+			/// <summary> 256 x 256 pixels.</summary>
+			x256 = 256,
+			/// <summary> 512 x 512 pixels.</summary>
+			x512 = 512,
+			/// <summary> 1024 x 1024 pixels.</summary>
+			x1024 = 1024,
+			/// <summary> 2048 x 2048 pixels.</summary>
+			x2048 = 2048
 		}
 
 		/// <summary>
-		/// The snowflake ID of the user requesting to join
+		/// The snowflake ID of the user. 
 		/// </summary>
 		[JsonProperty("id")]
 		public ulong ID { get; set; }
 
 		/// <summary>
-		/// The username of the user trying to join
+		/// The username of the player.
 		/// </summary>
 		[JsonProperty("username")]
 		public string Username { get; set; }
 
 		/// <summary>
-		/// The descriminator of the user trying to join
+		/// The discriminator of the user.
 		/// </summary>
 		[JsonProperty("discriminator")]
-		public int Descriminator { get; set; }
+		public int Discriminator { get; set; }
 
 		/// <summary>
-		/// The avatar hash of the user trying to join. Too get a URI for the avatar, use the <see cref="GetAvatarURL(AvatarFormat)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat)"/> will account for this and return the discord default.
+		/// The avatar hash of the user. Too get a URI for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
 		/// </summary>
 		[JsonProperty("avatar")]
 		public string Avatar { get; set; }
 
 		/// <summary>
-		/// The endpoint for the CDN
+		/// The endpoint for the CDN. Normally cdn.discordapp.com
 		/// </summary>
-		internal string CdnEndpoint { get { return _cdn; } set { _cdn = value; } }
+		public string CdnEndpoint { get { return _cdn; } private set { _cdn = value; } }
 		private string _cdn = "cdn.discordapp.com";
+
+		/// <summary>
+		/// Updates the URL paths to the appropriate configuration
+		/// </summary>
+		/// <param name="configuration">The configuration received by the OnReady event.</param>
+		internal void SetConfiguration(Configuration configuration)
+		{
+			this._cdn = configuration.CdnHost;
+		}
 
 		/// <summary>
 		/// Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
@@ -86,7 +122,7 @@ namespace DiscordRPC
 					throw new BadImageFormatException("The user has no avatar and the requested format " + format.ToString() + " is not supported. (Only supports PNG).");
 
 				//Get the endpoint
-				int descrim = Descriminator % 5;
+				int descrim = Discriminator % 5;
 				endpoint = "/embed/avatars/" + descrim;
 			}
 
@@ -96,7 +132,7 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
-		/// Returns the file extension of the specified format
+		/// Returns the file extension of the specified format.
 		/// </summary>
 		/// <param name="format">The format to get the extention off</param>
 		/// <returns>Returns a period prefixed file extension.</returns>
