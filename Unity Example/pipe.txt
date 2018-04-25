@@ -1,2 +1,0 @@
-2
-\\?\pipe\discord-ipc-0A

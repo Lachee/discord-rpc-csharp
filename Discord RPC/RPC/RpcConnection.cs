@@ -31,6 +31,9 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		public static readonly bool LOCK_STEP = false;
 
+		/// <summary>
+		/// The logger used by the RPC connection
+		/// </summary>
 		public ILogger Logger
 		{
 			get { return _logger; }
@@ -44,15 +47,30 @@ namespace DiscordRPC.RPC
 		private ILogger _logger;
 
 		#region States
-		private object l_states = new object();
 
+		/// <summary>
+		/// The current state of the RPC connection
+		/// </summary>
 		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_states) tmp = _state; return tmp; } }
 		private RpcState _state;
+		private object l_states = new object();
+
+		/// <summary>
+		/// The configuration received by the Ready
+		/// </summary>
+		public Configuration Configuration { get { Configuration tmp = null;  lock (l_config) tmp = _configuration; return tmp; } }
+		private Configuration _configuration = null;
+		private object l_config = new object();
 
 		private volatile bool aborting = false;
 		private bool disposed = false;
 
+		/// <summary>
+		/// Indiccates if the RPC connection is still running in the background
+		/// </summary>
 		public bool IsRunning { get { return thread != null; } }
+
+
 		#endregion
 
 		#region Privates
@@ -111,7 +129,7 @@ namespace DiscordRPC.RPC
 		/// <summary>
 		/// Enqueues a command
 		/// </summary>
-		/// <param name="presence"></param>
+		/// <param name="command">The command to enqueue</param>
 		internal void EnqueueCommand(ICommand command)
 		{
 			//Enqueue the set presence argument
@@ -353,8 +371,15 @@ namespace DiscordRPC.RPC
 					Logger.Info("Connection established with the RPC");
 					lock (l_states) _state = RpcState.Connected;
 
-					//Enqueue a ready event
+					//Prepare the object
 					ReadyMessage ready = response.GetObject<ReadyMessage>();
+					lock (l_config)
+					{
+						_configuration = ready.Configuration;
+						ready.User.SetConfiguration(_configuration);
+					}
+
+					//Enqueue the message
 					EnqueueMessage(ready);
 					return;
 				}

@@ -2,6 +2,7 @@
 using System;
 using DiscordRPC.Helper;
 using System.Text;
+using DiscordRPC.Exceptions;
 
 namespace DiscordRPC
 {
@@ -23,7 +24,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!ValidateString(value, out _state, 128, Encoding.UTF8))
-					throw new Exception("State cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("State", 128);
 			}
 		}
 		private string _state;
@@ -39,7 +40,7 @@ namespace DiscordRPC
 			set 
 			{
 				if (!ValidateString(value, out _details, 128, Encoding.UTF8))
-					throw new Exception("Details cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("Details", 128);
 			}
 		}
 		private string _details;
@@ -215,7 +216,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _matchSecret, 128, Encoding.UTF8))
-					throw new Exception("Match secret cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("MatchSecret", 128);
 			}
 		}
 		private string _matchSecret;
@@ -235,7 +236,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _joinSecret, 128, Encoding.UTF8))
-					throw new Exception("Join secret cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("JoinSecret", 128);
 			}
 		}
 		private string _joinSecret;
@@ -254,7 +255,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _spectateSecret, 128, Encoding.UTF8))
-					throw new Exception("Spectate secret cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("SpectateSecret", 128);
 			}
 		}
 		private string _spectateSecret;
@@ -320,7 +321,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _largeimagekey, 32, Encoding.UTF8))
-					throw new Exception("Large image key cannot be greater than 32 bytes!");
+					throw new StringOutOfRangeException("LargeImageKey", 32);
 			}
 		}
 		private string _largeimagekey;
@@ -336,7 +337,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _largeimagetext, 128, Encoding.UTF8))
-					throw new Exception("Large image text cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("LargeImageText", 128);
 			}
 		}
 		private string _largeimagetext;
@@ -353,7 +354,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _smallimagekey, 32, Encoding.UTF8))
-					throw new Exception("Small image key cannot be greater than 32 bytes!");
+					throw new StringOutOfRangeException("SmallImageKey", 32);
 			}
 		}
 		private string _smallimagekey;
@@ -369,7 +370,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _smallimagetext, 128, Encoding.UTF8))
-					throw new Exception("Small image text cannot be greater than 128 bytes!");
+					throw new StringOutOfRangeException("SmallImageText", 128);
 			}
 		}
 		private string _smallimagetext;
