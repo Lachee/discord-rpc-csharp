@@ -251,6 +251,11 @@
             <param name="type">The flag to subscribe to</param>
             <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
         </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.SynchronizeState">
+            <summary>
+            Resends the current presence and subscription. This is used when Ready is called to keep the current state within discord.
+            </summary>
+        </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Initialize">
             <summary>
             Attempts to initalize a connection to the Discord IPC.
@@ -452,6 +457,57 @@
             Pipe Client used to communicate with Discord.
             </summary>
         </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.Logger">
+            <summary>
+            The logger of this pipe
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.IsConnected">
+            <summary>
+            Is the pipe currently connected?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.ConnectedPipe">
+            <summary>
+            The pipe number we are connected too
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.LastError">
+            <summary>
+            The last pipe error read.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Connect(System.Int32)">
+            <summary>
+            Attempts to establish a connection to the pipe
+            </summary>
+            <param name="pipe">The pipe to connect too</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
+            <summary>
+            Attempts to read a frame
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
+            <summary>
+            Attempts to write a frame
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Close">
+            <summary>
+            Closes the pipe
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Dispose">
+            <summary>
+            Closes the pipe
+            </summary>
+        </member>
         <member name="T:DiscordRPC.IO.INamedPipeClient">
             <summary>
             Pipe Client used to communicate with Discord.
@@ -582,15 +638,46 @@
             <param name="uint32"></param>
             <returns></returns>
         </member>
-        <member name="T:DiscordRPC.Logging.FancyConsoleLogger">
-            <summary>
-            Logs the outputs to the console using <see cref="M:System.Console.WriteLine"/> using a fancy method from https://stackoverflow.com/a/850587/5010271
-            </summary>
-        </member>
         <member name="T:DiscordRPC.Logging.ConsoleLogger">
             <summary>
             Logs the outputs to the console using <see cref="M:System.Console.WriteLine"/>
             </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Level">
+            <summary>
+            The level of logging to apply to this logger.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Coloured">
+            <summary>
+            Should the output be coloured?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Colored">
+            <summary>
+            A alias too <see cref="P:DiscordRPC.Logging.ConsoleLogger.Coloured"/>
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Info(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Warning(System.String,System.Object[])">
+            <summary>
+            Warning log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Error(System.String,System.Object[])">
+            <summary>
+            Error log messsages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
         </member>
         <member name="T:DiscordRPC.Logging.ILogger">
             <summary>
@@ -1422,15 +1509,51 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.EstabishFairwell">
+            <summary>
+            Establishes a fairwell with the server by sending a handwave.
+            </summary>
+        </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.AttemptConnection">
             <summary>
             Attempts to connect to the pipe. Returns true on success
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.SetConnectionState(DiscordRPC.RPC.RpcState)">
+            <summary>
+            Sets the current state of the pipe, locking the l_states object for thread saftey.
+            </summary>
+            <param name="state">The state to set it too.</param>
+        </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Close">
             <summary>
             Closes the connection
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.Dispose">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.RPC.RpcState">
+            <summary>
+            State of the RPC connection
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Disconnected">
+            <summary>
+            Disconnected from the discord client
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Connecting">
+            <summary>
+            Connecting to the discord client. The handshake has been sent and we are awaiting the ready event
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Connected">
+            <summary>
+            We are connect to the client and can send and receive messages.
             </summary>
         </member>
         <member name="T:DiscordRPC.Web.WebRPC">
@@ -1603,6 +1726,12 @@
             </summary>
             <param name="format">The format to get the extention off</param>
             <returns>Returns a period prefixed file extension.</returns>
+        </member>
+        <member name="M:DiscordRPC.User.ToString">
+            <summary>
+            Formats the user into username#discriminator
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

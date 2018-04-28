@@ -15,15 +15,35 @@ namespace DiscordRPC.IO
 	{
 		const string PIPE_NAME = @"\\?\pipe\discord-ipc-{0}";
 
+		/// <summary>
+		/// The logger of this pipe
+		/// </summary>
 		public ILogger Logger { get; set; }
-
+		
+		/// <summary>
+		/// Is the pipe currently connected?
+		/// </summary>
 		public bool IsConnected { get { return NativePipe.IsConnected(); } }
 
+		/// <summary>
+		/// The pipe number we are connected too
+		/// </summary>
 		public int ConnectedPipe { get { return _connectedPipe; } }
 		private int _connectedPipe;
 		
 		private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
-		
+
+		/// <summary>
+		/// The last pipe error read.
+		/// </summary>
+		internal NativePipe.PipeReadError LastError { get { return _lasterr; } }
+		private NativePipe.PipeReadError _lasterr = NativePipe.PipeReadError.None;
+
+		/// <summary>
+		/// Attempts to establish a connection to the pipe
+		/// </summary>
+		/// <param name="pipe">The pipe to connect too</param>
+		/// <returns></returns>
 		public bool Connect(int pipe)
 		{
 			if (IsConnected)
@@ -79,6 +99,11 @@ namespace DiscordRPC.IO
 			}
 		}
 		
+		/// <summary>
+		/// Attempts to read a frame
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
 		public bool ReadFrame(out PipeFrame frame)
 		{
 			//Make sure we are connected
@@ -89,10 +114,21 @@ namespace DiscordRPC.IO
 			int bytesRead = NativePipe.ReadFrame(_buffer, _buffer.Length);
 			if (bytesRead <= 0)
 			{
+				//Update the error message
+				_lasterr = NativePipe.PipeReadError.ReadEmptyMessage;
+
 				//A error actively occured. If it is 0 we just read no bytes.
 				if (bytesRead < 0)
-					Logger.Error("Native pipe failed to read. Err: {0}", bytesRead);
+				{
+					//We have a pretty bad error, we will log it for prosperity. 
+					_lasterr = (NativePipe.PipeReadError)bytesRead;
+					Logger.Error("Native pipe failed to read: {0}", _lasterr.ToString());
 
+					//Close this pipe
+					this.Close();
+				}
+
+				//Return a empty frame and return false (read failure).
 				frame = default(PipeFrame);
 				return false;
 			}
@@ -111,6 +147,11 @@ namespace DiscordRPC.IO
 			}
 		}
 
+		/// <summary>
+		/// Attempts to write a frame
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
 		public bool WriteFrame(PipeFrame frame)
 		{
 			if (!IsConnected)
@@ -128,11 +169,17 @@ namespace DiscordRPC.IO
 			}
 		}
 
+		/// <summary>
+		/// Closes the pipe
+		/// </summary>
 		public void Close()
 		{
 			NativePipe.Close();
 		}
 
+		/// <summary>
+		/// Closes the pipe
+		/// </summary>
 		public void Dispose()
 		{
 			//Close the stream (disposing of it too)
@@ -142,6 +189,16 @@ namespace DiscordRPC.IO
 
 	internal static class NativePipe
 	{
+		public enum PipeReadError
+		{
+			None = 0,
+			BufferZeroSized = -1,
+			PipeNotConnected = -2,
+			FailedToRead = -3,
+			ReadEmptyMessage = -4,
+			FailedToPeek = -5,
+		}
+		
 		[DllImport("DiscordRPC.Native.dll", EntryPoint = "isConnected", CallingConvention =  CallingConvention.Cdecl)]
 		public static extern bool IsConnected();
 

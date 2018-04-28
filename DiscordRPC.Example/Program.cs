@@ -21,7 +21,7 @@ namespace DiscordRPC.Example
 		/// <summary>
 		/// The level of logging to use.
 		/// </summary>
-		private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Warning;
+		private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Info;
 
 		/// <summary>
 		/// The current presence to send to discord.
@@ -109,7 +109,7 @@ namespace DiscordRPC.Example
 			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
 				//Set the logger. This way we can see the output of the client.
-				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel };
+				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true };
 
 				//Register to the events we care about. We are registering to everyone just to show off the events
 				client.OnReady += OnReady;

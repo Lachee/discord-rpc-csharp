@@ -370,6 +370,9 @@ namespace DiscordRPC
 					{
 						_configuration = rm.Configuration;
 						_user = rm.User;
+
+						//Resend our presence and subscription
+						SynchronizeState();
 					}
 					break;
 
@@ -520,6 +523,18 @@ namespace DiscordRPC
 
 			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
 				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = false });
+		}
+
+		/// <summary>
+		/// Resends the current presence and subscription. This is used when Ready is called to keep the current state within discord.
+		/// </summary>
+		public void SynchronizeState()
+		{
+			//Set the presence 
+			SetPresence(_presence);
+
+			//Set the subscription
+			SubscribeToTypes(_subscription, false);
 		}
 
 		/// <summary>

@@ -11,8 +11,17 @@ namespace DiscordRPC.Logging
 	public class NullLogger : ILogger
 	{
 		public LogLevel Level { get; set; }
-		public void Info(string message, params object[] args) { }
-		public void Warning(string message, params object[] args) { }
-		public void Error(string message, params object[] args) { }
+		public void Info(string message, params object[] args)
+		{
+			//Null Logger, so no messages are acutally sent
+		}
+		public void Warning(string message, params object[] args)
+		{
+			//Null Logger, so no messages are acutally sent 
+		}
+		public void Error(string message, params object[] args)
+		{
+			//Null Logger, so no messages are acutally sent
+		}
 	}
 }

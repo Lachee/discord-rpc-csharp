@@ -232,7 +232,7 @@ namespace DiscordRPC.RPC
 								{
 									case Opcode.Close:
 										//We have been told by discord to close, so we will consider it an abort
-										Logger.Warning("We have been told to terminate by discord. ", frame.Message);
+										Logger.Warning("We have been told to terminate by discord: '{0}'", frame.Message);
 										EnqueueMessage(new CloseMessage() { Reason = frame.Message });
 										mainloop = false;
 										break;
@@ -323,7 +323,22 @@ namespace DiscordRPC.RPC
 				finally
 				{
 					//Disconnect from the pipe because something bad has happened. An exception has been thrown or the main read loop has terminated.
-					if (namedPipe.IsConnected) namedPipe.Close();
+					if (namedPipe.IsConnected)
+					{
+						if (aborting)
+						{
+							//We are aborting, so we are just going to say goodbye real quick before terminating the pipe
+							Logger.Info("Saying goodbye to the named pipe connection.");
+							EstabishFairwell();
+						}
+
+						//Terminate the pipe
+						Logger.Info("Closing the named pipe.");
+						namedPipe.Close();
+					}
+
+					//Update our state
+					SetConnectionState(RpcState.Disconnected);
 				}
 			}
 
@@ -363,7 +378,7 @@ namespace DiscordRPC.RPC
 				if (response.Command == Command.Dispatch && response.Event.HasValue && response.Event.Value == ServerEvent.Ready)
 				{
 					Logger.Info("Connection established with the RPC");
-					lock (l_states) _state = RpcState.Connected;
+					SetConnectionState(RpcState.Connected);
 
 					//Prepare the object
 					ReadyMessage ready = response.GetObject<ReadyMessage>();
@@ -564,34 +579,54 @@ namespace DiscordRPC.RPC
 		/// Establishes the handshake with the server. 
 		/// </summary>
 		/// <returns></returns>
-		private bool EstablishHandshake()
+		private void EstablishHandshake()
 		{
 			Logger.Info("Attempting to establish a handshake...");
 
 			//We are establishing a lock and not releasing it until we sent the handshake message.
 			// We need to set the key, and it would not be nice if someone did things between us setting the key.
-			lock (l_states)
+		
+			//Check its state
+			if (State != RpcState.Disconnected)
 			{
-				//Check its state
-				if (_state != RpcState.Disconnected)
-				{
-					Logger.Error("State must be disconnected in order to start a handshake!");
-					return false;
-				}
-
-				//Send it off to the server
-				Logger.Info("Sending Handshake...");				
-				if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Handshake, new Handshake() { Version = VERSION, ClientID = applicationID })))
-				{
-					Logger.Error("Failed to write a handshake.");
-					return false;
-				}
-
-				_state = RpcState.Connecting;
+				Logger.Error("State must be disconnected in order to start a handshake!");
+				return;
 			}
-			
-			//Success
-			return true;
+
+			//Send it off to the server
+			Logger.Info("Sending Handshake...");				
+			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Handshake, new Handshake() { Version = VERSION, ClientID = applicationID })))
+			{
+				Logger.Error("Failed to write a handshake.");
+				return;
+			}
+
+			//This has to be done outside the lock
+			SetConnectionState(RpcState.Connecting);
+		}
+
+		/// <summary>
+		/// Establishes a fairwell with the server by sending a handwave.
+		/// </summary>
+		private void EstabishFairwell()
+		{
+			Logger.Info("Attempting to wave goodbye...");
+    
+			//Check its state
+			if (State == RpcState.Disconnected)
+			{
+				Logger.Error("State must NOT be disconnected in order to send a handwave!");
+				return;
+			}
+
+			//Send the handwave
+			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
+			{
+				Logger.Error("failed to write a handwave.");
+				return;
+			}
+
+			//Probably should update the state to disconnected, but for all we know, discord may refuse this close.
 		}
 		
 
@@ -633,6 +668,19 @@ namespace DiscordRPC.RPC
 		}
 		
 		/// <summary>
+		/// Sets the current state of the pipe, locking the l_states object for thread saftey.
+		/// </summary>
+		/// <param name="state">The state to set it too.</param>
+		private void SetConnectionState(RpcState state)
+		{
+			Logger.Info("Setting the connection state to {0}", state.ToString().ToSnakeCase().ToUpperInvariant());
+			lock (l_states)
+			{
+				_state = state;
+			}
+		}
+
+		/// <summary>
 		/// Closes the connection
 		/// </summary>
 		public void Close()
@@ -657,6 +705,10 @@ namespace DiscordRPC.RPC
 			queueUpdatedEvent.Set();
 		}
 
+
+		/// <summary>
+		/// Closes the connection
+		/// </summary>
 		public void Dispose()
 		{
 			Close();
@@ -665,10 +717,24 @@ namespace DiscordRPC.RPC
 
 	}
 
+	/// <summary>
+	/// State of the RPC connection
+	/// </summary>
 	public enum RpcState
 	{
+		/// <summary>
+		/// Disconnected from the discord client
+		/// </summary>
 		Disconnected,
+		
+		/// <summary>
+		/// Connecting to the discord client. The handshake has been sent and we are awaiting the ready event
+		/// </summary>
 		Connecting,
+
+		/// <summary>
+		/// We are connect to the client and can send and receive messages.
+		/// </summary>
 		Connected
 	}
 }

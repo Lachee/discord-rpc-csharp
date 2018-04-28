@@ -118,6 +118,7 @@ public class DiscordManager : MonoBehaviour {
 		_client.Logger = new UnityLogger() { Level = logLevel };
 
 		//Subscribe to some initial events
+		#region Event Registration
 		client.OnReady += (s, args) =>
 		{
 			//We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
@@ -126,10 +127,6 @@ public class DiscordManager : MonoBehaviour {
 			//Set the user and cache their avatars
 			_currentUser = args.User;
 			_currentUser.CacheAvatar(this, DiscordAvatarSize.x128);
-
-			//Send the default presence and subscription
-			client.SetPresence((RichPresence)_currentPresence);
-			client.SetSubscription(_currentSubscription.ToDiscordRPC());
 		}; 
 		client.OnPresenceUpdate += (s, args) =>
 		{
@@ -159,6 +156,11 @@ public class DiscordManager : MonoBehaviour {
 		};
 
 		events.RegisterEvents(client);
+		#endregion
+
+		//Set initial presence and sub. (This will enqueue it)
+		client.SetPresence((RichPresence)_currentPresence);
+		client.SetSubscription(_currentSubscription.ToDiscordRPC());
 
 		//Start the client
 		_client.Initialize();

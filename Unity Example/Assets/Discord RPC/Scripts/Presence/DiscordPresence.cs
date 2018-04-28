@@ -70,37 +70,52 @@ public class DiscordPresence
 	/// <param name="presence">The rich presence, often received by discord.</param>
 	public DiscordPresence(DiscordRPC.RichPresence presence)
 	{
-		this.state = presence.State;
-		this.details = presence.Details;
-
-		this.party = presence.HasParty() ? new DiscordParty(presence.Party) : new DiscordParty();
-		this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : new DiscordSecrets();
-		
-		if (presence.HasAssets())
+		if (presence != null)
 		{
-			this.smallAsset = new DiscordAsset()
-			{
-				image = presence.Assets.SmallImageKey,
-				tooltip = presence.Assets.SmallImageText
-			};
+			this.state = presence.State;
+			this.details = presence.Details;
 
-			this.largeAsset = new DiscordAsset()
+			this.party = presence.HasParty() ? new DiscordParty(presence.Party) : new DiscordParty();
+			this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : new DiscordSecrets();
+
+			if (presence.HasAssets())
 			{
-				image = presence.Assets.LargeImageKey,
-				tooltip = presence.Assets.LargeImageText
-			};
+				this.smallAsset = new DiscordAsset()
+				{
+					image = presence.Assets.SmallImageKey,
+					tooltip = presence.Assets.SmallImageText
+				};
+
+				this.largeAsset = new DiscordAsset()
+				{
+					image = presence.Assets.LargeImageKey,
+					tooltip = presence.Assets.LargeImageText
+				};
+			}
+			else
+			{
+				this.smallAsset = new DiscordAsset();
+				this.largeAsset = new DiscordAsset();
+			}
+
+			if (presence.HasTimestamps())
+			{
+				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : new DiscordTimestamp(0);
+				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : new DiscordTimestamp(0);
+			}
 		}
 		else
 		{
+			this.state = "";
+			this.details = "";
+			this.party = new DiscordParty();
+			this.secrets = new DiscordSecrets();
 			this.smallAsset = new DiscordAsset();
 			this.largeAsset = new DiscordAsset();
+			this.startTime = new DiscordTimestamp(0);
+			this.endTime = new DiscordTimestamp(0);
 		}
 
-		if (presence.HasTimestamps())
-		{
-			this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : new DiscordTimestamp(0);
-			this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : new DiscordTimestamp(0);
-		}
 	}
 
 	/// <summary>
