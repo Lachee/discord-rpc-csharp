@@ -545,6 +545,21 @@ namespace DiscordRPC
 				int size = Math.Max(1, Size);
 				return new int[] { size, Math.Max(size, Max) };
 			}
+
+			set
+			{
+				if (value.Length != 2)
+				{
+					Size = 0;
+					Max = 0;
+				}
+				else
+				{
+					Size = value[0];
+					Max = value[1];
+				}
+			}
+
 		}
 	}
 

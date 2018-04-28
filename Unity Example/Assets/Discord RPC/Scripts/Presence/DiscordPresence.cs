@@ -83,13 +83,16 @@ public class DiscordPresence
 				this.smallAsset = new DiscordAsset()
 				{
 					image = presence.Assets.SmallImageKey,
-					tooltip = presence.Assets.SmallImageText
+					tooltip = presence.Assets.SmallImageText,
+					snowflake = presence.Assets.SmallImageID.GetValueOrDefault(0)
 				};
+
 
 				this.largeAsset = new DiscordAsset()
 				{
 					image = presence.Assets.LargeImageKey,
-					tooltip = presence.Assets.LargeImageText
+					tooltip = presence.Assets.LargeImageText,
+					snowflake = presence.Assets.LargeImageID.GetValueOrDefault(0)
 				};
 			}
 			else
@@ -140,7 +143,7 @@ public class DiscordPresence
 
 				LargeImageKey = largeAsset.image,
 				LargeImageText = largeAsset.tooltip
-			};
+			};			
 		}
 
 		if (startTime > 0 || endTime > 0)
