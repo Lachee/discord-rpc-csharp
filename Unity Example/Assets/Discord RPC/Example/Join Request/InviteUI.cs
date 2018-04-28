@@ -10,8 +10,20 @@ namespace DiscordRPC.Examples.JoinRequest
 		public DiscordUser user;
 		public RawImage avatar;
 		public Text username;
+		public Image ignore;
+
+		public float ignoreTime = 15f;
+		private float _ignoreStartTime = 0;
+		private bool _incrementIgnoreTimer = false;
 
 		public DiscordRPC.Message.JoinRequestMessage message;
+
+		private void Start()
+		{
+
+			_ignoreStartTime = Time.time;
+			_incrementIgnoreTimer = true;
+		}
 
 		public void SetMessage(DiscordRPC.Message.JoinRequestMessage message)
 		{
@@ -29,6 +41,28 @@ namespace DiscordRPC.Examples.JoinRequest
 				Debug.Log("Downloaded Texture for Invite");
 				avatar.texture = texture;
 			});
+
+			//Set our ignore start time
+			_ignoreStartTime = Time.time;
+			_incrementIgnoreTimer = true;
+		}
+
+		private void Update()
+		{
+			if (!_incrementIgnoreTimer || !ignore) return;
+
+			//Calc the fill
+			float ignoreFill = (Time.time - _ignoreStartTime) / ignoreTime;
+
+			//Set the fill
+			ignore.fillAmount = Mathf.Clamp(ignoreFill, 0f, 1f);
+
+			//If fill is greater than 110%, end
+			if (ignoreFill > 1.1f)
+			{
+				OnResponsePressed(false);
+				_incrementIgnoreTimer = false;
+			}
 		}
 
 		public void OnResponsePressed(bool approved)

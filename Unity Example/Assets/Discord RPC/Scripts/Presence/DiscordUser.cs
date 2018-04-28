@@ -9,7 +9,7 @@ public class DiscordUser
 	/// The current location of the avatar caches
 	/// </summary>
 	public static string CacheDirectory { get { return _cacheDirectory; } set { _cacheDirectory = value; } }
-	private static string _cacheDirectory ="/Discord RPC/Cache/";
+	private static string _cacheDirectory ="Discord RPC/Cache/";
 
 	/// <summary>
 	/// The format to download and cache avatars in. By default, PNG is used.
@@ -139,7 +139,9 @@ public class DiscordUser
 
 			//Generate the path name
 			string filename = string.Format("{0}-{1}{2}.{3}", discriminator, avatarHash, size.ToString(), DiscordUser.AvatarFormat.ToString().ToLowerInvariant());
-			string path = Path.Combine(Application.dataPath, CacheDirectory, filename);
+
+			string cache = Path.Combine(Application.dataPath, CacheDirectory);
+			string path = Path.Combine(cache, filename);
 
 			//The holder texture is null, so we should create new one
 			Texture2D avatarTexture = new Texture2D((int)size, (int)size, TextureFormat.RGBA32, false);
@@ -162,8 +164,8 @@ public class DiscordUser
 					www.LoadImageIntoTexture(avatarTexture);
 
 					//Create the directory if it doesnt already exist
-					if (!Directory.Exists(_cacheDirectory))
-						Directory.CreateDirectory(_cacheDirectory);
+					if (!Directory.Exists(cache))
+						Directory.CreateDirectory(cache);
 
 					//Encode the image
 					byte[] bytes;
@@ -207,7 +209,8 @@ public class DiscordUser
 		int discrim = discriminator % 5;
 
 		string filename = string.Format("default-{0}{1}.png", discrim, size.ToString());
-		string path = Path.Combine(Application.dataPath, CacheDirectory, filename);
+		string cache = Path.Combine(Application.dataPath, CacheDirectory);
+		string path = Path.Combine(cache, filename);
 
 		//The holder texture is null, so we should create new one
 		Texture2D avatarTexture = new Texture2D((int)size, (int)size, TextureFormat.RGBA32, false);
@@ -231,8 +234,8 @@ public class DiscordUser
 				www.LoadImageIntoTexture(avatarTexture);
 
 				//Create the directory if it doesnt already exist
-				if (!Directory.Exists(_cacheDirectory))
-					Directory.CreateDirectory(_cacheDirectory);
+				if (!Directory.Exists(cache))
+					Directory.CreateDirectory(cache);
 
 				byte[] bytes = avatarTexture.EncodeToPNG();
 				File.WriteAllBytes(path, bytes);

@@ -11,8 +11,9 @@ static class DiscordAvatar
 	/// <summary>
 	/// The current location of the avatar caches
 	/// </summary>
+	[System.Obsolete]
 	public static string Cache { get { return _cache; } set { _cache = value; } }
-	private static string _cache = Application.dataPath + "/Discord RPC/Cache/";
+	private static string _cache = Application.dataPath + "Discord RPC/Cache/";
 
 	/// <summary>
 	/// The quality of JPEG encodings.
