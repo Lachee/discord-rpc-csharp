@@ -128,6 +128,15 @@ namespace DiscordRPC.Example
 				client.OnSpectate += OnSpectate;
 				client.OnJoinRequested += OnJoinRequested;
 
+				//Set some new presence to tell Discord we are in a game.
+				// If the connection is not yet available, this will be queued until a Ready event is called, 
+				// then it will be sent. All messages are queued until Discord is ready to receive them.
+				client.SetPresence(presence);
+
+				//Subscribe to the join / spectate feature.
+				//These require the RegisterURI to be true.
+				//client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+				
 				//Initialize the connection. This must be called ONLY once.
 				//It must be called before any updates are sent or received from the discord client.
 				client.Initialize();
@@ -183,7 +192,7 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(1);
+				Thread.Sleep(10);
 			}
 
 			Console.WriteLine("Press any key to terminate");
@@ -355,14 +364,6 @@ namespace DiscordRPC.Example
 			//It can be a good idea to send a inital presence update on this event too, just to setup the inital game state.
 			Console.WriteLine("On Ready. RPC Version: {0}", args.Version);
 
-			//Set some new presence to tell Discord we are in a game.
-			// If the connection is not yet available, this will be queued until a Ready event is called, 
-			// then it will be sent. All messages are queued until Discord is ready to receive them.
-			client.SetPresence(presence);
-
-			//Subscribe to the join / spectate feature.
-			//These require the RegisterURI to be true.
-			client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 		}
 		private static void OnClose(object sender, CloseMessage args)
 		{

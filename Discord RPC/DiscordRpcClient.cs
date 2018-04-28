@@ -360,7 +360,22 @@ namespace DiscordRPC
 				//We got a update, so we will update our current presence
 				case MessageType.PresenceUpdate:
 					var pm = message as PresenceMessage;
-					if (pm != null) _presence = pm.Presence;
+					if (pm != null)
+					{
+						//We need to merge these presences together
+						if (_presence == null)
+						{
+							_presence = pm.Presence;
+						}
+						else
+						{
+							_presence.Merge(pm.Presence);
+						}
+
+						//Update the message
+						pm.Presence = _presence;
+					}
+
 					break;
 
 				//Update our configuration

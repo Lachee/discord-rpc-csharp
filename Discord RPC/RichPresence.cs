@@ -123,6 +123,40 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
+		/// Merges the passed presence with this one, taking into account the image key to image id annoyance.
+		/// </summary>
+		/// <param name="presence"></param>
+		internal void Merge(RichPresence presence)
+		{
+			this._state = presence._state;
+			this._details = presence._details;
+			this.Party = presence.Party;
+			this.Timestamps = presence.Timestamps;
+			this.Secrets = presence.Secrets;
+
+			//If they have assets, we should merge them
+			if (presence.HasAssets())
+			{
+				//Make sure we actually have assets too
+				if (!this.HasAssets())
+				{
+					//We dont, so we will just use theirs
+					this.Assets = presence.Assets;
+				}
+				else
+				{
+					//We do, so we better merge them!
+					this.Assets.Merge(presence.Assets);
+				}
+			}
+			else
+			{
+				//They dont have assets, so we will just set ours to null
+				this.Assets = null;
+			}	
+		}
+
+		/// <summary>
 		/// Does the Rich Presence have valid timestamps?
 		/// </summary>
 		/// <returns></returns>
@@ -307,6 +341,9 @@ namespace DiscordRPC
 		#endregion
 	}
 
+	/// <summary>
+	/// Information about the pictures used in the Rich Presence.
+	/// </summary>
 	[Serializable]
 	public class Assets
 	{
@@ -322,6 +359,9 @@ namespace DiscordRPC
 			{
 				if (!RichPresence.ValidateString(value, out _largeimagekey, 32, Encoding.UTF8))
 					throw new StringOutOfRangeException("LargeImageKey", 32);
+
+				//Reset the large image ID
+				_largeimageID = null;
 			}
 		}
 		private string _largeimagekey;
@@ -355,6 +395,9 @@ namespace DiscordRPC
 			{
 				if (!RichPresence.ValidateString(value, out _smallimagekey, 32, Encoding.UTF8))
 					throw new StringOutOfRangeException("SmallImageKey", 32);
+
+				//Reset the small image id
+				_smallimageID = null;
 			}
 		}
 		private string _smallimagekey;
@@ -374,6 +417,55 @@ namespace DiscordRPC
 			}
 		}
 		private string _smallimagetext;
+
+		/// <summary>
+		/// The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="LargeImageKey"/> is changed.
+		/// </summary>
+		[JsonIgnore]
+		public ulong? LargeImageID { get { return _largeimageID; } }
+		private ulong? _largeimageID;
+
+		/// <summary>
+		/// The ID of the small image. This is only set after Update Presence and will automatically become null when <see cref="SmallImageKey"/> is changed.
+		/// </summary>
+		[JsonIgnore]
+		public ulong? SmallImageID { get { return _smallimageID; } }
+		private ulong? _smallimageID;
+
+		/// <summary>
+		/// Merges this asset with the other, taking into account for ID's instead of keys.
+		/// </summary>
+		/// <param name="other"></param>
+		internal void Merge(Assets other)
+		{
+			//Copy over the names
+			_smallimagetext = other._smallimagetext;
+			_largeimagetext = other._largeimagetext;
+
+			//Convert large ID
+			ulong largeID;
+			if (ulong.TryParse(other._largeimagekey, out largeID))
+			{
+				_largeimageID = largeID;
+			}
+			else
+			{
+				_largeimagekey = other._largeimagekey;
+				_largeimageID = null;
+			}
+
+			//Convert the small ID
+			ulong smallID;
+			if (ulong.TryParse(other._smallimagekey, out smallID))
+			{
+				_smallimageID = smallID;
+			}
+			else
+			{
+				_smallimagekey = other._smallimagekey;
+				_smallimageID = null;
+			}
+		}
 	}
 
 	/// <summary>
