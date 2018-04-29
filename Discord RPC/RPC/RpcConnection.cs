@@ -25,7 +25,10 @@ namespace DiscordRPC.RPC
 		/// The rate of poll to the discord pipe.
 		/// </summary>
 		public static readonly int POLL_RATE = 1000;
-		
+
+		private static readonly bool CLEAR_ON_FAIRWELL = false;
+		private static readonly bool SHUTDOWN_ONLY = true;
+
 		/// <summary>
 		/// The logger used by the RPC connection
 		/// </summary>
@@ -58,6 +61,7 @@ namespace DiscordRPC.RPC
 		private readonly object l_config = new object();
 
 		private volatile bool aborting = false;
+		private volatile bool shutdown = false;
 
 		/// <summary>
 		/// Indiccates if the RPC connection is still running in the background
@@ -187,7 +191,7 @@ namespace DiscordRPC.RPC
 
 			//Forever trying to connect unless the abort signal is sent
 			//Keep Alive Loop
-			while (!aborting)
+			while (!aborting && !shutdown)
 			{
 				try
 				{
@@ -215,6 +219,8 @@ namespace DiscordRPC.RPC
 						Logger.Info("Connection Established. Starting reading loop...");
 
 						//Continously iterate, waiting for the frame
+						//We want to only stop reading if the inside tells us (mainloop), if we are aborting (abort) or the pipe disconnects
+						// We dont want to exit on a shutdown, as we still have to send and process the closes.
 						PipeFrame frame;
 						bool mainloop = true;
 						while (mainloop && !aborting && namedPipe.IsConnected)
@@ -230,40 +236,46 @@ namespace DiscordRPC.RPC
 								//Do some basic processing on the frame
 								switch (frame.Opcode)
 								{
-									case Opcode.Close:
-										//We have been told by discord to close, so we will consider it an abort
+									//We have been told by discord to close, so we will consider it an abort
+									case Opcode.Close:															
 										Logger.Warning("We have been told to terminate by discord: '{0}'", frame.Message);
 										EnqueueMessage(new CloseMessage() { Reason = frame.Message });
 										mainloop = false;
 										break;
 
-
-									case Opcode.Ping:
-										//We have pinged, so we will flip it and respond back with pong
+									//We have pinged, so we will flip it and respond back with pong
+									case Opcode.Ping:					
 										Logger.Info("PING");
 										frame.Opcode = Opcode.Pong;
 										namedPipe.WriteFrame(frame);
 										break;
 
-									case Opcode.Pong:
-										//We have ponged? I have no idea if Discord actually sends ping/pongs.
+									//We have ponged? I have no idea if Discord actually sends ping/pongs.
+									case Opcode.Pong:															
 										Logger.Info("PONG");
 										break;
 
-									case Opcode.Frame:
+									//A frame has been sent, we should deal with that
+									case Opcode.Frame:					
+										if (shutdown)
+										{
+											//We are shutting down, so skip it
+											Logger.Warning("Skipping frame because we are shutting down.");
+											break;
+										}
 
-										//We have a frame, so we are going to process the payload and add it to the stack
 										if (frame.Data == null)
 										{
+											//We have invalid data, thats not good.
 											Logger.Error("We received no data from the frame so we cannot get the event payload!");
 											break;
 										}
-										else
-										{
-											EventPayload response = frame.GetObject<EventPayload>();
-											ProcessFrame(response);
-											break;
-										}
+
+										//We have a frame, so we are going to process the payload and add it to the stack
+										EventPayload response = frame.GetObject<EventPayload>();
+										ProcessFrame(response);
+										break;
+										
 
 									default:
 									case Opcode.Handshake:
@@ -288,10 +300,9 @@ namespace DiscordRPC.RPC
 
 							#endregion
 						}
-
 						#endregion
 
-						Logger.Warning("Left main read loop for some reason. IsAbort: {0}", aborting);
+						Logger.Info("Left main read loop for some reason. Aborting: {0}, Shutting Down: {1}", aborting, shutdown);
 					}
 					else
 					{
@@ -300,7 +311,7 @@ namespace DiscordRPC.RPC
 					}
 
 					//If we are not aborting, we have to wait a bit before trying to connect again
-					if (!aborting)
+					if (!aborting && !shutdown)
 					{
 						//We have disconnected for some reason, either a failed pipe or a bad reading,
 						// so we are going to wait a bit before doing it again
@@ -325,13 +336,6 @@ namespace DiscordRPC.RPC
 					//Disconnect from the pipe because something bad has happened. An exception has been thrown or the main read loop has terminated.
 					if (namedPipe.IsConnected)
 					{
-						if (aborting)
-						{
-							//We are aborting, so we are just going to say goodbye real quick before terminating the pipe
-							Logger.Info("Saying goodbye to the named pipe connection.");
-							EstabishFairwell();
-						}
-
 						//Terminate the pipe
 						Logger.Info("Closing the named pipe.");
 						namedPipe.Close();
@@ -525,12 +529,7 @@ namespace DiscordRPC.RPC
 				{
 					//We have been sent a close frame. We better just send a handwave
 					//Send it off to the server
-					Logger.Info("Sending Handwave...");
-					if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
-					{
-						Logger.Error("Failed to write a handwave.");
-						return;
-					}
+					EstabishFairwell();
 
 					//Queue the item
 					Logger.Info("Handwave sent, ending queue processing.");
@@ -619,14 +618,21 @@ namespace DiscordRPC.RPC
 				return;
 			}
 
+			if (CLEAR_ON_FAIRWELL)
+			{
+				//Send a null payload
+				var cmd = new PresenceCommand() { PID = processID, Presence = null };
+				var payload = cmd.PreparePayload(GetNextNonce());
+				var frame = new PipeFrame(Opcode.Frame, payload);
+				namedPipe.WriteFrame(frame);
+			}
+
 			//Send the handwave
 			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
 			{
 				Logger.Error("failed to write a handwave.");
 				return;
 			}
-
-			//Probably should update the state to disconnected, but for all we know, discord may refuse this close.
 		}
 		
 
@@ -681,6 +687,22 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
+		/// Sends a close command to the server and waits for its signal.
+		/// </summary>
+		public void Shutdown()
+		{
+			//Enable the flag
+			Logger.Info("Initiated shutdown procedure");
+			shutdown = true;
+
+			//Enqueue the command
+			EnqueueCommand(new CloseCommand());
+
+			//Trigger the event
+			queueUpdatedEvent.Set();
+		}
+
+		/// <summary>
 		/// Closes the connection
 		/// </summary>
 		public void Close()
@@ -698,10 +720,15 @@ namespace DiscordRPC.RPC
 			}
 
 			//Set the abort state
+			if (SHUTDOWN_ONLY)
+			{
+				Shutdown();
+				return;
+			}
+
+			//Terminate
 			Logger.Info("Updating Abort State...");
 			aborting = true;
-			
-			//Terminate
 			queueUpdatedEvent.Set();
 		}
 

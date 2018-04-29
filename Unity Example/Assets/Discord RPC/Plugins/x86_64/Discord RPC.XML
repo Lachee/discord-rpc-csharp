@@ -1553,6 +1553,11 @@
             </summary>
             <param name="state">The state to set it too.</param>
         </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.Shutdown">
+            <summary>
+            Sends a close command to the server and waits for its signal.
+            </summary>
+        </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Close">
             <summary>
             Closes the connection

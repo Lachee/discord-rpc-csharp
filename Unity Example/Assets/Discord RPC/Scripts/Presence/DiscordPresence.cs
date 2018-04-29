@@ -103,8 +103,8 @@ public class DiscordPresence
 
 			if (presence.HasTimestamps())
 			{
-				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : new DiscordTimestamp(0);
-				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : new DiscordTimestamp(0);
+				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : DiscordTimestamp.Invalid;
+				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : DiscordTimestamp.Invalid;
 			}
 		}
 		else
@@ -115,8 +115,8 @@ public class DiscordPresence
 			this.secrets = new DiscordSecrets();
 			this.smallAsset = new DiscordAsset();
 			this.largeAsset = new DiscordAsset();
-			this.startTime = new DiscordTimestamp(0);
-			this.endTime = new DiscordTimestamp(0);
+			this.startTime = DiscordTimestamp.Invalid;
+			this.endTime = DiscordTimestamp.Invalid;
 		}
 
 	}
@@ -146,11 +146,11 @@ public class DiscordPresence
 			};			
 		}
 
-		if (startTime > 0 || endTime > 0)
+		if (startTime.IsValid() || endTime.IsValid())
 		{
 			presence.Timestamps = new DiscordRPC.Timestamps();
-			if (startTime > 0) presence.Timestamps.Start = startTime.GetDateTime();
-			if (endTime > 0) presence.Timestamps.End = endTime.GetDateTime();
+			if (startTime.IsValid()) presence.Timestamps.Start = startTime.GetDateTime();
+			if (endTime.IsValid()) presence.Timestamps.End = endTime.GetDateTime();
 		}
 
 		return presence;

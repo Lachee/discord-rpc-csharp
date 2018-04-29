@@ -8,7 +8,13 @@ using UnityEngine;
 public class DiscordTimestamp
 {
 	/// <summary>
-	/// The stored timestamp
+	/// Representation of a invalid timestamp (unix epoch of 0 seconds).
+	/// </summary>
+	public static readonly DiscordTimestamp Invalid = new DiscordTimestamp(0L);
+
+	/// <summary>
+	/// The linux epoch of the timestamp. Use conversion methods such as <see cref="GetTime"/> to convert the time into unity relative times.
+	/// <para>This is used for implicit casting into a <see cref="long"/></para>
 	/// </summary>
 	[Tooltip("Unix Epoch Timestamp")]
 	public long timestamp = 0;
@@ -34,7 +40,7 @@ public class DiscordTimestamp
 	}
 
 	/// <summary>
-	/// Creates a new stamp that is relative to the Unity Startup time. See <see cref="UnityEngine.Time.realtimeSinceStartup"/>
+	/// Creates a new stamp that is relative to the Unity Startup time, where "now" is equal too <see cref="UnityEngine.Time.realtimeSinceStartup"/>.
 	/// </summary>
 	/// <param name="time">The time relative to <see cref="UnityEngine.Time.realtimeSinceStartup"/></param>
 	public DiscordTimestamp(float time)
@@ -42,13 +48,14 @@ public class DiscordTimestamp
 		//Calculate the difference
 		float diff = time - UnityEngine.Time.realtimeSinceStartup;
 
-		//Miliseconds
-		TimeSpan timespan = TimeSpan.FromSeconds(diff);
-		timestamp = ToUnixTime(DateTime.UtcNow + timespan);
+		//Convert to timespan and then to unix epoch
+		TimeSpan timespan = TimeSpan.FromSeconds(diff);		//Convert the difference to a TimeSpan for easier maths
+		timestamp = ToUnixTime(DateTime.UtcNow + timespan);	//Add the difference to the current time
 	}
 
 	/// <summary>
-	/// Converts the timestamp into a datetime
+	/// Converts the timestamp into a <see cref="DateTime"/>
+	/// <para>This is used for implicit conversion into a <see cref="DateTime"/></para>
 	/// </summary>
 	/// <returns></returns>
 	public DateTime GetDateTime()
@@ -57,7 +64,8 @@ public class DiscordTimestamp
 	}
 
 	/// <summary>
-	/// Converss the timestamp into a <see cref="UnityEngine.Time.realtimeSinceStartup"/> relative time.
+	/// Converts the timestamp into the number of seconds since the startup of the game (Unity relative), where "now" is equal too <see cref="UnityEngine.Time.realtimeSinceStartup"/>.
+	/// <para>This is used for implicit convertion into a <see cref="float"/>.</para>
 	/// </summary>
 	/// <returns></returns>
 	public float GetTime()
@@ -67,15 +75,91 @@ public class DiscordTimestamp
 		return UnityEngine.Time.realtimeSinceStartup + (float)timespan.TotalSeconds;
 	}
 
+	/// <summary>
+	/// Checks if the timestamp is valid (above 0 seconds relative to unix epoch).
+	/// </summary>
+	/// <returns>Returns true if the timestamp is a non-zero epoch.</returns>
+	public bool IsValid() { return this.timestamp > 0; }
+
+	/// <summary>
+	/// Adds seconds onto the timestamp.
+	/// </summary>
+	/// <param name="seconds">The number of seconds to add</param>
+	/// <returns>Returns the same timestamp object.</returns>
+	public DiscordTimestamp AddSeconds(int seconds)
+	{
+		timestamp += seconds;
+		return this;
+	}
+
+	/// <summary>
+	/// Adds minutes onto the timestamp.
+	/// </summary>
+	/// <param name="minutes">The number of minutes to add</param>
+	/// <returns>Returns the same timestamp object.</returns>
+	public DiscordTimestamp AddMinutes(int minutes)
+	{
+		return AddSeconds(minutes * 60);
+	}
+
+	/// <summary>
+	/// Adds minutes onto the timestamp, rounding off to the nearest second.
+	/// </summary>
+	/// <param name="minutes">The fraction of minutes to add</param>
+	/// <returns>Returns the same timestamp object.</returns>
+	public DiscordTimestamp AddMinutes(float minutes)
+	{
+		//Convert the time into a integer form
+		int mins = Mathf.FloorToInt(minutes);
+		int secs = Mathf.RoundToInt((minutes - mins) * 60);
+
+		return AddMinutes(mins).AddSeconds(secs);
+	}
+
+	/// <summary>
+	/// Adds hours onto the timestamp.
+	/// </summary>
+	/// <param name="hours">The number of hours to add</param>
+	/// <returns>Returns the same timestamp object</returns>
+	public DiscordTimestamp AddHours(int hours)
+	{
+		return AddMinutes(hours * 60);
+	}
+
+	/// <summary>
+	/// Adds hours onto the timestamp, rounding off to the nearest second.
+	/// </summary>
+	/// <param name="hours">The fraction of hours to add</param>
+	/// <returns>Returns the same timestamp object.</returns>
+	public DiscordTimestamp AddHours(float hours)
+	{
+		int h = Mathf.FloorToInt(hours);
+		float m = (hours - h) * 60f;
+		return AddHours(h).AddMinutes(m);
+	}
+	
+
 	#region Value Conversions
+	/// <summary>
+	/// Casts the timestamp into a unix epoch count of seconds.
+	/// </summary>
+	/// <param name="stamp">The timestamp</param>
 	public static implicit operator long(DiscordTimestamp stamp)
 	{
 		return stamp.timestamp;
 	}
+	/// <summary>
+	/// Converts the timestamp into a unity epoch (start of the game time as origin) count of seconds, where <see cref="UnityEngine.Time.realtimeSinceStartup"/> is now.
+	/// </summary>
+	/// <param name="stamp">The timestamp</param>
 	public static implicit operator float(DiscordTimestamp stamp)
 	{
 		return stamp.GetTime();
 	}
+	/// <summary>
+	/// Converts the timestamp into a <see cref="DateTime"/> representation.
+	/// </summary>
+	/// <param name="stamp">The timestamp</param>
 	public static implicit operator DateTime(DiscordTimestamp stamp)
 	{
 		return stamp.GetDateTime();
@@ -83,21 +167,32 @@ public class DiscordTimestamp
 	#endregion
 
 	#region Stamp Conversions
+	/// <summary>
+	/// Casts a unixh epoch count of seconds into a timestamp
+	/// </summary>
+	/// <param name="time">The time</param>
 	public static implicit operator DiscordTimestamp(long time)
 	{
 		return new DiscordTimestamp(time);
 	}
+	/// <summary>
+	/// Converts the <see cref="DateTime"/> into a timestamp
+	/// </summary>
+	/// <param name="time">The time</param>
 	public static implicit operator DiscordTimestamp(DateTime time)
 	{
 		return new DiscordTimestamp(time);
 	}
+	/// <summary>
+	/// Converts a unity epoch (start of game time as origin) count of seconds (where <see cref="UnityEngine.Time.realtimeSinceStartup"/> is now) into a timestamp.
+	/// </summary>
+	/// <param name="time">The time</param>
 	public static implicit operator DiscordTimestamp(float time)
 	{
 		return new DiscordTimestamp(time);
 	}
 	#endregion
-
-
+	
 	private static DateTime FromUnixTime(long unixTime)
 	{
 		var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

@@ -287,6 +287,10 @@ namespace DiscordRPC.Example
 			//Parse the command
 			switch (command.ToLowerInvariant())
 			{
+				case "close":
+					client.Dispose();
+					break;
+
 				#region State & Details
 				case "state":
 					presence.State = body;

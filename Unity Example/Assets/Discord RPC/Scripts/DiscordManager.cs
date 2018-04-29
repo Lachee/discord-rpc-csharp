@@ -157,14 +157,14 @@ public class DiscordManager : MonoBehaviour {
 
 		events.RegisterEvents(client);
 		#endregion
-
-		//Set initial presence and sub. (This will enqueue it)
-		client.SetPresence((RichPresence)_currentPresence);
-		client.SetSubscription(_currentSubscription.ToDiscordRPC());
-
+		
 		//Start the client
 		_client.Initialize();
 		Debug.Log("[DRP] Discord Rich Presence intialized and connecting...");
+
+		//Set initial presence and sub. (This will enqueue it)
+		SetSubscription(_currentSubscription);
+		SetPresence(_currentPresence);
 
 	}
 	
@@ -205,8 +205,13 @@ public class DiscordManager : MonoBehaviour {
 
 		if (!client.IsInitialized)
 		{
-			Debug.LogError("[DRP] Attempted to send a presence update to a client that is not initialized!");
-			return;
+			Debug.LogWarning("[DRP] Attempted to send a presence update to a client that is not initialized! The messages will be enqueued instead!");
+		}
+
+		//Just do some validation
+		if (!presence.secrets.IsEmpty() && _currentSubscription == DiscordEvent.None)
+		{
+			Debug.LogWarning("[DRP] Sending a secret, however we are not actually subscribed to any events. This will cause the messages to be ignored!");
 		}
 
 		//Set the presence
