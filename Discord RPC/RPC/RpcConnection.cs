@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using DiscordRPC.Logging;
 
 namespace DiscordRPC.RPC
-{	
+{
 	/// <summary>
 	/// Communicates between the client and discord through RPC
 	/// </summary>
@@ -26,8 +26,15 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		public static readonly int POLL_RATE = 1000;
 
-		private static readonly bool CLEAR_ON_FAIRWELL = false;
-		private static readonly bool SHUTDOWN_ONLY = true;
+		/// <summary>
+		/// Should we send a null presence on the fairwells?
+		/// </summary>
+		private static readonly bool CLEAR_ON_SHUTDOWN = true;
+
+		/// <summary>
+		/// Should we work in a lock step manner? This option is semi-obsolete and may not work as expected.
+		/// </summary>
+		private static readonly bool LOCK_STEP = false;
 
 		/// <summary>
 		/// The logger used by the RPC connection
@@ -56,7 +63,7 @@ namespace DiscordRPC.RPC
 		/// <summary>
 		/// The configuration received by the Ready
 		/// </summary>
-		public Configuration Configuration { get { Configuration tmp = null;  lock (l_config) tmp = _configuration; return tmp; } }
+		public Configuration Configuration { get { Configuration tmp = null; lock (l_config) tmp = _configuration; return tmp; } }
 		private Configuration _configuration = null;
 		private readonly object l_config = new object();
 
@@ -64,10 +71,15 @@ namespace DiscordRPC.RPC
 		private volatile bool shutdown = false;
 
 		/// <summary>
-		/// Indiccates if the RPC connection is still running in the background
+		/// Indicates if the RPC connection is still running in the background
 		/// </summary>
 		public bool IsRunning { get { return thread != null; } }
 
+		/// <summary>
+		/// Forces the <see cref="Close"/> to call <see cref="Shutdown"/> instead, safely saying goodbye to Discord. 
+		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
+		/// </summary>
+		public bool ShutdownOnly { get; set; }
 
 		#endregion
 
@@ -99,12 +111,14 @@ namespace DiscordRPC.RPC
 		/// <param name="applicationID">The ID of the Discord App</param>
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
+		/// <param name="client">The pipe client we shall use.</param>
 		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
 			this.targetPipe = targetPipe;
 			this.namedPipe = client;
+			this.ShutdownOnly = true;
 
 			//Assign a default logger
 			Logger = new ConsoleLogger();
@@ -130,6 +144,9 @@ namespace DiscordRPC.RPC
 		/// <param name="command">The command to enqueue</param>
 		internal void EnqueueCommand(ICommand command)
 		{
+			//We cannot add anything else if we are aborting or shutting down.
+			if (aborting || shutdown) return;
+
 			//Enqueue the set presence argument
 			lock (_rtqueue)
 				_rtqueue.Enqueue(command);
@@ -220,7 +237,7 @@ namespace DiscordRPC.RPC
 
 						//Continously iterate, waiting for the frame
 						//We want to only stop reading if the inside tells us (mainloop), if we are aborting (abort) or the pipe disconnects
-						// We dont want to exit on a shutdown, as we still have to send and process the closes.
+						// We dont want to exit on a shutdown, as we still have information
 						PipeFrame frame;
 						bool mainloop = true;
 						while (mainloop && !aborting && namedPipe.IsConnected)
@@ -237,9 +254,11 @@ namespace DiscordRPC.RPC
 								switch (frame.Opcode)
 								{
 									//We have been told by discord to close, so we will consider it an abort
-									case Opcode.Close:															
-										Logger.Warning("We have been told to terminate by discord: '{0}'", frame.Message);
-										EnqueueMessage(new CloseMessage() { Reason = frame.Message });
+									case Opcode.Close:
+
+										ClosePayload close = frame.GetObject<ClosePayload>();
+										Logger.Info("We have been told to terminate by discord: ({0}) {1}", close.Code, close.Reason);
+										EnqueueMessage(new CloseMessage() { Code = close.Code, Reason = close.Reason });
 										mainloop = false;
 										break;
 
@@ -288,12 +307,11 @@ namespace DiscordRPC.RPC
 								#endregion
 							}
 
-							//Process the entire command queue we have left
-							ProcessCommandQueue();
+							if (!aborting && namedPipe.IsConnected)
+							{ 
+								//Process the entire command queue we have left
+								ProcessCommandQueue();
 
-							//We should wait some time, unless we have been aborted.
-							if (!aborting)
-							{
 								//Wait for some time, or until a command has been queued up
 								queueUpdatedEvent.WaitOne(POLL_RATE);
 							}
@@ -317,7 +335,7 @@ namespace DiscordRPC.RPC
 						// so we are going to wait a bit before doing it again
 						long sleep = delay.NextDelay();
 
-						Logger.Info("Waiting {0}ms", sleep);
+						Logger.Info("Waiting {0}ms before attempting to connect again", sleep);
 						Thread.Sleep(delay.NextDelay());
 					}
 				}
@@ -519,9 +537,14 @@ namespace DiscordRPC.RPC
 					//Peek at the item
 					item = _rtqueue.Peek();
 				}
+
+				//BReak out of the loop as soon as we send this item
+				if (shutdown || (!aborting && LOCK_STEP))
+					needsWriting = false;
 				
 				//Prepare the payload
 				IPayload payload = item.PreparePayload(GetNextNonce());
+				Logger.Info("Attempting to send payload: " + payload.Command);
 
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
@@ -529,7 +552,7 @@ namespace DiscordRPC.RPC
 				{
 					//We have been sent a close frame. We better just send a handwave
 					//Send it off to the server
-					EstabishFairwell();
+					SendHandwave();
 
 					//Queue the item
 					Logger.Info("Handwave sent, ending queue processing.");
@@ -607,7 +630,7 @@ namespace DiscordRPC.RPC
 		/// <summary>
 		/// Establishes a fairwell with the server by sending a handwave.
 		/// </summary>
-		private void EstabishFairwell()
+		private void SendHandwave()
 		{
 			Logger.Info("Attempting to wave goodbye...");
     
@@ -617,16 +640,7 @@ namespace DiscordRPC.RPC
 				Logger.Error("State must NOT be disconnected in order to send a handwave!");
 				return;
 			}
-
-			if (CLEAR_ON_FAIRWELL)
-			{
-				//Send a null payload
-				var cmd = new PresenceCommand() { PID = processID, Presence = null };
-				var payload = cmd.PreparePayload(GetNextNonce());
-				var frame = new PipeFrame(Opcode.Frame, payload);
-				namedPipe.WriteFrame(frame);
-			}
-
+			
 			//Send the handwave
 			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
 			{
@@ -687,7 +701,8 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
-		/// Sends a close command to the server and waits for its signal.
+		/// Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye. 
+		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
 		/// </summary>
 		public void Shutdown()
 		{
@@ -695,15 +710,20 @@ namespace DiscordRPC.RPC
 			Logger.Info("Initiated shutdown procedure");
 			shutdown = true;
 
-			//Enqueue the command
-			EnqueueCommand(new CloseCommand());
+			//Clear the commands and enqueue the close
+			lock(l_rtqueue)
+			{
+				_rtqueue.Clear();
+				if (CLEAR_ON_SHUTDOWN) _rtqueue.Enqueue(new PresenceCommand() { PID = processID, Presence = null });
+				_rtqueue.Enqueue(new CloseCommand());
+			}
 
 			//Trigger the event
 			queueUpdatedEvent.Set();
 		}
 
 		/// <summary>
-		/// Closes the connection
+		/// Closes the connection and disposes of resources.
 		/// </summary>
 		public void Close()
 		{
@@ -720,7 +740,7 @@ namespace DiscordRPC.RPC
 			}
 
 			//Set the abort state
-			if (SHUTDOWN_ONLY)
+			if (ShutdownOnly)
 			{
 				Shutdown();
 				return;
@@ -734,10 +754,11 @@ namespace DiscordRPC.RPC
 
 
 		/// <summary>
-		/// Closes the connection
+		/// Closes the connection and disposes resources. Identical to <see cref="Close"/> but ignores the "ShutdownOnly" value.
 		/// </summary>
 		public void Dispose()
 		{
+			ShutdownOnly = false;
 			Close();
 		}
 		#endregion

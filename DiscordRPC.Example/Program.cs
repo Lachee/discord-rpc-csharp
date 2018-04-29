@@ -11,7 +11,7 @@ namespace DiscordRPC.Example
 		/// <summary>
 		/// The pipe Discord is located on. If set to -1, the client will scan for the first available pipe.
 		/// </summary>
-		private static int DiscordPipe = 1;
+		private static int DiscordPipe = -1;
 
 		/// <summary>
 		/// ID of the client

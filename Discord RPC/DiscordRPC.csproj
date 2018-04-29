@@ -153,6 +153,7 @@
     <Compile Include="RPC\Commands\PresenceCommand.cs" />
     <Compile Include="RPC\Commands\SubscribeCommand.cs" />
     <Compile Include="Message\ReadyMessage.cs" />
+    <Compile Include="RPC\Payload\ClosePayload.cs" />
     <Compile Include="RPC\Payload\Command.cs" />
     <Compile Include="Message\IMessage.cs" />
     <Compile Include="Message\MessageType.cs" />

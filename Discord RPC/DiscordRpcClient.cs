@@ -95,6 +95,13 @@ namespace DiscordRPC
 		public bool IsInitialized { get { return _initialized; } }
 		private bool _initialized;
 
+		/// <summary>
+		/// Forces the connection to shutdown gracefully instead of just aborting the connection.
+		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
+		/// </summary>
+		public bool ShutdownOnly { get { return _shutdownOnly; } set { _shutdownOnly = value; if (connection != null) connection.ShutdownOnly = value; } }
+		private bool _shutdownOnly = true;
+
 		#region Events
 
 		/// <summary>
@@ -236,7 +243,7 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client);
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client) { ShutdownOnly = _shutdownOnly };
 			connection.Logger = this._logger;
 		}
 
@@ -351,8 +358,8 @@ namespace DiscordRPC
 
 		private void HandleMessage(IMessage message)
 		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
+			//if (Disposed)
+			//	throw new ObjectDisposedException("Discord IPC Client");
 
 			if (message == null) return;
 			switch (message.Type)

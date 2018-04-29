@@ -70,6 +70,12 @@
             Represents if the client has been <see cref="M:DiscordRPC.DiscordRpcClient.Initialize"/>
             </summary>
         </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.ShutdownOnly">
+            <summary>
+            Forces the connection to shutdown gracefully instead of just aborting the connection.
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
+            </summary>
+        </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnReady">
             <summary>
             Called when the discord client is ready to send and receive messages.
@@ -785,6 +791,21 @@
             Called when the IPC has closed.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Type">
+            <summary>
+            The type of message
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Reason">
+            <summary>
+            The reason for the close
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Code">
+            <summary>
+            The closure code
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.JoinMessage">
             <summary>
             Called when the Discord Client wishes for this process to join a game. D -> C.
@@ -1255,6 +1276,16 @@
             The rich presence to be set. Can be null.
             </summary>
         </member>
+        <member name="P:DiscordRPC.RPC.Payload.ClosePayload.Code">
+            <summary>
+            The close code the discord gave us
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Payload.ClosePayload.Reason">
+            <summary>
+            The close reason discord gave us
+            </summary>
+        </member>
         <member name="T:DiscordRPC.RPC.Payload.Command">
             <summary>
             The possible commands that can be sent and received by the server.
@@ -1469,6 +1500,16 @@
             The rate of poll to the discord pipe.
             </summary>
         </member>
+        <member name="F:DiscordRPC.RPC.RpcConnection.CLEAR_ON_SHUTDOWN">
+            <summary>
+            Should we send a null presence on the fairwells?
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcConnection.LOCK_STEP">
+            <summary>
+            Should we work in a lock step manner? This option is semi-obsolete and may not work as expected.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.RPC.RpcConnection.Logger">
             <summary>
             The logger used by the RPC connection
@@ -1486,7 +1527,13 @@
         </member>
         <member name="P:DiscordRPC.RPC.RpcConnection.IsRunning">
             <summary>
-            Indiccates if the RPC connection is still running in the background
+            Indicates if the RPC connection is still running in the background
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.ShutdownOnly">
+            <summary>
+            Forces the <see cref="M:DiscordRPC.RPC.RpcConnection.Close"/> to call <see cref="M:DiscordRPC.RPC.RpcConnection.Shutdown"/> instead, safely saying goodbye to Discord. 
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient)">
@@ -1496,6 +1543,7 @@
             <param name="applicationID">The ID of the Discord App</param>
             <param name="processID">The ID of the currently running process</param>
             <param name="targetPipe">The target pipe to connect too</param>
+            <param name="client">The pipe client we shall use.</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueCommand(DiscordRPC.RPC.Commands.ICommand)">
             <summary>
@@ -1536,7 +1584,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.RPC.RpcConnection.EstabishFairwell">
+        <member name="M:DiscordRPC.RPC.RpcConnection.SendHandwave">
             <summary>
             Establishes a fairwell with the server by sending a handwave.
             </summary>
@@ -1555,17 +1603,18 @@
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Shutdown">
             <summary>
-            Sends a close command to the server and waits for its signal.
+            Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye. 
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Close">
             <summary>
-            Closes the connection
+            Closes the connection and disposes of resources.
             </summary>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Dispose">
             <summary>
-            Closes the connection
+            Closes the connection and disposes resources. Identical to <see cref="M:DiscordRPC.RPC.RpcConnection.Close"/> but ignores the "ShutdownOnly" value.
             </summary>
         </member>
         <member name="T:DiscordRPC.RPC.RpcState">
