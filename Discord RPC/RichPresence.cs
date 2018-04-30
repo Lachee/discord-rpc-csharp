@@ -490,23 +490,56 @@ namespace DiscordRPC
 		/// The <see cref="Start"/> of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
 		/// </summary>
 		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
-		private long? epochStart { get { return Start.HasValue ? GetEpoch(Start.Value) : (long?)null; } }
+		private long? epochStart
+		{
+			get
+			{
+				return Start.HasValue ? ToUnixTime(Start.Value) : (long?)null;
+			}
+
+			set
+			{
+				Start = value.HasValue ? FromUnixTime(value.Value) : (DateTime?)null;
+			}
+		}
 
 		/// <summary>
 		/// The <see cref="End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="Start"/> is set, this value will override the "elapsed" state to "remaining".
 		/// </summary>
 		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
-		private long? epochEnd { get { return End.HasValue ? GetEpoch(End.Value) : (long?)null; } }
+		private long? epochEnd
+		{
+			get
+			{
+				return End.HasValue ? ToUnixTime(Start.Value) : (long?)null;
+			}
+
+			set
+			{
+				End = value.HasValue ? FromUnixTime(value.Value) : (DateTime?)null;
+			}
+		}
+		
+		/// <summary>
+		/// Converts a Unix Epoch time into a <see cref="DateTime"/>.
+		/// </summary>
+		/// <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
+		/// <returns></returns>
+		public static DateTime FromUnixTime(long unixTime)
+		{
+			var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			return epoch.AddMilliseconds(unixTime);
+		}
 
 		/// <summary>
-		/// Gets the Unix Epoch time equivilent of the DateTime.
+		/// Converts a <see cref="DateTime"/> into a Unix Epoch time.
 		/// </summary>
-		/// <param name="time">The time to convert to Unix Epoch</param>
-		/// <returns>The Unix Epoch of the passed DateTime.</returns>
-		public static long GetEpoch(DateTime time)
+		/// <param name="date">The datetime to convert</param>
+		/// <returns></returns>
+		public static long ToUnixTime(DateTime date)
 		{
-			DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-			return (long)(time - epoch).TotalSeconds;
+			var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			return Convert.ToInt64((date - epoch).TotalSeconds);
 		}
 	}
 

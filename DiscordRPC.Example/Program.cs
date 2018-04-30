@@ -140,6 +140,11 @@ namespace DiscordRPC.Example
 					SpectateSecret = "spectate_myuniquegameid"
 				};
 
+				presence.Timestamps = new Timestamps()
+				{
+					Start = DateTime.UtcNow
+				};
+
 				//We also need to generate a initial party. This is because Join requires the party to be created too.
 				// If no party is set, the join feature will not work and may cause errors within the discord client itself.
 				presence.Party = new Party()

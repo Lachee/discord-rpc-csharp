@@ -1203,12 +1203,19 @@
             The <see cref="P:DiscordRPC.Timestamps.End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="P:DiscordRPC.Timestamps.Start"/> is set, this value will override the "elapsed" state to "remaining".
             </summary>
         </member>
-        <member name="M:DiscordRPC.Timestamps.GetEpoch(System.DateTime)">
+        <member name="M:DiscordRPC.Timestamps.FromUnixTime(System.Int64)">
             <summary>
-            Gets the Unix Epoch time equivilent of the DateTime.
+            Converts a Unix Epoch time into a <see cref="T:System.DateTime"/>.
             </summary>
-            <param name="time">The time to convert to Unix Epoch</param>
-            <returns>The Unix Epoch of the passed DateTime.</returns>
+            <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.Timestamps.ToUnixTime(System.DateTime)">
+            <summary>
+            Converts a <see cref="T:System.DateTime"/> into a Unix Epoch time.
+            </summary>
+            <param name="date">The datetime to convert</param>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.Party">
             <summary>

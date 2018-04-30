@@ -192,13 +192,24 @@ public class DiscordTimestamp
 		return new DiscordTimestamp(time);
 	}
 	#endregion
-	
-	private static DateTime FromUnixTime(long unixTime)
+
+	/// <summary>
+	/// Converts a Unix Epoch time into a <see cref="DateTime"/>.
+	/// </summary>
+	/// <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
+	/// <returns></returns>
+	public static DateTime FromUnixTime(long unixTime)
 	{
 		var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		return epoch.AddSeconds(unixTime);
+		return epoch.AddMilliseconds(unixTime);
 	}
-	private static long ToUnixTime(DateTime date)
+
+	/// <summary>
+	/// Converts a <see cref="DateTime"/> into a Unix Epoch time.
+	/// </summary>
+	/// <param name="date">The datetime to convert</param>
+	/// <returns></returns>
+	public static long ToUnixTime(DateTime date)
 	{
 		var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		return Convert.ToInt64((date - epoch).TotalSeconds);
