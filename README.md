@@ -19,6 +19,15 @@ This library supports all features of the Rich Presence that the official C++ li
 
 _*Managed Pipes is unavailable for the Unity3D game engine due to technical limitations and a substitute native wrapper library is required._
 
+## Doesn't RPC require whitelisting?
+```
+RPC: CLOSED,
+RPC - Rich Presence: OPEN,
+RPC - Rich Presence - Join / Specate: CLOSED
+```
+* __All features within RPC need to be given permission and whitelisted (excluding Rich Presence)__
+* __Rich Presence Join / Spectate feature is whitelist only (but private testing allowed)__
+
 # Installation
 Within the Visual Studio solution, there are 3 projects. The main library is located in `Discord RPC`, the example project is `DiscordRPC.Example` and a native pipe wrapper is `DiscordRPC.Native`. 
 
