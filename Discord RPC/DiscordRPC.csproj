@@ -172,9 +172,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\"
-copy /Y "$(TargetPath)" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetFileName)"
-copy /Y "$(TargetDir)$(TargetName).XML" "$(SolutionDir)\..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetName).XML"
+    <PostBuildEvent>mkdir "$(ProjectDir)\..\Unity Example\Assets\Discord RPC\Plugins\"
+copy /Y "$(TargetPath)" "$(ProjectDir)\..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetFileName)"
+copy /Y "$(TargetDir)$(TargetName).XML" "$(ProjectDir)\..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetName).XML"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
