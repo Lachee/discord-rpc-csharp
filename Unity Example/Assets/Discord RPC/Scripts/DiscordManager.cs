@@ -273,9 +273,10 @@ public class DiscordManager : MonoBehaviour {
 	/// <returns></returns>
 	public static IEnumerator SendPresence(string applicationID, DiscordPresence presence)
 	{
-		var req = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
-		byte[] data = System.Text.Encoding.UTF8.GetBytes(req.Data);
-		WWW www = new WWW(req.URL, data, req.Headers);
+		var requestPayload = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
+		byte[] encodedRequest = System.Text.Encoding.UTF8.GetBytes(requestPayload.Data);
+
+		WWW www = new WWW(requestPayload.URL, encodedRequest, requestPayload.Headers);
 		yield return www;
 
 		/*
