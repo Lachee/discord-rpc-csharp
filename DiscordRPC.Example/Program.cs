@@ -161,7 +161,7 @@ namespace DiscordRPC.Example
 
 				//Subscribe to the join / spectate feature.
 				//These require the RegisterURI to be true.
-				//client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 				
 				//Initialize the connection. This must be called ONLY once.
 				//It must be called before any updates are sent or received from the discord client.
