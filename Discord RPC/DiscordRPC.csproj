@@ -131,7 +131,6 @@
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
     <Compile Include="IO\PipeFrame.cs" />
-    <Compile Include="Logging\FancyConsoleLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
@@ -154,6 +153,7 @@
     <Compile Include="RPC\Commands\PresenceCommand.cs" />
     <Compile Include="RPC\Commands\SubscribeCommand.cs" />
     <Compile Include="Message\ReadyMessage.cs" />
+    <Compile Include="RPC\Payload\ClosePayload.cs" />
     <Compile Include="RPC\Payload\Command.cs" />
     <Compile Include="Message\IMessage.cs" />
     <Compile Include="Message\MessageType.cs" />

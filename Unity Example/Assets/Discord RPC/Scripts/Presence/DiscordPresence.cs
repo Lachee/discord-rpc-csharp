@@ -70,37 +70,55 @@ public class DiscordPresence
 	/// <param name="presence">The rich presence, often received by discord.</param>
 	public DiscordPresence(DiscordRPC.RichPresence presence)
 	{
-		this.state = presence.State;
-		this.details = presence.Details;
-
-		this.party = presence.HasParty() ? new DiscordParty(presence.Party) : new DiscordParty();
-		this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : new DiscordSecrets();
-		
-		if (presence.HasAssets())
+		if (presence != null)
 		{
-			this.smallAsset = new DiscordAsset()
-			{
-				image = presence.Assets.SmallImageKey,
-				tooltip = presence.Assets.SmallImageText
-			};
+			this.state = presence.State;
+			this.details = presence.Details;
 
-			this.largeAsset = new DiscordAsset()
+			this.party = presence.HasParty() ? new DiscordParty(presence.Party) : new DiscordParty();
+			this.secrets = presence.HasSecrets() ? new DiscordSecrets(presence.Secrets) : new DiscordSecrets();
+
+			if (presence.HasAssets())
 			{
-				image = presence.Assets.LargeImageKey,
-				tooltip = presence.Assets.LargeImageText
-			};
+				this.smallAsset = new DiscordAsset()
+				{
+					image = presence.Assets.SmallImageKey,
+					tooltip = presence.Assets.SmallImageText,
+					snowflake = presence.Assets.SmallImageID.GetValueOrDefault(0)
+				};
+
+
+				this.largeAsset = new DiscordAsset()
+				{
+					image = presence.Assets.LargeImageKey,
+					tooltip = presence.Assets.LargeImageText,
+					snowflake = presence.Assets.LargeImageID.GetValueOrDefault(0)
+				};
+			}
+			else
+			{
+				this.smallAsset = new DiscordAsset();
+				this.largeAsset = new DiscordAsset();
+			}
+
+			if (presence.HasTimestamps())
+			{
+				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : DiscordTimestamp.Invalid;
+				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : DiscordTimestamp.Invalid;
+			}
 		}
 		else
 		{
+			this.state = "";
+			this.details = "";
+			this.party = new DiscordParty();
+			this.secrets = new DiscordSecrets();
 			this.smallAsset = new DiscordAsset();
 			this.largeAsset = new DiscordAsset();
+			this.startTime = DiscordTimestamp.Invalid;
+			this.endTime = DiscordTimestamp.Invalid;
 		}
 
-		if (presence.HasTimestamps())
-		{
-			this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp(presence.Timestamps.Start.Value) : new DiscordTimestamp(0);
-			this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp(presence.Timestamps.End.Value) : new DiscordTimestamp(0);
-		}
 	}
 
 	/// <summary>
@@ -125,14 +143,14 @@ public class DiscordPresence
 
 				LargeImageKey = largeAsset.image,
 				LargeImageText = largeAsset.tooltip
-			};
+			};			
 		}
 
-		if (startTime > 0 || endTime > 0)
+		if (startTime.IsValid() || endTime.IsValid())
 		{
 			presence.Timestamps = new DiscordRPC.Timestamps();
-			if (startTime > 0) presence.Timestamps.Start = startTime.GetDateTime();
-			if (endTime > 0) presence.Timestamps.End = endTime.GetDateTime();
+			if (startTime.IsValid()) presence.Timestamps.Start = startTime.GetDateTime();
+			if (endTime.IsValid()) presence.Timestamps.End = endTime.GetDateTime();
 		}
 
 		return presence;

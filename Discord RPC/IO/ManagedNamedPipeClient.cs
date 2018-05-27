@@ -214,7 +214,7 @@ namespace DiscordRPC.IO
 			//flush and dispose			
 			try
 			{
-				_stream.Flush();
+				try { _stream.Flush(); }  catch (Exception) { }
 				_stream.Dispose();
 			}
 			catch (ObjectDisposedException)

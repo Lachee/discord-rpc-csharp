@@ -154,12 +154,17 @@ using (var web = new System.Net.WebClient())
 
 **Unity3D 2017+ Example**
 ```csharp
-IEnumeratable SetPresence()
+IEnumerator SendPresence(string applicationID, DiscordPresence presence)
 {
-	var request = DiscordRPC.Web.WebRPC.PrepareRequest(presence, ClientID);
-	RichPresence response = null;
+	//Prepare the request JSON and then encoded it into a byte array.
+	var requestPayload = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
+	byte[] encodedRequest = System.Text.Encoding.UTF8.GetBytes(requestPayload.Data);
 
-	//TODO: Example coming soon.
+	//Send a new HTTP POST request with the approprate data and headers from the payload
+	WWW www = new WWW(requestPayload.URL, encodedRequest, requestPayload.Headers);
+	
+	//Yield for its completion
+	yield return www;
 }
 ```
 

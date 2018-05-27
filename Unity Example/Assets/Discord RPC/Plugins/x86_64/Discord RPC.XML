@@ -55,6 +55,11 @@
             Current subscription to events. Gets set with <see cref="M:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)"/>, <see cref="T:DiscordRPC.Message.UnsubscribeMessage"/> and updated on <see cref="E:DiscordRPC.DiscordRpcClient.OnSubscribe"/>, <see cref="E:DiscordRPC.DiscordRpcClient.OnUnsubscribe"/>.
             </summary>
         </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.CurrentUser">
+            <summary>
+            The current discord user. This is updated with the ready event and will be null until the event is fired from the connection.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.DiscordRpcClient.Configuration">
             <summary>
             The current configuration the connection is using. Only becomes available after a ready event.
@@ -63,6 +68,12 @@
         <member name="P:DiscordRPC.DiscordRpcClient.IsInitialized">
             <summary>
             Represents if the client has been <see cref="M:DiscordRPC.DiscordRpcClient.Initialize"/>
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.ShutdownOnly">
+            <summary>
+            Forces the connection to shutdown gracefully instead of just aborting the connection.
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnReady">
@@ -245,6 +256,11 @@
             </summary>
             <param name="type">The flag to subscribe to</param>
             <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.SynchronizeState">
+            <summary>
+            Resends the current presence and subscription. This is used when Ready is called to keep the current state within discord.
+            </summary>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Initialize">
             <summary>
@@ -447,6 +463,57 @@
             Pipe Client used to communicate with Discord.
             </summary>
         </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.Logger">
+            <summary>
+            The logger of this pipe
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.IsConnected">
+            <summary>
+            Is the pipe currently connected?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.ConnectedPipe">
+            <summary>
+            The pipe number we are connected too
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.LastError">
+            <summary>
+            The last pipe error read.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Connect(System.Int32)">
+            <summary>
+            Attempts to establish a connection to the pipe
+            </summary>
+            <param name="pipe">The pipe to connect too</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
+            <summary>
+            Attempts to read a frame
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
+            <summary>
+            Attempts to write a frame
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Close">
+            <summary>
+            Closes the pipe
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Dispose">
+            <summary>
+            Closes the pipe
+            </summary>
+        </member>
         <member name="T:DiscordRPC.IO.INamedPipeClient">
             <summary>
             Pipe Client used to communicate with Discord.
@@ -577,15 +644,46 @@
             <param name="uint32"></param>
             <returns></returns>
         </member>
-        <member name="T:DiscordRPC.Logging.FancyConsoleLogger">
-            <summary>
-            Logs the outputs to the console using <see cref="M:System.Console.WriteLine"/> using a fancy method from https://stackoverflow.com/a/850587/5010271
-            </summary>
-        </member>
         <member name="T:DiscordRPC.Logging.ConsoleLogger">
             <summary>
             Logs the outputs to the console using <see cref="M:System.Console.WriteLine"/>
             </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Level">
+            <summary>
+            The level of logging to apply to this logger.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Coloured">
+            <summary>
+            Should the output be coloured?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.ConsoleLogger.Colored">
+            <summary>
+            A alias too <see cref="P:DiscordRPC.Logging.ConsoleLogger.Coloured"/>
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Info(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Warning(System.String,System.Object[])">
+            <summary>
+            Warning log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Error(System.String,System.Object[])">
+            <summary>
+            Error log messsages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
         </member>
         <member name="T:DiscordRPC.Logging.ILogger">
             <summary>
@@ -693,6 +791,21 @@
             Called when the IPC has closed.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Type">
+            <summary>
+            The type of message
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Reason">
+            <summary>
+            The reason for the close
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.CloseMessage.Code">
+            <summary>
+            The closure code
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.JoinMessage">
             <summary>
             Called when the Discord Client wishes for this process to join a game. D -> C.
@@ -733,6 +846,26 @@
             Called when the ipc is ready to send arguments.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Configuration">
+            <summary>
+            The configuration of the connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.User">
+            <summary>
+            User the connection belongs too
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Version">
+            <summary>
+            The version of the RPC
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.IMessage">
             <summary>
             Messages received from discord.
@@ -746,6 +879,11 @@
         <member name="P:DiscordRPC.Message.IMessage.TimeCreated">
             <summary>
             The time the message was created
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Message.IMessage.#ctor">
+            <summary>
+            Creates a new instance of the message
             </summary>
         </member>
         <member name="T:DiscordRPC.Message.MessageType">
@@ -892,6 +1030,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.RichPresence.Merge(DiscordRPC.RichPresence)">
+            <summary>
+            Merges the passed presence with this one, taking into account the image key to image id annoyance.
+            </summary>
+            <param name="presence"></param>
+        </member>
         <member name="M:DiscordRPC.RichPresence.HasTimestamps">
             <summary>
             Does the Rich Presence have valid timestamps?
@@ -989,6 +1133,11 @@
             <param name="random">The random used to generate the characters</param>
             <returns></returns>
         </member>
+        <member name="T:DiscordRPC.Assets">
+            <summary>
+            Information about the pictures used in the Rich Presence.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Assets.LargeImageKey">
             <summary>
             Name of the uploaded image for the large profile artwork.
@@ -1012,6 +1161,22 @@
             The tooltip for the small circle image. For example, "LvL 6" or "Ultimate 85%".
             <para>Max 128 Bytes.</para>
             </summary>
+        </member>
+        <member name="P:DiscordRPC.Assets.LargeImageID">
+            <summary>
+            The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="P:DiscordRPC.Assets.LargeImageKey"/> is changed.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Assets.SmallImageID">
+            <summary>
+            The ID of the small image. This is only set after Update Presence and will automatically become null when <see cref="P:DiscordRPC.Assets.SmallImageKey"/> is changed.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Assets.Merge(DiscordRPC.Assets)">
+            <summary>
+            Merges this asset with the other, taking into account for ID's instead of keys.
+            </summary>
+            <param name="other"></param>
         </member>
         <member name="T:DiscordRPC.Timestamps">
             <summary>
@@ -1038,12 +1203,19 @@
             The <see cref="P:DiscordRPC.Timestamps.End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="P:DiscordRPC.Timestamps.Start"/> is set, this value will override the "elapsed" state to "remaining".
             </summary>
         </member>
-        <member name="M:DiscordRPC.Timestamps.GetEpoch(System.DateTime)">
+        <member name="M:DiscordRPC.Timestamps.FromUnixTime(System.Int64)">
             <summary>
-            Gets the Unix Epoch time equivilent of the DateTime.
+            Converts a Unix Epoch time into a <see cref="T:System.DateTime"/>.
             </summary>
-            <param name="time">The time to convert to Unix Epoch</param>
-            <returns>The Unix Epoch of the passed DateTime.</returns>
+            <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.Timestamps.ToUnixTime(System.DateTime)">
+            <summary>
+            Converts a <see cref="T:System.DateTime"/> into a Unix Epoch time.
+            </summary>
+            <param name="date">The datetime to convert</param>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.Party">
             <summary>
@@ -1109,6 +1281,16 @@
         <member name="P:DiscordRPC.RPC.Commands.PresenceCommand.Presence">
             <summary>
             The rich presence to be set. Can be null.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Payload.ClosePayload.Code">
+            <summary>
+            The close code the discord gave us
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Payload.ClosePayload.Reason">
+            <summary>
+            The close reason discord gave us
             </summary>
         </member>
         <member name="T:DiscordRPC.RPC.Payload.Command">
@@ -1325,9 +1507,40 @@
             The rate of poll to the discord pipe.
             </summary>
         </member>
+        <member name="F:DiscordRPC.RPC.RpcConnection.CLEAR_ON_SHUTDOWN">
+            <summary>
+            Should we send a null presence on the fairwells?
+            </summary>
+        </member>
         <member name="F:DiscordRPC.RPC.RpcConnection.LOCK_STEP">
             <summary>
-            Should we only send once we finished receiving one?
+            Should we work in a lock step manner? This option is semi-obsolete and may not work as expected.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.Logger">
+            <summary>
+            The logger used by the RPC connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.State">
+            <summary>
+            The current state of the RPC connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.Configuration">
+            <summary>
+            The configuration received by the Ready
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.IsRunning">
+            <summary>
+            Indicates if the RPC connection is still running in the background
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.RpcConnection.ShutdownOnly">
+            <summary>
+            Forces the <see cref="M:DiscordRPC.RPC.RpcConnection.Close"/> to call <see cref="M:DiscordRPC.RPC.RpcConnection.Shutdown"/> instead, safely saying goodbye to Discord. 
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient)">
@@ -1337,12 +1550,13 @@
             <param name="applicationID">The ID of the Discord App</param>
             <param name="processID">The ID of the currently running process</param>
             <param name="targetPipe">The target pipe to connect too</param>
+            <param name="client">The pipe client we shall use.</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueCommand(DiscordRPC.RPC.Commands.ICommand)">
             <summary>
             Enqueues a command
             </summary>
-            <param name="presence"></param>
+            <param name="command">The command to enqueue</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueMessage(DiscordRPC.Message.IMessage)">
             <summary>
@@ -1377,15 +1591,57 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.SendHandwave">
+            <summary>
+            Establishes a fairwell with the server by sending a handwave.
+            </summary>
+        </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.AttemptConnection">
             <summary>
             Attempts to connect to the pipe. Returns true on success
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.SetConnectionState(DiscordRPC.RPC.RpcState)">
+            <summary>
+            Sets the current state of the pipe, locking the l_states object for thread saftey.
+            </summary>
+            <param name="state">The state to set it too.</param>
+        </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.Shutdown">
+            <summary>
+            Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye. 
+            <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
+            </summary>
+        </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.Close">
             <summary>
-            Closes the connection
+            Closes the connection and disposes of resources.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.RPC.RpcConnection.Dispose">
+            <summary>
+            Closes the connection and disposes resources. Identical to <see cref="M:DiscordRPC.RPC.RpcConnection.Close"/> but ignores the "ShutdownOnly" value.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.RPC.RpcState">
+            <summary>
+            State of the RPC connection
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Disconnected">
+            <summary>
+            Disconnected from the discord client
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Connecting">
+            <summary>
+            Connecting to the discord client. The handshake has been sent and we are awaiting the ready event
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.RPC.RpcState.Connected">
+            <summary>
+            We are connect to the client and can send and receive messages.
             </summary>
         </member>
         <member name="T:DiscordRPC.Web.WebRPC">
@@ -1460,35 +1716,89 @@
             Possible formats for avatars
             </summary>
         </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.PNG">
+            <summary>
+            Portable Network Graphics format (.png)
+            <para>Losses format that supports transparent avatars. Most recommended for stationary formats with wide support from many libraries.</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.JPEG">
+            <summary>
+            Joint Photographic Experts Group format (.jpeg)
+            <para>The format most cameras use. Lossy and does not support transparent avatars.</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.WebP">
+            <summary>
+            WebP format (.webp)
+            <para>Picture only version of WebM. Pronounced "weeb p".</para>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarFormat.GIF">
+            <summary>
+            Graphics Interchange Format (.gif)
+            <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
+            </summary>
+        </member>
         <member name="T:DiscordRPC.User.AvatarSize">
             <summary>
             Possible square sizes of avatars.
             </summary>
         </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x16">
+            <summary> 16 x 16 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x32">
+            <summary> 32 x 32 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x64">
+            <summary> 64 x 64 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x128">
+            <summary> 128 x 128 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x256">
+            <summary> 256 x 256 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x512">
+            <summary> 512 x 512 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x1024">
+            <summary> 1024 x 1024 pixels.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.AvatarSize.x2048">
+            <summary> 2048 x 2048 pixels.</summary>
+        </member>
         <member name="P:DiscordRPC.User.ID">
             <summary>
-            The snowflake ID of the user requesting to join
+            The snowflake ID of the user. 
             </summary>
         </member>
         <member name="P:DiscordRPC.User.Username">
             <summary>
-            The username of the user trying to join
+            The username of the player.
             </summary>
         </member>
-        <member name="P:DiscordRPC.User.Descriminator">
+        <member name="P:DiscordRPC.User.Discriminator">
             <summary>
-            The descriminator of the user trying to join
+            The discriminator of the user.
             </summary>
         </member>
         <member name="P:DiscordRPC.User.Avatar">
             <summary>
-            The avatar hash of the user trying to join. Too get a URI for the avatar, use the <see cref="!:GetAvatarURL(AvatarFormat)"/>. This can be null if the user has no avatar. The <see cref="!:GetAvatarURL(AvatarFormat)"/> will account for this and return the discord default.
+            The avatar hash of the user. Too get a URI for the avatar, use the <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/> will account for this and return the discord default.
             </summary>
         </member>
         <member name="P:DiscordRPC.User.CdnEndpoint">
             <summary>
-            The endpoint for the CDN
+            The endpoint for the CDN. Normally cdn.discordapp.com
             </summary>
+        </member>
+        <member name="M:DiscordRPC.User.SetConfiguration(DiscordRPC.Configuration)">
+            <summary>
+            Updates the URL paths to the appropriate configuration
+            </summary>
+            <param name="configuration">The configuration received by the OnReady event.</param>
         </member>
         <member name="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)">
             <summary>
@@ -1500,10 +1810,16 @@
         </member>
         <member name="M:DiscordRPC.User.GetAvatarExtension(DiscordRPC.User.AvatarFormat)">
             <summary>
-            Returns the file extension of the specified format
+            Returns the file extension of the specified format.
             </summary>
             <param name="format">The format to get the extention off</param>
             <returns>Returns a period prefixed file extension.</returns>
+        </member>
+        <member name="M:DiscordRPC.User.ToString">
+            <summary>
+            Formats the user into username#discriminator
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

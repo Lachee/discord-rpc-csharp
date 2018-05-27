@@ -95,6 +95,13 @@ namespace DiscordRPC
 		public bool IsInitialized { get { return _initialized; } }
 		private bool _initialized;
 
+		/// <summary>
+		/// Forces the connection to shutdown gracefully instead of just aborting the connection.
+		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
+		/// </summary>
+		public bool ShutdownOnly { get { return _shutdownOnly; } set { _shutdownOnly = value; if (connection != null) connection.ShutdownOnly = value; } }
+		private bool _shutdownOnly = true;
+
 		#region Events
 
 		/// <summary>
@@ -236,7 +243,7 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client);
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client) { ShutdownOnly = _shutdownOnly };
 			connection.Logger = this._logger;
 		}
 
@@ -351,8 +358,8 @@ namespace DiscordRPC
 
 		private void HandleMessage(IMessage message)
 		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
+			//if (Disposed)
+			//	throw new ObjectDisposedException("Discord IPC Client");
 
 			if (message == null) return;
 			switch (message.Type)
@@ -360,7 +367,22 @@ namespace DiscordRPC
 				//We got a update, so we will update our current presence
 				case MessageType.PresenceUpdate:
 					var pm = message as PresenceMessage;
-					if (pm != null) _presence = pm.Presence;
+					if (pm != null)
+					{
+						//We need to merge these presences together
+						if (_presence == null)
+						{
+							_presence = pm.Presence;
+						}
+						else
+						{
+							_presence.Merge(pm.Presence);
+						}
+
+						//Update the message
+						pm.Presence = _presence;
+					}
+
 					break;
 
 				//Update our configuration
@@ -370,6 +392,9 @@ namespace DiscordRPC
 					{
 						_configuration = rm.Configuration;
 						_user = rm.User;
+
+						//Resend our presence and subscription
+						SynchronizeState();
 					}
 					break;
 
@@ -520,6 +545,18 @@ namespace DiscordRPC
 
 			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
 				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = false });
+		}
+
+		/// <summary>
+		/// Resends the current presence and subscription. This is used when Ready is called to keep the current state within discord.
+		/// </summary>
+		public void SynchronizeState()
+		{
+			//Set the presence 
+			SetPresence(_presence);
+
+			//Set the subscription
+			SubscribeToTypes(_subscription, false);
 		}
 
 		/// <summary>

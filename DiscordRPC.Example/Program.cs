@@ -21,7 +21,7 @@ namespace DiscordRPC.Example
 		/// <summary>
 		/// The level of logging to use.
 		/// </summary>
-		private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Warning;
+		private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Info;
 
 		/// <summary>
 		/// The current presence to send to discord.
@@ -109,7 +109,7 @@ namespace DiscordRPC.Example
 			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
 				//Set the logger. This way we can see the output of the client.
-				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel };
+				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true };
 
 				//Register to the events we care about. We are registering to everyone just to show off the events
 				client.OnReady += OnReady;
@@ -128,11 +128,6 @@ namespace DiscordRPC.Example
 				client.OnSpectate += OnSpectate;
 				client.OnJoinRequested += OnJoinRequested;
 
-				//Initialize the connection. This must be called ONLY once.
-				//It must be called before any updates are sent or received from the discord client.
-				client.Initialize();
-
-
 				//Before we send a initial presence, we will generate a random "game ID" for this example.
 				// For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 
 				// This is used for the Join / Specate feature. This can be ignored if you do not plan to implement that feature.
@@ -145,6 +140,11 @@ namespace DiscordRPC.Example
 					SpectateSecret = "spectate_myuniquegameid"
 				};
 
+				presence.Timestamps = new Timestamps()
+				{
+					Start = DateTime.UtcNow
+				};
+
 				//We also need to generate a initial party. This is because Join requires the party to be created too.
 				// If no party is set, the join feature will not work and may cause errors within the discord client itself.
 				presence.Party = new Party()
@@ -154,6 +154,19 @@ namespace DiscordRPC.Example
 					Max = 4
 				};
 
+				//Set some new presence to tell Discord we are in a game.
+				// If the connection is not yet available, this will be queued until a Ready event is called, 
+				// then it will be sent. All messages are queued until Discord is ready to receive them.
+				client.SetPresence(presence);
+
+				//Subscribe to the join / spectate feature.
+				//These require the RegisterURI to be true.
+				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+				
+				//Initialize the connection. This must be called ONLY once.
+				//It must be called before any updates are sent or received from the discord client.
+				client.Initialize();
+				
 
 				//Start our main loop. In a normal game you probably don't have to do this step.
 				// Just make sure you call .Invoke() or some other dequeing event to receive your events.
@@ -183,7 +196,7 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(1);
+				Thread.Sleep(10);
 			}
 
 			Console.WriteLine("Press any key to terminate");
@@ -279,6 +292,10 @@ namespace DiscordRPC.Example
 			//Parse the command
 			switch (command.ToLowerInvariant())
 			{
+				case "close":
+					client.Dispose();
+					break;
+
 				#region State & Details
 				case "state":
 					presence.State = body;
@@ -355,14 +372,6 @@ namespace DiscordRPC.Example
 			//It can be a good idea to send a inital presence update on this event too, just to setup the inital game state.
 			Console.WriteLine("On Ready. RPC Version: {0}", args.Version);
 
-			//Set some new presence to tell Discord we are in a game.
-			// If the connection is not yet available, this will be queued until a Ready event is called, 
-			// then it will be sent. All messages are queued until Discord is ready to receive them.
-			client.SetPresence(presence);
-
-			//Subscribe to the join / spectate feature.
-			//These require the RegisterURI to be true.
-			client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 		}
 		private static void OnClose(object sender, CloseMessage args)
 		{

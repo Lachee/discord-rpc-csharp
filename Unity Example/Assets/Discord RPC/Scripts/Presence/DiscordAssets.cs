@@ -18,7 +18,10 @@ public class DiscordAsset
 	[CharacterLimit(128)]
 	[Tooltip("The tooltip of the large image.")]
 	public string tooltip;
-	
+
+	[Tooltip("Snowflake ID of the image.")]
+	public ulong snowflake;
+
 	/// <summary>
 	/// Is the asset object empty?
 	/// </summary>
