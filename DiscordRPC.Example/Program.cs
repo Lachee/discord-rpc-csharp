@@ -58,10 +58,10 @@ namespace DiscordRPC.Example
 		static void Main(string[] args)
 		{
 			//HttpExample();
-			FullClientExample();
+			//FullClientExample();
 
 			Console.WriteLine("Press any key to terminate");
-			Console.ReadKey();
+			Console.ReadKey();			
 		}
 
 		static void HttpExample()
@@ -69,6 +69,9 @@ namespace DiscordRPC.Example
 			//A simplified version, but is blocking. Its recommended to use some form of async or your prefered library for HTTP Post.
 			// Unity for example should use the WWW Class (or the new WebRequest.Post ).
 			//var response = DiscordRPC.Web.WebRPC.SetRichPresence(presence, ClientID);
+
+			//Seting a random details to test the update rate of the presence
+			presence.Details = DateTime.UtcNow.ToLongTimeString();
 
 			//Here we are going to manually call the request to show how it works
 			//First get the data we should be sending and prepare the data we will receive

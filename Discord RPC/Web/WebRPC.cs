@@ -141,7 +141,8 @@ namespace DiscordRPC.Web
 
 			//Prepare the payload
 			PresenceCommand command = new PresenceCommand() { PID = pid, Presence = presence };
-			var payload = command.PreparePayload(0);
+			var payload = command.PreparePayload(DateTime.UtcNow.ToFileTime());
+
 			string json = JsonConvert.SerializeObject(payload);
 
 			string url = "http://127.0.0.1:" + port + "/rpc?v=" + RpcConnection.VERSION + "&client_id=" + applicationID;
