@@ -131,6 +131,7 @@
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
     <Compile Include="IO\PipeFrame.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogLevel.cs" />

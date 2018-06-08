@@ -119,6 +119,11 @@ namespace DiscordRPC.IO
 				Logger.Warning("Attempted to end reading from a closed pipe");
 				return;
 			}
+			catch(NullReferenceException)
+			{
+				Logger.Warning("Attempted to read from a null pipe");
+				return;
+			}
 			catch(ObjectDisposedException)
 			{
 				Logger.Warning("Attemped to end reading from a disposed pipe");

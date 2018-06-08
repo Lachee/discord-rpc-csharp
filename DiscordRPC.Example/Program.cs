@@ -111,8 +111,12 @@ namespace DiscordRPC.Example
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true))												//This will create a new client with a SteamID (null if no steam)
 			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
+				//Clean our log file
+				//System.IO.File.WriteAllBytes("discord-rpc.log", new byte[0]);
+
 				//Set the logger. This way we can see the output of the client.
-				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true };
+				//client.Logger = new Logging.FileLogger("discord-rpc.log") { Level = DiscordLogLevel };
+				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel,  Coloured = true };
 
 				//Register to the events we care about. We are registering to everyone just to show off the events
 				client.OnReady += OnReady;

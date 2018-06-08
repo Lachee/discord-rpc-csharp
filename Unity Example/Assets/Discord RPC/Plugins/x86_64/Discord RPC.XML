@@ -649,6 +649,48 @@
             <param name="uint32"></param>
             <returns></returns>
         </member>
+        <member name="T:DiscordRPC.Logging.FileLogger">
+            <summary>
+            Logs the outputs to a file
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.FileLogger.Level">
+            <summary>
+            The level of logging to apply to this logger.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.FileLogger.File">
+            <summary>
+            Should the output be coloured?
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the file logger
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Info(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Warning(System.String,System.Object[])">
+            <summary>
+            Warning log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Error(System.String,System.Object[])">
+            <summary>
+            Error log messsages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="T:DiscordRPC.Logging.ConsoleLogger">
             <summary>
             Logs the outputs to the console using <see cref="M:System.Console.WriteLine"/>
