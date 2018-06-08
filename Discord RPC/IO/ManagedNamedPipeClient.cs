@@ -208,23 +208,36 @@ namespace DiscordRPC.IO
 			//We must have failed the try catch
 			return false;
 		}
-
+		
+		/// <summary>
+		/// Closes the pipe
+		/// </summary>
 		public void Close()
 		{
 			//flush and dispose			
 			try
 			{
-				try { _stream.Flush(); }  catch (Exception) { }
-				_stream.Dispose();
+				if (_stream != null)
+				{
+					try { _stream.Flush(); } catch (Exception) { }
+					_stream.Dispose();
+				}
+				else
+				{
+					Logger.Warning("Stream was closed, but no stream was available to begin with!");
+				}
 			}
 			catch (ObjectDisposedException)
 			{
 				Logger.Warning("Tried to dispose already disposed stream");
-				return;
+			}
+			finally
+			{
+				//set the stream to null
+				_connectedPipe = -1;
+				_stream = null;
 			}
 
-			//set the stream to null
-			_connectedPipe = -1;
 		}
 
 		public void Dispose()

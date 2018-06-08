@@ -366,7 +366,8 @@ namespace DiscordRPC.RPC
 
 			//We have disconnected, so dispose of the thread and the pipe.
 			Logger.Info("Left Main Loop");
-			namedPipe.Dispose();
+			if (namedPipe != null)
+				namedPipe.Dispose();
 
 			Logger.Info("Thread Terminated");
 		}

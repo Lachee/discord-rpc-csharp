@@ -559,6 +559,11 @@
             Closes the connection
             </summary>
         </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.Close">
+            <summary>
+            Closes the pipe
+            </summary>
+        </member>
         <member name="P:DiscordRPC.IO.PipeFrame.Opcode">
             <summary>
             The opcode of the frame
