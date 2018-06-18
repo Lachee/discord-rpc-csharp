@@ -12,12 +12,16 @@ This library supports all features of the Rich Presence that the official C++ li
  - **Error Handling** & **Error Checking** with automatic reconnects
  - **Events from Discord** (such as presence update and join requests)
  - **Full Rich Presence Implementation** (including Join / Spectate)
- - **Fully documented** (including which fields are obsolete)
+ - **Inline Documented** (for all your intelli-sense needs)
  - **Helper Functionality** (eg: AvatarURL generator from Join Requests)
  - **Ghost Prevention** (Tells discord to clear the RP on disposal)
- - :new: **HTTP Rich Presence support!**
+ - ~~**HTTP Rich Presence support!**~~ 
 
 _*Managed Pipes is unavailable for the Unity3D game engine due to technical limitations and a substitute native wrapper library is required._
+
+_*Proper Documentation outside of inline is planned and will be implemented hopefully soon_
+
+_*HTTP Support has been removed as Discord removed their implementation. Talks of brining it back and this library will update if it happens._
 
 ## Doesn't RPC require whitelisting?
 ```
