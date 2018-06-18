@@ -657,7 +657,7 @@ namespace DiscordRPC.RPC
 		/// <returns></returns>
 		public bool AttemptConnection()
 		{
-			Logger.Info("Attempting a new coonnection");
+			Logger.Info("Attempting a new connection");
 
 			//The thread mustn't exist already
 			if (thread != null)

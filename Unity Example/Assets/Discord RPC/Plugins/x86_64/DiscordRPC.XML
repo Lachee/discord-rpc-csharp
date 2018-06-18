@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Discord RPC</name>
+        <name>DiscordRPC</name>
     </assembly>
     <members>
         <member name="T:DiscordRPC.DiscordRpcClient">
