@@ -511,7 +511,7 @@ namespace DiscordRPC
 		{
 			get
 			{
-				return End.HasValue ? ToUnixTime(Start.Value) : (long?)null;
+				return End.HasValue ? ToUnixTime(End.Value) : (long?)null;
 			}
 
 			set
