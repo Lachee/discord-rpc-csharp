@@ -532,19 +532,19 @@ namespace DiscordRPC
 
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
-
+				
 			if (!HasRegisteredUriScheme)
-				throw new InvalidConfigurationException("Cannot subscribe to an event as this application has not registered a URI scheme.");
-			
+				throw new InvalidConfigurationException("Cannot subscribe/unsubscribe to an event as this application has not registered a URI scheme.");
+
 			//Add the subscribe command to be sent when the connection is able too
 			if ((type & EventType.Spectate) == EventType.Spectate)
-				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = false });
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = isUnsubscribe });
 
 			if ((type & EventType.Join) == EventType.Join)
-				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = false });
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
 
 			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
-				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = false });
+				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
 		}
 
 		/// <summary>
