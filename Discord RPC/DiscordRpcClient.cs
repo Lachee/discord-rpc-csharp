@@ -527,12 +527,18 @@ namespace DiscordRPC
 		/// <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
 		private void SubscribeToTypes(EventType type, bool isUnsubscribe)
 		{
+			//Because of SetSubscription, this can actually be none as there is no differences. 
+			//If that is the case, we should just stop here
+			if (type == EventType.None) return;
+
+			//We cannot do anything if we are disposed or missing our connection.
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 				
+			//We dont have the Uri Scheme registered, we should throw a exception to tell the user.
 			if (!HasRegisteredUriScheme)
 				throw new InvalidConfigurationException("Cannot subscribe/unsubscribe to an event as this application has not registered a URI scheme.");
 
