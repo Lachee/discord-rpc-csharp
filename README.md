@@ -21,7 +21,7 @@ _*Managed Pipes is unavailable for the Unity3D game engine due to technical limi
 
 _*Proper Documentation outside of inline is planned and will be implemented hopefully soon_
 
-_*HTTP Support has been removed as Discord removed their implementation. Talks of brining it back and this library will update if it happens._
+_*HTTP Support has been removed as Discord removed their implementation. Talks of bringing it back and this library will update if it happens._
 
 ## Doesn't RPC require whitelisting?
 ```
