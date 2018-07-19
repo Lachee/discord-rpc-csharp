@@ -374,6 +374,10 @@ namespace DiscordRPC
 						{
 							_presence = pm.Presence;
 						}
+						else if (pm.Presence == null)
+						{
+							_presence = null;
+						}
 						else
 						{
 							_presence.Merge(pm.Presence);
