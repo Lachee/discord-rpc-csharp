@@ -112,19 +112,24 @@ namespace DiscordRPC.IO
 			if (!TryReadUInt32(stream, out len))
 				return false;
 
-			//Read the data. This could potentially cause issues if we ever get anything greater than a int.
-			//TODO: Better implementation of this read using uints
-			byte[] buff = new byte[len];
-			int bytesread = stream.Read(buff, 0, buff.Length);
+			//Read the contents
+			using (var mem = new MemoryStream())
+			{
+				byte[] buffer = new byte[2048]; // read in chunks of 2KB
+				int bytesRead;
+				while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					mem.Write(buffer, 0, bytesRead);
+				}
 
-			//Make sure we actually read data.
-			if (bytesread != len)
-				return false;
+				byte[] result = mem.ToArray();
+				if (result.Length != len)
+					return false;
 
-			//Apply the values we read
-			Opcode = (Opcode)op;
-			Data = buff;
-			return true;
+				Opcode = (Opcode)op;
+				Data = result;
+				return true;
+			}			
 		}
 
 		/// <summary>

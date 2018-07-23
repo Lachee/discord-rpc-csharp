@@ -129,6 +129,11 @@ namespace DiscordRPC.IO
 				Logger.Warning("Attemped to end reading from a disposed pipe");
 				return;
 			}
+			catch(Exception e)
+			{
+				Logger.Error("A unkown error has occured while reading a pipe: " + e.Message);
+				return;
+			}
 
 			//How much did we read?
 			Logger.Info("Read {0} bytes", bytes);
@@ -139,19 +144,26 @@ namespace DiscordRPC.IO
 				//Load it into a memory stream and read the frame
 				using (MemoryStream stream = new MemoryStream(_buffer, 0, bytes))
 				{
-					PipeFrame frame = new PipeFrame();
-					if (frame.ReadStream(stream))
+					try
 					{
-						Logger.Info("Read a frame: {0}", frame.Opcode);
+						PipeFrame frame = new PipeFrame();
+						if (frame.ReadStream(stream))
+						{
+							Logger.Info("Read a frame: {0}", frame.Opcode);
 
-						//Enqueue the stream
-						lock (_framequeuelock)
-							_framequeue.Enqueue(frame);
+							//Enqueue the stream
+							lock (_framequeuelock)
+								_framequeue.Enqueue(frame);
+						}
+						else
+						{
+							//TODO: Enqueue a pipe close event here as we failed to read something.
+							Logger.Error("Pipe failed to read from the data received by the stream.");
+						}
 					}
-					else
+					catch (Exception e)
 					{
-						//TODO: Enqueue a pipe close event here as we failed to read something.
-						Logger.Error("Pipe failed to read from the data received by the stream.");
+						Logger.Error("A exception has occured while trying to parse the pipe data: " + e.Message);
 					}
 				}
 			}
