@@ -636,6 +636,14 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.IO.PipeFrame.TryReadInt32(System.IO.Stream,System.Int32@)">
+            <summary>
+            Attempts to read a Int32
+            </summary>
+            <param name="stream"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
         <member name="M:DiscordRPC.IO.PipeFrame.WriteStream(System.IO.Stream)">
             <summary>
             Writes the frame into the target frame as one big byte block.

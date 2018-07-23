@@ -108,17 +108,20 @@ namespace DiscordRPC.IO
 				return false;
 
 			//Try to read the length
-			uint len;
-			if (!TryReadUInt32(stream, out len))
+			int len;
+			if (!TryReadInt32(stream, out len))
 				return false;
+
+			int readsRemaining = len;
 
 			//Read the contents
 			using (var mem = new MemoryStream())
 			{
-				byte[] buffer = new byte[2048]; // read in chunks of 2KB
+				byte[] buffer = new byte[Math.Min(len, 2048)]; // read in chunks of 2KB
 				int bytesRead;
-				while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+				while ((bytesRead = stream.Read(buffer, 0, Math.Min(buffer.Length, readsRemaining))) > 0)
 				{
+					readsRemaining -= len;
 					mem.Write(buffer, 0, bytesRead);
 				}
 
@@ -154,6 +157,31 @@ namespace DiscordRPC.IO
 			//Flip the endianess if required then convert it to a number
 			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			value = BitConverter.ToUInt32(bytes, 0);
+			return true;
+		}   
+		
+		/// <summary>
+		/// Attempts to read a Int32
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		private bool TryReadInt32(Stream stream, out int value)
+		{
+			//Read the bytes available to us
+			byte[] bytes = new byte[4];
+			int cnt = stream.Read(bytes, 0, bytes.Length);
+
+			//Make sure we actually have a valid value
+			if (cnt != 4)
+			{
+				value = default(int);
+				return false;
+			}
+
+			//Flip the endianess if required then convert it to a number
+			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			value = BitConverter.ToInt32(bytes, 0);
 			return true;
 		}
 

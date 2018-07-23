@@ -89,7 +89,7 @@ namespace DiscordRPC.IO
 			try
 			{
 				Logger.Info("Begining Read of {0} bytes", _buffer.Length);
-				_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
+				_stream.BeginRead(_buffer, 0, _buffer.Length, EndRead, IsConnected);
 			}
 			catch(ObjectDisposedException)
 			{
