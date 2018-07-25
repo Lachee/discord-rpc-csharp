@@ -10,6 +10,9 @@ namespace DiscordRPC.IO
 	//TODO: Make Internal
 	public struct PipeFrame
 	{
+		/// <summary>
+		/// The maxium size of a pipe frame (16kb).
+		/// </summary>
 		public const int MAX_SIZE = 16 * 1024;
 
 		/// <summary>

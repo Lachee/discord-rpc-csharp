@@ -559,9 +559,45 @@
             Closes the connection
             </summary>
         </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.#ctor">
+            <summary>
+            Creates a new instance of a Managed NamedPipe client. Doesn't connect to anything yet, just setups the values.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.Connect(System.Int32)">
+            <summary>
+            Connects to the pipe
+            </summary>
+            <param name="pipe"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
+            <summary>
+            Reads a frame, returning false if none are available
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
+            <summary>
+            Writes a frame to the pipe
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
         <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.Close">
             <summary>
             Closes the pipe
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.Dispose">
+            <summary>
+            Disposes of the stream
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.PipeFrame.MAX_SIZE">
+            <summary>
+            The maxium size of a pipe frame (16kb).
             </summary>
         </member>
         <member name="P:DiscordRPC.IO.PipeFrame.Opcode">

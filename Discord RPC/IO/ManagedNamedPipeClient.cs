@@ -14,7 +14,7 @@ namespace DiscordRPC.IO
 		const string PIPE_NAME = @"discord-ipc-{0}";
 
 		public ILogger Logger { get; set; }
-		public bool IsConnected {  get { return _stream != null && _stream.IsConnected; } }
+		public bool IsConnected {  get { return !_isClosed && _stream != null && _stream.IsConnected; } }
 		public int ConnectedPipe {  get { return _connectedPipe; } }
 
 		private int _connectedPipe;
@@ -25,8 +25,29 @@ namespace DiscordRPC.IO
 		private Queue<PipeFrame> _framequeue = new Queue<PipeFrame>();
 		private object _framequeuelock = new object();
 
+		private volatile bool _isDisposed = false;
+		private volatile bool _isClosed = true;
+
+		/// <summary>
+		/// Creates a new instance of a Managed NamedPipe client. Doesn't connect to anything yet, just setups the values.
+		/// </summary>
+		public ManagedNamedPipeClient()
+		{
+			_buffer = new byte[PipeFrame.MAX_SIZE];
+			Logger = new NullLogger();
+			_stream = null;
+		}
+
+		/// <summary>
+		/// Connects to the pipe
+		/// </summary>
+		/// <param name="pipe"></param>
+		/// <returns></returns>
 		public bool Connect(int pipe)
 		{
+			if (_isDisposed)
+				throw new ObjectDisposedException("NamedPipe");
+
 			if (pipe > 9)
 				throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
 
@@ -52,6 +73,9 @@ namespace DiscordRPC.IO
 		}
 		private bool AttemptConnection(int pipe)
 		{
+			if (_isDisposed)
+				throw new ObjectDisposedException("_stream");
+
 			//Prepare the pipe name
 			string pipename = string.Format(PIPE_NAME, pipe);
 			Logger.Info("Attempting to connect to " + pipename);
@@ -69,27 +93,32 @@ namespace DiscordRPC.IO
 				//Store the value
 				Logger.Info("Connected to " + pipename);
 				_connectedPipe = pipe;
-				return true;
+				_isClosed = false;
 			}
 			catch (Exception e)
 			{
 				//Something happened, try again
 				//TODO: Log the failure condition
 				Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
-				if (_stream != null) _stream.Dispose();
-				_stream = null;
-				return false;
+				_isClosed = true;
+				if (_stream != null)
+				{
+					_stream.Dispose();
+					_stream = null;
+				}
 			}
+
+			return !_isClosed;
 		}
 
 		private void BeginRead()
 		{
+			if (_isClosed) return;
 			if (!IsConnected) return;
-
 			try
 			{
 				Logger.Info("Begining Read of {0} bytes", _buffer.Length);
-				_stream.BeginRead(_buffer, 0, _buffer.Length, EndRead, IsConnected);
+				_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
 			}
 			catch(ObjectDisposedException)
 			{
@@ -101,6 +130,11 @@ namespace DiscordRPC.IO
 				//The pipe has been closed
 				Logger.Warning("Attempted to start reading from a closed pipe");
 				return;
+			}
+			catch (Exception e)
+			{
+				Logger.Error("An exception occured while starting to read a stream: {0}", e.Message);
+				Logger.Error(e.StackTrace);
 			}
 		}
 
@@ -131,7 +165,8 @@ namespace DiscordRPC.IO
 			}
 			catch(Exception e)
 			{
-				Logger.Error("A unkown error has occured while reading a pipe: " + e.Message);
+				Logger.Error("An exception occured while ending a read of a stream: {0}", e.Message);
+				Logger.Error(e.StackTrace);
 				return;
 			}
 
@@ -142,12 +177,12 @@ namespace DiscordRPC.IO
 			if (bytes > 0)
 			{
 				//Load it into a memory stream and read the frame
-				using (MemoryStream stream = new MemoryStream(_buffer, 0, bytes))
+				using (MemoryStream memory = new MemoryStream(_buffer, 0, bytes))
 				{
 					try
 					{
 						PipeFrame frame = new PipeFrame();
-						if (frame.ReadStream(stream))
+						if (frame.ReadStream(memory))
 						{
 							Logger.Info("Read a frame: {0}", frame.Opcode);
 
@@ -169,15 +204,23 @@ namespace DiscordRPC.IO
 			}
 
 			//We are still connected, so continue to read
-			if (IsConnected)
+			if (!_isClosed && IsConnected)
 			{
 				Logger.Info("Starting another read");
 				BeginRead();
 			}
 		}
 
+		/// <summary>
+		/// Reads a frame, returning false if none are available
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
 		public bool ReadFrame(out PipeFrame frame)
 		{
+			if (_isDisposed)
+				throw new ObjectDisposedException("_stream");
+
 			//Check the queue, returning the pipe if we have anything available. Otherwise null.
 			lock(_framequeuelock)
 			{
@@ -194,10 +237,18 @@ namespace DiscordRPC.IO
 			}
 		}
 
+		/// <summary>
+		/// Writes a frame to the pipe
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <returns></returns>
 		public bool WriteFrame(PipeFrame frame)
 		{
+			if (_isDisposed)
+				throw new ObjectDisposedException("_stream");
+
 			//Write the frame. We are assuming proper duplex connection here
-			if (!IsConnected)
+			if (_isClosed || !IsConnected)
 			{
 				Logger.Error("Failed to write frame because the stream is closed");
 				return false;
@@ -231,13 +282,20 @@ namespace DiscordRPC.IO
 		/// </summary>
 		public void Close()
 		{
+			//If we are already closed, jsut exit
+			if (_isClosed)
+			{
+				Logger.Warning("Tried to close a already closed pipe.");
+				return;
+			}
+
 			//flush and dispose			
 			try
 			{
 				if (_stream != null)
 				{
-					try { _stream.Flush(); } catch (Exception) { }
-					_stream.Dispose();
+					try { _stream.Flush(); _stream.Dispose(); } catch (Exception) { }					
+					_isClosed = true;
 				}
 				else
 				{
@@ -251,16 +309,23 @@ namespace DiscordRPC.IO
 			finally
 			{
 				//set the stream to null
+				_isClosed = true;
 				_connectedPipe = -1;
 				_stream = null;
 			}
-
 		}
 
+		/// <summary>
+		/// Disposes of the stream
+		/// </summary>
 		public void Dispose()
 		{
+			//Prevent double disposing
+			if (_isDisposed) return;
+
 			//Close the stream (disposing of it too)
 			Close();
+			_isDisposed = true;
 		}		
 	}
 }

@@ -240,7 +240,7 @@ namespace DiscordRPC.RPC
 						// We dont want to exit on a shutdown, as we still have information
 						PipeFrame frame;
 						bool mainloop = true;
-						while (mainloop && !aborting && namedPipe.IsConnected)
+						while (mainloop && !aborting && !shutdown && namedPipe.IsConnected)
 						{
 							#region Read Loop
 
@@ -369,7 +369,7 @@ namespace DiscordRPC.RPC
 			if (namedPipe != null)
 				namedPipe.Dispose();
 
-			Logger.Info("Thread Terminated");
+			Logger.Info("Thread Terminated, no longer performing RPC connection.");
 		}
 
 		#region Reading
@@ -513,6 +513,8 @@ namespace DiscordRPC.RPC
 		
 		private void ProcessCommandQueue()
 		{
+			Logger.Info("Checking command queue");
+
 			//We are not ready yet, dont even try
 			if (State != RpcState.Connected)
 				return;

@@ -105,6 +105,7 @@ namespace DiscordRPC.Example
 		
 		static void FullClientExample()
 		{
+			
 			//Creates a new Discord RPC Client. Below are some of the ways to register:
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
@@ -174,7 +175,6 @@ namespace DiscordRPC.Example
 				//It must be called before any updates are sent or received from the discord client.
 				client.Initialize();
 				
-
 				//Start our main loop. In a normal game you probably don't have to do this step.
 				// Just make sure you call .Invoke() or some other dequeing event to receive your events.
 				MainLoop();
