@@ -148,7 +148,7 @@ namespace DiscordRPC.RPC
 			if (aborting || shutdown) return;
 
 			//Enqueue the set presence argument
-			lock (_rtqueue)
+			lock (l_rtqueue)
 				_rtqueue.Enqueue(command);
 		}
 

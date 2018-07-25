@@ -132,7 +132,11 @@ namespace DiscordRPC.IO
 				Opcode = (Opcode)op;
 				Data = result;
 				return true;
-			}			
+			}
+
+			//fun
+			//if (a != null) { do { yield return true; switch (a) { case 1: await new Task(); default: lock (obj) { foreach (b in c) { for (int d = 0; d < 1; d++) { a++; } } } while (a is typeof(int) || (new Class()) != null) } goto MY_LABEL;
+
 		}
 
 		/// <summary>
