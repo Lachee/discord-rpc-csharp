@@ -206,6 +206,7 @@ namespace DiscordRPC.Example
 				Thread.Sleep(10);
 			}
 
+			client.Dispose();
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
 		}
@@ -405,6 +406,7 @@ namespace DiscordRPC.Example
 			//This is called when the client fails to establish a connection to discord. 
 			// It can be assumed that Discord is unavailable on the supplied pipe.
 			Console.WriteLine("Pipe Connection Failed. Could not connect to pipe #{0}", args.FailedPipe);
+			isRunning = false;
 		}
 		#endregion
 
