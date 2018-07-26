@@ -14,7 +14,27 @@ namespace DiscordRPC.IO
 		const string PIPE_NAME = @"discord-ipc-{0}";
 
 		public ILogger Logger { get; set; }
-		public bool IsConnected {  get { return !_isClosed && _stream != null && _stream.IsConnected; } }
+
+		/// <summary>
+		/// Checks if the client is connected
+		/// </summary>
+		public bool IsConnected
+		{
+			get
+			{
+				//This will trigger if the stream is disabled. This should prevent the lock check
+				if (_isClosed) return false;
+				lock (l_stream)
+				{
+					//We cannot be sure its still connected, so lets double check
+					return _stream != null && _stream.IsConnected;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The pipe we are currently connected too.
+		/// </summary>
 		public int ConnectedPipe {  get { return _connectedPipe; } }
 
 		private int _connectedPipe;
@@ -27,6 +47,8 @@ namespace DiscordRPC.IO
 
 		private volatile bool _isDisposed = false;
 		private volatile bool _isClosed = true;
+
+		private object l_stream = new object();
 
 		/// <summary>
 		/// Creates a new instance of a Managed NamedPipe client. Doesn't connect to anything yet, just setups the values.
@@ -54,7 +76,7 @@ namespace DiscordRPC.IO
 			//Attempt to connect to the specific pipe
 			if (pipe >= 0 && AttemptConnection(pipe))
 			{
-				BeginRead();
+				tBeginRead();
 				return true;
 			}
 
@@ -63,7 +85,7 @@ namespace DiscordRPC.IO
 			{
 				if (AttemptConnection(i))
 				{
-					BeginRead();
+					tBeginRead();
 					return true;
 				}
 			}
@@ -83,12 +105,15 @@ namespace DiscordRPC.IO
 			try
 			{
 				//Create the client
-				_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
-				_stream.Connect(1000);
+				lock (l_stream)
+				{
+					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
+					_stream.Connect(1000);
 
-				//Spin for a bit while we wait for it to finish connecting
-				Logger.Info("Waiting for connection...");
-				do { Thread.Sleep(10); } while (!_stream.IsConnected);
+					//Spin for a bit while we wait for it to finish connecting
+					Logger.Info("Waiting for connection...");
+					do { Thread.Sleep(10); } while (!_stream.IsConnected);
+				}
 
 				//Store the value
 				Logger.Info("Connected to " + pipename);
@@ -100,25 +125,28 @@ namespace DiscordRPC.IO
 				//Something happened, try again
 				//TODO: Log the failure condition
 				Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
-				_isClosed = true;
-				if (_stream != null)
-				{
-					_stream.Dispose();
-					_stream = null;
-				}
+				Close();
 			}
 
 			return !_isClosed;
 		}
 
-		private void BeginRead()
+		/// <summary>
+		/// Starts a read. Can be executed in another thread.
+		/// </summary>
+		private void tBeginRead()
 		{
 			if (_isClosed) return;
-			if (!IsConnected) return;
 			try
 			{
-				Logger.Info("Begining Read of {0} bytes", _buffer.Length);
-				_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(EndRead), IsConnected);
+				lock (l_stream)
+				{
+					//Make sure the stream is valid
+					if (_stream == null || !_stream.IsConnected) return;
+
+					Logger.Info("Begining Read of {0} bytes", _buffer.Length);
+					_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(tEndRead), _stream.IsConnected);
+				}
 			}
 			catch(ObjectDisposedException)
 			{
@@ -138,7 +166,11 @@ namespace DiscordRPC.IO
 			}
 		}
 
-		private void EndRead(IAsyncResult callback)
+		/// <summary>
+		/// Ends a read. Can be executed in another thread.
+		/// </summary>
+		/// <param name="callback"></param>
+		private void tEndRead(IAsyncResult callback)
 		{
 			Logger.Info("Ending Read");
 			int bytes = 0;
@@ -146,7 +178,14 @@ namespace DiscordRPC.IO
 			try
 			{
 				//Attempt to read the bytes, catching for IO exceptions or dispose exceptions
-				bytes = _stream.EndRead(callback);
+				lock (l_stream)
+				{
+					//Make sure the stream is still valid
+					if (_stream == null || !_stream.IsConnected) return;
+
+					//Read our btyes
+					bytes = _stream.EndRead(callback);
+				}
 			}
 			catch (IOException)
 			{
@@ -207,7 +246,7 @@ namespace DiscordRPC.IO
 			if (!_isClosed && IsConnected)
 			{
 				Logger.Info("Starting another read");
-				BeginRead();
+				tBeginRead();
 			}
 		}
 
@@ -257,6 +296,7 @@ namespace DiscordRPC.IO
 			try
 			{
 				//Write the pipe
+				//This can only happen on the main thread so it should be fine.
 				frame.WriteStream(_stream);
 				return true;
 			}
@@ -292,26 +332,43 @@ namespace DiscordRPC.IO
 			//flush and dispose			
 			try
 			{
-				if (_stream != null)
+				//Wait for the stream object to become available.
+				lock (l_stream)
 				{
-					try { _stream.Flush(); _stream.Dispose(); } catch (Exception) { }					
-					_isClosed = true;
-				}
-				else
-				{
-					Logger.Warning("Stream was closed, but no stream was available to begin with!");
+					if (_stream != null)
+					{
+						try
+						{
+							//Stream isn't null, so flush it and then dispose of it.\
+							// We are doing a catch here because it may throw an error during this process and we dont care if it fails.
+							_stream.Flush();
+							_stream.Dispose();
+						}
+						catch (Exception)
+						{
+						}
+
+						//Make the stream null and set our flag.
+						_stream = null;
+						_isClosed = true;
+					}
+					else
+					{
+						//The stream is already null?
+						Logger.Warning("Stream was closed, but no stream was available to begin with!");
+					}
 				}
 			}
 			catch (ObjectDisposedException)
 			{
+				//ITs already been disposed
 				Logger.Warning("Tried to dispose already disposed stream");
 			}
 			finally
 			{
-				//set the stream to null
+				//For good measures, we will mark the pipe as closed anyways
 				_isClosed = true;
 				_connectedPipe = -1;
-				_stream = null;
 			}
 		}
 
@@ -324,7 +381,19 @@ namespace DiscordRPC.IO
 			if (_isDisposed) return;
 
 			//Close the stream (disposing of it too)
-			Close();
+			if (!_isClosed) Close();
+
+			//Dispose of the stream if it hasnt been destroyed already.
+			lock(l_stream)
+			{
+				if (_stream != null)
+				{
+					_stream.Dispose();
+					_stream = null;
+				}
+			}
+
+			//Set our dispose flag
 			_isDisposed = true;
 		}		
 	}

@@ -513,7 +513,7 @@ namespace DiscordRPC.RPC
 		
 		private void ProcessCommandQueue()
 		{
-			Logger.Info("Checking command queue");
+			//Logger.Info("Checking command queue");
 
 			//We are not ready yet, dont even try
 			if (State != RpcState.Connected)

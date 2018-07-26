@@ -559,6 +559,16 @@
             Closes the connection
             </summary>
         </member>
+        <member name="P:DiscordRPC.IO.ManagedNamedPipeClient.IsConnected">
+            <summary>
+            Checks if the client is connected
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.ManagedNamedPipeClient.ConnectedPipe">
+            <summary>
+            The pipe we are currently connected too.
+            </summary>
+        </member>
         <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.#ctor">
             <summary>
             Creates a new instance of a Managed NamedPipe client. Doesn't connect to anything yet, just setups the values.
@@ -570,6 +580,17 @@
             </summary>
             <param name="pipe"></param>
             <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.tBeginRead">
+            <summary>
+            Starts a read. Can be executed in another thread.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.tEndRead(System.IAsyncResult)">
+            <summary>
+            Ends a read. Can be executed in another thread.
+            </summary>
+            <param name="callback"></param>
         </member>
         <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
             <summary>
