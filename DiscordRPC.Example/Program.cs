@@ -87,7 +87,7 @@ namespace DiscordRPC.Example
 
 				//Make the request
 				string json = web.UploadString(request.URL, request.Data);
-
+				
 				//Try to parse the request
 				if (!DiscordRPC.Web.WebRPC.TryParseResponse(json, out response))
 				{
@@ -105,7 +105,6 @@ namespace DiscordRPC.Example
 		
 		static void FullClientExample()
 		{
-			
 			//Creates a new Discord RPC Client. Below are some of the ways to register:
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
@@ -203,7 +202,9 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(10);
+				Thread.Sleep(1000);
+
+				client.SetPresence(presence);
 			}
 
 			client.Dispose();

@@ -108,14 +108,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Converters\EnumSnakeCaseConverter.cs" />
+    <Compile Include="Converters\EnumValueAttribute.cs" />
     <Compile Include="DiscordRpcClient.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="EventType.cs" />

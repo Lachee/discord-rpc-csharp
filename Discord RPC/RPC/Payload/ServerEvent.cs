@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DiscordRPC.Converters;
+using System;
+using System.Runtime.Serialization;
 
 namespace DiscordRPC.RPC.Payload
 {
@@ -13,26 +12,31 @@ namespace DiscordRPC.RPC.Payload
 		/// <summary>
 		/// Sent when the server is ready to accept messages
 		/// </summary>
+		[EnumValue("READY")]
 		Ready,
 
 		/// <summary>
 		/// Sent when something bad has happened
 		/// </summary>
+		[EnumValue("ERROR")]
 		Error,
 
 		/// <summary>
 		/// Join Event 
 		/// </summary>
+		[EnumValue("ACTIVITY_JOIN")]
 		ActivityJoin,
 
 		/// <summary>
 		/// Spectate Event
 		/// </summary>
+		[EnumValue("ACTIVITY_SPECTATE")]
 		ActivitySpectate,
 
 		/// <summary>
 		/// Request Event
 		/// </summary>
+		[EnumValue("ACTIVITY_JOIN_REQUEST")]
 		ActivityJoinRequest,
 
 		#region RPC Protocols

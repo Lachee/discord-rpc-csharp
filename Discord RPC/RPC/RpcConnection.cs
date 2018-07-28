@@ -70,6 +70,8 @@ namespace DiscordRPC.RPC
 		private volatile bool aborting = false;
 		private volatile bool shutdown = false;
 
+		private volatile bool hasConnectedOnce = false;
+
 		/// <summary>
 		/// Indicates if the RPC connection is still running in the background
 		/// </summary>
@@ -225,6 +227,8 @@ namespace DiscordRPC.RPC
 					Logger.Info("Connecting to the pipe through the {0}", namedPipe.GetType().FullName);
 					if (namedPipe.Connect(targetPipe))
 					{
+						hasConnectedOnce = true;
+
 						#region Connected
 						//We connected to a pipe! Reset the delay
 						Logger.Info("Connected to the pipe. Attempting to establish handshake...");
@@ -291,8 +295,14 @@ namespace DiscordRPC.RPC
 										}
 
 										//We have a frame, so we are going to process the payload and add it to the stack
-										EventPayload response = frame.GetObject<EventPayload>();
-										ProcessFrame(response);
+										EventPayload response = null;
+										try { response = frame.GetObject<EventPayload>(); } catch (Exception e)
+										{
+											Logger.Error("Failed to parse event! " + e.Message);
+											Logger.Error("Data: " + frame.Message);
+										}
+
+										if (response != null) ProcessFrame(response);
 										break;
 										
 

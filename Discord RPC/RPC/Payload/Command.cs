@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiscordRPC.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,31 +14,37 @@ namespace DiscordRPC.RPC.Payload
 		/// <summary>
 		/// event dispatch
 		/// </summary>
+		[EnumValue("DISPATCH")]
 		Dispatch,
 
 		/// <summary>
 		/// Called to set the activity
 		/// </summary>
+		[EnumValue("SET_ACTIVITY")]
 		SetActivity,
 
 		/// <summary>
 		/// used to subscribe to an RPC event
 		/// </summary>
+		[EnumValue("SUBSCRIBE")]
 		Subscribe,
 
 		/// <summary>
 		/// used to unsubscribe from an RPC event
 		/// </summary>
+		[EnumValue("UNSUBSCRIBE")]
 		Unsubscribe,
 
 		/// <summary>
 		/// Used to accept join requests.
 		/// </summary>
+		[EnumValue("SEND_ACTIVITY_JOIN_INVITE")]
 		SendActivityJoinInvite,
 
 		/// <summary>
 		/// Used to reject join requests.
 		/// </summary>
+		[EnumValue("CLOSE_ACTIVITY_JOIN_REQUEST")]
 		CloseActivityJoinRequest,
 
 		/// <summary>
