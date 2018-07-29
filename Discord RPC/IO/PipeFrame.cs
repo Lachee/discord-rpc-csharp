@@ -111,18 +111,18 @@ namespace DiscordRPC.IO
 				return false;
 
 			//Try to read the length
-			int len;
-			if (!TryReadInt32(stream, out len))
+			uint len;
+			if (!TryReadUInt32(stream, out len))
 				return false;
 
-			int readsRemaining = len;
+			uint readsRemaining = len;
 
 			//Read the contents
 			using (var mem = new MemoryStream())
 			{
-				byte[] buffer = new byte[Math.Min(len, 2048)]; // read in chunks of 2KB
+				byte[] buffer = new byte[Min(2048, len)]; // read in chunks of 2KB
 				int bytesRead;
-				while ((bytesRead = stream.Read(buffer, 0, Math.Min(buffer.Length, readsRemaining))) > 0)
+				while ((bytesRead = stream.Read(buffer, 0, Min(buffer.Length, readsRemaining))) > 0)
 				{
 					readsRemaining -= len;
 					mem.Write(buffer, 0, bytesRead);
@@ -140,6 +140,12 @@ namespace DiscordRPC.IO
 			//fun
 			//if (a != null) { do { yield return true; switch (a) { case 1: await new Task(); default: lock (obj) { foreach (b in c) { for (int d = 0; d < 1; d++) { a++; } } } while (a is typeof(int) || (new Class()) != null) } goto MY_LABEL;
 
+		}
+
+		private int Min(int a, uint b)
+		{
+			if (b >= a) return a;
+			return (int) b;
 		}
 
 		/// <summary>
@@ -162,7 +168,7 @@ namespace DiscordRPC.IO
 			}
 
 			//Flip the endianess if required then convert it to a number
-			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			value = BitConverter.ToUInt32(bytes, 0);
 			return true;
 		}   
@@ -187,7 +193,7 @@ namespace DiscordRPC.IO
 			}
 
 			//Flip the endianess if required then convert it to a number
-			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 			value = BitConverter.ToInt32(bytes, 0);
 			return true;
 		}
@@ -223,7 +229,7 @@ namespace DiscordRPC.IO
 			byte[] bytes = BitConverter.GetBytes(uint32);
 
 			//If we are already in LE, we dont need to flip it
-			if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
 
 			//Give back the bytes
 			return bytes;

@@ -233,7 +233,6 @@ namespace DiscordRPC.RPC
 						//We connected to a pipe! Reset the delay
 						Logger.Info("Connected to the pipe. Attempting to establish handshake...");
 						EnqueueMessage(new ConnectionEstablishedMessage() { ConnectedPipe = namedPipe.ConnectedPipe });
-						delay.Reset();
 
 						//Attempt to establish a handshake
 						EstablishHandshake();
@@ -412,6 +411,7 @@ namespace DiscordRPC.RPC
 				{
 					Logger.Info("Connection established with the RPC");
 					SetConnectionState(RpcState.Connected);
+					delay.Reset();
 
 					//Prepare the object
 					ReadyMessage ready = response.GetObject<ReadyMessage>();

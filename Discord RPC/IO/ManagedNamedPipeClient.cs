@@ -233,11 +233,13 @@ namespace DiscordRPC.IO
 						{
 							//TODO: Enqueue a pipe close event here as we failed to read something.
 							Logger.Error("Pipe failed to read from the data received by the stream.");
+							Close();
 						}
 					}
 					catch (Exception e)
 					{
 						Logger.Error("A exception has occured while trying to parse the pipe data: " + e.Message);
+						Close();
 					}
 				}
 			}
