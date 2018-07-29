@@ -129,7 +129,7 @@ namespace DiscordRPC.IO
 				}
 
 				byte[] result = mem.ToArray();
-				if (result.Length != len)
+				if (result.LongLength != len)
 					return false;
 
 				Opcode = (Opcode)op;
@@ -172,31 +172,6 @@ namespace DiscordRPC.IO
 			value = BitConverter.ToUInt32(bytes, 0);
 			return true;
 		}   
-		
-		/// <summary>
-		/// Attempts to read a Int32
-		/// </summary>
-		/// <param name="stream"></param>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		private bool TryReadInt32(Stream stream, out int value)
-		{
-			//Read the bytes available to us
-			byte[] bytes = new byte[4];
-			int cnt = stream.Read(bytes, 0, bytes.Length);
-
-			//Make sure we actually have a valid value
-			if (cnt != 4)
-			{
-				value = default(int);
-				return false;
-			}
-
-			//Flip the endianess if required then convert it to a number
-			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			value = BitConverter.ToInt32(bytes, 0);
-			return true;
-		}
 
 		/// <summary>
 		/// Writes the frame into the target frame as one big byte block.
@@ -205,8 +180,8 @@ namespace DiscordRPC.IO
 		public void WriteStream(Stream stream)
 		{
 			//Get all the bytes
-			byte[] op = ConvertBytes((uint) Opcode);
-			byte[] len = ConvertBytes(Length);
+			byte[] op = BitConverter.GetBytes((uint) Opcode);
+			byte[] len = BitConverter.GetBytes(Length);
 
 			//Copy it all into a buffer
 			byte[] buff = new byte[op.Length + len.Length + Data.Length];
@@ -216,23 +191,6 @@ namespace DiscordRPC.IO
 
 			//Write it to the stream
 			stream.Write(buff, 0, buff.Length);
-		}
-
-
-		/// <summary>
-		/// Gets the bytes of a uint32 value in LE format.
-		/// </summary>
-		/// <param name="uint32"></param>
-		/// <returns></returns>
-		private byte[] ConvertBytes(uint uint32)
-		{
-			byte[] bytes = BitConverter.GetBytes(uint32);
-
-			//If we are already in LE, we dont need to flip it
-			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-
-			//Give back the bytes
-			return bytes;
-		}
+		}		
 	}
 }
