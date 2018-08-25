@@ -2,7 +2,6 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger)
 
-
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
 This library supports all features of the Rich Presence that the official C++ library supports, plus a few extra:
@@ -15,7 +14,6 @@ This library supports all features of the Rich Presence that the official C++ li
  - **Inline Documented** (for all your intelli-sense needs)
  - **Helper Functionality** (eg: AvatarURL generator from Join Requests)
  - **Ghost Prevention** (Tells discord to clear the RP on disposal)
- - ~~**HTTP Rich Presence support!**~~ 
 
 _*Managed Pipes is unavailable for the Unity3D game engine due to technical limitations and a substitute native wrapper library is required._
 
@@ -23,17 +21,10 @@ _*Proper Documentation outside of inline is planned and will be implemented hope
 
 _*HTTP Support has been removed as Discord removed their implementation. Talks of bringing it back and this library will update if it happens._
 
-## Doesn't RPC require whitelisting?
-```
-RPC: CLOSED,
-RPC - Rich Presence: OPEN,
-RPC - Rich Presence - Join / Specate: CLOSED
-```
-* __All features within RPC need to be given permission and whitelisted (excluding Rich Presence)__
-* __Rich Presence Join / Spectate feature is whitelist only (but private testing allowed)__
-
 # Installation
 Within the Visual Studio solution, there are 3 projects. The main library is located in `Discord RPC`, the example project is `DiscordRPC.Example` and a native pipe wrapper is `DiscordRPC.Native`. 
+
+If you are using Unity3D, you can download the Unity Package for a quick setup [DiscordRPC_Unity.unitypackage](https://github.com/Lachee/discord-rpc-csharp/raw/master/DiscordRPC_Unity.unitypackage). This maybe a older version of the project.
 
 **Dependencies:**
  - Newtonsoft.Json 
@@ -49,6 +40,8 @@ For standard use, the only project that needs to be build is `Discord RPC`. This
 There is currently no nuget package available. One will be released in the future when this project is in a stable state.
 
 **Unity3D Game Engine**
+Download the Unity Package for a quick setup [DiscordRPC_Unity.unitypackage](https://github.com/Lachee/discord-rpc-csharp/raw/master/DiscordRPC_Unity.unitypackage). This maybe a older version of the project.
+
 Unity3D has a limitation with its managed version of pipes. It does not support asynchronous mode (even in .NET 4.6) and will block waiting for a read to finish. Aborting a read will cause a hard freeze of the editor.
 
 This library provides a solution that should only be used when this problem occurs. It is a native library and as such is platform specific and needs to be built for every planned release platform (win32, win64, mac, linux). 
@@ -123,55 +116,6 @@ void Deinitialize()
 	client.Dispose();
 }
 ```
-### Special Usage
-If you do not wish to support the Join / Request feature and just want a quick and simple way to send messages, you may want to use the `WebRPC` instead. This will prepare payloads for you to send with HTTP Post to the discord client. It will generate the url, payload and headings, all you need to do is then pass them to your implementation of web requests.
-
-**WebClient Example**
-```csharp
-var request = DiscordRPC.Web.WebRPC.PrepareRequest(presence, ClientID);
-RichPresence response = null;
-
-//Now we need to send it. We are using WebClient as a example
-using (var web = new System.Net.WebClient())
-{
-	//Copy over the headers
-	foreach (var kp in request.Headers)
-		web.Headers.Add(kp.Key, kp.Value);
-
-	//Make the request
-	string json = web.UploadString(request.URL, request.Data);
-
-	//Try to parse the request
-	if (!DiscordRPC.Web.WebRPC.TryParseResponse(json, out response))
-	{
-		//We failed to set the rich presence
-		Console.WriteLine("Something went wrong while trying to parse the response!");
-		Console.WriteLine("Received: {0}", json);
-	}
-	else
-	{
-		//We succesfully set the rich presence!
-		Console.WriteLine("Succesfully set Rich Presence! State: {0}", response.State);
-	}
-}
-```
-
-**Unity3D 2017+ Example**
-```csharp
-IEnumerator SendPresence(string applicationID, DiscordPresence presence)
-{
-	//Prepare the request JSON and then encoded it into a byte array.
-	var requestPayload = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
-	byte[] encodedRequest = System.Text.Encoding.UTF8.GetBytes(requestPayload.Data);
-
-	//Send a new HTTP POST request with the approprate data and headers from the payload
-	WWW www = new WWW(requestPayload.URL, encodedRequest, requestPayload.Headers);
-	
-	//Yield for its completion
-	yield return www;
-}
-```
-
 
 ## Build script parameters
 The following parameters can be passed to the build script:
