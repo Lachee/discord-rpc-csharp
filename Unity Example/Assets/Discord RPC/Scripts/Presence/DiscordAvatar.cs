@@ -4,6 +4,7 @@ using DiscordRPC;
 using System.Collections;
 using System.IO;
 
+[System.Obsolete("Avatar information is handled by the User object now")]
 static class DiscordAvatar
 {
 	public delegate void AvatarDownloadCallback(User user, Texture2D avatar);
@@ -31,7 +32,7 @@ static class DiscordAvatar
 	/// <param name="isJPEG">Flag indicating if the avatar should be jpeg encoded, otherwise the PNG format will be used. Default is false</param>
 	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
 	[System.Obsolete("Cast this object into a DiscordUser instead and use the functions provided.")]
-	public static void GetAvatarTexture(this User user, MonoBehaviour reference,  User.AvatarSize size = User.AvatarSize.x128, TextureFormat format = TextureFormat.RGBA32, bool isJPEG = false, AvatarDownloadCallback callback = null)
+	private static void GetAvatarTexture(this User user, MonoBehaviour reference,  User.AvatarSize size = User.AvatarSize.x128, TextureFormat format = TextureFormat.RGBA32, bool isJPEG = false, AvatarDownloadCallback callback = null)
 	{
 		reference.StartCoroutine(EnumerateAvatarTexture(user, size, format, isJPEG, callback));
 	}
@@ -46,7 +47,7 @@ static class DiscordAvatar
 	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
 	/// <returns></returns>
 	[System.Obsolete("Cast this object into a DiscordUser instead and use the functions provided.")]
-	public static IEnumerator EnumerateAvatarTexture(this User user, User.AvatarSize size = User.AvatarSize.x128, TextureFormat format = TextureFormat.RGBA32, bool isJPEG = false, AvatarDownloadCallback callback = null)
+	private static IEnumerator EnumerateAvatarTexture(this User user, User.AvatarSize size = User.AvatarSize.x128, TextureFormat format = TextureFormat.RGBA32, bool isJPEG = false, AvatarDownloadCallback callback = null)
 	{
 		if (string.IsNullOrEmpty(user.Avatar))
 		{
@@ -101,7 +102,7 @@ static class DiscordAvatar
 	/// <param name="callback">The callback that will be made when the picture finishes downloading.</param>
 	/// <returns></returns>
 	[System.Obsolete("Cast this object into a DiscordUser instead and use the functions provided.")]
-	public static IEnumerator GetDefaultAvatarTexture(this User user, User.AvatarSize size = User.AvatarSize.x128, AvatarDownloadCallback callback = null)
+	private static IEnumerator GetDefaultAvatarTexture(this User user, User.AvatarSize size = User.AvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
 		int discrim = user.Discriminator % 5;
 

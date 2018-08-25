@@ -7,7 +7,7 @@ namespace DiscordRPC.Examples.JoinRequest
 {
 	public class Example_JoinRequest : MonoBehaviour
 	{
-		public InviteUI prefabInviteUI;
+		public DiscordInviteUI prefabInviteUI;
 		public Transform inviteHolder;
 
 		private void Start()

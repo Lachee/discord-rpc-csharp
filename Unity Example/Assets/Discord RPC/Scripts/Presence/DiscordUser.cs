@@ -14,7 +14,7 @@ public class DiscordUser
 	/// <summary>
 	/// The format to download and cache avatars in. By default, PNG is used.
 	/// </summary>
-	public static DiscordAvatarFormat AvatarFormat { get; set; } = DiscordAvatarFormat.PNG;
+	public static DiscordAvatarFormat AvatarFormat { get; set; }
 
 	/// <summary>
 	/// The username of the Discord user
@@ -117,22 +117,22 @@ public class DiscordUser
 	/// <param name="size">The target size of the avatar. Default is 128x128</param>
 	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
 	/// <returns></returns>
-	public void CacheAvatar(MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128,  AvatarDownloadCallback callback = null)
+	public void GetAvatar(MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128,  AvatarDownloadCallback callback = null)
 	{
-		coroutineCaller.StartCoroutine(CacheAvatarCoroutine(size, callback));
-	}  
-	
+		coroutineCaller.StartCoroutine(GetAvatarCoroutine(size, callback));
+	}
+
 	/// <summary>
 	/// Gets the user avatar as a Texture2D as a enumerator. It will first check the cache if the image exists, if it does it will return the image. Otherwise it will download the image from Discord and store it in the cache, calling the callback once done.
 	/// </summary>
 	/// <param name="size">The target size of the avatar. Default is 128x128</param>
 	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
 	/// <returns></returns>
-	public IEnumerator CacheAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
+	public IEnumerator GetAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
 		if (string.IsNullOrEmpty(_avatarHash))
 		{
-			yield return CacheDefaultAvatarCoroutine(size, callback);
+			yield return GetDefaultAvatarCoroutine(size, callback);
 		}
 		else
 		{
@@ -204,7 +204,7 @@ public class DiscordUser
 	/// <param name="size">The size of the target avatar</param>
 	/// <param name="callback">The callback that will be made when the picture finishes downloading.</param>
 	/// <returns></returns>
-	public IEnumerator CacheDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
+	public IEnumerator GetDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
 		int discrim = discriminator % 5;
 
@@ -253,6 +253,17 @@ public class DiscordUser
 			callback.Invoke(this, _avatar);
 	}
 
+	#region Obsolete Functions
+	[System.Obsolete("Now known as GetAvatar instead.")]
+	public void CacheAvatar(MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { GetAvatar(coroutineCaller, size, callback); }
+
+	[System.Obsolete("Now known as GetAvatarCoroutine instead.")]
+	public IEnumerator CacheAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { return GetAvatarCoroutine(size, callback); }
+
+	[System.Obsolete("Now known as GetAGetDefaultAvatarCoroutinevatar instead.")]
+	public IEnumerator CacheDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { return GetDefaultAvatarCoroutine(size, callback); }
+	#endregion
+
 	private string GetAvatarURL(DiscordAvatarFormat format, DiscordAvatarSize size)
 	{
 		//Prepare the endpoint
@@ -282,6 +293,7 @@ public class DiscordUser
 	/// <param name="user"></param>
 	public static implicit operator DiscordUser(DiscordRPC.User user) { return new DiscordUser(user); }
 }
+
 
 /// <summary>
 /// The format of the discord avatars in the cache
@@ -322,4 +334,53 @@ public enum DiscordAvatarSize
 	x1024 = 1024,
 	/// <summary> 2048 x 2048 pixels.</summary>
 	x2048 = 2048
+}
+
+/// <summary>
+/// Collection of extensions to the <see cref="DiscordRPC.User"/> class.
+/// </summary>
+public static class DiscordUserExtension
+{
+	/// <summary>
+	/// Gets the user avatar as a Texture2D and starts it with the supplied monobehaviour. It will first check the cache if the image exists, if it does it will return the image. Otherwise it will download the image from Discord and store it in the cache, calling the callback once done.
+	/// <para>An alias of <see cref="DiscordUser.CacheAvatar(MonoBehaviour, DiscordAvatarSize, AvatarDownloadCallback)"/> and will return the new <see cref="DiscordUser"/> instance.</para>
+	/// </summary>
+	/// <param name="coroutineCaller">The target object that will start the coroutine</param>
+	/// <param name="size">The target size of the avatar. Default is 128x128</param>
+	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
+	/// <returns>Returns the generated <see cref="DiscordUser"/> for this <see cref="DiscordRPC.User"/> object.</returns>
+	public static DiscordUser GetAvatar(this DiscordRPC.User user, MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128, DiscordUser.AvatarDownloadCallback callback = null)
+	{
+		var du = new DiscordUser(user);
+		du.GetAvatar(coroutineCaller, size, callback);
+		return du;
+	}
+
+	/// <summary>
+	/// Gets the user avatar as a Texture2D as a enumerator. It will first check the cache if the image exists, if it does it will return the image. Otherwise it will download the image from Discord and store it in the cache, calling the callback once done.
+	/// <para>An alias of <see cref="DiscordUser.CacheAvatarCoroutine(DiscordAvatarSize, DiscordUser.AvatarDownloadCallback)"/> and will return the new <see cref="DiscordUser"/> instance in the callback.</para>
+	/// </summary>
+	/// <param name="size">The target size of the avatar. Default is 128x128</param>
+	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
+	/// <returns></returns>
+	public static IEnumerator GetAvatarCoroutine(this DiscordRPC.User user, DiscordAvatarSize size = DiscordAvatarSize.x128, DiscordUser.AvatarDownloadCallback callback = null)
+	{
+		var du = new DiscordUser(user);
+		return du.GetDefaultAvatarCoroutine(size, callback);
+	}
+
+	/// <summary>
+	/// Gets the default avatar for the given user. Will check the cache first, and if none are available it will then download the default from discord.
+	/// <para>An alias of <see cref="DiscordUser.CacheDefaultAvatarCoroutine(DiscordAvatarSize, DiscordUser.AvatarDownloadCallback)"/> and will return the new <see cref="DiscordUser"/> instance in the callback.</para>
+	/// </summary>
+	/// <param name="size">The size of the target avatar</param>
+	/// <param name="callback">The callback that will be made when the picture finishes downloading.</param>
+	/// <returns></returns>
+	public static IEnumerator GetDefaultAvatarCoroutine(this DiscordRPC.User user, DiscordAvatarSize size = DiscordAvatarSize.x128, DiscordUser.AvatarDownloadCallback callback = null)
+	{
+		var du = new DiscordUser(user);
+		return du.GetDefaultAvatarCoroutine(size, callback);
+	}
+
+
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 [InitializeOnLoad]
 public class DiscordNativeInstall  {
 	
-	const string PLUGIN_PATH_86_64 = "Discord RPC/Plugins/x64";
+	const string PLUGIN_PATH_86_64 = "Discord RPC/Plugins/x86_64";
 	const string PLUGIN_PATH_86 = "Discord RPC/Plugins/x86";
 	const string PLUGIN_NAME = "DiscordRPC.Native.dll";
 
@@ -33,7 +33,6 @@ public class DiscordNativeInstall  {
 
 		//Make sure we are below 2017
 #if !UNITY_2017_1_OR_NEWER
-		Debug.Log("Since you are below Unity 2017, the DLL needs to be copied over");
 		CopyLibrary();
 		return;
 #endif
@@ -55,7 +54,7 @@ public class DiscordNativeInstall  {
 
 	private static void CleanRoot()
 	{
-		string lib = Path.Combine(Application.dataPath, PLUGIN_NAME);
+		string lib = Path.Combine(Application.dataPath + "/../", PLUGIN_NAME);
 		if (File.Exists(lib))
 		{
 			try
@@ -74,7 +73,7 @@ public class DiscordNativeInstall  {
 	{
 		//Prepare the paths
 		string sourcePath = Path.Combine(Application.dataPath, path);
-		string destPath = Application.dataPath;
+		string destPath = Application.dataPath + "/../";
 
 		string sourceFile = Path.Combine(sourcePath, file);
 		string destFile = Path.Combine(destPath, file);
@@ -82,7 +81,7 @@ public class DiscordNativeInstall  {
 		//Make sure the path exists
 		if (!File.Exists(sourceFile))
 		{
-			Debug.LogWarning("Could not find the native dll '" + sourceFile + "' to copy. Make sure you build the library before use!");
+			Debug.LogWarning("Since you are below Unity 2017, the DLL needs to be copied over. Could not find the native dll '" + sourceFile + "' to copy. Make sure you build the library before use!");
 		}
 
 		//Make sure the file doesn't already exist
@@ -91,13 +90,13 @@ public class DiscordNativeInstall  {
 			//They have both been modified at the last time, probably best to just leave if.
 			if (File.GetLastWriteTime(sourceFile) == File.GetLastWriteTime(destFile))
 				return;
-
+			
 			//Give a warning about restarting
-			Debug.Log("The file '" + destFile + "' already exists. Will override but will require a unity restart to take effect");
+			Debug.Log("Since you are below Unity 2017, the DLL needs to be copied over. The file '" + destFile + "' already exists. Will override but will require a unity restart to take effect");
 		}
 		else
 		{
-			Debug.Log("The file '" + destFile + "' is being copied to work with your current unity settings");
+			Debug.Log("Since you are below Unity 2017, the DLL needs to be copied over. The file '" + destFile + "' is being copied to work with your current unity settings");
 		}
 
 		//Copy the file

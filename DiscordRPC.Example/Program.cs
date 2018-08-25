@@ -204,7 +204,7 @@ namespace DiscordRPC.Example
 				//Console.Write("+");
 				Thread.Sleep(1000);
 
-				client.SetPresence(presence);
+				//client.SetPresence(presence);
 			}
 
 			client.Dispose();

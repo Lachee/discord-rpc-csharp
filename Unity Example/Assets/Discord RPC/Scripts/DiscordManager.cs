@@ -126,7 +126,7 @@ public class DiscordManager : MonoBehaviour {
 
 			//Set the user and cache their avatars
 			_currentUser = args.User;
-			_currentUser.CacheAvatar(this, DiscordAvatarSize.x128);
+			_currentUser.GetAvatar(this, DiscordAvatarSize.x128);
 		}; 
 		client.OnPresenceUpdate += (s, args) =>
 		{
@@ -271,14 +271,17 @@ public class DiscordManager : MonoBehaviour {
 	/// <param name="applicationID">The ID of this application</param>
 	/// <param name="presence">The presence to set the client</param>
 	/// <returns></returns>
+	[System.Obsolete("WWW (http) based requests are no longer supported as Discord removed the functionality. See the offical Github repository for more information.")]
 	public static IEnumerator SendPresence(string applicationID, DiscordPresence presence)
 	{
+		/*
 		var requestPayload = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
 		byte[] encodedRequest = System.Text.Encoding.UTF8.GetBytes(requestPayload.Data);
 
 		WWW www = new WWW(requestPayload.URL, encodedRequest, requestPayload.Headers);
 		yield return www;
-
+		*/
+		yield return null;
 		/*
 		RichPresence p;
 		string response = System.Text.Encoding.UTF8.GetString(www.bytes);
