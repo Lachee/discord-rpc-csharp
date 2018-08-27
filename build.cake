@@ -14,7 +14,8 @@ var buildCounter = Argument<int>("buildCounter", 0);
 // Project Variables
 var sln = string.Format("./{0}/{0}.sln", projectName);
 var releaseFolder = string.Format("./{0}/bin/{1}", projectName, buildType);
-var releaseDll = string.Format("/{0}.dll", projectName);
+//var releaseDll = string.Format("/{0}.dll", projectName);
+var releaseDll = "/DiscordRPC.dll";
 var nuspecFile = string.Format("./{0}/{0}.nuspec", projectName);
 
 // Execution Variables
