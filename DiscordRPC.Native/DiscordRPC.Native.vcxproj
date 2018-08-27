@@ -83,6 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(MSBuildProjectDirectory)\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,13 +98,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86\"
-copy /Y "$(TargetPath)" "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86\$(TargetFileName)"
-copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration)\$(TargetFileName)"
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copies DLL</Message>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,15 +118,6 @@ copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86_64\"
-copy /Y "$(TargetPath)" "$(SolutionDir)..\Unity Example\Assets\Discord RPC\Plugins\x86_64\$(TargetFileName)"
-copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration)\$(TargetFileName)"
-</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Copies DLL</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -145,11 +136,12 @@ copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(Configuration
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetPath)" "$(SolutionDir)..\DiscordRPC.Example\bin\$(ConfigurationName)\$(TargetFileName)"
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copies the DLL to the example project</Message>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
