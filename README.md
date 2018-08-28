@@ -127,9 +127,14 @@ void Deinitialize()
 ## Building
 **What needs to be built**
 
-_non-unity3d__: Only the DiscordRPC Project.
-
-_unity3d_: The DiscordRPC Project **and** the DiscordRPC.Native in your **target** platforms.
+| Type        | DiscordRPC | DiscordRPC.Native*   | DiscordRPC.Example |
+|-------------|------------|---------------------|--------------------|
+| WinForm App | X          |                     |                    |
+| Console App | X          |                     |                    |
+| Mono Game   | X          | * If Issues Persist |                    |
+| Unity3D     | X          | X                   |                    |
+* DiscordRPC.Native is _platform specific!_
+* It is recommended for Unity3D projects to use the Unity Package [DiscordRPC_Unity.unitypackage](https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC_Unity.unitypackage)
 
 You can build the solution easily in Visual Studio, however if you wish to build via command line, you can do so with the PowerShell build script:
 ```
