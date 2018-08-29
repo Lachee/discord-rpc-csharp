@@ -6,7 +6,7 @@ using System.Text;
 namespace DiscordRPC.Logging
 {
 	/// <summary>
-	/// Logs the outputs to the console using <see cref="Console.WriteLine"/>
+	/// Logs the outputs to the console using <see cref="Console.WriteLine()"/>
 	/// </summary>
 	public class ConsoleLogger : ILogger
 	{

@@ -6,7 +6,10 @@ using System.Reflection;
 
 namespace DiscordRPC.Converters
 {
-	public class EnumSnakeCaseConverter : JsonConverter
+	/// <summary>
+	/// Converts enums with the <see cref="EnumValueAttribute"/> into Json friendly terms. 
+	/// </summary>
+	internal class EnumSnakeCaseConverter : JsonConverter
 	{
 		public override bool CanConvert(Type objectType)
 		{

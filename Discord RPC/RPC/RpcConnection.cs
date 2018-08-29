@@ -69,9 +69,7 @@ namespace DiscordRPC.RPC
 
 		private volatile bool aborting = false;
 		private volatile bool shutdown = false;
-
-		private volatile bool hasConnectedOnce = false;
-
+		
 		/// <summary>
 		/// Indicates if the RPC connection is still running in the background
 		/// </summary>
@@ -227,8 +225,6 @@ namespace DiscordRPC.RPC
 					Logger.Info("Connecting to the pipe through the {0}", namedPipe.GetType().FullName);
 					if (namedPipe.Connect(targetPipe))
 					{
-						hasConnectedOnce = true;
-
 						#region Connected
 						//We connected to a pipe! Reset the delay
 						Logger.Info("Connected to the pipe. Attempting to establish handshake...");

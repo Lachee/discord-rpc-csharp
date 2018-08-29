@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiscordRPC.Converters
 {
-	public class EnumValueAttribute : Attribute
+	internal class EnumValueAttribute : Attribute
 	{
 		public string Value { get; set; }
 		public EnumValueAttribute(string value)

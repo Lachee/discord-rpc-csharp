@@ -7,10 +7,16 @@ namespace DiscordRPC.Message
 	/// </summary>
 	public class UnsubscribeMessage : IMessage
 	{
+		/// <summary>
+		/// The type of message received from discord
+		/// </summary>
 		public override MessageType Type { get { return MessageType.Unsubscribe; } }
-		public EventType Event { get; internal set; }
 		
-		public UnsubscribeMessage() { }
+		/// <summary>
+		/// The event that was subscribed too.
+		/// </summary>
+		public EventType Event { get; internal set; }
+
 		internal UnsubscribeMessage(ServerEvent evt)
 		{
 			switch (evt)

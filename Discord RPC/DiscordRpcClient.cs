@@ -206,7 +206,7 @@ namespace DiscordRPC
 		/// </summary>
 		/// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
 		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>	
+		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
 		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme) : this(applicationID, steamID, registerUriScheme, -1) { }
 
 		/// <summary>

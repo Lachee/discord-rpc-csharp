@@ -193,7 +193,7 @@ namespace DiscordRPC
 		}
 		
 		/// <summary>
-		/// Attempts to call <see cref="NullEmpty(string)"/> on the string and return the result, if its within a valid length.
+		/// Attempts to call <see cref="StringTools.NullEmpty(string)"/> on the string and return the result, if its within a valid length.
 		/// </summary>
 		/// <param name="str">The string to check</param>
 		/// <param name="result">The formatted string result</param>
@@ -238,7 +238,7 @@ namespace DiscordRPC
 	public class Secrets
 	{
 		/// <summary>
-		/// The unique match code to distinguish different games/lobbies. Use <see cref="Secret.CreateSecret()"/> to get an appropriately sized secret. 
+		/// The unique match code to distinguish different games/lobbies. Use <see cref="Secrets.CreateSecret(Random)"/> to get an appropriately sized secret. 
 		/// <para>This cannot be null and must be supplied for the  Join / Spectate feature to work.</para>
 		/// <para>Max Length of 128 Bytes</para>
 		/// </summary>

@@ -7,7 +7,9 @@ using System.Text;
 
 namespace DiscordRPC.IO
 {
-	//TODO: Make Internal
+	/// <summary>
+	/// A frame received and sent to the Discord client for RPC communications.
+	/// </summary>
 	public struct PipeFrame
 	{
 		/// <summary>
@@ -39,6 +41,11 @@ namespace DiscordRPC.IO
 			set { SetMessage(value); }
 		}
 		
+		/// <summary>
+		/// Creates a new pipe frame instance
+		/// </summary>
+		/// <param name="opcode">The opcode of the frame</param>
+		/// <param name="data">The data of the frame that will be serialized as JSON</param>
 		public PipeFrame(Opcode opcode, object data)
 		{
 			//Set the opcode and a temp field for data

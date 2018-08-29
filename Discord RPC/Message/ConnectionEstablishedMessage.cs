@@ -11,6 +11,9 @@ namespace DiscordRPC.Message
 	/// </summary>
 	public class ConnectionEstablishedMessage : IMessage
 	{
+		/// <summary>
+		/// The type of message received from discord
+		/// </summary>
 		public override MessageType Type { get { return MessageType.ConnectionEstablished; } }
 
 		/// <summary>

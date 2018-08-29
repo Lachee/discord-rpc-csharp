@@ -11,6 +11,9 @@ namespace DiscordRPC.Message
 	/// </summary>
 	public class ConnectionFailedMessage : IMessage
 	{
+		/// <summary>
+		/// The type of message received from discord
+		/// </summary>
 		public override MessageType Type { get { return MessageType.ConnectionFailed; } }
 
 		/// <summary>

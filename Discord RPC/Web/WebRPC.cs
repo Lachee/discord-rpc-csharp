@@ -45,7 +45,6 @@ namespace DiscordRPC.Web
 		/// <param name="presence">The presence to send to discord</param>
 		/// <param name="response">The response object from the client</param>
 		/// <param name="applicationID">The ID of the application</param>
-		/// <param name="async">Enables async operations. This will ignore all responses received from discord.</param>
 		/// <param name="port">The port the discord client is currently on. Specify this for testing. Will start scanning from supplied port.</param>
 		/// <returns>True if the response was valid from the server, otherwise false.</returns>
 		[System.Obsolete("Setting Rich Presence over HTTP is no longer supported by Discord. See offical Rich Presence github for more information.")]
