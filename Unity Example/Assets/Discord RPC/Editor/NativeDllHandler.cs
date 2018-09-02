@@ -16,29 +16,17 @@ public class DiscordNativeInstall  {
 	{
 
 #pragma warning disable 0162
-
-		//In SUBSET mode, this is bad
-#if NET_2_0_SUBSET
-		Debug.LogError("Cannot use the discord library because .NET 2.0 SUBSET is being used. Please switch to either .NET 2.0 or .NET 4.6 in the player settings.");
-		CleanRoot();
-		return;
-#endif
-
+		
 		//We are not windows, cannot do anything
 #if !UNITY_STANDALONE_WIN
 		Debug.LogError("Cannot use the discord library because the natives do not support non-windows platforms yet.");
 		CleanRoot();
 		return;
 #endif
-
-		//Make sure we are below 2017
-#if !UNITY_2017_1_OR_NEWER
+		
+		//Copy the library over
 		CopyLibrary();
-		return;
-#endif
 
-		//Clean the root.
-		CleanRoot();
 #pragma warning restore 0162
 
 	}
