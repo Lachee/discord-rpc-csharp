@@ -66,7 +66,7 @@ public class DiscordManager : MonoBehaviour {
 	/// </summary>
 	public DiscordEvent CurrentSubscription { get { return _currentSubscription; } }
 	[Tooltip("The current subscription flag")]
-	[SerializeField] private DiscordEvent _currentSubscription = DiscordEvent.Join | DiscordEvent.Spectate;
+	[SerializeField] private DiscordEvent _currentSubscription = DiscordEvent.None;
 
 	/// <summary>
 	/// The current presence displayed on the Discord Client.
@@ -241,6 +241,78 @@ public class DiscordManager : MonoBehaviour {
 		this._currentSubscription = evt;
 		client.SetSubscription(evt.ToDiscordRPC());
 	}
+
+	#region Single Components Sets
+	public DiscordPresence UpdateDetails(string details)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence) _client.UpdateDetails(details);
+	}
+
+	public DiscordPresence UpdateState(string state)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateState(state);
+	}
+
+	public DiscordPresence UpdateParty(DiscordParty party)
+	{
+		if (_client == null) return null;
+		if (party == null) return (DiscordPresence)_client.UpdateParty(null);
+		return (DiscordPresence)_client.UpdateParty(party.ToRichParty());
+	}
+	public DiscordPresence UpdatePartySize(int size, int max)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdatePartySize(size, max);
+	}
+
+	public DiscordPresence UpdateLargeAsset(DiscordAsset asset)
+	{
+		if (_client == null) return null;
+		if (asset == null) return (DiscordPresence)_client.UpdateLargeAsset("", "");
+		return (DiscordPresence)_client.UpdateLargeAsset(asset.image, asset.tooltip);
+	}
+	public DiscordPresence UpdateSmallAsset(DiscordAsset asset)
+	{
+		if (_client == null) return null;
+		if (asset == null) return (DiscordPresence)_client.UpdateSmallAsset("", "");
+		return (DiscordPresence)_client.UpdateSmallAsset(asset.image, asset.tooltip);
+	}
+
+	public DiscordPresence UpdateSecrets(DiscordSecrets secrets)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateSecrets(secrets.ToRichSecrets());
+	}
+
+	public DiscordPresence UpdateStartTime()
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateStartTime();
+	}
+	public DiscordPresence UpdateStartTime(DiscordTimestamp timestamp)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateStartTime(timestamp.GetDateTime());
+	}
+	public DiscordPresence UpdateEndTime()
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateEndTime();
+	}
+	public DiscordPresence UpdateEndTime(DiscordTimestamp timestamp)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateEndTime(timestamp.GetDateTime());
+	}
+	public DiscordPresence UpdateClearTime(DiscordTimestamp timestamp)
+	{
+		if (_client == null) return null;
+		return (DiscordPresence)_client.UpdateClearTime();
+	}
+	#endregion
+
 
 	/// <summary>
 	/// Resonds to a Join Request.

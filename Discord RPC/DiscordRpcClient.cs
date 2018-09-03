@@ -473,8 +473,8 @@ namespace DiscordRPC
 					if (!HasRegisteredUriScheme)
 						throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme!");
 
-					if (!string.IsNullOrEmpty(presence.Secrets.JoinSecret) && !presence.HasParty())
-						throw new BadPresenceException("Presences that include Join Secrets must also include a party!");
+					//if (!string.IsNullOrEmpty(presence.Secrets.JoinSecret) && !presence.HasParty())
+					//	throw new BadPresenceException("Presences that include Join Secrets must also include a party!");
 				}
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
@@ -484,6 +484,176 @@ namespace DiscordRPC
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
 			}
 		}
+
+		#region Updates
+		/// <summary>
+		/// Updates only the <see cref="RichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+		/// </summary>
+		/// <param name="details">The details of the Rich Presence</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateDetails(string details)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			_presence.Details = details;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		/// <summary>
+		/// Updates only the <see cref="RichPresence.State"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+		/// </summary>
+		/// <param name="state">The state of the Rich Presence</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateState(string state)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			_presence.State = state;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		/// <summary>
+		/// Updates only the <see cref="RichPresence.Party"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+		/// </summary>
+		/// <param name="party">The party of the Rich Presence</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateParty(Party party)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			_presence.Party = party;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		/// <summary>
+		/// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
+		/// <para>Will return null if no presence exists and will throw a new <see cref="NullReferenceException"/> if the Party does not exist.</para>
+		/// </summary>
+		/// <param name="size">The new size of the party. It cannot be greater than <see cref="Party.Max"/></param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdatePartySize(int size)
+		{
+			if (_presence == null) return null;
+			if (_presence.Party == null)
+				throw new NullReferenceException("Cannot set the size of the party if the party does not exist");
+
+			try { UpdatePartySize(size, _presence.Party.Max); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		/// <summary>
+		/// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
+		/// <para>Will return null if no presence exists and will throw a new <see cref="NullReferenceException"/> if the Party does not exist.</para>
+		/// </summary>
+		/// <param name="size">The new size of the party. It cannot be greater than <see cref="Party.Max"/></param>
+		/// <param name="max">The new size of the party. It cannot be smaller than <see cref="Party.Size"/></param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdatePartySize(int size, int max)
+		{
+			if (_presence == null) return null;
+			if (_presence.Party == null)
+				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
+
+			_presence.Party.Size = size;
+			_presence.Party.Max = max;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+
+
+		/// <summary>
+		/// Updates the large <see cref="Assets"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Both <paramref name="key"/> and <paramref name="tooltip"/> are optional and will be ignored it null.
+		/// </summary>
+		/// <param name="key">Optional: The new key to set the asset too</param>
+		/// <param name="tooltip">Optional: The new tooltip to display on the asset</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateLargeAsset(string key = null, string tooltip = null)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			if (_presence.Assets == null) _presence.Assets = new Assets();
+			_presence.Assets.LargeImageKey = key ?? _presence.Assets.LargeImageKey;
+			_presence.Assets.LargeImageText = tooltip ?? _presence.Assets.LargeImageText;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+
+		/// <summary>
+		/// Updates the small <see cref="Assets"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Both <paramref name="key"/> and <paramref name="tooltip"/> are optional and will be ignored it null.
+		/// </summary>
+		/// <param name="key">Optional: The new key to set the asset too</param>
+		/// <param name="tooltip">Optional: The new tooltip to display on the asset</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateSmallAsset(string key = null, string tooltip = null)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			if (_presence.Assets == null) _presence.Assets = new Assets();
+			_presence.Assets.SmallImageKey = key ?? _presence.Assets.SmallImageKey;
+			_presence.Assets.SmallImageText = tooltip ?? _presence.Assets.SmallImageText;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+
+		/// <summary>
+		/// Updates the <see cref="Secrets"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Will override previous secret entirely.
+		/// </summary>
+		/// <param name="secrets">The new secret to send to discord.</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateSecrets(Secrets secrets)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			_presence.Secrets = secrets;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+
+		/// <summary>
+		/// Sets the start time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
+		/// </summary>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateStartTime() { try { return UpdateStartTime(DateTime.UtcNow); } catch (Exception e) { throw e; } }
+
+		/// <summary>
+		/// Sets the start time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
+		/// </summary>
+		/// <param name="time">The new time for the start</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateStartTime(DateTime time)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
+			_presence.Timestamps.Start = time;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		
+		/// <summary>
+		/// Sets the end time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
+		/// </summary>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateEndTime() { try { return UpdateEndTime(DateTime.UtcNow); } catch (Exception e) { throw e; } }
+
+		/// <summary>
+		/// Sets the end time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
+		/// </summary>
+		/// <param name="time">The new time for the end</param>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateEndTime(DateTime time)
+		{
+			if (_presence == null) _presence = new RichPresence();
+			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
+			_presence.Timestamps.End = time;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+
+		/// <summary>
+		/// Sets the start and end time of <see cref="CurrentPresence"/> to null and sends it to Discord.
+		/// </summary>
+		/// <returns>Updated Rich Presence</returns>
+		public RichPresence UpdateClearTime()
+		{
+			if (_presence == null) return null;
+			_presence.Timestamps = null;
+			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			return _presence;
+		}
+		#endregion
 
 		/// <summary>
 		/// Clears the Rich Presence. Use this just before disposal to prevent ghosting.

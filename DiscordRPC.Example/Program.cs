@@ -143,8 +143,8 @@ namespace DiscordRPC.Example
 					//These secrets should contain enough data for external clients to be able to know which
 					// game to connect too. A simple approach would be just to use IP address, but this is highly discouraged
 					// and can leave your players vulnerable! 
-					JoinSecret = "join_myuniquegameid",
-					SpectateSecret = "spectate_myuniquegameid"
+					//JoinSecret = "join_myuniquegameid",
+					//SpectateSecret = "spectate_myuniquegameid"
 				};
 
 				presence.Timestamps = new Timestamps()
@@ -161,6 +161,8 @@ namespace DiscordRPC.Example
 					Max = 4
 				};
 
+				presence.Party = new Party();
+
 				//Set some new presence to tell Discord we are in a game.
 				// If the connection is not yet available, this will be queued until a Ready event is called, 
 				// then it will be sent. All messages are queued until Discord is ready to receive them.
@@ -168,7 +170,7 @@ namespace DiscordRPC.Example
 
 				//Subscribe to the join / spectate feature.
 				//These require the RegisterURI to be true.
-				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+				//client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 				
 				//Initialize the connection. This must be called ONLY once.
 				//It must be called before any updates are sent or received from the discord client.

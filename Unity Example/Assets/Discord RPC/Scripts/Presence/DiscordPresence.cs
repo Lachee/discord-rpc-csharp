@@ -134,7 +134,7 @@ public class DiscordPresence
 		presence.Party		= !this.party.IsEmpty() ? this.party.ToRichParty() : null;
 		presence.Secrets	= !this.secrets.IsEmpty() ? this.secrets.ToRichSecrets() : null;
 
-		if (!smallAsset.IsEmpty() || !largeAsset.IsEmpty())
+		if ((smallAsset != null && !smallAsset.IsEmpty()) || (largeAsset != null && !largeAsset.IsEmpty()))
 		{
 			presence.Assets = new DiscordRPC.Assets()
 			{

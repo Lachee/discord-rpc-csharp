@@ -157,6 +157,32 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
+		/// Updates this presence with any values from the previous one
+		/// </summary>
+		/// <param name="presence"></param>
+		internal void Update(RichPresence presence)
+		{
+			if (presence == null) return;
+
+			this._state		= presence._state	?? this._state;
+			this._details	= presence._details ?? this._details;
+			
+			if (presence.Party != null)
+			{
+				if (this.Party != null)
+				{
+					this.Party.ID = presence.Party.ID ?? this.Party.ID;
+					this.Party.Size = presence.Party.Size;
+					this.Party.Max = presence.Party.Max;
+				}
+				else
+				{
+					this.Party = presence.Party;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Does the Rich Presence have valid timestamps?
 		/// </summary>
 		/// <returns></returns>
