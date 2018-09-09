@@ -512,11 +512,12 @@ namespace DiscordRPC
 		[JsonIgnore]
 		public DateTime? End { get; set; }
 
-		/// <summary>
-		/// The <see cref="Start"/> of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
-		/// </summary>
-		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
-		private long? epochStart
+
+        /// <summary>
+        /// Unix epoch for discord start time. Sent as seconds, but received in milliseconds.
+        /// </summary>
+        [JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
+		private long? discordEpochStart
 		{
 			get
 			{
@@ -525,15 +526,16 @@ namespace DiscordRPC
 
 			set
 			{
-				Start = value.HasValue ? FromUnixTime(value.Value) : (DateTime?)null;
+				Start = value.HasValue ? FromUnixTime(value.Value / 1000) : (DateTime?)null;
 			}
 		}
 
-		/// <summary>
-		/// The <see cref="End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="Start"/> is set, this value will override the "elapsed" state to "remaining".
-		/// </summary>
+
+        /// <summary>
+        /// Unix epoch for discord end time. Sent as seconds, but received in milliseconds.
+        /// </summary>
 		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
-		private long? epochEnd
+		private long? discordEpochEnd
 		{
 			get
 			{
@@ -542,7 +544,7 @@ namespace DiscordRPC
 
 			set
 			{
-				End = value.HasValue ? FromUnixTime(value.Value) : (DateTime?)null;
+				End = value.HasValue ? FromUnixTime(value.Value / 1000) : (DateTime?)null;
 			}
 		}
 		
