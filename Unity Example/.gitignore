@@ -36,3 +36,4 @@ sysinfo.txt
 Assets/Discord RPC/Cache
 DiscordRPC.Native.dll
 !Assets/*/DiscordRPC.Native.dll
+!Assets/Discord RPC/Example/Tools*
