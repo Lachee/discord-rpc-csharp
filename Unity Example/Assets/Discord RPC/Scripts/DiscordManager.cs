@@ -111,12 +111,13 @@ public class DiscordManager : MonoBehaviour {
 			steamID,										//The Steam App. This can be null or empty string to disable steam intergration.
 			registerUriScheme,								//Should the client register a custom URI Scheme? This must be true for endpoints
 			(int) targetPipe,								//The target pipe to connect too
-			new NativeNamedPipeClient()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+			new DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
 		);
 
-		//Update the logger to the unity logger
-		_client.Logger = new UnityLogger() { Level = logLevel };
-
+        //Update the logger to the unity logger
+        if (Debug.isDebugBuild) _client.Logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
+        if (Application.isEditor) _client.Logger = new UnityLogger() { Level = logLevel };
+        
 		//Subscribe to some initial events
 		#region Event Registration
 		client.OnReady += (s, args) =>

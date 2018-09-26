@@ -451,9 +451,9 @@ namespace DiscordRPC.RPC
 						//Prepare a serializer that can account for snake_case enums.
 						JsonSerializer serializer = new JsonSerializer();
 						serializer.Converters.Add(new Converters.EnumSnakeCaseConverter());
-						
-						//Go through the data, looking for the evt property, casting it to a server event
-						var evt = response.Data.GetValue("evt").ToObject<ServerEvent>(serializer);
+
+                        //Go through the data, looking for the evt property, casting it to a server event
+                        var evt = response.GetObject<EventPayload>().Event.Value;
 
 						//Enqueue the appropriate message.
 						if (response.Command == Command.Subscribe)
@@ -492,17 +492,17 @@ namespace DiscordRPC.RPC
 			{
 				//We are to join the server
 				case ServerEvent.ActivitySpectate:
-					var spectate = response.Data.ToObject<SpectateMessage>();
+					var spectate = response.GetObject<SpectateMessage>();
 					EnqueueMessage(spectate);
 					break;
 
 				case ServerEvent.ActivityJoin:
-					var join = response.Data.ToObject<JoinMessage>();
+					var join = response.GetObject<JoinMessage>();
 					EnqueueMessage(join);
 					break;
 
 				case ServerEvent.ActivityJoinRequest:
-					var request = response.Data.ToObject<JoinRequestMessage>();
+					var request = response.GetObject<JoinRequestMessage>();
 					EnqueueMessage(request);
 					break;
 

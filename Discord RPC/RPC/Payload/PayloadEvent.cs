@@ -7,7 +7,7 @@ namespace DiscordRPC.RPC.Payload
 	/// <summary>
 	/// Used for Discord IPC Events
 	/// </summary>
-	internal class EventPayload : IPayload
+	public class EventPayload : IPayload
 	{
 		/// <summary>
 		/// The data the server sent too us
@@ -28,9 +28,10 @@ namespace DiscordRPC.RPC.Payload
 		/// Sets the obejct stored within the data.
 		/// </summary>
 		/// <param name="obj"></param>
+        [System.Obsolete("Not used and there is no reason to set the data manually.", true)]
 		public void SetObject(object obj)
 		{
-			Data = JObject.FromObject(obj);
+            throw new System.NotImplementedException();
 		}
 
 		/// <summary>
@@ -41,7 +42,7 @@ namespace DiscordRPC.RPC.Payload
 		public T GetObject<T>()
 		{
 			if (Data == null) return default(T);
-			return Data.ToObject<T>();
+            return Data.ToObject<T>();
 		}
 
 		public override string ToString()

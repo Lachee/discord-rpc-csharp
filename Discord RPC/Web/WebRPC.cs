@@ -106,7 +106,7 @@ namespace DiscordRPC.Web
 				if (ev != null)
 				{
 					//Parse the response into a rich presence response
-					response = ev.Data.ToObject<RichPresenceResponse>();
+					response = ev.GetObject<RichPresenceResponse>();
 					return true;
 				}
 

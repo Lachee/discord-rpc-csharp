@@ -101,7 +101,7 @@ extern "C" DISCORDRPCNATIVE_API void close()
 }
 
 
-extern "C" DISCORDRPCNATIVE_API unsigned int open(const char* pipename) 
+extern "C" DISCORDRPCNATIVE_API unsigned int open(char* pipename) 
 {
 	//Creates a connection to the pipe
 	pipe = ::CreateFileA(pipename, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);

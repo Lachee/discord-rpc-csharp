@@ -4,6 +4,31 @@
         <name>DiscordRPC</name>
     </assembly>
     <members>
+        <member name="T:DiscordRPC.Configuration">
+            <summary>
+            Configuration of the current RPC connection
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Configuration.ApiEndpoint">
+            <summary>
+            The Discord API endpoint that should be used.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Configuration.CdnHost">
+            <summary>
+            The CDN endpoint
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Configuration.Enviroment">
+            <summary>
+            The type of enviroment the connection on. Usually Production. 
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Converters.EnumSnakeCaseConverter">
+            <summary>
+            Converts enums with the <see cref="T:DiscordRPC.Converters.EnumValueAttribute"/> into Json friendly terms. 
+            </summary>
+        </member>
         <member name="T:DiscordRPC.DiscordRpcClient">
             <summary>
             A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.
@@ -175,7 +200,7 @@
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-            <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>	
+            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32)">
             <summary>
@@ -226,6 +251,99 @@
             Sets the Rich Presences
             </summary>
             <param name="presence">The rich presence to send to discord</param>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateDetails(System.String)">
+            <summary>
+            Updates only the <see cref="P:DiscordRPC.RichPresence.Details"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            </summary>
+            <param name="details">The details of the Rich Presence</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateState(System.String)">
+            <summary>
+            Updates only the <see cref="P:DiscordRPC.RichPresence.State"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            </summary>
+            <param name="state">The state of the Rich Presence</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateParty(DiscordRPC.Party)">
+            <summary>
+            Updates only the <see cref="P:DiscordRPC.RichPresence.Party"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            </summary>
+            <param name="party">The party of the Rich Presence</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32)">
+            <summary>
+            Updates the <see cref="P:DiscordRPC.Party.Size"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
+            <para>Will return null if no presence exists and will throw a new <see cref="T:System.NullReferenceException"/> if the Party does not exist.</para>
+            </summary>
+            <param name="size">The new size of the party. It cannot be greater than <see cref="P:DiscordRPC.Party.Max"/></param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32,System.Int32)">
+            <summary>
+            Updates the <see cref="P:DiscordRPC.Party.Size"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
+            <para>Will return null if no presence exists and will throw a new <see cref="T:System.NullReferenceException"/> if the Party does not exist.</para>
+            </summary>
+            <param name="size">The new size of the party. It cannot be greater than <see cref="P:DiscordRPC.Party.Max"/></param>
+            <param name="max">The new size of the party. It cannot be smaller than <see cref="P:DiscordRPC.Party.Size"/></param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateLargeAsset(System.String,System.String)">
+            <summary>
+            Updates the large <see cref="T:DiscordRPC.Assets"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Both <paramref name="key"/> and <paramref name="tooltip"/> are optional and will be ignored it null.
+            </summary>
+            <param name="key">Optional: The new key to set the asset too</param>
+            <param name="tooltip">Optional: The new tooltip to display on the asset</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateSmallAsset(System.String,System.String)">
+            <summary>
+            Updates the small <see cref="T:DiscordRPC.Assets"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Both <paramref name="key"/> and <paramref name="tooltip"/> are optional and will be ignored it null.
+            </summary>
+            <param name="key">Optional: The new key to set the asset too</param>
+            <param name="tooltip">Optional: The new tooltip to display on the asset</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateSecrets(DiscordRPC.Secrets)">
+            <summary>
+            Updates the <see cref="T:DiscordRPC.Secrets"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Will override previous secret entirely.
+            </summary>
+            <param name="secrets">The new secret to send to discord.</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateStartTime">
+            <summary>
+            Sets the start time of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> to now and sends the updated presence to Discord.
+            </summary>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateStartTime(System.DateTime)">
+            <summary>
+            Sets the start time of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord.
+            </summary>
+            <param name="time">The new time for the start</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateEndTime">
+            <summary>
+            Sets the end time of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> to now and sends the updated presence to Discord.
+            </summary>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateEndTime(System.DateTime)">
+            <summary>
+            Sets the end time of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord.
+            </summary>
+            <param name="time">The new time for the end</param>
+            <returns>Updated Rich Presence</returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.UpdateClearTime">
+            <summary>
+            Sets the start and end time of <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> to null and sends it to Discord.
+            </summary>
+            <returns>Updated Rich Presence</returns>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.ClearPresence">
             <summary>
@@ -338,7 +456,7 @@
         </member>
         <member name="T:DiscordRPC.Events.OnConnectionEstablishedEvent">
             <summary>
-            The connection to the discord client was succesfull. This is called before <see cref="!:Ready"/>.
+            The connection to the discord client was succesfull. This is called before <see cref="T:DiscordRPC.Events.OnReadyEvent"/>.
             </summary>
             <param name="sender">The Discord client handler that sent this event</param>
             <param name="args">The arguments supplied with the event</param>
@@ -403,6 +521,11 @@
         <member name="M:DiscordRPC.Helper.BackoffDelay.Reset">
             <summary>
             Resets the backoff
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Helper.StringTools">
+            <summary>
+            Collectin of helpful string extensions
             </summary>
         </member>
         <member name="M:DiscordRPC.Helper.StringTools.NullEmpty(System.String)">
@@ -559,6 +682,16 @@
             Closes the connection
             </summary>
         </member>
+        <member name="T:DiscordRPC.IO.ManagedNamedPipeClient">
+            <summary>
+            A named pipe client using the .NET framework <see cref="T:System.IO.Pipes.NamedPipeClientStream"/>
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.IO.ManagedNamedPipeClient.Logger">
+            <summary>
+            The logger for the Pipe client to use
+            </summary>
+        </member>
         <member name="P:DiscordRPC.IO.ManagedNamedPipeClient.IsConnected">
             <summary>
             Checks if the client is connected
@@ -616,6 +749,41 @@
             Disposes of the stream
             </summary>
         </member>
+        <member name="T:DiscordRPC.IO.Opcode">
+            <summary>
+            The operation code that the <see cref="T:DiscordRPC.IO.PipeFrame"/> was sent under. This defines the type of frame and the data to expect.
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.Opcode.Handshake">
+            <summary>
+            Initial handshake frame
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.Opcode.Frame">
+            <summary>
+            Generic message frame
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.Opcode.Close">
+            <summary>
+            Discord has closed the connection
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.Opcode.Ping">
+            <summary>
+            Ping frame (not used?)
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.Opcode.Pong">
+            <summary>
+            Pong frame (not used?)
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.IO.PipeFrame">
+            <summary>
+            A frame received and sent to the Discord client for RPC communications.
+            </summary>
+        </member>
         <member name="F:DiscordRPC.IO.PipeFrame.MAX_SIZE">
             <summary>
             The maxium size of a pipe frame (16kb).
@@ -640,6 +808,13 @@
             <summary>
             The data represented as a string.
             </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.PipeFrame.#ctor(DiscordRPC.IO.Opcode,System.Object)">
+            <summary>
+            Creates a new pipe frame instance
+            </summary>
+            <param name="opcode">The opcode of the frame</param>
+            <param name="data">The data of the frame that will be serialized as JSON</param>
         </member>
         <member name="P:DiscordRPC.IO.PipeFrame.MessageEncoding">
             <summary>
@@ -843,9 +1018,40 @@
             Ignores all log events
             </summary>
         </member>
+        <member name="P:DiscordRPC.Logging.NullLogger.Level">
+            <summary>
+            The level of logging to apply to this logger.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.NullLogger.Info(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.NullLogger.Warning(System.String,System.Object[])">
+            <summary>
+            Warning log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.NullLogger.Error(System.String,System.Object[])">
+            <summary>
+            Error log messsages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="T:DiscordRPC.Message.ConnectionFailedMessage">
             <summary>
             Failed to establish any connection with discord. Discord is potentially not running?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ConnectionFailedMessage.Type">
+            <summary>
+            The type of message received from discord
             </summary>
         </member>
         <member name="P:DiscordRPC.Message.ConnectionFailedMessage.FailedPipe">
@@ -858,6 +1064,11 @@
             The connection to the discord client was succesfull. This is called before <see cref="F:DiscordRPC.Message.MessageType.Ready"/>.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.ConnectedPipe">
             <summary>
             The pipe we ended up connecting too
@@ -866,6 +1077,11 @@
         <member name="T:DiscordRPC.Message.PresenceMessage">
             <summary>
             Representation of the message received by discord when the presence has been updated.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.PresenceMessage.Type">
+            <summary>
+            The type of message received from discord
             </summary>
         </member>
         <member name="P:DiscordRPC.Message.PresenceMessage.Presence">
@@ -908,6 +1124,11 @@
             Called when the Discord Client wishes for this process to join a game. D -> C.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.JoinMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Message.JoinMessage.Secret">
             <summary>
             The <see cref="P:DiscordRPC.Secrets.JoinSecret" /> to connect with. 
@@ -916,6 +1137,11 @@
         <member name="T:DiscordRPC.Message.JoinRequestMessage">
             <summary>
             Called when some other person has requested access to this game. C -> D -> C.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.JoinRequestMessage.Type">
+            <summary>
+            The type of message received from discord
             </summary>
         </member>
         <member name="P:DiscordRPC.Message.JoinRequestMessage.User">
@@ -928,14 +1154,39 @@
             Called when the Discord Client wishes for this process to spectate a game. D -> C. 
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.SpectateMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.UnsubscribeMessage">
             <summary>
             Called as validation of a subscribe
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Event">
+            <summary>
+            The event that was subscribed too.
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.SubscribeMessage">
             <summary>
             Called as validation of a subscribe
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.SubscribeMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.SubscribeMessage.Event">
+            <summary>
+            The event that was subscribed too.
             </summary>
         </member>
         <member name="T:DiscordRPC.Message.ReadyMessage">
@@ -1048,10 +1299,49 @@
             Created when a error occurs within the ipc and it is sent to the client.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Code">
+            <summary>
+            The Discord error code.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Message">
+            <summary>
+            The message associated with the error code.
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Message.ErrorCode">
             <summary>
             The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
             </summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.Success">
+            <summary> Pipe was Successful </summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.PipeException">
+            <summary>The pipe had an exception</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.ReadCorrupt">
+            <summary>The pipe received corrupted data</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.NotImplemented">
+            <summary>The functionality was not yet implemented</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.UnkownError">
+            <summary>Unkown Discord error</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidPayload">
+            <summary>Invalid Payload received</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidCommand">
+            <summary>Invalid command was sent</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
+            <summary>Invalid event was sent </summary>
         </member>
         <member name="M:DiscordRPC.Registry.UriScheme.GetSteamLocation">
             <summary>
@@ -1133,6 +1423,12 @@
             </summary>
             <param name="presence"></param>
         </member>
+        <member name="M:DiscordRPC.RichPresence.Update(DiscordRPC.RichPresence)">
+            <summary>
+            Updates this presence with any values from the previous one
+            </summary>
+            <param name="presence"></param>
+        </member>
         <member name="M:DiscordRPC.RichPresence.HasTimestamps">
             <summary>
             Does the Rich Presence have valid timestamps?
@@ -1159,7 +1455,7 @@
         </member>
         <member name="M:DiscordRPC.RichPresence.ValidateString(System.String,System.String@,System.Int32,System.Text.Encoding)">
             <summary>
-            Attempts to call <see cref="!:NullEmpty(string)"/> on the string and return the result, if its within a valid length.
+            Attempts to call <see cref="M:DiscordRPC.Helper.StringTools.NullEmpty(System.String)"/> on the string and return the result, if its within a valid length.
             </summary>
             <param name="str">The string to check</param>
             <param name="result">The formatted string result</param>
@@ -1183,7 +1479,7 @@
         </member>
         <member name="P:DiscordRPC.Secrets.MatchSecret">
             <summary>
-            The unique match code to distinguish different games/lobbies. Use <see cref="!:Secret.CreateSecret()"/> to get an appropriately sized secret. 
+            The unique match code to distinguish different games/lobbies. Use <see cref="M:DiscordRPC.Secrets.CreateSecret(System.Random)"/> to get an appropriately sized secret. 
             <para>This cannot be null and must be supplied for the  Join / Spectate feature to work.</para>
             <para>Max Length of 128 Bytes</para>
             </summary>
@@ -1290,14 +1586,14 @@
             The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="P:DiscordRPC.Timestamps.Start"/> is set, this value will override the "elapsed" state to "remaining".
             </summary>
         </member>
-        <member name="P:DiscordRPC.Timestamps.epochStart">
+        <member name="P:DiscordRPC.Timestamps.discordEpochStart">
             <summary>
-            The <see cref="P:DiscordRPC.Timestamps.Start"/> of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
+            Unix epoch for discord start time. Sent as seconds, but received in milliseconds.
             </summary>
         </member>
-        <member name="P:DiscordRPC.Timestamps.epochEnd">
+        <member name="P:DiscordRPC.Timestamps.discordEpochEnd">
             <summary>
-            The <see cref="P:DiscordRPC.Timestamps.End"/> time of the match in Unix Epoch. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="P:DiscordRPC.Timestamps.Start"/> is set, this value will override the "elapsed" state to "remaining".
+            Unix epoch for discord end time. Sent as seconds, but received in milliseconds.
             </summary>
         </member>
         <member name="M:DiscordRPC.Timestamps.FromUnixTime(System.Int64)">
@@ -1762,7 +2058,6 @@
             <param name="presence">The presence to send to discord</param>
             <param name="response">The response object from the client</param>
             <param name="applicationID">The ID of the application</param>
-            <param name="async">Enables async operations. This will ignore all responses received from discord.</param>
             <param name="port">The port the discord client is currently on. Specify this for testing. Will start scanning from supplied port.</param>
             <returns>True if the response was valid from the server, otherwise false.</returns>
         </member>

@@ -18,18 +18,18 @@ namespace DiscordRPC.Message
 		/// The configuration of the connection
 		/// </summary>
 		[JsonProperty("config")]
-		public Configuration Configuration { get; internal set; }
+		public Configuration Configuration { get; set; }
 
 		/// <summary>
 		/// User the connection belongs too
 		/// </summary>
 		[JsonProperty("user")]
-		public User User { get; internal set; }
+		public User User { get; set; }
 
 		/// <summary>
 		/// The version of the RPC
 		/// </summary>
 		[JsonProperty("v")]
-		public int Version { get; internal set; }
+		public int Version { get; set; }
 	}
 }
