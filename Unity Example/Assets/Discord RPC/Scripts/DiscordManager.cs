@@ -1,6 +1,4 @@
-﻿using DiscordRPC;
-using DiscordRPC.IO;
-using DiscordRPC.Message;
+﻿using DiscordRPC.Message;
 using System.Collections;
 using UnityEngine;
 
@@ -75,15 +73,15 @@ public class DiscordManager : MonoBehaviour {
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
 	[SerializeField] private DiscordPresence _currentPresence;
 
-	#endregion
+    #endregion
 
-	public DiscordEvents events;
+    public DiscordRPC.Unity.DiscordEvents events;
 
 	/// <summary>
 	/// The current Discord Client.
 	/// </summary>
-	public DiscordRpcClient client { get { return _client; } }
-	private DiscordRpcClient _client;
+	public DiscordRPC.DiscordRpcClient client { get { return _client; } }
+	private DiscordRPC.DiscordRpcClient _client;
 	
 	#region Unity Events
 #if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN)
@@ -106,17 +104,17 @@ public class DiscordManager : MonoBehaviour {
 
 		//We are starting the client. Below is a break down of the parameters.
 		Debug.Log("[DRP] Starting Discord Rich Presence");
-		_client = new DiscordRpcClient(
+		_client = new DiscordRPC.DiscordRpcClient(
 			applicationID,									//The Discord Application ID
 			steamID,										//The Steam App. This can be null or empty string to disable steam intergration.
 			registerUriScheme,								//Should the client register a custom URI Scheme? This must be true for endpoints
 			(int) targetPipe,								//The target pipe to connect too
-			new DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+			new DiscordRPC.Unity.DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
 		);
 
         //Update the logger to the unity logger
         if (Debug.isDebugBuild) _client.Logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
-        if (Application.isEditor) _client.Logger = new UnityLogger() { Level = logLevel };
+        if (Application.isEditor) _client.Logger = new DiscordRPC.Unity.UnityLogger() { Level = logLevel };
         
 		//Subscribe to some initial events
 		#region Event Registration
