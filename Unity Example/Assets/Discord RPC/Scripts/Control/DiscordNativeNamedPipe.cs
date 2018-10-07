@@ -1,4 +1,5 @@
-﻿using DiscordRPC.IO;
+﻿#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
+using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using System;
 using System.IO;
@@ -6,7 +7,6 @@ using System.Runtime.InteropServices;
 
 namespace DiscordRPC.Unity
 {
-
     /// <summary>
     /// Pipe Client used to communicate with Discord.
     /// </summary>
@@ -118,37 +118,40 @@ namespace DiscordRPC.Unity
             try
             {
                 bytesRead = NativePipeExtern.ReadFrame(pnt, _buffer.Length);
-                Marshal.Copy(pnt, _buffer, 0, bytesRead);
+                if (bytesRead <= 0)
+                {
+                    //We have not read a valid amount of bytes, so return a error message.
+                    //Update the error message
+                    _lasterr = NativePipeExtern.PipeReadError.ReadEmptyMessage;
+
+                    //A error actively occured. If it is 0 we just read no bytes.
+                    if (bytesRead < 0)
+                    {
+                        //We have a pretty bad error, we will log it for prosperity. 
+                        _lasterr = (NativePipeExtern.PipeReadError)bytesRead;
+                        Logger.Error("Native pipe failed to read: {0}", _lasterr.ToString());
+
+                        //Close this pipe
+                        this.Close();
+                    }
+
+                    //Return a empty frame and return false (read failure).
+                    frame = default(PipeFrame);
+                    return false;
+                }
+                else
+                {
+                    //WE have read a valid amount of bytes, so copy the marshaled bytes over to the buffer
+                    Marshal.Copy(pnt, _buffer, 0, bytesRead);
+                }
             }
             finally
             {
-                //Free the allocated memory
+                //Finally, before we exit this try block, free the pointer we allocated.
                 Marshal.FreeHGlobal(pnt);
             }
 
-
-            if (bytesRead <= 0)
-            {
-                //Update the error message
-                _lasterr = NativePipeExtern.PipeReadError.ReadEmptyMessage;
-
-                //A error actively occured. If it is 0 we just read no bytes.
-                if (bytesRead < 0)
-                {
-                    //We have a pretty bad error, we will log it for prosperity. 
-                    _lasterr = (NativePipeExtern.PipeReadError)bytesRead;
-                    Logger.Error("Native pipe failed to read: {0}", _lasterr.ToString());
-
-                    //Close this pipe
-                    this.Close();
-                }
-
-                //Return a empty frame and return false (read failure).
-                frame = default(PipeFrame);
-                return false;
-            }
-
-            //Parse the pipe
+            //Parse the message by reading the contents into a memory stream.
             using (MemoryStream stream = new MemoryStream(_buffer, 0, bytesRead))
             {
                 //Try to parse the stream
@@ -181,15 +184,18 @@ namespace DiscordRPC.Unity
                 //Get the bytes and send it
                 byte[] bytes = stream.ToArray();
 
+                //Copy the bytes into a new marshaled block
                 int size = Marshal.SizeOf(bytes[0]) * bytes.Length;
                 IntPtr pnt = Marshal.AllocHGlobal(size);
                 try
                 {
+                    //Send the marshaled block
                     Marshal.Copy(bytes, 0, pnt, bytes.Length);
                     return NativePipeExtern.WriteFrame(pnt, bytes.Length);
                 }
                 finally
                 {
+                    //Finally, before exiting the try catch, free the memory we assigned.
                     Marshal.FreeHGlobal(pnt);
                 }
             }
@@ -241,3 +247,4 @@ namespace DiscordRPC.Unity
         public static extern UInt32 Open([MarshalAs(UnmanagedType.LPStr)] string pipename);
     }
 }
+#endif

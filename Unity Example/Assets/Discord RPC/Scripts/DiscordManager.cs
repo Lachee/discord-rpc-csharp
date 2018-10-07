@@ -82,119 +82,146 @@ public class DiscordManager : MonoBehaviour {
 	/// </summary>
 	public DiscordRPC.DiscordRpcClient client { get { return _client; } }
 	private DiscordRPC.DiscordRpcClient _client;
-	
-	#region Unity Events
-#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN)
-	private void OnEnable()
-	{
-		//Make sure we are allowed to be active.
-		if (!active || !gameObject.activeSelf) return;
-		if (!Application.isPlaying) return;
 
-		//This has a instance already that isn't us
-		if (_instance != null && _instance != this)
-		{
-			Destroy(this);
-			return;
-		}
+    public bool isInitialized { get { return _client != null && _client.IsInitialized; } }
 
-		//Assign the instance
-		_instance = this;
-		DontDestroyOnLoad(this);
+    #region Unity Events
 
-		//We are starting the client. Below is a break down of the parameters.
-		Debug.Log("[DRP] Starting Discord Rich Presence");
-		_client = new DiscordRPC.DiscordRpcClient(
-			applicationID,									//The Discord Application ID
-			steamID,										//The Steam App. This can be null or empty string to disable steam intergration.
-			registerUriScheme,								//Should the client register a custom URI Scheme? This must be true for endpoints
-			(int) targetPipe,								//The target pipe to connect too
-			new DiscordRPC.Unity.DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
-		);
+    private void Awake()
+    {
+        //Update the default path for the cache
+        if (DiscordUser.CacheDirectory == null)
+            DiscordUser.CacheDirectory = Application.dataPath + "/Avatars";
+    }
 
-        //Update the logger to the unity logger
-        if (Debug.isDebugBuild) _client.Logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
-        if (Application.isEditor) _client.Logger = new DiscordRPC.Unity.UnityLogger() { Level = logLevel };
-        
-		//Subscribe to some initial events
-		#region Event Registration
-		client.OnReady += (s, args) =>
-		{
-			//We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
-			Debug.Log("[DRP] Connection established and received READY from Discord IPC. Sending our previous Rich Presence and Subscription.");
+    private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
 
-			//Set the user and cache their avatars
-			_currentUser = args.User;
-			_currentUser.GetAvatar(this, DiscordAvatarSize.x128);
-		}; 
-		client.OnPresenceUpdate += (s, args) =>
-		{
-			Debug.Log("[DRP] Our Rich Presence has been updated. Applied changes to local store.");
-			_currentPresence = (DiscordPresence)args.Presence;
-		};
-		client.OnSubscribe += (s, a) =>
-		{
-			Debug.Log("[DRP] New Subscription. Updating local store.");
-			_currentSubscription = client.Subscription.ToUnity();
-		};
-		client.OnUnsubscribe += (s, a) =>
-		{
-			Debug.Log("[DRP] Removed Subscription. Updating local store.");
-			_currentSubscription = client.Subscription.ToUnity();
-		};
-		client.OnError += (s, args) =>
-		{
-			//Something bad happened while we tried to send a event. We will just log this for clarity.
-			Debug.LogError("[DRP] Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
-		};
 
-		client.OnJoinRequested += (s, args) =>
-		{
-			Debug.Log("[DRP] Join Requested");
-	
-		};
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
 
-		events.RegisterEvents(client);
-		#endregion
-		
-		//Start the client
-		_client.Initialize();
-		Debug.Log("[DRP] Discord Rich Presence intialized and connecting...");
+    private void OnEnable() { if (gameObject.activeSelf && !isInitialized) Initialize(); }   //Try to initialize the client when we are enabled.
+    private void Start() { if(!isInitialized) Initialize(); }       //Try to initialize the client when we start. This is useful for moments where we are spawned in
 
-		//Set initial presence and sub. (This will enqueue it)
-		SetSubscription(_currentSubscription);
-		SetPresence(_currentPresence);
-
-	}
-	
-	private void OnDisable()
-	{
-		if (_client != null)
-		{
-			Debug.Log("[DRP] Disposing Discord IPC Client...");
-			_client.Dispose();
-			_client = null;
-			Debug.Log("[DRP] Finished Disconnecting");
-		}
-
-	}
-
-	private void FixedUpdate()
+    private void FixedUpdate()
 	{
 		if (client == null) return;
 
 		//Invoke the client events
 		client.Invoke();
 	}
-#endif
-#endregion
 
-	/// <summary>
-	/// Sets the Rich Presence of the Discord Client through the pipe connection. This differs from <see cref="SendPresence(DiscordPresence)"/> as the client will validate the presence update and the updated state will be tracked. 
-	/// <para>This will log a error if the client is null or not yet initiated.</para>
-	/// </summary>
-	/// <param name="presence">The Rich Presence to be shown to the client</param>
-	public void SetPresence(DiscordPresence presence)
+#endif
+    #endregion
+
+    /// <summary>
+    /// Initializes the discord client if able to. Wont initialize if <see cref="active"/> is false, we are not in playmode, we already have a instance or we already have a client.
+    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD is meet.</para>
+    /// </summary>
+    public void Initialize()
+    {
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
+        
+        if (!active) return;                //Are we allowed to be active?
+        if (!Application.isPlaying) return; //We are not allowed to initialize while in the editor.
+
+        //This has a instance already that isn't us
+        if (_instance != null && _instance != this)
+        {
+            Debug.LogWarning("[DAPI] Multiple DiscordManagers exist already. Destroying self.", _instance);
+            Destroy(this);
+            return;
+        }
+
+        //Make sure the client doesnt already exit
+        if (_client != null)
+        {
+            Debug.LogError("[DAPI] Cannot initialize a new client when one is already initialized.");
+            return;
+        }
+
+        //Assign the instance
+        _instance = this;
+        DontDestroyOnLoad(this);
+
+        //We are starting the client. Below is a break down of the parameters.
+        Debug.Log("[DRP] Starting Discord Rich Presence");
+        _client = new DiscordRPC.DiscordRpcClient(
+            applicationID,                                  //The Discord Application ID
+            steamID,                                        //The Steam App. This can be null or empty string to disable steam intergration.
+            registerUriScheme,                              //Should the client register a custom URI Scheme? This must be true for endpoints
+            (int)targetPipe,                                //The target pipe to connect too
+            new DiscordRPC.Unity.DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+        );
+
+        //Update the logger to the unity logger
+        if (Debug.isDebugBuild) _client.Logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
+        if (Application.isEditor) _client.Logger = new DiscordRPC.Unity.UnityLogger() { Level = logLevel };
+
+        //Subscribe to some initial events
+        #region Event Registration
+        client.OnError += (s, args) => Debug.LogError("[DRP] Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
+        client.OnJoinRequested += (s, args) => Debug.Log("[DRP] Join Requested");
+
+        client.OnReady += (s, args) =>
+        {
+            //We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
+            Debug.Log("[DRP] Connection established and received READY from Discord IPC. Sending our previous Rich Presence and Subscription.");
+
+            //Set the user and cache their avatars
+            _currentUser = args.User;
+            _currentUser.GetAvatar(this, DiscordAvatarSize.x128);
+        };
+        client.OnPresenceUpdate += (s, args) =>
+        {
+            Debug.Log("[DRP] Our Rich Presence has been updated. Applied changes to local store.");
+            _currentPresence = (DiscordPresence)args.Presence;
+        };
+        client.OnSubscribe += (s, a) =>
+        {
+            Debug.Log("[DRP] New Subscription. Updating local store.");
+            _currentSubscription = client.Subscription.ToUnity();
+        };
+        client.OnUnsubscribe += (s, a) =>
+        {
+            Debug.Log("[DRP] Removed Subscription. Updating local store.");
+            _currentSubscription = client.Subscription.ToUnity();
+        };
+  
+        //Register the unity events
+        events.RegisterEvents(client);
+        #endregion
+
+        //Start the client
+        _client.Initialize();
+        Debug.Log("[DRP] Discord Rich Presence intialized and connecting...");
+
+        //Set initial presence and sub. (This will enqueue it)
+        SetSubscription(_currentSubscription);
+        SetPresence(_currentPresence);
+#endif
+    }
+    
+    /// <summary>
+    /// If not already disposed, it will dispose and deinitialize the discord client.
+    /// </summary>
+    public void Deinitialize()
+    {
+        //We dispose outside the scripting symbols as we always want to be able to dispose (just in case).
+        if (_client != null)
+        {
+            Debug.Log("[DRP] Disposing Discord IPC Client...");
+            _client.Dispose();
+            _client = null;
+            Debug.Log("[DRP] Finished Disconnecting");
+        }
+    }
+
+    /// <summary>
+    /// Sets the Rich Presence of the Discord Client through the pipe connection. This differs from <see cref="SendPresence(DiscordPresence)"/> as the client will validate the presence update and the updated state will be tracked. 
+    /// <para>This will log a error if the client is null or not yet initiated.</para>
+    /// </summary>
+    /// <param name="presence">The Rich Presence to be shown to the client</param>
+    public void SetPresence(DiscordPresence presence)
 	{
 		if (client == null)
 		{
