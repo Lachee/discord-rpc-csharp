@@ -75,13 +75,13 @@ public class DiscordManager : MonoBehaviour {
 
     #endregion
 
-    public DiscordRPC.Unity.DiscordEvents events;
+    public DiscordRPC.Unity.DiscordEvents events = new DiscordRPC.Unity.DiscordEvents();
 
 	/// <summary>
 	/// The current Discord Client.
 	/// </summary>
 	public DiscordRPC.DiscordRpcClient client { get { return _client; } }
-	private DiscordRPC.DiscordRpcClient _client;
+	private DiscordRPC.DiscordRpcClient _client = null;
 
     public bool isInitialized { get { return _client != null && _client.IsInitialized; } }
 

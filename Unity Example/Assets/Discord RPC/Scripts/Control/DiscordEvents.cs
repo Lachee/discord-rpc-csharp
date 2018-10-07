@@ -42,17 +42,17 @@ namespace DiscordRPC.Unity
         [Serializable]
         public class ConnectionFailedMessageEvent : UnityEvent<ConnectionFailedMessage> { }
 
-        public ReadyMessageEvent OnReady;
-        public CloseMessageEvent OnClose;
-        public ErrorMessageEvent OnError;
-        public PresenceMessageEvent OnPresenceUpdate;
-        public SubscribeMessageEvent OnSubscribe;
-        public UnsubscribeMessageEvent OnUnsubscribe;
-        public JoinMessageEvent OnJoin;
-        public SpectateMessageEvent OnSpectate;
-        public JoinRequestMessageEvent OnJoinRequest;
-        public ConnectionEstablishedMessageEvent OnConnectionEstablished;
-        public ConnectionFailedMessageEvent OnConnectionFailed;
+        public ReadyMessageEvent OnReady = new ReadyMessageEvent();
+        public CloseMessageEvent OnClose = new CloseMessageEvent();
+        public ErrorMessageEvent OnError = new ErrorMessageEvent();
+        public PresenceMessageEvent OnPresenceUpdate = new PresenceMessageEvent();
+        public SubscribeMessageEvent OnSubscribe = new SubscribeMessageEvent();
+        public UnsubscribeMessageEvent OnUnsubscribe = new UnsubscribeMessageEvent();
+        public JoinMessageEvent OnJoin = new JoinMessageEvent();
+        public SpectateMessageEvent OnSpectate = new SpectateMessageEvent();
+        public JoinRequestMessageEvent OnJoinRequest = new JoinRequestMessageEvent();
+        public ConnectionEstablishedMessageEvent OnConnectionEstablished = new ConnectionEstablishedMessageEvent();
+        public ConnectionFailedMessageEvent OnConnectionFailed = new ConnectionFailedMessageEvent();
 
         public void RegisterEvents(DiscordRpcClient client)
         {
