@@ -152,7 +152,17 @@ public class DiscordUser
 	/// <returns></returns>
 	public IEnumerator GetAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
-		if (string.IsNullOrEmpty(_avatarHash))
+        if (_avatar != null)
+        {
+            //Execute the callback (if any)
+            if (callback != null)
+                callback.Invoke(this, _avatar);
+
+            //Stop here, we did all we need to do
+            yield break;
+        }
+
+        if (string.IsNullOrEmpty(_avatarHash))
 		{
 			yield return GetDefaultAvatarCoroutine(size, callback);
 		}
@@ -250,7 +260,6 @@ public class DiscordUser
     /// <returns></returns>
     public IEnumerator GetDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
-
         //Calculate the discrim number and prepare the cache path
         int discrim = discriminator % 5;
         string path = null;
