@@ -256,7 +256,7 @@ namespace DiscordRPC.RPC
 									case Opcode.Close:
 
 										ClosePayload close = frame.GetObject<ClosePayload>();
-										Logger.Info("We have been told to terminate by discord: ({0}) {1}", close.Code, close.Reason);
+										Logger.Warning("We have been told to terminate by discord: ({0}) {1}", close.Code, close.Reason);
 										EnqueueMessage(new CloseMessage() { Code = close.Code, Reason = close.Reason });
 										mainloop = false;
 										break;

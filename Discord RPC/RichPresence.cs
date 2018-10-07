@@ -507,7 +507,7 @@ namespace DiscordRPC
 		public DateTime? Start { get; set; }
 
 		/// <summary>
-		/// The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="Start"/> is set, this value will override the "elapsed" state to "remaining".
+		/// The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". This will override the "elapsed" to "remaining".
 		/// </summary>
 		[JsonIgnore]
 		public DateTime? End { get; set; }

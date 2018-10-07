@@ -13,15 +13,15 @@ namespace DiscordRPC.Example
 		/// </summary>
 		private static int DiscordPipe = -1;
 
-		/// <summary>
-		/// ID of the client
-		/// </summary>
-		private static string ClientID = "424087019149328395";
+        /// <summary>
+        /// ID of the client
+        /// </summary>
+        private static string ClientID = "424087019149328395";
 
-		/// <summary>
-		/// The level of logging to use.
-		/// </summary>
-		private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Info;
+        /// <summary>
+        /// The level of logging to use.
+        /// </summary>
+        private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Warning;
 
 		/// <summary>
 		/// The current presence to send to discord.
@@ -57,52 +57,64 @@ namespace DiscordRPC.Example
 		//Main Loop
 		static void Main(string[] args)
 		{
-			//Seting a random details to test the update rate of the presence
-			//HttpExample();
-			FullClientExample();
+            //Reads the arguments for the pipe
+            for (int i = 0; i < args.Length; i++)
+            {
+                switch (args[i])
+                {
+                    case "-pipe":
+                        DiscordPipe = int.Parse(args[++i]);
+                        break;
+
+                    default: break;
+                }
+            }
+
+            //Seting a random details to test the update rate of the presence
+            BasicExample();
+            //FullClientExample();
 
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
 		}
+        
+        static void BasicExample()
+        {
+            //Create a new client
+            var client = new DiscordRpcClient(ClientID);
 
-		[System.Obsolete("Setting Rich Presence over HTTP is no longer supported by Discord. See offical Rich Presence github for more information.")]
-		static void HttpExample()
-		{
-			//A simplified version, but is blocking. Its recommended to use some form of async or your prefered library for HTTP Post.
-			// Unity for example should use the WWW Class (or the new WebRequest.Post ).
-			//var response = DiscordRPC.Web.WebRPC.SetRichPresence(presence, ClientID);
-			presence.Details = DateTime.UtcNow.ToLongTimeString();
+            //Create the logger
+            client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true };
 
-			//Here we are going to manually call the request to show how it works
-			//First get the data we should be sending and prepare the data we will receive
-			Web.WebRequest request = DiscordRPC.Web.WebRPC.PrepareRequest(presence, ClientID);
-			RichPresence response = null;
+            //Create some events so we know things are happening
+            client.OnReady += (sender, msg) => { Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
+            client.OnPresenceUpdate += (sender, msg) => { Console.WriteLine("Presence has been updated!"); };
 
-			//Now we need to send it. We are using WebClient as a example
-			using (var web = new System.Net.WebClient())
-			{
-				//Copy over the headers
-				foreach (var kp in request.Headers)
-					web.Headers.Add(kp.Key, kp.Value);
+            //Create a timer that will regularly call invoke
+            var timer = new System.Timers.Timer(150);
+            timer.Elapsed += (sender, evt) => { client.Invoke(); };
+            timer.Start();
 
-				//Make the request
-				string json = web.UploadString(request.URL, request.Data);
-				
-				//Try to parse the request
-				if (!DiscordRPC.Web.WebRPC.TryParseResponse(json, out response))
-				{
-					//We failed to set the rich presence
-					Console.WriteLine("Something went wrong while trying to parse the response!");
-					Console.WriteLine("Received: {0}", json);
-				}
-				else
-				{
-					//We succesfully set the rich presence!
-					Console.WriteLine("Succesfully set Rich Presence! State: {0}", response.State);
-				}
-			}
-		}
-		
+            //Connect
+            client.Initialize();
+
+            //Send a presence. Do this as many times as you want
+            client.SetPresence(new RichPresence()
+            {
+                Details = "A Basic Example",
+                State = "In Game"
+            });
+
+
+            //Do the rest of your program.
+            //Simulated by a Console.ReadKey
+            Console.ReadKey();
+
+            //At the very end we need to dispose of it
+            timer.Dispose();
+            client.Dispose();
+        }
+
 		static void FullClientExample()
 		{
 			//Creates a new Discord RPC Client. Below are some of the ways to register:
@@ -143,7 +155,7 @@ namespace DiscordRPC.Example
 					//These secrets should contain enough data for external clients to be able to know which
 					// game to connect too. A simple approach would be just to use IP address, but this is highly discouraged
 					// and can leave your players vulnerable! 
-					//JoinSecret = "join_myuniquegameid",
+					JoinSecret = "join_myuniquegameid",
 					//SpectateSecret = "spectate_myuniquegameid"
 				};
 
@@ -161,9 +173,7 @@ namespace DiscordRPC.Example
 					Size = 1,
 					Max = 4
 				};
-
-				presence.Party = new Party();
-
+                
 				//Set some new presence to tell Discord we are in a game.
 				// If the connection is not yet available, this will be queued until a Ready event is called, 
 				// then it will be sent. All messages are queued until Discord is ready to receive them.
@@ -171,7 +181,7 @@ namespace DiscordRPC.Example
 
 				//Subscribe to the join / spectate feature.
 				//These require the RegisterURI to be true.
-				//client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 				
 				//Initialize the connection. This must be called ONLY once.
 				//It must be called before any updates are sent or received from the discord client.
