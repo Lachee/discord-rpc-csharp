@@ -5,11 +5,37 @@ using UnityEngine;
 [System.Serializable]
 public class DiscordUser
 {
-	/// <summary>
-	/// The current location of the avatar caches
-	/// </summary>
-	public static string CacheDirectory { get { return _cacheDirectory; } set { _cacheDirectory = value; } }
-	private static string _cacheDirectory ="Discord RPC/Cache/";
+    /// <summary>
+    /// Caching Level. This is a flag.
+    /// </summary>
+    [System.Flags]
+    public enum CacheLevelFlag
+    {
+        /// <summary>Disable all caching</summary>
+        None = 0,
+
+        /// <summary>Caches avatars by user id (required for caching to work).</summary>
+        UserId = 1,
+
+        /// <summary>Caches the avatars by avatar hash. </summary>
+        Hash = 3, //UserId | 2,
+
+        /// <summary>Caches the avatars by size. If off, only the largest size is stored. </summary>
+        Size = 5, //UserId | 4
+    }
+
+    /// <summary>
+    /// The current location of the avatar caches
+    /// </summary>
+    public static string CacheDirectory = null;
+
+    /// <summary>
+    /// The caching level used by the avatar functions. Note that the cache is never cleared. The cache level will help mitigate exessive file counts.
+    /// <para><see cref="CacheLevelFlag.None"/> will cause no images to be cached and will be downloaded everytime they are fetched.</para>
+    /// <para><see cref="CacheLevelFlag.Hash"/> will cache images based of their hash. Without this, the avatar will likely stay the same forever.</para>
+    /// <para><see cref="CacheLevelFlag.Size"/> will cache images based of their size. Useful, but may result in multiples of the same file. Disabling this will cause all files to be x512.</para>
+    /// </summary>
+    public static CacheLevelFlag CacheLevel = CacheLevelFlag.None;
 
 	/// <summary>
 	/// The format to download and cache avatars in. By default, PNG is used.
@@ -46,7 +72,7 @@ public class DiscordUser
 	[SerializeField] private string _avatarHash;
 
 	/// <summary>
-	/// The current avatar cache
+	/// The current avatar cache. Will return null until <see cref="GetAvatarCoroutine(DiscordAvatarSize, AvatarDownloadCallback)"/> is called.
 	/// </summary>
 	public Texture2D avatar {  get { return _avatar; } }
 	[SerializeField] private Texture2D _avatar;
@@ -62,13 +88,7 @@ public class DiscordUser
 	/// </summary>
 	public DiscordAvatarFormat cacheFormat { get { return _cacheFormat; } }
 	[SerializeField] private DiscordAvatarFormat _cacheFormat;
-
-	/// <summary>
-	/// The current path of the cache image
-	/// </summary>
-	public string cachePath { get { return _cachePath; } }
-	[SerializeField] private string _cachePath;
-
+    
 	/// <summary>
 	/// The current URL for the discord avatars
 	/// </summary>
@@ -124,7 +144,9 @@ public class DiscordUser
 
 	/// <summary>
 	/// Gets the user avatar as a Texture2D as a enumerator. It will first check the cache if the image exists, if it does it will return the image. Otherwise it will download the image from Discord and store it in the cache, calling the callback once done.
-	/// </summary>
+	/// <para>If <see cref="CacheLevel"/> has <see cref="CacheLevelFlag.Size"/> set, then the size will be ignored and <see cref="DiscordAvatarSize.x512"/> will be used instead.</para>
+    /// <para>If <see cref="CacheLevel"/> is <see cref="CacheLevelFlag.None"/>, then no files will be written for cache.</para>
+    /// </summary>
 	/// <param name="size">The target size of the avatar. Default is 128x128</param>
 	/// <param name="callback">The callback for when the texture completes. Default is no-callback, but its highly recommended to use a callback</param>
 	/// <returns></returns>
@@ -136,21 +158,35 @@ public class DiscordUser
 		}
 		else
 		{
+            //Prepare the cache path
+            string path = null;
 
-			//Generate the path name
-			string filename = string.Format("{0}-{1}{2}.{3}", discriminator, avatarHash, size.ToString(), DiscordUser.AvatarFormat.ToString().ToLowerInvariant());
+            //Build the formatting
+            if (CacheLevel != CacheLevelFlag.None)
+            {
+                //Update the default cache just incase its null
+                SetupDefaultCacheDirectory();
 
-			string cache = Path.Combine(Application.dataPath, CacheDirectory);
-			string path = Path.Combine(cache, filename);
+                string format = "{0}";
+                if ((CacheLevel & CacheLevelFlag.Hash) == CacheLevelFlag.Hash) format += "-{1}";
+                if ((CacheLevel & CacheLevelFlag.Size) == CacheLevelFlag.Size) format += "{2}"; else size = DiscordAvatarSize.x512;
+
+                //Generate the path name
+                string filename = string.Format(format + ".{3}", ID, avatarHash, size.ToString(), DiscordUser.AvatarFormat.ToString().ToLowerInvariant());
+                path = Path.Combine(CacheDirectory, filename);
+                Debug.Log("<color=#FA0B0F>Cache:</color> " + path);
+            }
 
 			//The holder texture is null, so we should create new one
 			Texture2D avatarTexture = new Texture2D((int)size, (int)size, TextureFormat.RGBA32, false);
 
-			//Check if the file exists
-			if (File.Exists(path))
-			{
-				//Load the image
-				var bytes = File.ReadAllBytes(path);
+			//Check if the file exists and we have caching enabled
+			if (CacheLevel != CacheLevelFlag.None && File.Exists(path))
+            {
+                Debug.Log("<color=#FA0B0F>Read Cache:</color> " + path);
+
+                //Load the image
+                var bytes = File.ReadAllBytes(path);
 				avatarTexture.LoadImage(bytes);
 			}
 			else
@@ -163,33 +199,38 @@ public class DiscordUser
 					//Update the holder
 					www.LoadImageIntoTexture(avatarTexture);
 
-					//Create the directory if it doesnt already exist
-					if (!Directory.Exists(cache))
-						Directory.CreateDirectory(cache);
+                    //Encode and cache the files
+                    if (CacheLevel != CacheLevelFlag.None)
+                    {
+                        //Create the directory if it doesnt already exist
+                        if (!Directory.Exists(CacheDirectory))
+                            Directory.CreateDirectory(CacheDirectory);
 
-					//Encode the image
-					byte[] bytes;
-					switch (DiscordUser.AvatarFormat)
-					{
-						default:
-						case DiscordAvatarFormat.PNG:
-							bytes = avatarTexture.EncodeToPNG();
-							break;
+                        Debug.Log("<color=#FA0B0F>Saving Cache:</color> " + path);
 
-						case DiscordAvatarFormat.JPEG:
-							bytes = avatarTexture.EncodeToJPG();
-							break;
-					}
+                        //Encode the image
+                        byte[] bytes;
+                        switch (DiscordUser.AvatarFormat)
+                        {
+                            default:
+                            case DiscordAvatarFormat.PNG:
+                                bytes = avatarTexture.EncodeToPNG();
+                                break;
 
-					//Save the image
-					File.WriteAllBytes(path, bytes);
+                            case DiscordAvatarFormat.JPEG:
+                                bytes = avatarTexture.EncodeToJPG();
+                                break;
+                        }
+
+                        //Save the image
+                        File.WriteAllBytes(path, bytes);
+                    }
 				}
 			}
 
 			//Apply our avatar and update our cache
 			_avatar = avatarTexture;
 			_cacheFormat = DiscordUser.AvatarFormat;
-			_cachePath = path;
 			_cacheSize = size;
 
 			//Execute the callback (if any)
@@ -198,25 +239,41 @@ public class DiscordUser
 		}
 	}
 
-	/// <summary>
-	/// Gets the default avatar for the given user. Will check the cache first, and if none are available it will then download the default from discord.
-	/// </summary>
-	/// <param name="size">The size of the target avatar</param>
-	/// <param name="callback">The callback that will be made when the picture finishes downloading.</param>
-	/// <returns></returns>
-	public IEnumerator GetDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
+    /// <summary>
+    /// Gets the default avatar for the given user. Will check the cache first, and if none are available it will then download the default from discord.	
+    /// <para>If <see cref="CacheLevel"/> has <see cref="CacheLevelFlag.Size"/> set, then the size will be ignored and <see cref="DiscordAvatarSize.x512"/> will be used instead.</para>
+    /// <para>If <see cref="CacheLevel"/> is <see cref="CacheLevelFlag.None"/>, then no files will be written for cache.</para>
+    /// </summary>
+    /// <param name="size">The size of the target avatar</param>
+    /// <param name="callback">The callback that will be made when the picture finishes downloading.</param>
+    /// 
+    /// <returns></returns>
+    public IEnumerator GetDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null)
 	{
-		int discrim = discriminator % 5;
 
-		string filename = string.Format("default-{0}{1}.png", discrim, size.ToString());
-		string cache = Path.Combine(Application.dataPath, CacheDirectory);
-		string path = Path.Combine(cache, filename);
+        //Calculate the discrim number and prepare the cache path
+        int discrim = discriminator % 5;
+        string path = null;
+
+        //Update the default cache just incase its null
+        if (CacheLevel != CacheLevelFlag.None)
+        {
+            //Setup the dir
+            SetupDefaultCacheDirectory();
+
+            //should we cache the size?
+            bool cacheSize = (CacheLevel & CacheLevelFlag.Size) == CacheLevelFlag.Size;
+            if (!cacheSize) size = DiscordAvatarSize.x512;
+
+            string filename = string.Format("default-{0}{1}.png", discrim, cacheSize ? size.ToString() : "");
+            path = Path.Combine(CacheDirectory, filename);
+        }
 
 		//The holder texture is null, so we should create new one
 		Texture2D avatarTexture = new Texture2D((int)size, (int)size, TextureFormat.RGBA32, false);
 
 		//Check if the file exists
-		if (File.Exists(path))
+		if (CacheLevel != CacheLevelFlag.None && File.Exists(path))
 		{
 			//Load the image
 			byte[] bytes = File.ReadAllBytes(path);
@@ -233,28 +290,40 @@ public class DiscordUser
 				//Update the holder
 				www.LoadImageIntoTexture(avatarTexture);
 
-				//Create the directory if it doesnt already exist
-				if (!Directory.Exists(cache))
-					Directory.CreateDirectory(cache);
+                //We have been told to cache, so do so.
+                if (CacheLevel != CacheLevelFlag.None)
+                {
+                    //Create the directory if it doesnt already exist
+                    if (!Directory.Exists(CacheDirectory))
+                        Directory.CreateDirectory(CacheDirectory);
 
-				byte[] bytes = avatarTexture.EncodeToPNG();
-				File.WriteAllBytes(path, bytes);
+                    byte[] bytes = avatarTexture.EncodeToPNG();
+                    File.WriteAllBytes(path, bytes);
+                }
 			}
 		}
 
 		//Apply our avatar and update our cache
 		_avatar = avatarTexture;
 		_cacheFormat = DiscordAvatarFormat.PNG;
-		_cachePath = path;
 		_cacheSize = size;
 		
 		//Execute the callback (if any)
 		if (callback != null)
 			callback.Invoke(this, _avatar);
 	}
+    
+    /// <summary>
+    /// Updates the default directory for the cache
+    /// </summary>
+    private static void SetupDefaultCacheDirectory()
+    {
+        if (CacheDirectory == null)
+            CacheDirectory = Application.dataPath + "/Discord Rpc/Cache";
+    }
 
-	#region Obsolete Functions
-	[System.Obsolete("Now known as GetAvatar instead.")]
+    #region Obsolete Functions
+    [System.Obsolete("Now known as GetAvatar instead.")]
 	public void CacheAvatar(MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { GetAvatar(coroutineCaller, size, callback); }
 
 	[System.Obsolete("Now known as GetAvatarCoroutine instead.")]

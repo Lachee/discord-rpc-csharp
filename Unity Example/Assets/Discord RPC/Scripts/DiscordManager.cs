@@ -86,14 +86,7 @@ public class DiscordManager : MonoBehaviour {
     public bool isInitialized { get { return _client != null && _client.IsInitialized; } }
 
     #region Unity Events
-
-    private void Awake()
-    {
-        //Update the default path for the cache
-        if (DiscordUser.CacheDirectory == null)
-            DiscordUser.CacheDirectory = Application.dataPath + "/Avatars";
-    }
-
+    
     private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
 
 
