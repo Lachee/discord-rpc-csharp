@@ -9,7 +9,7 @@ namespace DiscordRPC
 	/// <summary>
 	/// The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.
 	/// </summary>
-	[JsonObject(MemberSerialization = MemberSerialization.OptIn, ItemNullValueHandling = NullValueHandling.Ignore)]
+	[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 	[Serializable]
 	public class RichPresence
 	{
