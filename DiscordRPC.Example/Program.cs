@@ -102,7 +102,8 @@ namespace DiscordRPC.Example
             client.SetPresence(new RichPresence()
             {
                 Details = "A Basic Example",
-                State = "In Game"
+                State = "In Game",
+                Timestamps = Timestamps.FromTimeSpan(10)
             });
 
 
