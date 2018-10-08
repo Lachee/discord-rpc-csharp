@@ -44,7 +44,7 @@ There is currently no nuget package available. One will be released in the futur
 
 **Unity3D Game Engine**
 
-Download the Unity Package for a quick setup [DiscordRPC_Unity.unitypackage](https://github.com/Lachee/discord-rpc-csharp/raw/master/DiscordRPC_Unity.unitypackage). This maybe a older version of the project.
+Download the Unity Package for a quick setup from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts). For a older stable version, you can also try the [commited package](https://github.com/Lachee/discord-rpc-csharp/raw/master/DiscordRPC_Unity.unitypackage) (I personally recomend the appvoyer as this maybe a older version of the project).
 
 
 Unity3D has a limitation with its managed version of pipes. It does not support asynchronous mode (even in .NET 4.6) and will block waiting for a read to finish. Aborting a read will cause a hard freeze of the editor.
@@ -141,7 +141,7 @@ You can build the solution easily in Visual Studio, however if you wish to build
 .\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
 ```
 
-The AppVeyor has been setup with appropriate [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) too. If you want the absolutely latest version, have a look there. 
+The AppVeyor has been setup with appropriate [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) too. If you want the absolutely latest version, have a look there. Now with Unity Packages! 
 
 The Nuget project is to be announced. 
 
