@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiscordRPC.Exceptions
 {
-	class InvalidConfigurationException : Exception
+    public class InvalidConfigurationException : Exception
 	{
 		public InvalidConfigurationException(string message) : base(message) { }
 	}

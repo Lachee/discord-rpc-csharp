@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiscordRPC.Exceptions
 {
-	class BadPresenceException : Exception
+	public class BadPresenceException : Exception
 	{
 		public BadPresenceException(string message) : base(message) { }
 	}

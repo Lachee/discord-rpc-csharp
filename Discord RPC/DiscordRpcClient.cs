@@ -495,7 +495,7 @@ namespace DiscordRPC
 		{
 			if (_presence == null) _presence = new RichPresence();
 			_presence.Details = details;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 		/// <summary>
@@ -507,7 +507,7 @@ namespace DiscordRPC
 		{
 			if (_presence == null) _presence = new RichPresence();
 			_presence.State = state;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 		/// <summary>
@@ -519,7 +519,7 @@ namespace DiscordRPC
 		{
 			if (_presence == null) _presence = new RichPresence();
 			_presence.Party = party;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 		/// <summary>
@@ -532,9 +532,9 @@ namespace DiscordRPC
 		{
 			if (_presence == null) return null;
 			if (_presence.Party == null)
-				throw new NullReferenceException("Cannot set the size of the party if the party does not exist");
+				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-			try { UpdatePartySize(size, _presence.Party.Max); } catch (Exception e) { throw e; }
+			try { UpdatePartySize(size, _presence.Party.Max); } catch (Exception) { throw; }
 			return _presence;
 		}
 		/// <summary>
@@ -552,7 +552,7 @@ namespace DiscordRPC
 
 			_presence.Party.Size = size;
 			_presence.Party.Max = max;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 
@@ -569,7 +569,7 @@ namespace DiscordRPC
 			if (_presence.Assets == null) _presence.Assets = new Assets();
 			_presence.Assets.LargeImageKey = key ?? _presence.Assets.LargeImageKey;
 			_presence.Assets.LargeImageText = tooltip ?? _presence.Assets.LargeImageText;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 
@@ -585,7 +585,7 @@ namespace DiscordRPC
 			if (_presence.Assets == null) _presence.Assets = new Assets();
 			_presence.Assets.SmallImageKey = key ?? _presence.Assets.SmallImageKey;
 			_presence.Assets.SmallImageText = tooltip ?? _presence.Assets.SmallImageText;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 
@@ -598,7 +598,7 @@ namespace DiscordRPC
 		{
 			if (_presence == null) _presence = new RichPresence();
 			_presence.Secrets = secrets;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 
@@ -606,7 +606,7 @@ namespace DiscordRPC
 		/// Sets the start time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
 		/// </summary>
 		/// <returns>Updated Rich Presence</returns>
-		public RichPresence UpdateStartTime() { try { return UpdateStartTime(DateTime.UtcNow); } catch (Exception e) { throw e; } }
+		public RichPresence UpdateStartTime() { try { return UpdateStartTime(DateTime.UtcNow); } catch (Exception) { throw; } }
 
 		/// <summary>
 		/// Sets the start time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
@@ -618,7 +618,7 @@ namespace DiscordRPC
 			if (_presence == null) _presence = new RichPresence();
 			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
 			_presence.Timestamps.Start = time;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 		
@@ -626,7 +626,7 @@ namespace DiscordRPC
 		/// Sets the end time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
 		/// </summary>
 		/// <returns>Updated Rich Presence</returns>
-		public RichPresence UpdateEndTime() { try { return UpdateEndTime(DateTime.UtcNow); } catch (Exception e) { throw e; } }
+		public RichPresence UpdateEndTime() { try { return UpdateEndTime(DateTime.UtcNow); } catch (Exception) { throw; } }
 
 		/// <summary>
 		/// Sets the end time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
@@ -638,7 +638,7 @@ namespace DiscordRPC
 			if (_presence == null) _presence = new RichPresence();
 			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
 			_presence.Timestamps.End = time;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 
@@ -650,7 +650,7 @@ namespace DiscordRPC
 		{
 			if (_presence == null) return null;
 			_presence.Timestamps = null;
-			try { SetPresence(_presence); } catch (Exception e) { throw e; }
+			try { SetPresence(_presence); } catch (Exception) { throw; }
 			return _presence;
 		}
 		#endregion

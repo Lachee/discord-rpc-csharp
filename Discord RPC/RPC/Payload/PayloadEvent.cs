@@ -21,19 +21,17 @@ namespace DiscordRPC.RPC.Payload
 		[JsonProperty("evt"), JsonConverter(typeof(EnumSnakeCaseConverter))]
 		public ServerEvent? Event { get; set; }
 
+        /// <summary>
+        /// Creates a payload with empty data
+        /// </summary>
 		public EventPayload() : base() { Data = null; }
+
+        /// <summary>
+        /// Creates a payload with empty data and a set nonce
+        /// </summary>
+        /// <param name="nonce"></param>
 		public EventPayload(long nonce) : base(nonce) { Data = null; }
-
-		/// <summary>
-		/// Sets the obejct stored within the data.
-		/// </summary>
-		/// <param name="obj"></param>
-        [System.Obsolete("Not used and there is no reason to set the data manually.", true)]
-		public void SetObject(object obj)
-		{
-            throw new System.NotImplementedException();
-		}
-
+        
 		/// <summary>
 		/// Gets the object stored within the Data
 		/// </summary>
@@ -45,6 +43,10 @@ namespace DiscordRPC.RPC.Payload
             return Data.ToObject<T>();
 		}
 
+        /// <summary>
+        /// Converts the object into a human readable string
+        /// </summary>
+        /// <returns></returns>
 		public override string ToString()
 		{
 			return "Event " + base.ToString() + ", Event: " + (Event.HasValue ? Event.ToString() : "N/A");

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiscordRPC.Exceptions
 {
-	class StringOutOfRangeException : Exception
+    public class StringOutOfRangeException : Exception
 	{
 		public StringOutOfRangeException(string message) : base(message) { }
 		public StringOutOfRangeException(int max) : this("String", max) { }
