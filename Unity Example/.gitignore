@@ -24,6 +24,7 @@ ExportedObj/
 *.pdb
 
 # Unity3D generated meta files
+!*.meta
 *.pidb.meta
 *.pdb.meta
 
@@ -33,7 +34,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-Assets/Discord RPC/Cache
+Assets/Discord RPC/Cache*
 DiscordRPC.Native.dll
 !Assets/*/DiscordRPC.Native.dll
 !Assets/Discord RPC/Example/Tools*
