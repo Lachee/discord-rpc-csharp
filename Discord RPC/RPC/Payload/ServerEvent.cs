@@ -41,6 +41,7 @@ namespace DiscordRPC.RPC.Payload
 
 		#region RPC Protocols
 		//Old things that are obsolete
+        /*
 		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
 		GuildStatus,
 		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
@@ -73,6 +74,7 @@ namespace DiscordRPC.RPC.Payload
 		NotificationCreate,
 		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
 		CaptureShortcutChange
+        */
 		#endregion
 	}
 }

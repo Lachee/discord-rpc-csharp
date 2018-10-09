@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Payload
 {
-	/// <summary>
-	/// Base Payload that is received by both client and server
-	/// </summary>
-	public abstract class IPayload
+    /// <summary>
+    /// Base Payload that is received by both client and server
+    /// </summary>
+    internal abstract class IPayload
 	{
 		/// <summary>
 		/// The type of payload
@@ -20,8 +20,8 @@ namespace DiscordRPC.RPC.Payload
 		[JsonProperty("nonce")]
 		public string Nonce { get; set; }
 
-		public IPayload() { }
-		public IPayload(long nonce)
+		protected IPayload() { }
+        protected IPayload(long nonce)
 		{
 			Nonce = nonce.ToString();
 		}
