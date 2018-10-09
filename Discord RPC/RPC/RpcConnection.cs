@@ -519,8 +519,6 @@ namespace DiscordRPC.RPC
 		
 		private void ProcessCommandQueue()
 		{
-			//Logger.Info("Checking command queue");
-
 			//We are not ready yet, dont even try
 			if (State != RpcState.Connected)
 				return;
@@ -655,8 +653,10 @@ namespace DiscordRPC.RPC
 			{
 				Logger.Error("failed to write a handwave.");
 				return;
-			}
-		}
+            }
+
+            Logger.Info("Goodbye sent.");
+        }
 		
 
 		/// <summary>

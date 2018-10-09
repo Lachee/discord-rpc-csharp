@@ -15,7 +15,7 @@ namespace DiscordRPC.IO
 		/// <summary>
 		/// The maxium size of a pipe frame (16kb).
 		/// </summary>
-		public const int MAX_SIZE = 16 * 1024;
+		public static readonly int MAX_SIZE = 16 * 1024;
 
 		/// <summary>
 		/// The opcode of the frame
@@ -174,9 +174,7 @@ namespace DiscordRPC.IO
 				return false;
 			}
 
-			//Flip the endianess if required then convert it to a number
-			//if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
-			value = BitConverter.ToUInt32(bytes, 0);
+            value = BitConverter.ToUInt32(bytes, 0);
 			return true;
 		}   
 
