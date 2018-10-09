@@ -42,6 +42,7 @@ If you wish to manually include it yourself without the fancy tools I made, you 
 The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. Its important you follow all 3 stages to ensure proper behaviour of the library.
 
 **Initialization**
+
 This stage will setup the connection to Discord and establish the events. Once you have done the intialization you can call `SetPresence` and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same discord client at the same time.
 ```csharp
 public DiscordRpcClient client;
@@ -93,6 +94,7 @@ void Initialize()
 
 
 **Invoking**
+
 This stage is very important and is often missed. The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread saftey and order of operations (especially important in Unity3D applications).
 ```csharp
 //The main loop of your application, or some sort of timer. Literally the Update function in Unity3D
@@ -111,6 +113,7 @@ timer.Start();
 ```
 
 **Deinitialization**
+
 Its important that you dispose your client before you application terminates. This will stop the threads, abort the pipe reads and tell discord to clear the presence. Failure to do so may result in a memory leak!
 ```csharp
 //Called when your application terminates.
