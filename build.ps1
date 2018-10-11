@@ -5,7 +5,7 @@ Param(
 	[int]$BuildCount
 )
 
-function GatherArtifacts([string] $dest_root, [switch]$include_unity)
+function GatherArtifacts([string] $dest_root, [bool]$include_unity)
 {
 	$project = "DiscordRPC";
 	$target = "Release"
@@ -82,11 +82,17 @@ if ($MakeUnityPackage)
 	{
 		throw "Error occured while building the unity package.";
 	}
-}
 
-#Gather artifacts
-Write-Host ">>> Copying Packages";
-GatherArtifacts ./artifacts $MakeUnityPackage
+	#Gather artifacts
+	Write-Host ">>> Copying Packages";)
+	GatherArtifacts ./artifacts '$true'
+}
+else
+{
+	#Gather artifacts
+	Write-Host ">>> Copying Packages";)
+	GatherArtifacts ./artifacts '$false'
+}
 
 
 Write-Host ">>> Build Complete"
