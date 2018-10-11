@@ -4,7 +4,7 @@
 #addin nuget:?package=Cake.VersionReader
 
 // Adjustable Variables
-var projectName = "Discord RPC";
+var projectName = "DiscordRPC";
 
 // Arguments
 var target = Argument ("target", "Default");
@@ -44,11 +44,24 @@ Task ("OutputVariables")
 // Builds the code
 Task ("Build")
 	.Does (() => {
+
+		//Build 32bit versions of the solution
 		MSBuild (sln, new MSBuildSettings 
 						{
 							Verbosity = Verbosity.Quiet,
-							Configuration = buildType
+							Configuration = buildType,
+							PlatformTarget = PlatformTarget.x86
 						});
+
+		//Build 64bit versions of the solution
+		MSBuild (sln, new MSBuildSettings 
+					{
+						Verbosity = Verbosity.Quiet,
+						Configuration = buildType,
+						PlatformTarget = PlatformTarget.x64
+					});
+					
+						
 		var file = MakeAbsolute(Directory(releaseFolder)) + releaseDll;
 		version = GetVersionNumber(file);
 		ciVersion = GetVersionNumberWithContinuesIntegrationNumberAppended(file, buildCounter);
@@ -113,10 +126,10 @@ RunTarget (target);
 // Code to start a TeamCity log block
 public void StartBlock(string blockName)
 {
-		if(runningOnTeamCity)
-		{
-			TeamCity.WriteStartBlock(blockName);
-		}
+	if(runningOnTeamCity)
+	{
+		TeamCity.WriteStartBlock(blockName);
+	}
 }
 
 // Code to start a TeamCity build block
