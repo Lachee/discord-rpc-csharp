@@ -1,4 +1,9 @@
-﻿#MD5 Hasing Algo required for NuGet
+﻿[CmdletBinding()]
+Param(
+    [string[]]$ScriptArgs
+)
+
+#MD5 Hasing Algo required for NuGet
 [Reflection.Assembly]::LoadWithPartialName("System.Security") | Out-Null
 function MD5HashFile([string] $filePath) {
     if ([string]::IsNullOrEmpty($filePath) -or !(Test-Path $filePath -PathType Leaf))

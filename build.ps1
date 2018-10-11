@@ -48,6 +48,7 @@ function GatherArtifacts([string] $dest_root, [switch]$include_unity)
 
 function BuildLibrary($buildcount)
 {
+	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
 	.\build-lib.ps1 -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
 	if ($LASTEXITCODE -ne 0) 
 	{
