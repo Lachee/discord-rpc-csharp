@@ -84,13 +84,13 @@ if ($MakeUnityPackage)
 	}
 
 	#Gather artifacts
-	Write-Host ">>> Copying Packages";)
+	Write-Host ">>> Copying Packages";
 	GatherArtifacts ./artifacts '$true'
 }
 else
 {
 	#Gather artifacts
-	Write-Host ">>> Copying Packages";)
+	Write-Host ">>> Copying Packages";
 	GatherArtifacts ./artifacts '$false'
 }
 
