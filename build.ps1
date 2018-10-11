@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param(
     [string]$Target,
-	[switch]$MakeUnityPackage
+	[switch]$MakeUnityPackage,
 	[int]$BuildCount
 )
 
@@ -46,9 +46,9 @@ function GatherArtifacts([string] $dest_root, [switch]$include_unity)
 	}
 }
 
-function BuildLibrary($target, $buildcount)
+function BuildLibrary($buildcount)
 {
-	.\build-lib.ps1 -ScriptArgs "-buildCounter=$buildcount",'-buildType="'+$target+'"'
+	.\build-lib.ps1 -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
 	if ($LASTEXITCODE -ne 0) 
 	{
 		Throw "Failed to build library."
@@ -66,7 +66,7 @@ function BuildUnity()
 
 #Build the library 
 Write-Host ">>> Building Library";
-BuildLibrary "Release" $BuildCount
+BuildLibrary $BuildCount
 if ($LASTEXITCODE -ne 0)
 {
 	throw "Error occured while building the project.";
