@@ -2,6 +2,7 @@
 Param(
     [string]$Target,
 	[switch]$MakeUnityPackage,
+	[switch]$IgnoreLibraryBuild,
 	[int]$BuildCount
 )
 
@@ -66,11 +67,13 @@ function BuildUnity()
 }
 
 #Build the library 
-Write-Host ">>> Building Library";
-BuildLibrary $BuildCount
-if ($LASTEXITCODE -ne 0)
-{
-	throw "Error occured while building the project.";
+if (!($IgnoreLibraryBuild)) {
+	Write-Host ">>> Building Library";
+	BuildLibrary $BuildCount
+	if ($LASTEXITCODE -ne 0)
+	{
+		throw "Error occured while building the project.";
+	}
 }
 
 #Build the Unity package
@@ -85,13 +88,13 @@ if ($MakeUnityPackage)
 
 	#Gather artifacts
 	Write-Host ">>> Copying Packages";
-	GatherArtifacts ./artifacts '$true'
+	GatherArtifacts ./artifacts $True
 }
 else
 {
 	#Gather artifacts
 	Write-Host ">>> Copying Packages";
-	GatherArtifacts ./artifacts '$false'
+	GatherArtifacts ./artifacts $False
 }
 
 
