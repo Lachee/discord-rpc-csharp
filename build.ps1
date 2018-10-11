@@ -2,6 +2,7 @@
 Param(
     [string]$Target,
 	[switch]$MakeUnityPackage
+	[int]$BuildCount
 )
 
 function GatherArtifacts([string] $dest_root, [switch]$include_unity)
@@ -45,9 +46,9 @@ function GatherArtifacts([string] $dest_root, [switch]$include_unity)
 	}
 }
 
-function BuildLibrary()
+function BuildLibrary($target, $buildcount)
 {
-	.\build-lib.ps1
+	.\build-lib.ps1 -ScriptArgs "-buildCounter=$buildcount",'-buildType="'+$target+'"'
 	if ($LASTEXITCODE -ne 0) 
 	{
 		Throw "Failed to build library."
@@ -65,7 +66,7 @@ function BuildUnity()
 
 #Build the library 
 Write-Host ">>> Building Library";
-BuildLibrary
+BuildLibrary "Release" $BuildCount
 if ($LASTEXITCODE -ne 0)
 {
 	throw "Error occured while building the project.";
