@@ -34,9 +34,14 @@ function GatherArtifacts([string] $dest_root, [switch]$include_unity)
 	copy -Force "$source_native64/$native_dll"	"$dest_native64/$native_dll"
 	copy -Force "$source_managed/$manage_dll"	"$dest_root/$manage_dll"
 	
+	Write-Host "Artifact: $dest_native32/$native_dll"
+	Write-Host "Artifact: $dest_native64/$native_dll"
+	Write-Host "Artifact: $dest_root/$manage_dll"
+	
 	if ($include_unity)
 	{
 		copy -Force "$source_unity/$unity_pack"	"$dest_root/$unity_pack";
+		Write-Host "Artifact: $dest_root/$unity_pack";
 	}
 }
 
