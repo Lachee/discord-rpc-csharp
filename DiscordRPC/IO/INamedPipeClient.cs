@@ -51,5 +51,6 @@ namespace DiscordRPC.IO
 		/// Closes the connection
 		/// </summary>
 		void Close();
+        
 	}
 }

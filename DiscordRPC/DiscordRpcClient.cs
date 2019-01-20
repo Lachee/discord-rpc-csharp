@@ -358,9 +358,6 @@ namespace DiscordRPC
 
 		private void HandleMessage(IMessage message)
 		{
-			//if (Disposed)
-			//	throw new ObjectDisposedException("Discord IPC Client");
-
 			if (message == null) return;
 			switch (message.Type)
 			{
@@ -468,14 +465,8 @@ namespace DiscordRPC
 			{
 				//Send valid presence
 				//Validate the presence with our settings
-				if (presence.HasSecrets())
-				{
-					if (!HasRegisteredUriScheme)
-						throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme!");
-
-					//if (!string.IsNullOrEmpty(presence.Secrets.JoinSecret) && !presence.HasParty())
-					//	throw new BadPresenceException("Presences that include Join Secrets must also include a party!");
-				}
+				if (presence.HasSecrets()  && !HasRegisteredUriScheme)
+					throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme!");
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
 					throw new BadPresenceException("Presence maximum party size cannot be smaller than the current size.");

@@ -354,6 +354,7 @@ namespace DiscordRPC.IO
 						}
 						catch (Exception)
 						{
+                            //We caught an error, but we dont care anyways because we are disposing of the stream.
 						}
 
 						//Make the stream null and set our flag.
