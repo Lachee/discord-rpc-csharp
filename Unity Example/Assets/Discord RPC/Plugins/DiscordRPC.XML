@@ -1576,6 +1576,23 @@
             Structure representing the start and endtimes of a match.
             </summary>
         </member>
+        <member name="P:DiscordRPC.Timestamps.Now">
+            <summary> Creates a new timestamp for now. </summary>
+        </member>
+        <member name="M:DiscordRPC.Timestamps.FromTimeSpan(System.Double)">
+            <summary>
+            Creates a new timestamp starting at UtcNow and ending in the supplied timespan
+            </summary>
+            <param name="seconds">How long the Timestamp will last for in seconds.</param>
+            <returns>Returns a new timestamp with given duration.</returns>
+        </member>
+        <member name="M:DiscordRPC.Timestamps.FromTimeSpan(System.TimeSpan)">
+            <summary>
+            Creates a new timestamp starting at UtcNow and ending in the supplied timespan
+            </summary>
+            <param name="timespan">How long the Timestamp will last for.</param>
+            <returns>Returns a new timestamp with given duration.</returns>
+        </member>
         <member name="P:DiscordRPC.Timestamps.Start">
             <summary>
             The time that match started. When included (not-null), the time in the rich presence will be shown as "00:01 elapsed".
@@ -1583,29 +1600,42 @@
         </member>
         <member name="P:DiscordRPC.Timestamps.End">
             <summary>
-            The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". If <see cref="P:DiscordRPC.Timestamps.Start"/> is set, this value will override the "elapsed" state to "remaining".
+            The time the match will end. When included (not-null), the time in the rich presence will be shown as "00:01 remaining". This will override the "elapsed" to "remaining".
             </summary>
         </member>
-        <member name="P:DiscordRPC.Timestamps.discordEpochStart">
+        <member name="M:DiscordRPC.Timestamps.#ctor">
             <summary>
-            Unix epoch for discord start time. Sent as seconds, but received in milliseconds.
+            Creates a empty timestamp object
             </summary>
         </member>
-        <member name="P:DiscordRPC.Timestamps.discordEpochEnd">
+        <member name="M:DiscordRPC.Timestamps.#ctor(System.DateTime,System.Nullable{System.DateTime})">
             <summary>
-            Unix epoch for discord end time. Sent as seconds, but received in milliseconds.
+            Creates a timestamp with the set start or end time.
+            </summary>
+            <param name="start">The start time</param>
+            <param name="end">The end time</param>
+        </member>
+        <member name="P:DiscordRPC.Timestamps.StartUnixMilliseconds">
+            <summary>
+            Converts between DateTime and Milliseconds to give the Unix Epoch Time for the <see cref="P:DiscordRPC.Timestamps.Start"/>.
             </summary>
         </member>
-        <member name="M:DiscordRPC.Timestamps.FromUnixTime(System.Int64)">
+        <member name="P:DiscordRPC.Timestamps.EndUnixMilliseconds">
+            <summary>
+            Converts between DateTime and Milliseconds to give the Unix Epoch Time  for the <see cref="P:DiscordRPC.Timestamps.End"/>.
+            <seealso cref="P:DiscordRPC.Timestamps.End"/>
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Timestamps.FromUnixMilliseconds(System.UInt64)">
             <summary>
             Converts a Unix Epoch time into a <see cref="T:System.DateTime"/>.
             </summary>
-            <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
+            <param name="unixTime">The time in milliseconds since 1970 / 01 / 01</param>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.Timestamps.ToUnixTime(System.DateTime)">
+        <member name="M:DiscordRPC.Timestamps.ToUnixMilliseconds(System.DateTime)">
             <summary>
-            Converts a <see cref="T:System.DateTime"/> into a Unix Epoch time.
+            Converts a <see cref="T:System.DateTime"/> into a Unix Epoch time (in milliseconds).
             </summary>
             <param name="date">The datetime to convert</param>
             <returns></returns>
@@ -1842,17 +1872,28 @@
             The type of event the server sent
             </summary>
         </member>
-        <member name="M:DiscordRPC.RPC.Payload.EventPayload.SetObject(System.Object)">
+        <member name="M:DiscordRPC.RPC.Payload.EventPayload.#ctor">
             <summary>
-            Sets the obejct stored within the data.
+            Creates a payload with empty data
             </summary>
-            <param name="obj"></param>
+        </member>
+        <member name="M:DiscordRPC.RPC.Payload.EventPayload.#ctor(System.Int64)">
+            <summary>
+            Creates a payload with empty data and a set nonce
+            </summary>
+            <param name="nonce"></param>
         </member>
         <member name="M:DiscordRPC.RPC.Payload.EventPayload.GetObject``1">
             <summary>
             Gets the object stored within the Data
             </summary>
             <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.RPC.Payload.EventPayload.ToString">
+            <summary>
+            Converts the object into a human readable string
+            </summary>
             <returns></returns>
         </member>
         <member name="T:DiscordRPC.RPC.Payload.ServerEvent">
