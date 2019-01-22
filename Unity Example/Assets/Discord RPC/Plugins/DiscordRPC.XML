@@ -493,6 +493,21 @@
             Called when another Discord Client has requested permission to join this game.
             </summary>
         </member>
+        <member name="T:DiscordRPC.Exceptions.BadPresenceException">
+            <summary>
+            A BadPresenceException is thrown when invalid, incompatible or conflicting properties and is unable to be sent.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Exceptions.InvalidConfigurationException">
+            <summary>
+            A InvalidConfigurationException is thrown when trying to perform a action that conflicts with the current configuration.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Exceptions.StringOutOfRangeException">
+            <summary>
+            A StringOutOfRangeException is thrown when the length of a string exceeds the allowed limit.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Helper.BackoffDelay.Maximum">
             <summary>
             The maximum time the backoff can reach
@@ -579,62 +594,6 @@
         <member name="T:DiscordRPC.IO.InvalidPipeException">
             <summary>
             The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.IO.NativeNamedPipeClient">
-            <summary>
-            Pipe Client used to communicate with Discord.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.Logger">
-            <summary>
-            The logger of this pipe
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.IsConnected">
-            <summary>
-            Is the pipe currently connected?
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.ConnectedPipe">
-            <summary>
-            The pipe number we are connected too
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.LastError">
-            <summary>
-            The last pipe error read.
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Connect(System.Int32)">
-            <summary>
-            Attempts to establish a connection to the pipe
-            </summary>
-            <param name="pipe">The pipe to connect too</param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
-            <summary>
-            Attempts to read a frame
-            </summary>
-            <param name="frame"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
-            <summary>
-            Attempts to write a frame
-            </summary>
-            <param name="frame"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Close">
-            <summary>
-            Closes the pipe
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Dispose">
-            <summary>
-            Closes the pipe
             </summary>
         </member>
         <member name="T:DiscordRPC.IO.INamedPipeClient">
