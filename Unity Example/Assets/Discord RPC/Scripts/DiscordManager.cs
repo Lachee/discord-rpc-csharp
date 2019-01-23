@@ -10,8 +10,14 @@ public class DiscordManager : MonoBehaviour {
 
 	public const string EXAMPLE_APPLICATION = "424087019149328395";
 
-	public static DiscordManager instance { get { return _instance; } }
-	private static DiscordManager _instance;
+    [System.Obsolete("Use current instead")]
+    public static DiscordManager instance { get { return _instance; } }
+
+    /// <summary>
+    /// The current instance of the Discord Manager
+    /// </summary>
+    public static DiscordManager current { get { return _instance; } }
+    private static DiscordManager _instance;
 
 	#region Properties and Configurations
     [Header("Properties")]
@@ -94,7 +100,7 @@ public class DiscordManager : MonoBehaviour {
     private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
 
 
-#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 
     private void OnEnable() { if (gameObject.activeSelf && !isInitialized) Initialize(); }   //Try to initialize the client when we are enabled.
     private void Start() { if(!isInitialized) Initialize(); }       //Try to initialize the client when we start. This is useful for moments where we are spawned in
@@ -115,12 +121,12 @@ public class DiscordManager : MonoBehaviour {
 
     /// <summary>
     /// Initializes the discord client if able to. Wont initialize if <see cref="active"/> is false, we are not in playmode, we already have a instance or we already have a client.
-    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD is meet.</para>
+    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD is meet.</para>
     /// </summary>
     public void Initialize()
     {
-#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
-        
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
+
         if (!active) return;                //Are we allowed to be active?
         if (!Application.isPlaying) return; //We are not allowed to initialize while in the editor.
 

@@ -23,18 +23,21 @@ Within the Visual Studio solution, there are 3 projects. The main library is loc
  - Newtonsoft.Json 
  - .NET 3.5+
  
- Unity3D can run in .NET 2.0 (not subset) but requires the DiscordRPC.Native library included in the project.
+**Unity3D Dependencies:**
+ - Newtonsoft.Json  (included in Unity Package).
+ - .NET 2.0+ (not subset)
+ - [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library (included in Unity Package).
   
-**Standard .NET (build)**
+**Source: .NET Standard**
 
 There is currently no nuget package available, but one will be included soon. At the moment, to include this library simply [Download or Build](#building) the library and include it as an assembly reference.
 
 
-**Unity3D Game Engine**
+**Source: Unity3D Game Engine**
 
 There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) AppVoyer generates. This includes the native library and the managed library prebuilt, so you dont need to worry about a thing.  
 
-If you wish to manually include it yourself without the fancy tools I made, you can simply include the `DiscordRPC.dll` and `DiscordRPC.Native.dll` you [Downloaded or Built](#building) and include them into your unity project. Make sure the native library is only included on the appropriate platforms (Windows 32bit and 64bit).
+If you wish to have barebones Unity3D implementation, you need the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](Unity Example/Assets/Discord RPC/Scripts/Control/UnityNamedPipe.cs). I **highly** recommend using the supplied unity package however as it does all the connection handling and editor scripts for you.
 
 
 ## Usage
@@ -54,7 +57,7 @@ void Initialize()
 	/*
 	Create a discord client
 	NOTE: 	If you are using Unity3D, you must use the full constructor and define
-			 the pipe connection as DiscordRPC.IO.NativeNamedPipeClient
+			 the pipe connection.
 	*/
 	client = new DiscordRpcClient("my_client_id");			
 	
@@ -127,17 +130,15 @@ void Deinitialize()
 ## Building
 **Whats Required**
 
-| Type        | DiscordRPC | DiscordRPC.Native*   | DiscordRPC.Example |
+| Type        | DiscordRPC | unity-named-pipes   | DiscordRPC.Example |
 |-------------|------------|---------------------|--------------------|
 | WinForm App | X          |                     |                    |
 | Console App | X          |                     |                    |
 | Mono Game   | X          | * If Issues Persist |                    |
 | Unity3D     | X          | X                   |                    |
-* DiscordRPC.Native is _platform specific!_
+* unity-named-pipes is a external project that only needs to be included for Unity3D.
 
 I recommend downloading the `Unity Package` for all Unity3D projects from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts). Its automatically built and guaranteed to be the latest. I also recommend downloading the `DiscordRPC.dll` itself from the artifacts. 
-
-The native client I recommend building yourself however, since the artifacts only contains a 32bit version. 
 
 You can build the solution easily in Visual Studio, its a simple matter of right clicking the project and hitting build. However if you wish to build via command line, you can do so with the PowerShell build script:
 ```

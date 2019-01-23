@@ -1,4 +1,4 @@
-﻿#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
+﻿#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using System;
