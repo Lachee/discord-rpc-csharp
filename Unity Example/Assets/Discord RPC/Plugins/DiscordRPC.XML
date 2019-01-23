@@ -854,6 +854,13 @@
             </summary>
             <param name="path"></param>
         </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.FileLogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -895,6 +902,13 @@
             A alias too <see cref="P:DiscordRPC.Logging.ConsoleLogger.Coloured"/>
             </summary>
         </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.ConsoleLogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -926,6 +940,13 @@
             The level of logging to apply to this logger.
             </summary>
         </member>
+        <member name="M:DiscordRPC.Logging.ILogger.Trace(System.String,System.Object[])">
+            <summary>
+            Debug trace messeages used for debugging internal elements.
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.ILogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -950,6 +971,11 @@
         <member name="T:DiscordRPC.Logging.LogLevel">
             <summary>
             Level of logging to employ.
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.Logging.LogLevel.Trace">
+            <summary>
+            Trace, Info, Warning and Errors are logged
             </summary>
         </member>
         <member name="F:DiscordRPC.Logging.LogLevel.Info">
@@ -981,6 +1007,13 @@
             <summary>
             The level of logging to apply to this logger.
             </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.NullLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
         </member>
         <member name="M:DiscordRPC.Logging.NullLogger.Info(System.String,System.Object[])">
             <summary>
@@ -1302,19 +1335,7 @@
         <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
             <summary>Invalid event was sent </summary>
         </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.GetSteamLocation">
-            <summary>
-            Gets the current location of the steam client
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.GetApplicationLocation">
-            <summary>
-            Gets the current location of the app
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.RegisterUriScheme(System.String,System.String,System.String)">
+        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(System.String,System.String,System.String)">
             <summary>
             Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
             <para>Additional arguments can be supplied if required.</para>
@@ -1322,6 +1343,36 @@
             <param name="appid">The ID of the discord application</param>
             <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
             <param name="arguments">Optional arguments to be appended to the end.</param>
+        </member>
+        <member name="M:DiscordRPC.Registry.UriScheme.GetApplicationLocation">
+            <summary>
+            Gets the current location of the app
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.RegisterUriScheme(System.String,System.String,System.String)">
+            <summary>
+            Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
+            <para>Additional arguments can be supplied if required.</para>
+            </summary>
+            <param name="appid">The ID of the discord application</param>
+            <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
+            <param name="arguments">Optional arguments to be appended to the end.</param>
+        </member>
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.CreateUriScheme(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates the actual scheme
+            </summary>
+            <param name="scheme"></param>
+            <param name="friendlyName"></param>
+            <param name="defaultIcon"></param>
+            <param name="command"></param>
+        </member>
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.GetSteamLocation">
+            <summary>
+            Gets the current location of the steam client
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.RichPresence">
             <summary>

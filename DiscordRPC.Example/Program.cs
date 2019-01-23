@@ -21,7 +21,7 @@ namespace DiscordRPC.Example
         /// <summary>
         /// The level of logging to use.
         /// </summary>
-        private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Warning;
+        private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Info;
 
 		/// <summary>
 		/// The current presence to send to discord.

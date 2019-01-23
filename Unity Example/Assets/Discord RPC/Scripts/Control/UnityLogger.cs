@@ -10,21 +10,27 @@ namespace DiscordRPC.Unity
     {
         public LogLevel Level { get; set; }
 
+        public void Trace(string message, params object[] args)
+        {
+            if (Level > LogLevel.Trace) return;
+            Debug.Log("<IPC TRACE> " + (args.Length > 0 ? string.Format(message, args) : message));
+        }
+
         public void Info(string message, params object[] args)
         {
-            if (Level != LogLevel.Info) return;
+            if (Level > LogLevel.Info) return;
             Debug.Log("<IPC> " + (args.Length > 0 ? string.Format(message, args) : message));
         }
 
         public void Warning(string message, params object[] args)
         {
-            if (Level != LogLevel.Info && Level != LogLevel.Warning) return;
+            if (Level > LogLevel.Warning) return;
             Debug.LogWarning("<IPC> " + (args.Length > 0 ? string.Format(message, args) : message));
         }
 
         public void Error(string message, params object[] args)
         {
-            if (Level != LogLevel.Info && Level != LogLevel.Warning && Level != LogLevel.Error) return;
+            if (Level > LogLevel.Error) return;
             Debug.LogError("<IPC> " + (args.Length > 0 ? string.Format(message, args) : message));
         }
     }

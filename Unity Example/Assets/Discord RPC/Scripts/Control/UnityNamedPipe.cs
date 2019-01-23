@@ -82,7 +82,7 @@ namespace DiscordRPC.Unity
             }
             catch(Exception e)
             {
-                Logger.Info("Failed: " + e.Message);
+                Logger.Error("Failed: " + e.Message);
                 ConnectedPipe = -1;
                 Close();
                 return false;
@@ -93,7 +93,7 @@ namespace DiscordRPC.Unity
         {
             if (_stream != null)
             {
-                Logger.Info("Closing stream");
+                Logger.Trace("Closing stream");
                 _stream.Dispose();
                 _stream = null;
             }
@@ -102,6 +102,7 @@ namespace DiscordRPC.Unity
         public void Dispose()
         {
             if (_isDisposed) return;
+            Logger.Trace("Disposing Stream");
             _isDisposed = true;
             Close();
         }
@@ -120,6 +121,8 @@ namespace DiscordRPC.Unity
 
             //Try and read a frame
             int length = _stream.Read(_buffer, 0, _buffer.Length);
+            Logger.Trace("Read {0} bytes", length);
+
             if (length == 0)
             {
                 frame = default(PipeFrame);
@@ -137,6 +140,7 @@ namespace DiscordRPC.Unity
                 }
                 else
                 {
+                    Logger.Trace("Read pipe frame!");
                     return true;
                 }
             }
@@ -158,6 +162,7 @@ namespace DiscordRPC.Unity
             {
                 //Write the pipe
                 //This can only happen on the main thread so it should be fine.
+                Logger.Trace("Writing frame");
                 frame.WriteStream(_stream);
                 return true;
             }

@@ -15,13 +15,22 @@ namespace DiscordRPC.Logging
 		/// </summary>
 		public LogLevel Level { get; set; }
 
+        /// <summary>
+        /// Informative log messages
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public void Trace(string message, params object[] args)
+        {
+            //Null Logger, so no messages are acutally sent
+        }
 
-		/// <summary>
-		/// Informative log messages
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		public void Info(string message, params object[] args)
+        /// <summary>
+        /// Informative log messages
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public void Info(string message, params object[] args)
 		{
 			//Null Logger, so no messages are acutally sent
 		}

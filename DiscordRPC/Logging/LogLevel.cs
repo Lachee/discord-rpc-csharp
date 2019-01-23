@@ -10,24 +10,29 @@ namespace DiscordRPC.Logging
 	/// </summary>
 	public enum LogLevel
 	{
-		/// <summary>
-		/// Info, Warning and Errors are logged
-		/// </summary>
-		Info,
-		
-		/// <summary>
-		/// Warning and Errors are logged
-		/// </summary>
-		Warning,
+        /// <summary>
+        /// Trace, Info, Warning and Errors are logged
+        /// </summary>
+        Trace = 1,
 
-		/// <summary>
-		/// Only Errors are logged
-		/// </summary>
-		Error,
+        /// <summary>
+        /// Info, Warning and Errors are logged
+        /// </summary>
+        Info = 2,
+
+        /// <summary>
+        /// Warning and Errors are logged
+        /// </summary>
+        Warning = 3,
+
+        /// <summary>
+        /// Only Errors are logged
+        /// </summary>
+        Error = 4,
 
 		/// <summary>
 		/// Nothing is logged
 		/// </summary>
-		None
+		None = 256
 	}
 }
