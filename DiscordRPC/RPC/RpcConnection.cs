@@ -171,7 +171,7 @@ namespace DiscordRPC.RPC
 		/// <returns></returns>
 		internal IMessage DequeueMessage()
         {
-            Logger.Trace("Deque Message");
+            //Logger.Trace("Deque Message");
             lock (l_rxqueue)
 			{
 				//We have nothing, so just return null.
@@ -188,7 +188,7 @@ namespace DiscordRPC.RPC
 		/// <returns></returns>
 		internal IMessage[] DequeueMessages()
         {
-            Logger.Trace("Deque Multiple Messages");
+            //Logger.Trace("Deque Multiple Messages");
             lock (l_rxqueue)
 			{
 				//Copy the messages into an array

@@ -18,6 +18,8 @@ namespace DiscordRPC.Examples.JoinRequest
 		//This event is subscribed to the Discord Manager using the inspector
 		public void OnJoinRequest(JoinRequestMessage message)
 		{
+            Debug.LogError("JOIN REQUEST");
+
 			//Insantiate the UI element
 			var invite = Instantiate(prefabInviteUI, inviteHolder);
 			invite.SetMessage(message);

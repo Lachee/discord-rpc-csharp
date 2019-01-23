@@ -71,8 +71,8 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            BasicExample();
-            //FullClientExample();
+            //BasicExample();
+            FullClientExample();
 
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
