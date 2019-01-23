@@ -115,7 +115,10 @@
     <Compile Include="Message\UnsubscribeMsesage.cs" />
     <Compile Include="Message\SubscribeMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registry\IUriSchemeCreator.cs" />
+    <Compile Include="Registry\UnixUriSchemeCreator.cs" />
     <Compile Include="Registry\UriScheme.cs" />
+    <Compile Include="Registry\WindowsUriSchemeCreator.cs" />
     <Compile Include="RichPresence.cs" />
     <Compile Include="RPC\Commands\ICommand.cs" />
     <Compile Include="RPC\Commands\CloseCommand.cs" />
