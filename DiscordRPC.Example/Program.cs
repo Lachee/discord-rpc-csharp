@@ -122,15 +122,15 @@ namespace DiscordRPC.Example
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
 			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true))												//This will create a new client with a SteamID (null if no steam)
-			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe))											//This will create a new client that will register itself a URI scheme (for join / spectate)
+			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe, new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true }))											//This will create a new client that will register itself a URI scheme (for join / spectate)
 			{
 				//Clean our log file
 				//System.IO.File.WriteAllBytes("discord-rpc.log", new byte[0]);
 
 				//Set the logger. This way we can see the output of the client.
-				//client.Logger = new Logging.FileLogger("discord-rpc.log") { Level = DiscordLogLevel };
-				client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel,  Coloured = true };
-
+				//We can set it this way, but doing it directly in the constructor allows for the Register Uri Scheme to be logged too.
+                //client.Logger = new Logging.FileLogger("discord-rpc.log") { Level = DiscordLogLevel };
+				
 				//Register to the events we care about. We are registering to everyone just to show off the events
 				client.OnReady += OnReady;
 				client.OnClose += OnClose;

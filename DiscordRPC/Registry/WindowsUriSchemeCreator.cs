@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiscordRPC.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,20 +13,24 @@ namespace DiscordRPC.Registry
         /// Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
         /// <para>Additional arguments can be supplied if required.</para>
         /// </summary>
+        /// <param name="logger">The logger to report messages too.</param>
         /// <param name="appid">The ID of the discord application</param>
         /// <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
-        /// <param name="arguments">Optional arguments to be appended to the end.</param>
-        public void RegisterUriScheme(string appid, string steamid = null, string arguments = null)
+        public void RegisterUriScheme(ILogger logger, string appid, string steamid = null)
         {
             //Prepare our location
             string location = UriScheme.GetApplicationLocation();
-            if (location == null) { return; }   //Some sort of error occured. TODO: Log Error
+            if (location == null)
+            {
+                logger.Error("Failed to register application because the location was null.");
+                return;
+            }
 
             //Prepare the Scheme, Friendly name, default icon and default command
             string scheme = "discord-" + appid;
             string friendlyName = "Run game " + appid + " protocol";
             string defaultIcon = location;
-            string command = string.Format("{0} {1}", location, arguments);
+            string command = location;
 
             //We have a steam ID, so attempt to replce the command with a steam command
             if (!string.IsNullOrEmpty(steamid))

@@ -1,16 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using DiscordRPC.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace DiscordRPC.Registry
 {
-	internal static class UriScheme
+    internal static class UriScheme
 	{
-        public static void RegisterUriScheme(string appid, string steamid = null, string arguments = null)
+        public static void RegisterUriScheme(ILogger logger, string appid, string steamid = null)
         {
             //Get the creator
             IUriSchemeCreator creator = null;
@@ -37,7 +33,7 @@ namespace DiscordRPC.Registry
                 throw new PlatformNotSupportedException("Platform does not support registration.");
 
             //Register the endpoitns
-            creator.RegisterUriScheme(appid, steamid, arguments);
+            creator.RegisterUriScheme(logger, appid, steamid);
         }
 
         /// <summary>

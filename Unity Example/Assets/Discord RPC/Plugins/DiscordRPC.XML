@@ -179,30 +179,33 @@
             <param name="applicationID"></param>	
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the default uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,System.Int32)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the default uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
@@ -210,8 +213,9 @@
             <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.IO.INamedPipeClient)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.IO.INamedPipeClient,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
@@ -220,6 +224,7 @@
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
             <param name="client">The pipe client to use and communicate to discord through</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Invoke">
             <summary>
@@ -1335,14 +1340,14 @@
         <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
             <summary>Invalid event was sent </summary>
         </member>
-        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(System.String,System.String,System.String)">
+        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
             <summary>
             Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
             <para>Additional arguments can be supplied if required.</para>
             </summary>
+            <param name="logger">The logger to report messages too.</param>
             <param name="appid">The ID of the discord application</param>
             <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
-            <param name="arguments">Optional arguments to be appended to the end.</param>
         </member>
         <member name="M:DiscordRPC.Registry.UriScheme.GetApplicationLocation">
             <summary>
@@ -1350,14 +1355,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.RegisterUriScheme(System.String,System.String,System.String)">
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
             <summary>
             Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
             <para>Additional arguments can be supplied if required.</para>
             </summary>
+            <param name="logger">The logger to report messages too.</param>
             <param name="appid">The ID of the discord application</param>
             <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
-            <param name="arguments">Optional arguments to be appended to the end.</param>
         </member>
         <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.CreateUriScheme(System.String,System.String,System.String,System.String)">
             <summary>

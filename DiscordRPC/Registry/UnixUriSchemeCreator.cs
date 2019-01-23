@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiscordRPC.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,13 +10,21 @@ namespace DiscordRPC.Registry
 {
     class UnixUriSchemeCreator : IUriSchemeCreator
     {
-        public void RegisterUriScheme(string appid, string steamid = null, string arguments = null)
+        public void RegisterUriScheme(ILogger logger, string appid, string steamid = null)
         {
             var home = Environment.GetEnvironmentVariable("HOME");
-            if (string.IsNullOrEmpty(home)) return;     //TODO: Log Error
+            if (string.IsNullOrEmpty(home))
+            {
+                logger.Error("Failed to register because the HOME variable was not set.");
+                return;
+            }
 
             string exe = UriScheme.GetApplicationLocation();
-            if (string.IsNullOrEmpty(exe)) return;      //TODO: Log Error
+            if (string.IsNullOrEmpty(exe))
+            {
+                logger.Error("Failed to register because the application was not located.");
+                return;
+            }
 
             //Prepare the command
             string command = null;
@@ -27,7 +36,7 @@ namespace DiscordRPC.Registry
             else
             {
                 //Just a regular discord command
-                command = string.Format("{0} {1}", exe, arguments);
+                command = exe;
             }
 
 
@@ -47,13 +56,21 @@ MimeType=x-scheme-handler/discord-{2}";
             string filename = "/discord-" + appid + ".desktop";
             string filepath = home + "/.local/share/applications";
             var directory = Directory.CreateDirectory(filepath);
-            if (!directory.Exists) return;
+            if (!directory.Exists)
+            {
+                logger.Error("Failed to register because {0} does not exist", filepath);
+                return;
+            }
 
             //Write the file
             File.WriteAllText(filepath + filename, file);
 
             //Register the Mime type
-            RegisterMime(appid);
+            if (!RegisterMime(appid))
+            {
+                logger.Error("Failed to register because the Mime failed.");
+                return;
+            }
         }
 
         private bool RegisterMime(string appid)

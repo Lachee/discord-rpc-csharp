@@ -116,6 +116,7 @@
     <Compile Include="Message\SubscribeMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registry\IUriSchemeCreator.cs" />
+    <Compile Include="Registry\MacUriSchemeCreator.cs" />
     <Compile Include="Registry\UnixUriSchemeCreator.cs" />
     <Compile Include="Registry\UriScheme.cs" />
     <Compile Include="Registry\WindowsUriSchemeCreator.cs" />
