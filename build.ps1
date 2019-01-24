@@ -29,7 +29,7 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity)
 	
 	if ($include_unity)
 	{
-		copy -Force "$source_unity/$unity_pack"	"$dest_root/$unity_pack";
+		Move-Item -Force "$source_unity/$unity_pack"	"$dest_root/$unity_pack";
 		Write-Host "Artifact: $dest_root/$unity_pack";
 	}
 }
