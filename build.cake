@@ -45,20 +45,11 @@ Task ("OutputVariables")
 Task ("Build")
 	.Does (() => {
 
-		//Build 32bit versions of the solution
-		MSBuild (sln, new MSBuildSettings 
-						{
-							Verbosity = Verbosity.Quiet,
-							Configuration = buildType,
-							PlatformTarget = PlatformTarget.x86
-						});
-
 		//Build 64bit versions of the solution
 		MSBuild (sln, new MSBuildSettings 
 					{
 						Verbosity = Verbosity.Quiet,
-						Configuration = buildType,
-						PlatformTarget = PlatformTarget.x64
+						Configuration = buildType
 					});
 					
 						
