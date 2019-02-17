@@ -35,16 +35,16 @@ public class DiscordNativeInstall  {
 
 #pragma warning disable 0162
         if (!ENABLED) return;
-        
-		//We are not windows, cannot do anything
-#if !UNITY_STANDALONE_WIN
+
+        //We are not windows, cannot do anything
+#if !UNITY_STANDALONE
 		Debug.LogError("Cannot use the discord library because the natives do not support non-windows platforms yet.");
 		CleanRoot();
 		return;
 #endif
-		
-		//Copy the library over
-		CopyLibrary();
+
+        //Copy the library over
+        CopyLibrary();
 
 #pragma warning restore 0162
 

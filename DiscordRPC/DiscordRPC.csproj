@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\DiscordRPC.xml</DocumentationFile>
-  </PropertyGroup>  
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -53,7 +53,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\x86\Release\DiscordRPC.xml</DocumentationFile>
-  </PropertyGroup> 
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -73,7 +73,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\Newtonsoft.Json.11.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
@@ -96,7 +96,6 @@
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
     <Compile Include="IO\InvalidPipeException.cs" />
-    <Compile Include="IO\NativeNamedPipeClient.cs" />
     <Compile Include="IO\INamedPipeClient.cs" />
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />
@@ -116,7 +115,11 @@
     <Compile Include="Message\UnsubscribeMsesage.cs" />
     <Compile Include="Message\SubscribeMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registry\IUriSchemeCreator.cs" />
+    <Compile Include="Registry\MacUriSchemeCreator.cs" />
+    <Compile Include="Registry\UnixUriSchemeCreator.cs" />
     <Compile Include="Registry\UriScheme.cs" />
+    <Compile Include="Registry\WindowsUriSchemeCreator.cs" />
     <Compile Include="RichPresence.cs" />
     <Compile Include="RPC\Commands\ICommand.cs" />
     <Compile Include="RPC\Commands\CloseCommand.cs" />
@@ -141,7 +144,7 @@
     <None Include="DiscordRPC.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

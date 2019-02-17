@@ -15,6 +15,13 @@ namespace DiscordRPC.Logging
 		/// </summary>
 		LogLevel Level { get; set; }
 
+        /// <summary>
+        /// Debug trace messeages used for debugging internal elements.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        void Trace(string message, params object[] args);
+
 		/// <summary>
 		/// Informative log messages
 		/// </summary>

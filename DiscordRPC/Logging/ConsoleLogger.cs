@@ -24,15 +24,28 @@ namespace DiscordRPC.Logging
 		/// A alias too <see cref="Coloured"/>
 		/// </summary>
 		public bool Colored { get { return Coloured; } set { Coloured = value; } }
+       
+        /// <summary>
+        /// Informative log messages
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public void Trace(string message, params object[] args)
+        {
+            if (Level > LogLevel.Trace) return;
 
-		/// <summary>
-		/// Informative log messages
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		public void Info(string message, params object[] args)
+            if (Coloured) Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("TRACE: " + message, args);
+        }
+
+        /// <summary>
+        /// Informative log messages
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public void Info(string message, params object[] args)
 		{
-			if (Level != LogLevel.Info) return;
+			if (Level > LogLevel.Info) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("INFO: " + message, args);
@@ -45,7 +58,7 @@ namespace DiscordRPC.Logging
 		/// <param name="args"></param>
 		public void Warning(string message, params object[] args)
 		{
-			if (Level != LogLevel.Info && Level != LogLevel.Warning) return;
+			if (Level > LogLevel.Warning) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine("WARN: " + message, args);
@@ -58,7 +71,7 @@ namespace DiscordRPC.Logging
 		/// <param name="args"></param>
 		public void Error(string message, params object[] args)
 		{
-			if (Level != LogLevel.Info && Level != LogLevel.Warning && Level != LogLevel.Error) return;
+			if (Level > LogLevel.Error) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine("ERR : " + message, args);

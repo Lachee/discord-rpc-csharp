@@ -10,10 +10,17 @@ public class DiscordManager : MonoBehaviour {
 
 	public const string EXAMPLE_APPLICATION = "424087019149328395";
 
-	public static DiscordManager instance { get { return _instance; } }
-	private static DiscordManager _instance;
+    [System.Obsolete("Use current instead")]
+    public static DiscordManager instance { get { return _instance; } }
+
+    /// <summary>
+    /// The current instance of the Discord Manager
+    /// </summary>
+    public static DiscordManager current { get { return _instance; } }
+    private static DiscordManager _instance;
 
 	#region Properties and Configurations
+    [Header("Properties")]
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
 	public string applicationID = EXAMPLE_APPLICATION;
 	
@@ -57,7 +64,9 @@ public class DiscordManager : MonoBehaviour {
 	/// </summary>
 	public DiscordUser CurrentUser { get { return _currentUser; } }
 	[Tooltip("The current Discord user. This does not get set until the first Ready event.")]
-	[SerializeField] private DiscordUser _currentUser;
+
+    [Header("State")]
+    [SerializeField] private DiscordUser _currentUser;
 
 	/// <summary>
 	/// The current event subscription flag.
@@ -75,6 +84,7 @@ public class DiscordManager : MonoBehaviour {
 
     #endregion
 
+    [Header("Handlers and Events")]
     public DiscordRPC.Unity.DiscordEvents events = new DiscordRPC.Unity.DiscordEvents();
 
 	/// <summary>
@@ -90,7 +100,7 @@ public class DiscordManager : MonoBehaviour {
     private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
 
 
-#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 
     private void OnEnable() { if (gameObject.activeSelf && !isInitialized) Initialize(); }   //Try to initialize the client when we are enabled.
     private void Start() { if(!isInitialized) Initialize(); }       //Try to initialize the client when we start. This is useful for moments where we are spawned in
@@ -98,6 +108,9 @@ public class DiscordManager : MonoBehaviour {
     private void FixedUpdate()
 	{
 		if (client == null) return;
+
+        //Update the client log level
+        client.Logger.Level = logLevel;
 
 		//Invoke the client events
 		client.Invoke();
@@ -108,12 +121,12 @@ public class DiscordManager : MonoBehaviour {
 
     /// <summary>
     /// Initializes the discord client if able to. Wont initialize if <see cref="active"/> is false, we are not in playmode, we already have a instance or we already have a client.
-    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD is meet.</para>
+    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD is meet.</para>
     /// </summary>
     public void Initialize()
     {
-#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE_WIN) && !DISABLE_DISCORD
-        
+#if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
+
         if (!active) return;                //Are we allowed to be active?
         if (!Application.isPlaying) return; //We are not allowed to initialize while in the editor.
 
@@ -136,6 +149,13 @@ public class DiscordManager : MonoBehaviour {
         _instance = this;
         DontDestroyOnLoad(this);
 
+        //Prepare the logger
+        DiscordRPC.Logging.ILogger logger = null;
+
+        //Update the logger to the unity logger
+        if (Debug.isDebugBuild)         logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
+        if (Application.isEditor)       logger = new DiscordRPC.Unity.UnityLogger() { Level = logLevel };
+
         //We are starting the client. Below is a break down of the parameters.
         Debug.Log("[DRP] Starting Discord Rich Presence");
         _client = new DiscordRPC.DiscordRpcClient(
@@ -143,12 +163,10 @@ public class DiscordManager : MonoBehaviour {
             steamID,                                        //The Steam App. This can be null or empty string to disable steam intergration.
             registerUriScheme,                              //Should the client register a custom URI Scheme? This must be true for endpoints
             (int)targetPipe,                                //The target pipe to connect too
-            new DiscordRPC.Unity.DiscordNativeNamedPipe()                     //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+            new DiscordRPC.Unity.UnityNamedPipe(),           //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
+            logger
         );
 
-        //Update the logger to the unity logger
-        if (Debug.isDebugBuild) _client.Logger = new DiscordRPC.Logging.FileLogger("discordrpc.log") { Level = logLevel };
-        if (Application.isEditor) _client.Logger = new DiscordRPC.Unity.UnityLogger() { Level = logLevel };
 
         //Subscribe to some initial events
         #region Event Registration
@@ -160,6 +178,7 @@ public class DiscordManager : MonoBehaviour {
             //We have connected to the Discord IPC. We should send our rich presence just incase it lost it.
             Debug.Log("[DRP] Connection established and received READY from Discord IPC. Sending our previous Rich Presence and Subscription.");
 
+
             //Set the user and cache their avatars
             _currentUser = args.User;
             _currentUser.GetAvatar(this, DiscordAvatarSize.x128);
@@ -167,6 +186,7 @@ public class DiscordManager : MonoBehaviour {
         client.OnPresenceUpdate += (s, args) =>
         {
             Debug.Log("[DRP] Our Rich Presence has been updated. Applied changes to local store.");
+            Debug.Log(args.Presence.State);
             _currentPresence = (DiscordPresence)args.Presence;
         };
         client.OnSubscribe += (s, a) =>
@@ -184,13 +204,14 @@ public class DiscordManager : MonoBehaviour {
         events.RegisterEvents(client);
         #endregion
 
+        //Set initial presence and sub. (This will enqueue it)
+        SetSubscription(_currentSubscription);
+        SetPresence(_currentPresence);
+
         //Start the client
         _client.Initialize();
         Debug.Log("[DRP] Discord Rich Presence intialized and connecting...");
 
-        //Set initial presence and sub. (This will enqueue it)
-        SetSubscription(_currentSubscription);
-        SetPresence(_currentPresence);
 #endif
     }
     
@@ -210,7 +231,7 @@ public class DiscordManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets the Rich Presence of the Discord Client through the pipe connection. This differs from <see cref="SendPresence(DiscordPresence)"/> as the client will validate the presence update and the updated state will be tracked. 
+    /// Sets the Rich Presence of the Discord Client through the pipe connection. 
     /// <para>This will log a error if the client is null or not yet initiated.</para>
     /// </summary>
     /// <param name="presence">The Rich Presence to be shown to the client</param>
@@ -224,7 +245,7 @@ public class DiscordManager : MonoBehaviour {
 
 		if (!client.IsInitialized)
 		{
-			Debug.LogWarning("[DRP] Attempted to send a presence update to a client that is not initialized! The messages will be enqueued instead!");
+			//Debug.LogWarning("[DRP] Attempted to send a presence update to a client that is not initialized! The messages will be enqueued instead!");
 		}
 
 		//Just do some validation
@@ -237,6 +258,15 @@ public class DiscordManager : MonoBehaviour {
 		_currentPresence = presence;
 		client.SetPresence(presence != null ? presence.ToRichPresence() : null);
 	}
+
+    /// <summary>
+    /// Resends the current Rich Presence to the Discord Client via the pipe connectoin.
+    /// </summary>
+    [ContextMenu("Resend Presence")]
+    public void ResetPresence()
+    {
+        SetPresence(_currentPresence);
+    }
 
 	/// <summary>
 	/// Sets the subscription flag, unsubscribing and then subscribing to the nessary events. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
@@ -251,11 +281,11 @@ public class DiscordManager : MonoBehaviour {
 			return;
 		}
 
-		if (!client.IsInitialized)
-		{
-			Debug.LogError("[DRP] Attempted to send a presence update to a client that is not initialized!");
-			return;
-		}
+		//if (!client.IsInitialized)
+		//{
+		//	Debug.LogError("[DRP] Attempted to send a presence update to a client that is not initialized!");
+		//	return;
+		//}
 
 		this._currentSubscription = evt;
 		client.SetSubscription(evt.ToDiscordRPC());
@@ -354,29 +384,5 @@ public class DiscordManager : MonoBehaviour {
 
 
 		client.Respond(request, acceptRequest);
-	}
-
-	/// <summary>
-	/// Sets the Rich Presence of the Discord Client through a HTTP connection. This differs from <see cref="SetPresence(DiscordPresence)"/> as it does not attempt to connect to the websocket and is a write-only operation with no state validation.
-	/// </summary>
-	/// <param name="applicationID">The ID of this application</param>
-	/// <param name="presence">The presence to set the client</param>
-	/// <returns></returns>
-	[System.Obsolete("WWW (http) based requests are no longer supported as Discord removed the functionality. See the offical Github repository for more information.")]
-	public static IEnumerator SendPresence(string applicationID, DiscordPresence presence)
-	{
-		/*
-		var requestPayload = DiscordRPC.Web.WebRPC.PrepareRequest(presence.ToRichPresence(), applicationID);
-		byte[] encodedRequest = System.Text.Encoding.UTF8.GetBytes(requestPayload.Data);
-
-		WWW www = new WWW(requestPayload.URL, encodedRequest, requestPayload.Headers);
-		yield return www;
-		*/
-		yield return null;
-		/*
-		RichPresence p;
-		string response = System.Text.Encoding.UTF8.GetString(www.bytes);
-		DiscordRPC.Web.WebRPC.TryParseResponse(response, out p);
-		*/
 	}
 }

@@ -117,7 +117,7 @@ namespace DiscordRPC.IO
 					_stream.Connect(1000);
 
 					//Spin for a bit while we wait for it to finish connecting
-					Logger.Info("Waiting for connection...");
+					Logger.Trace("Waiting for connection...");
 					do { Thread.Sleep(10); } while (!_stream.IsConnected);
 				}
 
@@ -150,7 +150,7 @@ namespace DiscordRPC.IO
 					//Make sure the stream is valid
 					if (_stream == null || !_stream.IsConnected) return;
 
-					Logger.Info("Begining Read of {0} bytes", _buffer.Length);
+					Logger.Trace("Begining Read of {0} bytes", _buffer.Length);
 					_stream.BeginRead(_buffer, 0, _buffer.Length, new AsyncCallback(tEndRead), _stream.IsConnected);
 				}
 			}
@@ -178,7 +178,7 @@ namespace DiscordRPC.IO
 		/// <param name="callback"></param>
 		private void tEndRead(IAsyncResult callback)
 		{
-			Logger.Info("Ending Read");
+			Logger.Trace("Ending Read");
 			int bytes = 0;
 
 			try
@@ -216,7 +216,7 @@ namespace DiscordRPC.IO
 			}
 
 			//How much did we read?
-			Logger.Info("Read {0} bytes", bytes);
+			Logger.Trace("Read {0} bytes", bytes);
 
 			//Did we read anything? If we did we should enqueue it.
 			if (bytes > 0)
@@ -229,7 +229,7 @@ namespace DiscordRPC.IO
 						PipeFrame frame = new PipeFrame();
 						if (frame.ReadStream(memory))
 						{
-							Logger.Info("Read a frame: {0}", frame.Opcode);
+							Logger.Trace("Read a frame: {0}", frame.Opcode);
 
 							//Enqueue the stream
 							lock (_framequeuelock)
@@ -253,7 +253,7 @@ namespace DiscordRPC.IO
 			//We are still connected, so continue to read
 			if (!_isClosed && IsConnected)
 			{
-				Logger.Info("Starting another read");
+				Logger.Trace("Starting another read");
 				tBeginRead();
 			}
 		}

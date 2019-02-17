@@ -179,30 +179,33 @@
             <param name="applicationID"></param>	
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the default uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,System.Int32)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the default uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
             <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
@@ -210,8 +213,9 @@
             <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.IO.INamedPipeClient)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.IO.INamedPipeClient,DiscordRPC.Logging.ILogger)">
             <summary>
             Creates a new Discord RPC Client using the steam uri scheme.
             </summary>
@@ -220,6 +224,7 @@
             <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
             <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
             <param name="client">The pipe client to use and communicate to discord through</param>
+            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Invoke">
             <summary>
@@ -493,6 +498,21 @@
             Called when another Discord Client has requested permission to join this game.
             </summary>
         </member>
+        <member name="T:DiscordRPC.Exceptions.BadPresenceException">
+            <summary>
+            A BadPresenceException is thrown when invalid, incompatible or conflicting properties and is unable to be sent.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Exceptions.InvalidConfigurationException">
+            <summary>
+            A InvalidConfigurationException is thrown when trying to perform a action that conflicts with the current configuration.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Exceptions.StringOutOfRangeException">
+            <summary>
+            A StringOutOfRangeException is thrown when the length of a string exceeds the allowed limit.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Helper.BackoffDelay.Maximum">
             <summary>
             The maximum time the backoff can reach
@@ -579,62 +599,6 @@
         <member name="T:DiscordRPC.IO.InvalidPipeException">
             <summary>
             The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.IO.NativeNamedPipeClient">
-            <summary>
-            Pipe Client used to communicate with Discord.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.Logger">
-            <summary>
-            The logger of this pipe
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.IsConnected">
-            <summary>
-            Is the pipe currently connected?
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.ConnectedPipe">
-            <summary>
-            The pipe number we are connected too
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.IO.NativeNamedPipeClient.LastError">
-            <summary>
-            The last pipe error read.
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Connect(System.Int32)">
-            <summary>
-            Attempts to establish a connection to the pipe
-            </summary>
-            <param name="pipe">The pipe to connect too</param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
-            <summary>
-            Attempts to read a frame
-            </summary>
-            <param name="frame"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
-            <summary>
-            Attempts to write a frame
-            </summary>
-            <param name="frame"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Close">
-            <summary>
-            Closes the pipe
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.IO.NativeNamedPipeClient.Dispose">
-            <summary>
-            Closes the pipe
             </summary>
         </member>
         <member name="T:DiscordRPC.IO.INamedPipeClient">
@@ -895,6 +859,13 @@
             </summary>
             <param name="path"></param>
         </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.FileLogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -936,6 +907,13 @@
             A alias too <see cref="P:DiscordRPC.Logging.ConsoleLogger.Coloured"/>
             </summary>
         </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.ConsoleLogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -967,6 +945,13 @@
             The level of logging to apply to this logger.
             </summary>
         </member>
+        <member name="M:DiscordRPC.Logging.ILogger.Trace(System.String,System.Object[])">
+            <summary>
+            Debug trace messeages used for debugging internal elements.
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
         <member name="M:DiscordRPC.Logging.ILogger.Info(System.String,System.Object[])">
             <summary>
             Informative log messages
@@ -991,6 +976,11 @@
         <member name="T:DiscordRPC.Logging.LogLevel">
             <summary>
             Level of logging to employ.
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.Logging.LogLevel.Trace">
+            <summary>
+            Trace, Info, Warning and Errors are logged
             </summary>
         </member>
         <member name="F:DiscordRPC.Logging.LogLevel.Info">
@@ -1022,6 +1012,13 @@
             <summary>
             The level of logging to apply to this logger.
             </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.NullLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
         </member>
         <member name="M:DiscordRPC.Logging.NullLogger.Info(System.String,System.Object[])">
             <summary>
@@ -1343,11 +1340,14 @@
         <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
             <summary>Invalid event was sent </summary>
         </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.GetSteamLocation">
+        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
             <summary>
-            Gets the current location of the steam client
+            Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
+            <para>Additional arguments can be supplied if required.</para>
             </summary>
-            <returns></returns>
+            <param name="logger">The logger to report messages too.</param>
+            <param name="appid">The ID of the discord application</param>
+            <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
         </member>
         <member name="M:DiscordRPC.Registry.UriScheme.GetApplicationLocation">
             <summary>
@@ -1355,14 +1355,29 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.RegisterUriScheme(System.String,System.String,System.String)">
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
             <summary>
             Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
             <para>Additional arguments can be supplied if required.</para>
             </summary>
+            <param name="logger">The logger to report messages too.</param>
             <param name="appid">The ID of the discord application</param>
             <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
-            <param name="arguments">Optional arguments to be appended to the end.</param>
+        </member>
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.CreateUriScheme(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates the actual scheme
+            </summary>
+            <param name="scheme"></param>
+            <param name="friendlyName"></param>
+            <param name="defaultIcon"></param>
+            <param name="command"></param>
+        </member>
+        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.GetSteamLocation">
+            <summary>
+            Gets the current location of the steam client
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.RichPresence">
             <summary>
