@@ -37,7 +37,7 @@ There is currently no nuget package available, but one will be included soon. At
 
 There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) AppVoyer generates. This includes the native library and the managed library prebuilt, so you dont need to worry about a thing.  
 
-If you wish to have barebones Unity3D implementation, you need the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](Unity Example/Assets/Discord RPC/Scripts/Control/UnityNamedPipe.cs). I **highly** recommend using the supplied unity package however as it does all the connection handling and editor scripts for you.
+If you wish to have barebones Unity3D implementation, you need the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). I **highly** recommend using the supplied unity package however as it does all the connection handling and editor scripts for you.
 
 
 ## Usage
