@@ -99,21 +99,23 @@ namespace DiscordRPC.IO
 			//We failed to connect
 			return false;
 		}
+
 		private bool AttemptConnection(int pipe)
 		{
 			if (_isDisposed)
 				throw new ObjectDisposedException("_stream");
 
-			//Prepare the pipe name
-			string pipename = string.Format(PIPE_NAME, pipe);
-			Logger.Info("Attempting to connect to " + pipename);
+            //Prepare the pipe name
+            Logger.Trace("Connection Attempt " + pipe);
+            string pipename = GetPipeName(pipe);
 
-			try
+            try
 			{
-				//Create the client
-				lock (l_stream)
-				{
-					_stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
+                //Create the client
+                lock (l_stream)
+                {
+                    Logger.Info("Attempting to connect to " + pipename);
+                    _stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
 					_stream.Connect(1000);
 
 					//Spin for a bit while we wait for it to finish connecting
@@ -134,7 +136,8 @@ namespace DiscordRPC.IO
 				Close();
 			}
 
-			return !_isClosed;
+            Logger.Trace("Done. Result: {0}", _isClosed);
+            return !_isClosed;
 		}
 
 		/// <summary>
@@ -404,6 +407,36 @@ namespace DiscordRPC.IO
 
 			//Set our dispose flag
 			_isDisposed = true;
-		}		
-	}
+		}
+                
+        private string GetPipeName(int pipe)
+        {
+            switch(Environment.OSVersion.Platform)
+            {
+                default:
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    Logger.Trace("PIPE WIN");
+                    return string.Format(PIPE_NAME, pipe);
+
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    Logger.Trace("PIPE UNIX / MACOSX");
+                    return GetEnviromentTemp() + "/" + string.Format(PIPE_NAME, pipe);
+            }
+        }
+
+        private string GetEnviromentTemp()
+        {
+            string temp = null;
+            temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+            temp = temp ?? Environment.GetEnvironmentVariable("TMPDIR");
+            temp = temp ?? Environment.GetEnvironmentVariable("TMP");
+            temp = temp ?? Environment.GetEnvironmentVariable("TEMP");
+            temp = temp ?? "/tmp";
+            return temp;
+        }
+    }
 }
