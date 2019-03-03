@@ -71,10 +71,13 @@ namespace DiscordRPC.Unity
 
             try
             {
+                //Prepare the name
+                string pipename = GetPipeName(pipe);
+
                 //Attempt to connect
-                Logger.Info("Connecting to " + pipe);
+                Logger.Info("Connecting to " + pipename);
                 ConnectedPipe = pipe;
-                _stream = new NamedPipeClientStream(".", string.Format(PIPE_NAME, pipe));
+                _stream = new NamedPipeClientStream(".", pipename);
                 _stream.Connect();
 
                 Logger.Info("Connected");
@@ -181,6 +184,25 @@ namespace DiscordRPC.Unity
 
             //We must have failed the try catch
             return false;
+        }
+        
+        private string GetPipeName(int pipe)
+        {
+#if (UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX) || UNITY_STANDALONE_LINUX
+
+            string temp = null;
+            temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+            temp = temp ?? Environment.GetEnvironmentVariable("TMPDIR");
+            temp = temp ?? Environment.GetEnvironmentVariable("TMP");
+            temp = temp ?? Environment.GetEnvironmentVariable("TEMP");
+            temp = temp ?? "/tmp";
+
+            Logger.Trace("PIPE UNIX / MACOSX");
+            return temp + "/" + string.Format(PIPE_NAME, pipe);
+#else
+            Logger.Trace("PIPE WIN");
+            return string.Format(PIPE_NAME, pipe);
+#endif
         }
     }
 }
