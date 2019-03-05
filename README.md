@@ -30,7 +30,10 @@ Within the Visual Studio solution, there are 3 projects. The main library is loc
   
 **Source: .NET Standard**
 
-There is currently no nuget package available, but one will be included soon. At the moment, to include this library simply [Download or Build](#building) the library and include it as an assembly reference.
+At the moment, to include this library simply [Download or Build](#building) the library and include it as an assembly reference. Get it on nuget now with:
+```
+PM> Install-Package DiscordRichPresence -Version 1.0.74
+```
 
 
 **Source: Unity3D Game Engine**
@@ -145,6 +148,8 @@ You can build the solution easily in Visual Studio, its a simple matter of right
 .\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
 ```
 
-The Nuget project is TBA. 
-
+Nuget project is [DiscordRichPresence](https://www.nuget.org/packages/DiscordRichPresence/). Install with
+```
+PM> https://www.nuget.org/packages/DiscordRichPresence/
+```
 
