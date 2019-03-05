@@ -101,7 +101,7 @@ namespace DiscordRPC
 		/// </summary>
 		public bool ShutdownOnly { get { return _shutdownOnly; } set { _shutdownOnly = value; if (connection != null) connection.ShutdownOnly = value; } }
 		private bool _shutdownOnly = true;
-
+        
 		#region Events
 
 		/// <summary>
@@ -472,10 +472,13 @@ namespace DiscordRPC
 				//Send valid presence
 				//Validate the presence with our settings
 				if (presence.HasSecrets()  && !HasRegisteredUriScheme)
-					throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme!");
+					throw new BadPresenceException("Cannot send a presence with secrets as this object has not registered a URI scheme. Please enable the uri scheme registration in the DiscordRpcClient constructor.");
 
 				if (presence.HasParty() && presence.Party.Max < presence.Party.Size)
 					throw new BadPresenceException("Presence maximum party size cannot be smaller than the current size.");
+
+                if (presence.HasSecrets() && !presence.HasParty())
+                    Logger.Warning("The presence has set the secrets but no buttons will show as there is no party available.");
 				
 				//Send the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });

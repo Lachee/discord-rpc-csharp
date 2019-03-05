@@ -98,8 +98,9 @@ namespace DiscordRPC.RPC
 		private readonly object l_rtqueue = new object();		//Lock for the send queue
 		private Queue<ICommand> _rtqueue;				//The send queue
 
-		private readonly object l_rxqueue = new object();		//Lock for the receive queue
-		private Queue<IMessage> _rxqueue;               //The receive queue
+		private readonly object l_rxqueue = new object();	//Lock for the receive queue
+        private readonly int _maxRxQueueSize;                 //The max size of the RX queue
+        private Queue<IMessage> _rxqueue;                   //The receive queue
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;                     //The backoff delay before reconnecting.
@@ -112,7 +113,7 @@ namespace DiscordRPC.RPC
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
-		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client)
+		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, int maxRxQueueSize = 128)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
@@ -125,7 +126,9 @@ namespace DiscordRPC.RPC
 
 			delay = new BackoffDelay(500, 60 * 1000);
 			_rtqueue = new Queue<ICommand>();
-			_rxqueue = new Queue<IMessage>();
+
+            _maxRxQueueSize = maxRxQueueSize;
+            _rxqueue = new Queue<IMessage>(_maxRxQueueSize + 1);
 			
 			nonce = 0;
 		}
@@ -160,9 +163,27 @@ namespace DiscordRPC.RPC
 		/// <param name="message">The message to add</param>
 		private void EnqueueMessage(IMessage message)
 		{
+            //Small queue sizes should just ignore messages
+            if (_maxRxQueueSize <= 0)
+            {
+                Logger.Trace("Enqueued Message, but queue size is 0.");
+                return;
+            }
+
+            //Large queue sizes should keep the queue in check
             Logger.Trace("Enqueue Message: " + message.Type);
-			lock (l_rxqueue)
-				_rxqueue.Enqueue(message);
+            lock (l_rxqueue)
+            {
+                //If we are too big drop the last element
+                if (_rxqueue.Count == _maxRxQueueSize)
+                {
+                    Logger.Warning("Too many enqueued messages, dropping oldest one.");
+                    _rxqueue.Dequeue();
+                }
+
+                //Enqueue the message
+                _rxqueue.Enqueue(message);
+            }
 		}
 
 		/// <summary>
