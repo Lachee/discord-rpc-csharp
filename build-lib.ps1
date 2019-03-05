@@ -1,5 +1,6 @@
 ﻿[CmdletBinding()]
 Param(
+    [string]$Target,
     [string[]]$ScriptArgs
 )
 

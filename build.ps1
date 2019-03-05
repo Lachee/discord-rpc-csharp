@@ -2,11 +2,12 @@
 Param(
     [string]$Target,
 	[switch]$MakeUnityPackage,
+	[switch]$MakeNugetPackage,
 	[switch]$IgnoreLibraryBuild,
 	[int]$BuildCount
 )
 
-function GatherArtifacts([string] $dest_root, [bool]$include_unity)
+function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$include_nuget)
 {
 	$project = "DiscordRPC";
 	$target = "Release"
@@ -18,6 +19,7 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity)
 	#prepare the source folders
 	$source_managed = "./$project/bin/$target";
 	$source_unity = "./";
+	$source_nuget = "./nupkg"
 
 	#create the directories for the dest
 	mkdir -Force $dest_root
@@ -32,12 +34,27 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity)
 		Move-Item -Force "$source_unity/$unity_pack"	"$dest_root/$unity_pack";
 		Write-Host "Artifact: $dest_root/$unity_pack";
 	}
+
+	if ($include_nuget)
+	{
+		Move-Item -Force "$source_nuget/*" "$dest_root/"
+		Write-Host "Artifact: NUGET"
+	}
 }
 
-function BuildLibrary($buildcount)
+function BuildLibrary($buildcount, [bool]$makeNuget)
 {
 	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
-	.\build-lib.ps1 -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+
+	if ($makeNuget) 
+	{
+		.\build-lib.ps1 -Target "Nuget" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+	}
+	else
+	{
+		.\build-lib.ps1 -Target "Default" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+	}
+
 	if ($LASTEXITCODE -ne 0) 
 	{
 		Throw "Failed to build library."
@@ -56,7 +73,7 @@ function BuildUnity()
 #Build the library 
 if (!($IgnoreLibraryBuild)) {
 	Write-Host ">>> Building Library";
-	BuildLibrary $BuildCount
+	BuildLibrary $BuildCount $MakeNugetPackage
 	if ($LASTEXITCODE -ne 0)
 	{
 		throw "Error occured while building the project.";
@@ -72,17 +89,10 @@ if ($MakeUnityPackage)
 	{
 		throw "Error occured while building the unity package.";
 	}
-
-	#Gather artifacts
-	Write-Host ">>> Copying Packages";
-	GatherArtifacts ./artifacts $True
-}
-else
-{
-	#Gather artifacts
-	Write-Host ">>> Copying Packages";
-	GatherArtifacts ./artifacts $False
 }
 
+#Gather artifacts
+Write-Host ">>> Copying Packages";
+GatherArtifacts ./artifacts $MakeUnityPackage $MakeNugetPackage
 
 Write-Host ">>> Build Complete"

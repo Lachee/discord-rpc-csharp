@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/21.0.07/nuspec.xsd">
+    <id>DiscordRichPresence</id>
+    <version>0.0.0</version>
+    <authors>Lachee</authors>
+    <owners>Lachee</owners>
+    <title>Discord Rich Presence</title>
+    <description>
+      A .NET implementation of Discord's Rich Presence functionality. This library supports all features of the Rich Presence that the official C++ library supports, plus a few extra.
+
+"Players love to show off what they are playing with Discord’s status feature. With Rich Presence you can add beautiful art and detailed information to show off your game even more. This lets players know what their friends are doing, so they can decide to ask to join in and play together." 
+  - Discord
+
+This is an unoffical, non-discord supported library.
+    </description>
+    <summary>Discord Rich Presence for your .NET project</summary>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/Lachee/discord-rpc-csharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright (c) Lachee 2018</copyright>
+    <releaseNotes></releaseNotes>
+    <tags>Discord Discord Rich Presence RPC Discord-RPC</tags>
+
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.1" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="./bin/Release/DiscordRPC.dll" target="lib\net35" />
+    <file src="./bin/Release/DiscordRPC.pdb" target="lib\net35" />
+    <file src="./bin/Release/DiscordRPC.xml" target="lib\net35" />
+  </files>
+</package>
