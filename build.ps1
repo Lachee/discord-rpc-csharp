@@ -48,7 +48,7 @@ function BuildLibrary($buildcount, [bool]$makeNuget)
 
 	if ($makeNuget) 
 	{
-		.\build-lib.ps1 -Target "NugetBuild" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+		.\build-lib.ps1 -Target "NugetBuildPush" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
 	}
 	else
 	{

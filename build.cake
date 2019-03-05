@@ -109,6 +109,12 @@ Task ("NugetBuild")
 	.IsDependentOn ("DiscoverBuildDetails")
 	.IsDependentOn ("NugetRestore")
 	.IsDependentOn ("Build")
+    .IsDependentOn ("Nuget");
+Task ("NugetBuildPush")
+	.IsDependentOn ("OutputVariables")
+	.IsDependentOn ("DiscoverBuildDetails")
+	.IsDependentOn ("NugetRestore")
+	.IsDependentOn ("Build")
     .IsDependentOn ("Nuget")
     .IsDependentOn ("Push");
     
