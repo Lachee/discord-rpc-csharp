@@ -7,21 +7,24 @@
 var projectName = "DiscordRPC";
 
 // Arguments
+var major_version = "1.0";
 var target = Argument ("target", "Default");
 var buildType = Argument<string>("buildType", "Release");
 var buildCounter = Argument<int>("buildCounter", 0);
 
 // Project Variables
+var asm = string.Format("./{0}/Properties/AssemblyInfo.cs", projectName);
 var sln = string.Format("./{0}/{0}.sln", projectName);
 var releaseFolder = string.Format("./{0}/bin/{1}", projectName, buildType);
 var releaseDll = "/DiscordRPC.dll";
 var nuspecFile = string.Format("./{0}/{0}.nuspec", projectName);
 
 // Execution Variables
-var version = "0.0.0";
-var ciVersion = "0.0.0-CI00000";
+var version = "1.0.0.0";
+var ciVersion = major_version + ".0-CI00000";
 var runningOnTeamCity = false;
 var runningOnAppVeyor = false;
+
 
 // Find out if we are running on a Build Server
 Task ("DiscoverBuildDetails")
@@ -41,6 +44,14 @@ Task ("OutputVariables")
 		Information("BuildCounter: " + buildCounter);
 	});
 
+Task("SetVersion")
+   .Does(() => {
+	   
+	   version = major_version + "." + buildCounter.ToString() + ".0";
+	   Information("Version: " + version);
+       ReplaceRegexInFiles(asm,  "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))", version);
+   });
+
 // Builds the code
 Task ("Build")
 	.Does (() => {
@@ -50,7 +61,7 @@ Task ("Build")
 					{
 						Verbosity = Verbosity.Quiet,
 						Configuration = buildType
-					});
+					}.WithProperty("build", buildCounter.ToString()));
 					
 						
 		var file = MakeAbsolute(Directory(releaseFolder)) + releaseDll;
@@ -103,17 +114,20 @@ Task ("Default")
 	.IsDependentOn ("OutputVariables")
 	.IsDependentOn ("DiscoverBuildDetails")
 	.IsDependentOn ("NugetRestore")
+	.IsDependentOn ("SetVersion")
 	.IsDependentOn ("Build");
 Task ("NugetBuild")
 	.IsDependentOn ("OutputVariables")
 	.IsDependentOn ("DiscoverBuildDetails")
 	.IsDependentOn ("NugetRestore")
+	.IsDependentOn ("SetVersion")
 	.IsDependentOn ("Build")
     .IsDependentOn ("Nuget");
 Task ("NugetBuildPush")
 	.IsDependentOn ("OutputVariables")
 	.IsDependentOn ("DiscoverBuildDetails")
 	.IsDependentOn ("NugetRestore")
+	.IsDependentOn ("SetVersion")
 	.IsDependentOn ("Build")
     .IsDependentOn ("Nuget")
     .IsDependentOn ("Push");
