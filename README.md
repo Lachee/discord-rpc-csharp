@@ -17,7 +17,6 @@ This library supports all features of the Rich Presence that the official C++ li
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
 
 # Installation
-Within the Visual Studio solution, there are 3 projects. The main library is located in `Discord RPC`, the example project is `DiscordRPC.Example` and a native pipe wrapper is `DiscordRPC.Native`. 
 
 **Dependencies:**
  - Newtonsoft.Json 
@@ -28,20 +27,18 @@ Within the Visual Studio solution, there are 3 projects. The main library is loc
  - .NET 2.0+ (not subset)
  - [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library (included in Unity Package).
   
-**Source: .NET Standard**
-
-At the moment, to include this library simply [Download or Build](#building) the library and include it as an assembly reference. Get it on nuget now with:
+**Source: .NET Project**
+For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
-PM> Install-Package DiscordRichPresence -Version 1.0.74
+PM> Install-Package DiscordRichPresence
 ```
-
+You can also [Download or Build](#building) your own version of the library if you have more specific requirements.
 
 **Source: Unity3D Game Engine**
 
 There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) AppVoyer generates. This includes the native library and the managed library prebuilt, so you dont need to worry about a thing.  
 
-If you wish to have barebones Unity3D implementation, you need the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). I **highly** recommend using the supplied unity package however as it does all the connection handling and editor scripts for you.
-
+For building your own package, read the [building](#building) guide.
 
 ## Usage
 
@@ -141,15 +138,20 @@ void Deinitialize()
 | Unity3D     | X          | X                   |                    |
 * unity-named-pipes is a external project that only needs to be included for Unity3D.
 
-I recommend downloading the `Unity Package` for all Unity3D projects from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts). Its automatically built and guaranteed to be the latest. I also recommend downloading the `DiscordRPC.dll` itself from the artifacts. 
-
+**DiscordRPC Library**
 You can build the solution easily in Visual Studio, its a simple matter of right clicking the project and hitting build. However if you wish to build via command line, you can do so with the PowerShell build script:
 ```
 .\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
 ```
 
-Nuget project is [DiscordRichPresence](https://www.nuget.org/packages/DiscordRichPresence/). Install with
+**Unity3D**
+The project does have a `Unity Pacakge` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
+
+You can build the Unity3D package using the command below. Make sure you update the `DiscordRPC.dll` within the Unity Project first as it is not automatically updated:
 ```
-PM> https://www.nuget.org/packages/DiscordRichPresence/
+.\build.ps1 -target Default -MakeUnityPackage -ScriptArgs '-buildType="Release"'
 ```
+
+If you wish to have barebones Unity3D implementation, you need to build the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). Put these in your own Unity Project and the `.dll`s in a folder called `Plugins`. 
+
 
