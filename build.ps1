@@ -4,7 +4,8 @@ Param(
 	[switch]$MakeUnityPackage,
 	[switch]$MakeNugetPackage,
 	[switch]$IgnoreLibraryBuild,
-	[int]$BuildCount
+	[int]$BuildCount,
+	[string]$BuildTag
 )
 
 function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$include_nuget)
@@ -73,6 +74,7 @@ function BuildUnity()
 #Build the library 
 if (!($IgnoreLibraryBuild)) {
 	Write-Host ">>> Building Library";
+	Write-Host $BuildTag
 	BuildLibrary $BuildCount $MakeNugetPackage
 	if ($LASTEXITCODE -ne 0)
 	{
