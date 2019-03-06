@@ -24,7 +24,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!ValidateString(value, out _state, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("State", 128);
+					throw new StringOutOfRangeException("State", 0, 128);
 			}
 		}
 		private string _state;
@@ -40,7 +40,7 @@ namespace DiscordRPC
 			set 
 			{
 				if (!ValidateString(value, out _details, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("Details", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _details;
@@ -160,6 +160,7 @@ namespace DiscordRPC
 		/// Updates this presence with any values from the previous one
 		/// </summary>
 		/// <param name="presence"></param>
+        [System.Obsolete("No longer used and probably can be removed.")]
 		internal void Update(RichPresence presence)
 		{
 			if (presence == null) return;
@@ -182,11 +183,12 @@ namespace DiscordRPC
 			}
 		}
 
-		/// <summary>
-		/// Does the Rich Presence have valid timestamps?
-		/// </summary>
-		/// <returns></returns>
-		public bool HasTimestamps()
+        #region Has Checks
+        /// <summary>
+        /// Does the Rich Presence have valid timestamps?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasTimestamps()
 		{
 			return this.Timestamps != null && (Timestamps.Start != null || Timestamps.End != null);
 		}
@@ -217,16 +219,85 @@ namespace DiscordRPC
 		{
 			return Secrets != null && (Secrets.JoinSecret != null || Secrets.SpectateSecret != null);
 		}
-		
-		/// <summary>
-		/// Attempts to call <see cref="StringTools.NullEmpty(string)"/> on the string and return the result, if its within a valid length.
-		/// </summary>
-		/// <param name="str">The string to check</param>
-		/// <param name="result">The formatted string result</param>
-		/// <param name="bytes">The maximum number of bytes the string can take up</param>
-		/// <param name="encoding">The encoding to count the bytes with</param>
-		/// <returns>True if the string fits within the number of bytes</returns>
-		internal static bool ValidateString(string str, out string result, int bytes, Encoding encoding)
+        #endregion
+
+        #region Builder
+        /// <summary>
+        /// Sets the state of the Rich Presence. See also <seealso cref="State"/>.
+        /// </summary>
+        /// <param name="state">The user's current <see cref="Party"/> status.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithState(string state)
+        {
+            State = state;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the details of the Rich Presence. See also <seealso cref="Details"/>.
+        /// </summary>
+        /// <param name="details">What the user is currently doing.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithDetails(string details)
+        {
+            Details = details;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the timestamp of the Rich Presence. See also <seealso cref="Timestamps"/>.
+        /// </summary>
+        /// <param name="timestamps">The time elapsed / remaining time data.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithTimestamps(Timestamps timestamps)
+        {
+            Timestamps = timestamps;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the assets of the Rich Presence. See also <seealso cref="Assets"/>.
+        /// </summary>
+        /// <param name="assets">The names of the images to use and the tooltips to give those images.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithAssets(Assets assets)
+        {
+            Assets = assets;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the Rich Presence's party. See also <seealso cref="Party"/>.
+        /// </summary>
+        /// <param name="party">The party the player is currently in.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithParty(Party party)
+        {
+            Party = party;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the Rich Presence's secrets. See also <seealso cref="Secrets"/>.
+        /// </summary>
+        /// <param name="secrets">The secrets used for Join / Spectate.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithSecrets(Secrets secrets)
+        {
+            Secrets = secrets;
+            return this;
+        }
+        #endregion
+
+        /// <summary>
+        /// Attempts to call <see cref="StringTools.NullEmpty(string)"/> on the string and return the result, if its within a valid length.
+        /// </summary>
+        /// <param name="str">The string to check</param>
+        /// <param name="result">The formatted string result</param>
+        /// <param name="bytes">The maximum number of bytes the string can take up</param>
+        /// <param name="encoding">The encoding to count the bytes with</param>
+        /// <returns>True if the string fits within the number of bytes</returns>
+        internal static bool ValidateString(string str, out string result, int bytes, Encoding encoding)
 		{
 			result = str;
 			if (str == null)
@@ -276,7 +347,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _matchSecret, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("MatchSecret", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _matchSecret;
@@ -296,7 +367,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _joinSecret, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("JoinSecret", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _joinSecret;
@@ -315,7 +386,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _spectateSecret, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("SpectateSecret", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _spectateSecret;
@@ -384,7 +455,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _largeimagekey, 32, Encoding.UTF8))
-					throw new StringOutOfRangeException("LargeImageKey", 32);
+					throw new StringOutOfRangeException(32);
 
 				//Reset the large image ID
 				_largeimageID = null;
@@ -403,7 +474,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _largeimagetext, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("LargeImageText", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _largeimagetext;
@@ -420,7 +491,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _smallimagekey, 32, Encoding.UTF8))
-					throw new StringOutOfRangeException("SmallImageKey", 32);
+					throw new StringOutOfRangeException(32);
 
 				//Reset the small image id
 				_smallimageID = null;
@@ -439,7 +510,7 @@ namespace DiscordRPC
 			set
 			{
 				if (!RichPresence.ValidateString(value, out _smallimagetext, 128, Encoding.UTF8))
-					throw new StringOutOfRangeException("SmallImageText", 128);
+					throw new StringOutOfRangeException(128);
 			}
 		}
 		private string _smallimagetext;

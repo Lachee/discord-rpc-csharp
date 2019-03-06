@@ -10,11 +10,41 @@ namespace DiscordRPC.Exceptions
     /// </summary>
     public class StringOutOfRangeException : Exception
 	{
-		internal StringOutOfRangeException(string message) : base(message) { }
-        internal StringOutOfRangeException(int max) : this("String", max) { }
-        internal StringOutOfRangeException(string argument, int max) : this(string.Format("{0} is too long. Expected a maximum length of {1}", argument, max)) { }
+        /// <summary>
+        /// Maximum length the string is allowed to be.
+        /// </summary>
+        public int MaximumLength { get; }
 
-        internal StringOutOfRangeException(int size, int max) : this("String", size, max) { }
-        internal StringOutOfRangeException(string argument, int size, int max) : this(string.Format("{0} is too long. Expected a maximum length of {1} but got {2}.", argument, size, max)) { }
-	}
+        /// <summary>
+        /// Minimum length the string is allowed to be.
+        /// </summary>
+        public int MinimumLength { get; }
+
+        /// <summary>
+        /// Creates a new string out of range exception with a range of min to max and a custom message
+        /// </summary>
+        /// <param name="message">The custom message</param>
+        /// <param name="min">Minimum length the string can be</param>
+        /// <param name="max">Maximum length the string can be</param>
+        internal StringOutOfRangeException(string message,  int min, int max) : base(message)
+        {
+            MinimumLength = min;
+            MaximumLength = max;
+        }
+
+        /// <summary>
+        /// Creates a new sting out of range exception with a range of min to max
+        /// </summary>
+        /// <param name="minumum"></param>
+        /// <param name="max"></param>
+        internal StringOutOfRangeException(int minumum, int max) 
+            : this("Length of string is out of range. Expected a value between " + minumum + " and " + max, minumum, max) { }
+
+        /// <summary>
+        /// Creates a new sting out of range exception with a range of 0 to max
+        /// </summary>
+        /// <param name="max"></param>
+        internal StringOutOfRangeException(int max)           
+            : this("Length of string is out of range. Expected a value with a maximum length of " + max, 0, max) { }
+    }
 }

@@ -32,16 +32,20 @@ namespace DiscordRPC
 		public string SteamID { get; private set; }
 
 		/// <summary>
-		/// Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination.
+		/// Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination. Defaults to the current application process ID.
 		/// </summary>
 		public int ProcessID { get; private set; }
+
+        /// <summary>
+        /// The maximum size of the message queue received from Discord. 
+        /// </summary>
+        public int MaxQueueSize { get; private set; }
 
 		/// <summary>
 		/// The dispose state of the client object.
 		/// </summary>
-		public bool Disposed { get { return _disposed; } }
-		private bool _disposed = false;
-
+		public bool Disposed { get; private set; }
+        
 		/// <summary>
 		/// The logger used this client and its associated components. <see cref="ILogger"/> are not called safely and can come from any thread. It is upto the <see cref="ILogger"/> to account for this and apply appropriate thread safe methods.
 		/// </summary>
@@ -61,45 +65,48 @@ namespace DiscordRPC
 		/// The pipe the discord client is on, ranging from 0 to 9. Use -1 to scan through all pipes.
 		/// <para>This property can be used for testing multiple clients. For example, if a Discord Client was on pipe 0, the Discord Canary is most likely on pipe 1.</para>
 		/// </summary>
-		public int TargetPipe { get { return _pipe; } }
-		private int _pipe = -1;
+		public int TargetPipe { get; private set; }
+
 		private RpcConnection connection;
 
 		/// <summary>
 		/// The current presence that the client has. Gets set with <see cref="SetPresence(RichPresence)"/> and updated on <see cref="OnPresenceUpdate"/>.
 		/// </summary>
-		public RichPresence CurrentPresence { get { return _presence; } }
-		private RichPresence _presence;
+		public RichPresence CurrentPresence { get; private set; }
 
 		/// <summary>
 		/// Current subscription to events. Gets set with <see cref="Subscribe(EventType)"/>, <see cref="UnsubscribeMessage"/> and updated on <see cref="OnSubscribe"/>, <see cref="OnUnsubscribe"/>.
 		/// </summary>
-		public EventType Subscription { get { return _subscription; } }
-		private EventType _subscription;
+		public EventType Subscription { get; private set; }
 
 		/// <summary>
 		/// The current discord user. This is updated with the ready event and will be null until the event is fired from the connection.
 		/// </summary>
-		public User CurrentUser { get { return _user; } }
-		private User _user;
+		public User CurrentUser { get; private set; }
 
 		/// <summary>
 		/// The current configuration the connection is using. Only becomes available after a ready event.
 		/// </summary>
-		public Configuration Configuration { get { return _configuration; } }
-		private Configuration _configuration;
+		public Configuration Configuration { get; private set; }
 
 		/// <summary>
 		/// Represents if the client has been <see cref="Initialize"/>
 		/// </summary>
-		public bool IsInitialized { get { return _initialized; } }
-		private bool _initialized;
+		public bool IsInitialized { get; private set; }
 
 		/// <summary>
 		/// Forces the connection to shutdown gracefully instead of just aborting the connection.
 		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
 		/// </summary>
-		public bool ShutdownOnly { get { return _shutdownOnly; } set { _shutdownOnly = value; if (connection != null) connection.ShutdownOnly = value; } }
+		public bool ShutdownOnly
+        {
+            get { return _shutdownOnly; }
+            set
+            {
+                _shutdownOnly = value;
+                if (connection != null) connection.ShutdownOnly = value;
+            }
+        }
 		private bool _shutdownOnly = true;
         
 		#region Events
@@ -168,23 +175,22 @@ namespace DiscordRPC
 		/// Failed to establish any connection with discord. Discord is potentially not running?
 		/// </summary>
 		public event OnConnectionFailedEvent OnConnectionFailed;
-		#endregion
+        #endregion
 
-		#region Initialization
-
-		/// <summary>
-		/// Creates a new Discord RPC Client without using any uri scheme. This will disable the Join / Spectate functionality.
-		/// </summary>
-		/// <param name="applicationID"></param>
-		public DiscordRpcClient(string applicationID) : this(applicationID, -1) { }
+        #region Initialization
 
         /// <summary>
         /// Creates a new Discord RPC Client without using any uri scheme. This will disable the Join / Spectate functionality.
         /// </summary>
-        /// <param name="applicationID"></param>	
-        /// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-       public DiscordRpcClient(string applicationID, int pipe) : this(applicationID, null, false, pipe) { }
+        /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+        public DiscordRpcClient(string applicationID) : this(applicationID, -1) { }
 
+        /// <summary>
+        /// Creates a new Discord RPC Client without using any uri scheme. This will disable the Join / Spectate functionality.
+        /// </summary>
+        /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+        /// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+        public DiscordRpcClient(string applicationID, int pipe) : this(applicationID, null, false, pipe) { }
 
         /// <summary>
         /// Creates a new Discord RPC Client using the default uri scheme.
@@ -222,24 +228,27 @@ namespace DiscordRPC
         /// <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe, ILogger logger = null) : this(applicationID, steamID, registerUriScheme, pipe, new ManagedNamedPipeClient(), logger) { }
 
-		/// <summary>
-		/// Creates a new Discord RPC Client using the steam uri scheme.
-		/// </summary>
-		/// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-		/// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-		/// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-		/// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-		/// <param name="client">The pipe client to use and communicate to discord through</param>
+        /// <summary>
+        /// Creates a new Discord RPC Client using the steam uri scheme.
+        /// </summary>
+        /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+        /// <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
+        /// <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
+        /// <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
+        /// <param name="client">The pipe client to use and communicate to discord through</param>
         /// <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
-		public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe, INamedPipeClient client, ILogger logger = null)
-		{
-
+        /// <param name="messageQueueSize">Optional queue size that limits how many messages from Discord can be queued at once.
+        /// <para>For large amounts of time between Invoking events and clearing the queue, its recommended to increase this value.</para>
+        /// <para>For situations where no events will be listened to and state tracking is not utilised, set to 0 to disable discord messages.</para>
+        /// </param>
+        public DiscordRpcClient(string applicationID, string steamID, bool registerUriScheme, int pipe, INamedPipeClient client, ILogger logger = null, int messageQueueSize = 128)
+        {
 			//Store our values
 			ApplicationID = applicationID;
 			SteamID = steamID;
 			HasRegisteredUriScheme = registerUriScheme;
 			ProcessID = System.Diagnostics.Process.GetCurrentProcess().Id;
-			_pipe = pipe;
+			TargetPipe = pipe;
             _logger = logger == null ? new NullLogger() : logger;
 
 			//If we are to register the URI scheme, do so.
@@ -249,7 +258,10 @@ namespace DiscordRPC
 				UriScheme.RegisterUriScheme(_logger, applicationID, steamID);
 
 			//Create the RPC client
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client) { ShutdownOnly = _shutdownOnly };
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client, messageQueueSize)
+            {
+                ShutdownOnly = _shutdownOnly
+            };
 			connection.Logger = this._logger;
 		}
 
@@ -257,7 +269,7 @@ namespace DiscordRPC
 
 		#region Message Handling
 		/// <summary>
-		/// Dequeues all the messages from Discord and invokes appropriate methods. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked and in the order they were invoked.
+		/// Dequeues all the messages from Discord, processes them and then invoke appropriate event handlers. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked in the order they were invoked.
 		/// </summary>
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
@@ -329,9 +341,10 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
-		/// Gets a single message from the queue. This may return null if none are availble. This will process the message and update internal state before handing it over.
+		/// Dequeues a single message from Discord and processes it. No events will be invoked.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Returns a single message that was dequeued from Discord</returns>
+        [System.Obsolete("This method enables inproper message handling. Use the Invoke() function instead.")]
 		public IMessage Dequeue()
 		{
 			if (Disposed)
@@ -345,11 +358,12 @@ namespace DiscordRPC
 			return message;
 		}
 
-		/// <summary>
-		/// Dequeues all messages from the Discord queue. This will be a empty array of size 0 if none are availble. This will process the messages and update internal state before handing it over.
-		/// </summary>
-		/// <returns></returns>
-		public IMessage[] DequeueAll()
+        /// <summary>
+        /// Dequeues all messages from the Discord queue. This will be a empty array of size 0 if none are availble. This will process the messages and update internal state before handing it over.
+        /// </summary>
+        /// <returns></returns>
+        [System.Obsolete("This method enables inproper message handling. Use the Invoke() function instead.")]
+        public IMessage[] DequeueAll()
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
@@ -373,21 +387,21 @@ namespace DiscordRPC
 					if (pm != null)
 					{
 						//We need to merge these presences together
-						if (_presence == null)
+						if (CurrentPresence == null)
 						{
-							_presence = pm.Presence;
+                            CurrentPresence = pm.Presence;
 						}
 						else if (pm.Presence == null)
 						{
-							_presence = null;
+                            CurrentPresence = null;
 						}
 						else
 						{
-							_presence.Merge(pm.Presence);
+                            CurrentPresence.Merge(pm.Presence);
 						}
 
 						//Update the message
-						pm.Presence = _presence;
+						pm.Presence = CurrentPresence;
 					}
 
 					break;
@@ -397,8 +411,8 @@ namespace DiscordRPC
 					var rm = message as ReadyMessage;
 					if (rm != null)
 					{
-						_configuration = rm.Configuration;
-						_user = rm.User;
+						Configuration = rm.Configuration;
+						CurrentUser = rm.User;
 
 						//Resend our presence and subscription
 						SynchronizeState();
@@ -417,12 +431,12 @@ namespace DiscordRPC
 
 				case MessageType.Subscribe:
 					var sub = message as SubscribeMessage;
-					_subscription |= sub.Event;
+					Subscription |= sub.Event;
 					break;
 
 				case MessageType.Unsubscribe:
 					var unsub = message as UnsubscribeMessage;
-					_subscription &= ~unsub.Event;
+                    Subscription &= ~unsub.Event;
 					break;
 
 				//We got a message we dont know what to do with.
@@ -430,14 +444,15 @@ namespace DiscordRPC
 					break;
 			}
 		}
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="Dequeue"/> frequently enough.
-		/// </summary>
-		/// <param name="request">The request that is being responded too.</param>
-		/// <param name="acceptRequest">Is the request accepted?</param>
-		public void Respond(JoinRequestMessage request, bool acceptRequest)
+        /// <summary>
+        /// Respond to a Join Request. All requests will timeout after 30 seconds.
+        /// <para>Because of the 30 second timeout, it is recommended to call <seealso cref="Invoke"/> faster than every 15 seconds to give your users adequate time to respond to the request.</para>
+        /// </summary>
+        /// <param name="request">The request that is being responded too.</param>
+        /// <param name="acceptRequest">Accept the join request.</param>
+        public void Respond(JoinRequestMessage request, bool acceptRequest)
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
@@ -449,20 +464,23 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
-		/// Sets the Rich Presences
+		/// Sets the Rich Presence.
 		/// </summary>
-		/// <param name="presence">The rich presence to send to discord</param>
+		/// <param name="presence">The Rich Presence to set on the current Discord user.</param>
 		public void SetPresence(RichPresence presence)
 		{
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
-			if (connection == null)
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
 			//Update our internal store of the presence
-			_presence = presence;
-			if (!_presence)
+			CurrentPresence = presence;
+			if (!CurrentPresence)
 			{
 				//Clear the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = null });
@@ -492,11 +510,14 @@ namespace DiscordRPC
 		/// <param name="details">The details of the Rich Presence</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateDetails(string details)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			_presence.Details = details;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			CurrentPresence.Details = details;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 		/// <summary>
 		/// Updates only the <see cref="RichPresence.State"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
@@ -504,11 +525,14 @@ namespace DiscordRPC
 		/// <param name="state">The state of the Rich Presence</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateState(string state)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			_presence.State = state;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			CurrentPresence.State = state;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 		/// <summary>
 		/// Updates only the <see cref="RichPresence.Party"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
@@ -516,11 +540,14 @@ namespace DiscordRPC
 		/// <param name="party">The party of the Rich Presence</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateParty(Party party)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			_presence.Party = party;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			CurrentPresence.Party = party;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 		/// <summary>
 		/// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
@@ -529,13 +556,16 @@ namespace DiscordRPC
 		/// <param name="size">The new size of the party. It cannot be greater than <see cref="Party.Max"/></param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdatePartySize(int size)
-		{
-			if (_presence == null) return null;
-			if (_presence.Party == null)
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) return null;
+			if (CurrentPresence.Party == null)
 				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-			try { UpdatePartySize(size, _presence.Party.Max); } catch (Exception) { throw; }
-			return _presence;
+			try { UpdatePartySize(size, CurrentPresence.Party.Max); } catch (Exception) { throw; }
+			return CurrentPresence;
 		}
 		/// <summary>
 		/// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
@@ -545,15 +575,18 @@ namespace DiscordRPC
 		/// <param name="max">The new size of the party. It cannot be smaller than <see cref="Party.Size"/></param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdatePartySize(int size, int max)
-		{
-			if (_presence == null) return null;
-			if (_presence.Party == null)
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) return null;
+			if (CurrentPresence.Party == null)
 				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-			_presence.Party.Size = size;
-			_presence.Party.Max = max;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+			CurrentPresence.Party.Size = size;
+			CurrentPresence.Party.Max = max;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 
 
@@ -564,13 +597,16 @@ namespace DiscordRPC
 		/// <param name="tooltip">Optional: The new tooltip to display on the asset</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateLargeAsset(string key = null, string tooltip = null)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			if (_presence.Assets == null) _presence.Assets = new Assets();
-			_presence.Assets.LargeImageKey = key ?? _presence.Assets.LargeImageKey;
-			_presence.Assets.LargeImageText = tooltip ?? _presence.Assets.LargeImageText;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
+			CurrentPresence.Assets.LargeImageKey = key ?? CurrentPresence.Assets.LargeImageKey;
+			CurrentPresence.Assets.LargeImageText = tooltip ?? CurrentPresence.Assets.LargeImageText;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 
 		/// <summary>
@@ -580,13 +616,16 @@ namespace DiscordRPC
 		/// <param name="tooltip">Optional: The new tooltip to display on the asset</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateSmallAsset(string key = null, string tooltip = null)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			if (_presence.Assets == null) _presence.Assets = new Assets();
-			_presence.Assets.SmallImageKey = key ?? _presence.Assets.SmallImageKey;
-			_presence.Assets.SmallImageText = tooltip ?? _presence.Assets.SmallImageText;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
+			CurrentPresence.Assets.SmallImageKey = key ?? CurrentPresence.Assets.SmallImageKey;
+			CurrentPresence.Assets.SmallImageText = tooltip ?? CurrentPresence.Assets.SmallImageText;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 
 		/// <summary>
@@ -595,11 +634,14 @@ namespace DiscordRPC
 		/// <param name="secrets">The new secret to send to discord.</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateSecrets(Secrets secrets)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			_presence.Secrets = secrets;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			CurrentPresence.Secrets = secrets;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 
 		/// <summary>
@@ -614,12 +656,15 @@ namespace DiscordRPC
 		/// <param name="time">The new time for the start</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateStartTime(DateTime time)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
-			_presence.Timestamps.Start = time;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
+			CurrentPresence.Timestamps.Start = time;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 		
 		/// <summary>
@@ -634,12 +679,15 @@ namespace DiscordRPC
 		/// <param name="time">The new time for the end</param>
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateEndTime(DateTime time)
-		{
-			if (_presence == null) _presence = new RichPresence();
-			if (_presence.Timestamps == null) _presence.Timestamps = new Timestamps();
-			_presence.Timestamps.End = time;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+        {
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) CurrentPresence = new RichPresence();
+			if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
+			CurrentPresence.Timestamps.End = time;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 
 		/// <summary>
@@ -648,10 +696,13 @@ namespace DiscordRPC
 		/// <returns>Updated Rich Presence</returns>
 		public RichPresence UpdateClearTime()
 		{
-			if (_presence == null) return null;
-			_presence.Timestamps = null;
-			try { SetPresence(_presence); } catch (Exception) { throw; }
-			return _presence;
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            if (CurrentPresence == null) return null;
+			CurrentPresence.Timestamps = null;
+			SetPresence(CurrentPresence);
+			return CurrentPresence;
 		}
 		#endregion
 
@@ -663,6 +714,9 @@ namespace DiscordRPC
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
+            if (!IsInitialized)
+                throw new UninitializedException();
+
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
@@ -670,28 +724,38 @@ namespace DiscordRPC
 			SetPresence(null);
 		}
 
-		/// <summary>
-		/// Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
-		/// </summary>
-		/// <param name="type"></param>
-		public void Subscribe(EventType type) { SetSubscription(_subscription | type); }
+        /// <summary>
+        /// Subscribes to an event sent from discord. Used for Join / Spectate feature.
+        /// <para>Requires the UriScheme to be registered.</para>
+        /// </summary>
+        /// <param name="type">The event type to subscribe to</param>
+        public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
-		/// <summary>
-		/// Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
-		/// </summary>
-		/// <param name="type"></param>
-		public void Unubscribe(EventType type) { SetSubscription(_subscription & ~type); }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        [System.Obsolete("Replaced with Unsubscribe", true)]
+        public void Unubscribe(EventType type) { SetSubscription(Subscription & ~type); }
 
-		/// <summary>
-		/// Sets the subscription flag, unsubscribing and then subscribing to the nessary events
-		/// </summary>
-		/// <param name="type">The events to subscribe too</param>
-		public void SetSubscription(EventType type)
+        /// <summary>
+        /// Unsubscribe from the event sent by discord. Used for Join / Spectate feature.
+        /// <para>Requires the UriScheme to be registered.</para>
+        /// </summary>
+        /// <param name="type">The event type to unsubscribe from</param>
+        public void Unsubscribe(EventType type) { SetSubscription(Subscription & ~type); }
+
+        /// <summary>
+        /// Sets the subscription to the events sent from Discord.
+        /// <para>Requires the UriScheme to be registered.</para>
+        /// </summary>
+        /// <param name="type">The new subscription as a flag. Events selected in the flag will be subscribed too and the other events will be unsubscribed.</param>
+        public void SetSubscription(EventType type)
 		{
 			//Calculate what needs to be unsubscrinbed
-			SubscribeToTypes(_subscription & ~type, true);
-			SubscribeToTypes(~_subscription & type, false);
-			_subscription = type;
+			SubscribeToTypes(Subscription & ~type, true);
+			SubscribeToTypes(~Subscription & type, false);
+			Subscription = type;
 		}
 
 		/// <summary>
@@ -708,6 +772,9 @@ namespace DiscordRPC
 			//We cannot do anything if we are disposed or missing our connection.
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
+
+            if (!IsInitialized)
+                throw new UninitializedException();
 
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
@@ -732,11 +799,14 @@ namespace DiscordRPC
 		/// </summary>
 		public void SynchronizeState()
 		{
-			//Set the presence 
-			SetPresence(_presence);
+            //Cannot sync over uninitialized connection
+            if (!IsInitialized)
+                throw new UninitializedException();
 
-			//Set the subscription
-			SubscribeToTypes(_subscription, false);
+			//Set the presence and if we have registered the uri scheme, resubscribe.
+			SetPresence(CurrentPresence);
+            if (HasRegisteredUriScheme)
+			    SubscribeToTypes(Subscription, false);
 		}
 
 		/// <summary>
@@ -748,21 +818,35 @@ namespace DiscordRPC
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
-			if (connection == null)
+            if (IsInitialized)
+                throw new UninitializedException("Cannot initialize a client that is already initialized");
+
+            if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
-			return _initialized = connection.AttemptConnection();
+			return IsInitialized = connection.AttemptConnection();
 		}
 		
+        /// <summary>
+        /// Attempts to disconnect and deinitialize the IPC connection while retaining the settings.
+        /// </summary>
+        public void Deinitialize()
+        {
+            if (!IsInitialized)
+                throw new UninitializedException("Cannot deinitialize a client that has not been initalized.");
+
+            connection.Close();
+            IsInitialized = false;
+        }
+
 		/// <summary>
 		/// Terminates the connection to Discord and disposes of the object.
 		/// </summary>
 		public void Dispose()
 		{
 			if (Disposed) return;
-
-			connection.Close();
-			_disposed = true;			
+            if (IsInitialized) Deinitialize();
+            Disposed = true;
 		}
 
 	}

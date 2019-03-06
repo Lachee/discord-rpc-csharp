@@ -607,7 +607,7 @@ namespace DiscordRPC.RPC
 					else
 					{
 						//Prepare the frame
-						frame.SetObject(Opcode.Frame, item.PreparePayload(GetNextNonce()));
+						frame.SetObject(Opcode.Frame, payload);
 
 						//Write it and if it wrote perfectly fine, we will dequeue it
 						Logger.Trace("Sending payload: " + payload.Command);
