@@ -43,17 +43,19 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$inclu
 	}
 }
 
-function BuildLibrary($buildcount, [bool]$makeNuget)
+function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 {
 	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
-
+	$args = "-buildCounter=$buildCount",'-buildType="Release"'
+	if ($buildTag) $args += "-buildTag=$buildTag"
+	
 	if ($makeNuget) 
 	{
-		.\build-lib.ps1 -Target "NugetBuild" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+		.\build-lib.ps1 -Target "NugetBuild" -ScriptArgs $args
 	}
 	else
 	{
-		.\build-lib.ps1 -Target "Default" -ScriptArgs "-buildCounter=$buildcount",'-buildType="Release"'
+		.\build-lib.ps1 -Target "Default" -ScriptArgs $args
 	}
 
 	if ($LASTEXITCODE -ne 0) 
@@ -74,8 +76,7 @@ function BuildUnity()
 #Build the library 
 if (!($IgnoreLibraryBuild)) {
 	Write-Host ">>> Building Library";
-	Write-Host $BuildTag
-	BuildLibrary $BuildCount $MakeNugetPackage
+	BuildLibrary $BuildCount $BuildTag $MakeNugetPackage
 	if ($LASTEXITCODE -ne 0)
 	{
 		throw "Error occured while building the project.";

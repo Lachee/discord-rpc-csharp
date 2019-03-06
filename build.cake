@@ -7,10 +7,10 @@
 var projectName = "DiscordRPC";
 
 // Arguments
-var major_version = "1.0";
 var target = Argument ("target", "Default");
 var buildType = Argument<string>("buildType", "Release");
 var buildCounter = Argument<int>("buildCounter", 0);
+var buildTag = Argument<string>("buildTag", "v1.0");
 
 // Project Variables
 var asm = string.Format("./{0}/Properties/AssemblyInfo.cs", projectName);
@@ -20,7 +20,8 @@ var releaseDll = "/DiscordRPC.dll";
 var nuspecFile = string.Format("./{0}/{0}.nuspec", projectName);
 
 // Execution Variables
-var version = "1.0.0.0";
+var major_version = buildTag.Trim('v');
+var version = major_version + "." + buildCounter.ToString() + ".0";
 var ciVersion = major_version + ".0-CI00000";
 var runningOnTeamCity = false;
 var runningOnAppVeyor = false;
@@ -46,7 +47,6 @@ Task ("OutputVariables")
 
 Task("SetVersion")
    .Does(() => {
-	   
 	   version = major_version + "." + buildCounter.ToString() + ".0";
 	   Information("Version: " + version);
        ReplaceRegexInFiles(asm,  "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))", version);
