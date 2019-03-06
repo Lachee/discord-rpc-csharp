@@ -43,6 +43,10 @@ Task ("OutputVariables")
 	{
 		Information("BuildType: " + buildType);
 		Information("BuildCounter: " + buildCounter);
+		Information("BuildTag: " + buildTag);
+		Information("MajorVersion: " + major_version);
+		Information("BuildVersion: " + version);
+		Information("CIVersion: " + ciVersion);
 	});
 
 Task("SetVersion")
