@@ -28,6 +28,7 @@ This library supports all features of the Rich Presence that the official C++ li
  - [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library (included in Unity Package).
   
 **Source: .NET Project**
+
 For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
 PM> Install-Package DiscordRichPresence
@@ -128,23 +129,16 @@ void Deinitialize()
 ```
 
 ## Building
-**Whats Required**
-
-| Type        | DiscordRPC | unity-named-pipes   | DiscordRPC.Example |
-|-------------|------------|---------------------|--------------------|
-| WinForm App | X          |                     |                    |
-| Console App | X          |                     |                    |
-| Mono Game   | X          | * If Issues Persist |                    |
-| Unity3D     | X          | X                   |                    |
-* unity-named-pipes is a external project that only needs to be included for Unity3D.
 
 **DiscordRPC Library**
+
 You can build the solution easily in Visual Studio, its a simple matter of right clicking the project and hitting build. However if you wish to build via command line, you can do so with the PowerShell build script:
 ```
 .\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
 ```
 
 **Unity3D**
+
 The project does have a `Unity Pacakge` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
 
 You can build the Unity3D package using the command below. Make sure you update the `DiscordRPC.dll` within the Unity Project first as it is not automatically updated:
