@@ -47,7 +47,7 @@ function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 {
 	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
 	$args = "-buildCounter=$buildCount",'-buildType="Release"'
-	if ($buildTag) $args += "-buildTag=$buildTag"
+	if ($buildTag) { $args += "-buildTag=$buildTag" }
 	
 	if ($makeNuget) 
 	{
