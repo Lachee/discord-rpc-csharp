@@ -724,6 +724,7 @@ namespace DiscordRPC
 			SetPresence(null);
 		}
 
+
         /// <summary>
         /// Subscribes to an event sent from discord. Used for Join / Spectate feature.
         /// <para>Requires the UriScheme to be registered.</para>
