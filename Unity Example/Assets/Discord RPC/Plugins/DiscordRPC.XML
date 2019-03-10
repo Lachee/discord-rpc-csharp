@@ -36,7 +36,8 @@
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.HasRegisteredUriScheme">
             <summary>
-            Gets a value indicating if the RPC Client has registered a URI scheme. If this is false, Join / Spectate events will fail.
+            Gets a value indicating if the client has registered a URI Scheme. If this is false, Join / Spectate events will fail.
+            <para>To register a URI Scheme, call <see cref="M:DiscordRPC.DiscordRpcClient.RegisterUriScheme(System.String,System.String)"/>.</para>
             </summary>
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.ApplicationID">
@@ -51,7 +52,12 @@
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.ProcessID">
             <summary>
-            Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination.
+            Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination. Defaults to the current application process ID.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.MaxQueueSize">
+            <summary>
+            The maximum size of the message queue received from Discord. 
             </summary>
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.Disposed">
@@ -168,75 +174,34 @@
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String)">
             <summary>
-            Creates a new Discord RPC Client without using any uri scheme. This will disable the Join / Spectate functionality.
-            </summary>
-            <param name="applicationID"></param>
-        </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Int32)">
-            <summary>
-            Creates a new Discord RPC Client without using any uri scheme. This will disable the Join / Spectate functionality.
-            </summary>
-            <param name="applicationID"></param>	
-            <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-        </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
-            <summary>
-            Creates a new Discord RPC Client using the default uri scheme.
+            Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
         </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
+        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Int32,DiscordRPC.Logging.ILogger,System.UInt32,DiscordRPC.IO.INamedPipeClient)">
             <summary>
-            Creates a new Discord RPC Client using the default uri scheme.
+            Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events. This constructor exposes more advance features such as custom NamedPipeClients and Loggers.
             </summary>
             <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-            <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
-        </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,DiscordRPC.Logging.ILogger)">
-            <summary>
-            Creates a new Discord RPC Client using the steam uri scheme.
-            </summary>
-            <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-            <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
-        </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.Logging.ILogger)">
-            <summary>
-            Creates a new Discord RPC Client using the steam uri scheme.
-            </summary>
-            <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-            <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-            <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
-        </member>
-        <member name="M:DiscordRPC.DiscordRpcClient.#ctor(System.String,System.String,System.Boolean,System.Int32,DiscordRPC.IO.INamedPipeClient,DiscordRPC.Logging.ILogger)">
-            <summary>
-            Creates a new Discord RPC Client using the steam uri scheme.
-            </summary>
-            <param name="applicationID">The ID of the application created at discord's developers portal.</param>
-            <param name="steamID">The steam ID of the app. This is used to launch Join / Spectate through steam URI scheme instead of manual launching</param>
-            <param name="registerUriScheme">Should a URI scheme be registered for Join / Spectate functionality? If false, the Join / Spectate functionality will be disabled.</param>
-            <param name="pipe">The pipe to connect too. -1 for first available pipe.</param>
-            <param name="client">The pipe client to use and communicate to discord through</param>
-            <param name="logger">The logger used to report messages. Its recommended to assign here so it can report the results of RegisterUriScheme.</param>
+            <param name="pipe">The pipe to connect too. If -1, then the client will scan for the first available instance of Discord.</param>
+            <param name="logger">The logger used to report messages. If null, then a <see cref="T:DiscordRPC.Logging.NullLogger"/> will be created and logs will be ignored.</param>
+            <param name="messageQueueSize">Optional queue size that limits how many messages from Discord can be queued at once.
+            <param name="client">The pipe client to use and communicate to discord through. If null, the default <see cref="T:DiscordRPC.IO.ManagedNamedPipeClient"/> will be used.</param>
+            <para>For large amounts of time between Invoking events and clearing the queue, its recommended to increase this value.</para>
+            <para>For situations where no events will be listened to and state tracking is not utilised, set to 0 to disable discord messages.</para>
+            </param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Invoke">
             <summary>
-            Dequeues all the messages from Discord and invokes appropriate methods. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked and in the order they were invoked.
+            Dequeues all the messages from Discord, processes them and then invoke appropriate event handlers. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked in the order they were invoked.
             </summary>
             <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Dequeue">
             <summary>
-            Gets a single message from the queue. This may return null if none are availble. This will process the message and update internal state before handing it over.
+            Dequeues a single message from Discord and processes it. No events will be invoked.
             </summary>
-            <returns></returns>
+            <returns>Returns a single message that was dequeued from Discord</returns>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.DequeueAll">
             <summary>
@@ -246,16 +211,17 @@
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.Message.JoinRequestMessage,System.Boolean)">
             <summary>
-            Respond to a Join Request. Give TRUE to allow the user to join, otherwise false. All requests will timeout after 30 seconds, so be sure to <see cref="M:DiscordRPC.DiscordRpcClient.Dequeue"/> frequently enough.
+            Respond to a Join Request. All requests will timeout after 30 seconds.
+            <para>Because of the 30 second timeout, it is recommended to call <seealso cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> faster than every 15 seconds to give your users adequate time to respond to the request.</para>
             </summary>
             <param name="request">The request that is being responded too.</param>
-            <param name="acceptRequest">Is the request accepted?</param>
+            <param name="acceptRequest">Accept the join request.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.SetPresence(DiscordRPC.RichPresence)">
             <summary>
-            Sets the Rich Presences
+            Sets the Rich Presence.
             </summary>
-            <param name="presence">The rich presence to send to discord</param>
+            <param name="presence">The Rich Presence to set on the current Discord user.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.UpdateDetails(System.String)">
             <summary>
@@ -355,23 +321,41 @@
             Clears the Rich Presence. Use this just before disposal to prevent ghosting.
             </summary>
         </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.RegisterUriScheme(System.String,System.String)">
+            <summary>
+            Registers the application executable to a custom URI Scheme.
+            <para>This is required for the Join and Spectate features. Discord will run this custom URI Scheme to launch your application when a user presses either of the buttons.</para>
+            </summary>
+            <param name="steamAppID">Optional Steam ID. If supplied, Discord will launch the game through steam instead of directly calling it.</param>
+            <param name="executable">The path to the executable. If null, the path to the current executable will be used instead.</param>
+            <returns></returns>
+        </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)">
             <summary>
-            Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
+            Subscribes to an event sent from discord. Used for Join / Spectate feature.
+            <para>Requires the UriScheme to be registered.</para>
             </summary>
-            <param name="type"></param>
+            <param name="type">The event type to subscribe to</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)">
             <summary>
-            Subscribes to an event from the server. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
+            
             </summary>
             <param name="type"></param>
         </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.Unsubscribe(DiscordRPC.EventType)">
+            <summary>
+            Unsubscribe from the event sent by discord. Used for Join / Spectate feature.
+            <para>Requires the UriScheme to be registered.</para>
+            </summary>
+            <param name="type">The event type to unsubscribe from</param>
+        </member>
         <member name="M:DiscordRPC.DiscordRpcClient.SetSubscription(DiscordRPC.EventType)">
             <summary>
-            Sets the subscription flag, unsubscribing and then subscribing to the nessary events
+            Sets the subscription to the events sent from Discord.
+            <para>Requires the UriScheme to be registered.</para>
             </summary>
-            <param name="type">The events to subscribe too</param>
+            <param name="type">The new subscription as a flag. Events selected in the flag will be subscribed too and the other events will be unsubscribed.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.SubscribeToTypes(DiscordRPC.EventType,System.Boolean)">
             <summary>
@@ -390,6 +374,11 @@
             Attempts to initalize a connection to the Discord IPC.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.DiscordRpcClient.Deinitialize">
+            <summary>
+            Attempts to disconnect and deinitialize the IPC connection while retaining the settings.
+            </summary>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Dispose">
             <summary>
@@ -511,6 +500,53 @@
         <member name="T:DiscordRPC.Exceptions.StringOutOfRangeException">
             <summary>
             A StringOutOfRangeException is thrown when the length of a string exceeds the allowed limit.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Exceptions.StringOutOfRangeException.MaximumLength">
+            <summary>
+            Maximum length the string is allowed to be.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Exceptions.StringOutOfRangeException.MinimumLength">
+            <summary>
+            Minimum length the string is allowed to be.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Exceptions.StringOutOfRangeException.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Creates a new string out of range exception with a range of min to max and a custom message
+            </summary>
+            <param name="message">The custom message</param>
+            <param name="min">Minimum length the string can be</param>
+            <param name="max">Maximum length the string can be</param>
+        </member>
+        <member name="M:DiscordRPC.Exceptions.StringOutOfRangeException.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new sting out of range exception with a range of min to max
+            </summary>
+            <param name="minumum"></param>
+            <param name="max"></param>
+        </member>
+        <member name="M:DiscordRPC.Exceptions.StringOutOfRangeException.#ctor(System.Int32)">
+            <summary>
+            Creates a new sting out of range exception with a range of 0 to max
+            </summary>
+            <param name="max"></param>
+        </member>
+        <member name="T:DiscordRPC.Exceptions.UninitializedException">
+            <summary>
+            Thrown when an action is performed on a client that has not yet been initialized
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Exceptions.UninitializedException.#ctor(System.String)">
+            <summary>
+            Creates a new unintialized exception
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:DiscordRPC.Exceptions.UninitializedException.#ctor">
+            <summary>
+            Creates a new uninitialized exception with default message.
             </summary>
         </member>
         <member name="P:DiscordRPC.Helper.BackoffDelay.Maximum">
@@ -857,7 +893,15 @@
             <summary>
             Creates a new instance of the file logger
             </summary>
-            <param name="path"></param>
+            <param name="path">The path of the log file.</param>
+            <param name="level">The level to assign to the logger.</param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String,DiscordRPC.Logging.LogLevel)">
+            <summary>
+            Creates a new instance of the file logger
+            </summary>
+            <param name="path">The path of the log file.</param>
+            <param name="level">The level to assign to the logger.</param>
         </member>
         <member name="M:DiscordRPC.Logging.FileLogger.Trace(System.String,System.Object[])">
             <summary>
@@ -906,6 +950,18 @@
             <summary>
             A alias too <see cref="P:DiscordRPC.Logging.ConsoleLogger.Coloured"/>
             </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.#ctor">
+            <summary>
+            Creates a new instance of a Console Logger.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.ConsoleLogger.#ctor(DiscordRPC.Logging.LogLevel,System.Boolean)">
+            <summary>
+            Creates a new instance of a Console Logger with a set log level
+            </summary>
+            <param name="level"></param>
+            <param name="coloured"></param>
         </member>
         <member name="M:DiscordRPC.Logging.ConsoleLogger.Trace(System.String,System.Object[])">
             <summary>
@@ -1340,29 +1396,43 @@
         <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
             <summary>Invalid event was sent </summary>
         </member>
-        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
+        <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(DiscordRPC.Registry.UriSchemeRegister)">
             <summary>
             Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
             <para>Additional arguments can be supplied if required.</para>
             </summary>
-            <param name="logger">The logger to report messages too.</param>
-            <param name="appid">The ID of the discord application</param>
-            <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
+            <param name="register">The register context.</param>
         </member>
-        <member name="M:DiscordRPC.Registry.UriScheme.GetApplicationLocation">
+        <member name="P:DiscordRPC.Registry.UriSchemeRegister.ApplicationID">
             <summary>
-            Gets the current location of the app
+            The ID of the Discord App to register
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Registry.UriSchemeRegister.SteamAppID">
+            <summary>
+            Optional Steam App ID to register. If given a value, then the game will launch through steam instead of Discord.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Registry.UriSchemeRegister.UsingSteamApp">
+            <summary>
+            Is this register using steam?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Registry.UriSchemeRegister.ExecutablePath">
+            <summary>
+            The full executable path of the application.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Registry.UriSchemeRegister.RegisterUriScheme">
+            <summary>
+            Registers the URI scheme, using the correct creator for the correct platform
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Registry.UriSchemeRegister.GetApplicationLocation">
+            <summary>
+            Gets the FileName for the currently executing application
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.RegisterUriScheme(DiscordRPC.Logging.ILogger,System.String,System.String)">
-            <summary>
-            Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.
-            <para>Additional arguments can be supplied if required.</para>
-            </summary>
-            <param name="logger">The logger to report messages too.</param>
-            <param name="appid">The ID of the discord application</param>
-            <param name="steamid">Optional field to indicate if this game should be launched through steam instead</param>
         </member>
         <member name="M:DiscordRPC.Registry.WindowsUriSchemeCreator.CreateUriScheme(System.String,System.String,System.String,System.String)">
             <summary>
@@ -1467,6 +1537,48 @@
             Does the Rich Presence have valid secrets?
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithState(System.String)">
+            <summary>
+            Sets the state of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.State"/>.
+            </summary>
+            <param name="state">The user's current <see cref="P:DiscordRPC.RichPresence.Party"/> status.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithDetails(System.String)">
+            <summary>
+            Sets the details of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Details"/>.
+            </summary>
+            <param name="details">What the user is currently doing.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithTimestamps(DiscordRPC.Timestamps)">
+            <summary>
+            Sets the timestamp of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Timestamps"/>.
+            </summary>
+            <param name="timestamps">The time elapsed / remaining time data.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithAssets(DiscordRPC.Assets)">
+            <summary>
+            Sets the assets of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Assets"/>.
+            </summary>
+            <param name="assets">The names of the images to use and the tooltips to give those images.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)">
+            <summary>
+            Sets the Rich Presence's party. See also <seealso cref="P:DiscordRPC.RichPresence.Party"/>.
+            </summary>
+            <param name="party">The party the player is currently in.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithSecrets(DiscordRPC.Secrets)">
+            <summary>
+            Sets the Rich Presence's secrets. See also <seealso cref="P:DiscordRPC.RichPresence.Secrets"/>.
+            </summary>
+            <param name="secrets">The secrets used for Join / Spectate.</param>
+            <returns>The modified Rich Presence.</returns>
         </member>
         <member name="M:DiscordRPC.RichPresence.ValidateString(System.String,System.String@,System.Int32,System.Text.Encoding)">
             <summary>
@@ -1992,7 +2104,7 @@
             <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
-        <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient)">
+        <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient,System.UInt32)">
             <summary>
             Creates a new instance of the RPC.
             </summary>
@@ -2000,6 +2112,7 @@
             <param name="processID">The ID of the currently running process</param>
             <param name="targetPipe">The target pipe to connect too</param>
             <param name="client">The pipe client we shall use.</param>
+            <param name="maxRxQueueSize">The maximum size of the out queue</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueCommand(DiscordRPC.RPC.Commands.ICommand)">
             <summary>

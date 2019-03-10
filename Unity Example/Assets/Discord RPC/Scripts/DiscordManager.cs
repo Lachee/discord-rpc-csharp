@@ -159,14 +159,14 @@ public class DiscordManager : MonoBehaviour {
         //We are starting the client. Below is a break down of the parameters.
         Debug.Log("[DRP] Starting Discord Rich Presence");
         _client = new DiscordRPC.DiscordRpcClient(
-            applicationID,                                  //The Discord Application ID
-            steamID,                                        //The Steam App. This can be null or empty string to disable steam intergration.
-            registerUriScheme,                              //Should the client register a custom URI Scheme? This must be true for endpoints
-            (int)targetPipe,                                //The target pipe to connect too
-            new DiscordRPC.Unity.UnityNamedPipe(),           //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
-            logger
+            applicationID,                                  //The Discord Application ID            
+            pipe: (int)targetPipe,                          //The target pipe to connect too
+            logger: logger,                                 //The logger
+            client: new DiscordRPC.Unity.UnityNamedPipe()   //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
         );
 
+        if (registerUriScheme)
+            client.RegisterUriScheme(steamID);
 
         //Subscribe to some initial events
         #region Event Registration
