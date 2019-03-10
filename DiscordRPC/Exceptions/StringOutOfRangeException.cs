@@ -13,12 +13,12 @@ namespace DiscordRPC.Exceptions
         /// <summary>
         /// Maximum length the string is allowed to be.
         /// </summary>
-        public int MaximumLength { get; }
+        public int MaximumLength { get; private set; }
 
         /// <summary>
         /// Minimum length the string is allowed to be.
         /// </summary>
-        public int MinimumLength { get; }
+        public int MinimumLength { get; private set; }
 
         /// <summary>
         /// Creates a new string out of range exception with a range of min to max and a custom message

@@ -22,15 +22,25 @@ namespace DiscordRPC.Logging
 
 		private object filelock;
 
-		/// <summary>
-		/// Creates a new instance of the file logger
-		/// </summary>
-		/// <param name="path"></param>
-		public FileLogger(string path)
-		{
-			File = path;
-			filelock = new object();			
-		}
+        /// <summary>
+        /// Creates a new instance of the file logger
+        /// </summary>
+        /// <param name="path">The path of the log file.</param>
+        /// <param name="level">The level to assign to the logger.</param>
+        public FileLogger(string path)
+            : this(path, LogLevel.Info) { }
+
+        /// <summary>
+        /// Creates a new instance of the file logger
+        /// </summary>
+        /// <param name="path">The path of the log file.</param>
+        /// <param name="level">The level to assign to the logger.</param>
+        public FileLogger(string path, LogLevel level)
+        {
+            Level = level;
+            File = path;
+            filelock = new object();
+        }
 
 
         /// <summary>

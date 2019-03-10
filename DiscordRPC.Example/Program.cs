@@ -8,25 +8,20 @@ namespace DiscordRPC.Example
 {
 	class Program
 	{
-		/// <summary>
-		/// The pipe Discord is located on. If set to -1, the client will scan for the first available pipe.
-		/// </summary>
-		private static int DiscordPipe = -1;
-
-        /// <summary>
-        /// ID of the client
-        /// </summary>
-        private static string ClientID = "424087019149328395";
-
         /// <summary>
         /// The level of logging to use.
         /// </summary>
-        private static Logging.LogLevel DiscordLogLevel = Logging.LogLevel.Info;
+        private static Logging.LogLevel logLevel = Logging.LogLevel.Info;
 
-		/// <summary>
-		/// The current presence to send to discord.
-		/// </summary>
-		private static RichPresence presence = new RichPresence()
+        /// <summary>
+        /// The pipe to connect too.
+        /// </summary>
+        private static int discordPipe = -1;
+
+        /// <summary>
+        /// The current presence to send to discord.
+        /// </summary>
+        private static RichPresence presence = new RichPresence()
 		{
 			Details = "Example Project",
 			State = "csharp example",
@@ -63,7 +58,7 @@ namespace DiscordRPC.Example
                 switch (args[i])
                 {
                     case "-pipe":
-                        DiscordPipe = int.Parse(args[++i]);
+                        discordPipe = int.Parse(args[++i]);
                         break;
 
                     default: break;
@@ -77,15 +72,15 @@ namespace DiscordRPC.Example
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
 		}
-        
+
         static void BasicExample()
         {
             //Create a new client
-            var client = new DiscordRpcClient(ClientID);
-
-            //Create the logger
-            client.Logger = new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true };
-
+            var client = new DiscordRpcClient("424087019149328395")
+            {
+                Logger = new Logging.ConsoleLogger(logLevel, true)
+            };
+            
             //Create some events so we know things are happening
             client.OnReady += (sender, msg) => { Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
             client.OnPresenceUpdate += (sender, msg) => { Console.WriteLine("Presence has been updated!"); };
@@ -106,7 +101,6 @@ namespace DiscordRPC.Example
                 Timestamps = Timestamps.FromTimeSpan(10)
             });
 
-
             //Do the rest of your program.
             //Simulated by a Console.ReadKey
             Console.ReadKey();
@@ -118,35 +112,34 @@ namespace DiscordRPC.Example
 
 		static void FullClientExample()
 		{
-			//Creates a new Discord RPC Client. Below are some of the ways to register:
-			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe, new IO.NativeNamedPipeClient()))	//This will create a new client with the specified pipe client
-			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true, DiscordPipe))									//This will create a new client on the specified pipe
-			//using (DiscordRpcClient client = new DiscordRpcClient("424087019149328395", null, true))												//This will create a new client with a SteamID (null if no steam)
-			using (client = new DiscordRpcClient(ClientID, true, DiscordPipe, new Logging.ConsoleLogger() { Level = DiscordLogLevel, Coloured = true }))											//This will create a new client that will register itself a URI scheme (for join / spectate)
-			{
-				//Clean our log file
-				//System.IO.File.WriteAllBytes("discord-rpc.log", new byte[0]);
+	    	//Create a new DiscordRpcClient. We are filling some of the defaults as examples.
+    	    using (client = new DiscordRpcClient("424087019149328395", pipe: discordPipe, logger: new Logging.ConsoleLogger(logLevel, true), messageQueueSize: 128))
+            {
+                //If you are going to make use of the Join / Spectate buttons, you are required to register the URI Scheme with the client.
+                client.RegisterUriScheme();
 
-				//Set the logger. This way we can see the output of the client.
-				//We can set it this way, but doing it directly in the constructor allows for the Register Uri Scheme to be logged too.
-                //client.Logger = new Logging.FileLogger("discord-rpc.log") { Level = DiscordLogLevel };
-				
-				//Register to the events we care about. We are registering to everyone just to show off the events
-				client.OnReady += OnReady;
-				client.OnClose += OnClose;
-				client.OnError += OnError;
+                //Set the logger. This way we can see the output of the client.
+                //We can set it this way, but doing it directly in the constructor allows for the Register Uri Scheme to be logged too.
+                //System.IO.File.WriteAllBytes("discord-rpc.log", new byte[0]);
+                //client.Logger = new Logging.FileLogger("discord-rpc.log", DiscordLogLevel);
 
-				client.OnConnectionEstablished += OnConnectionEstablished;
-				client.OnConnectionFailed += OnConnectionFailed;
+                //Register to the events we care about. We are registering to everyone just to show off the events
 
-				client.OnPresenceUpdate += OnPresenceUpdate;
+                client.OnReady += OnReady;                                      //Called when the client is ready to send presences
+				client.OnClose += OnClose;                                      //Called when connection to discord is lost
+				client.OnError += OnError;                                      //Called when discord has a error
 
-				client.OnSubscribe += OnSubscribe;
-				client.OnUnsubscribe += OnUnsubscribe;
+				client.OnConnectionEstablished += OnConnectionEstablished;      //Called when a pipe connection is made, but not ready
+				client.OnConnectionFailed += OnConnectionFailed;                //Called when a pipe connection failed.
 
-				client.OnJoin += OnJoin;
-				client.OnSpectate += OnSpectate;
-				client.OnJoinRequested += OnJoinRequested;
+				client.OnPresenceUpdate += OnPresenceUpdate;                    //Called when the presence is updated
+
+				client.OnSubscribe += OnSubscribe;                              //Called when a event is subscribed too
+				client.OnUnsubscribe += OnUnsubscribe;                          //Called when a event is unsubscribed from.
+
+				client.OnJoin += OnJoin;                                        //Called when the client wishes to join someone else. Requires RegisterUriScheme to be called.
+				client.OnSpectate += OnSpectate;                                //Called when the client wishes to spectate someone else. Requires RegisterUriScheme to be called.
+                client.OnJoinRequested += OnJoinRequested;                      //Called when someone else has requested to join this client.
 
 				//Before we send a initial presence, we will generate a random "game ID" for this example.
 				// For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 
@@ -157,15 +150,9 @@ namespace DiscordRPC.Example
 					// game to connect too. A simple approach would be just to use IP address, but this is highly discouraged
 					// and can leave your players vulnerable! 
 					JoinSecret = "join_myuniquegameid",
-					//SpectateSecret = "spectate_myuniquegameid"
+					SpectateSecret = "spectate_myuniquegameid"
 				};
-
-                presence.Timestamps = new Timestamps()
-                {
-                    Start = DateTime.UtcNow,
-                    End = DateTime.UtcNow + TimeSpan.FromSeconds(15)
-				};
-
+                
 				//We also need to generate a initial party. This is because Join requires the party to be created too.
 				// If no party is set, the join feature will not work and may cause errors within the discord client itself.
 				presence.Party = new Party()
@@ -174,12 +161,19 @@ namespace DiscordRPC.Example
 					Size = 1,
 					Max = 4
 				};
-                
-				//Set some new presence to tell Discord we are in a game.
-				// If the connection is not yet available, this will be queued until a Ready event is called, 
-				// then it will be sent. All messages are queued until Discord is ready to receive them.
-				client.SetPresence(presence);
 
+                //Give the game some time so we have a nice countdown
+                presence.Timestamps = new Timestamps()
+                {
+                    Start = DateTime.UtcNow,
+                    End = DateTime.UtcNow + TimeSpan.FromSeconds(15)
+                };
+                
+                //Set some new presence to tell Discord we are in a game.
+                // If the connection is not yet available, this will be queued until a Ready event is called, 
+                // then it will be sent. All messages are queued until Discord is ready to receive them.
+                client.SetPresence(presence);
+                
 				//Subscribe to the join / spectate feature.
 				//These require the RegisterURI to be true.
 				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
@@ -221,7 +215,6 @@ namespace DiscordRPC.Example
 				//client.SetPresence(presence);
 			}
 
-			client.Dispose();
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
 		}

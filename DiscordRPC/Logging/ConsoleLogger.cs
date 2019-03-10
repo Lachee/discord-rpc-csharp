@@ -26,6 +26,26 @@ namespace DiscordRPC.Logging
 		public bool Colored { get { return Coloured; } set { Coloured = value; } }
        
         /// <summary>
+        /// Creates a new instance of a Console Logger.
+        /// </summary>
+        public ConsoleLogger()
+        {
+            this.Level = LogLevel.Info;
+            Coloured = false;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Console Logger with a set log level
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="coloured"></param>
+        public ConsoleLogger(LogLevel level, bool coloured = false)
+        {
+            Level = level;
+            Coloured = coloured;
+        }
+
+        /// <summary>
         /// Informative log messages
         /// </summary>
         /// <param name="message"></param>

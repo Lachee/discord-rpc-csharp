@@ -93,13 +93,13 @@ namespace DiscordRPC.RPC
 		private Thread thread;							//The current thread
 		private INamedPipeClient namedPipe;
 
-		private int targetPipe;							//The pipe to taget. Leave as -1 for any available pipe.
+		private int targetPipe;							    //The pipe to taget. Leave as -1 for any available pipe.
 
-		private readonly object l_rtqueue = new object();		//Lock for the send queue
-		private Queue<ICommand> _rtqueue;				//The send queue
+		private readonly object l_rtqueue = new object();	//Lock for the send queue
+		private Queue<ICommand> _rtqueue;				    //The send queue
 
 		private readonly object l_rxqueue = new object();	//Lock for the receive queue
-        private readonly int _maxRxQueueSize;                 //The max size of the RX queue
+        private readonly uint _maxRxQueueSize;              //The max size of the RX queue
         private Queue<IMessage> _rxqueue;                   //The receive queue
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
@@ -113,7 +113,8 @@ namespace DiscordRPC.RPC
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
-		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, int maxRxQueueSize = 128)
+        /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
+		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
@@ -128,7 +129,7 @@ namespace DiscordRPC.RPC
 			_rtqueue = new Queue<ICommand>();
 
             _maxRxQueueSize = maxRxQueueSize;
-            _rxqueue = new Queue<IMessage>(_maxRxQueueSize + 1);
+            _rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
 			
 			nonce = 0;
 		}

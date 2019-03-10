@@ -10,23 +10,29 @@ namespace DiscordRPC.Registry
 {
     class MacUriSchemeCreator : IUriSchemeCreator
     {
-        public void RegisterUriScheme(ILogger logger, string appid, string steamid = null)
+        private ILogger logger;
+        public MacUriSchemeCreator(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
+        public bool RegisterUriScheme(UriSchemeRegister register)
         {
             //var home = Environment.GetEnvironmentVariable("HOME");
             //if (string.IsNullOrEmpty(home)) return;     //TODO: Log Error
 
-            string exe = UriScheme.GetApplicationLocation();
+            string exe = register.ExecutablePath;
             if (string.IsNullOrEmpty(exe))
             {
                 logger.Error("Failed to register because the application could not be located.");
-                return;
+                return false;
             }
             
             logger.Trace("Registering Steam Command");
 
             //Prepare the command
             string command = exe;
-            if (!string.IsNullOrEmpty(steamid)) command = "steam://rungameid/" + steamid;
+            if (register.UsingSteamApp) command = "steam://rungameid/" + register.SteamAppID;
             else logger.Warning("This library does not fully support MacOS URI Scheme Registration.");
 
             //get the folder ready
@@ -35,11 +41,12 @@ namespace DiscordRPC.Registry
             if (!directory.Exists)
             {
                 logger.Error("Failed to register because {0} does not exist", filepath);
-                return;
+                return false;
             }
 
             //Write the contents to file
-            File.WriteAllText(filepath + "/" + appid + ".json", "{ \"command\": \"" + command + "\" }");            
+            File.WriteAllText(filepath + "/" + register.ApplicationID + ".json", "{ \"command\": \"" + command + "\" }");
+            return true;
         }
         
     }

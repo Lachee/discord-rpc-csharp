@@ -10,28 +10,34 @@ namespace DiscordRPC.Registry
 {
     class UnixUriSchemeCreator : IUriSchemeCreator
     {
-        public void RegisterUriScheme(ILogger logger, string appid, string steamid = null)
+        private ILogger logger;
+        public UnixUriSchemeCreator(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
+        public bool RegisterUriScheme(UriSchemeRegister register)
         {
             var home = Environment.GetEnvironmentVariable("HOME");
             if (string.IsNullOrEmpty(home))
             {
                 logger.Error("Failed to register because the HOME variable was not set.");
-                return;
+                return false;
             }
 
-            string exe = UriScheme.GetApplicationLocation();
+            string exe = register.ExecutablePath;
             if (string.IsNullOrEmpty(exe))
             {
                 logger.Error("Failed to register because the application was not located.");
-                return;
+                return false;
             }
 
             //Prepare the command
             string command = null;
-            if (!string.IsNullOrEmpty(steamid))
+            if (register.UsingSteamApp)
             {
                 //A steam command isntead
-                command = "xdg-open steam://rungameid/" + steamid;
+                command = "xdg-open steam://rungameid/" + register.SteamAppID;
             }
             else
             {
@@ -50,27 +56,29 @@ NoDisplay=true
 Categories=Discord;Games;
 MimeType=x-scheme-handler/discord-{2}";
             
-            string file = string.Format(desktopFileFormat, appid, command, appid);
+            string file = string.Format(desktopFileFormat, register.ApplicationID, command, register.ApplicationID);
 
             //Prepare the path
-            string filename = "/discord-" + appid + ".desktop";
+            string filename = "/discord-" + register.ApplicationID + ".desktop";
             string filepath = home + "/.local/share/applications";
             var directory = Directory.CreateDirectory(filepath);
             if (!directory.Exists)
             {
                 logger.Error("Failed to register because {0} does not exist", filepath);
-                return;
+                return false;
             }
 
             //Write the file
             File.WriteAllText(filepath + filename, file);
 
             //Register the Mime type
-            if (!RegisterMime(appid))
+            if (!RegisterMime(register.ApplicationID))
             {
                 logger.Error("Failed to register because the Mime failed.");
-                return;
+                return false;
             }
+
+            return true;
         }
 
         private bool RegisterMime(string appid)
