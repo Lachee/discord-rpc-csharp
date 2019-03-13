@@ -804,7 +804,7 @@ namespace DiscordRPC.RPC
 	/// <summary>
 	/// State of the RPC connection
 	/// </summary>
-	public enum RpcState
+	internal enum RpcState
 	{
 		/// <summary>
 		/// Disconnected from the discord client
