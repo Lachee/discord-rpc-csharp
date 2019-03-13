@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DiscordRPC.Registry
 {
-    class MacUriSchemeCreator : IUriSchemeCreator
+    internal class MacUriSchemeCreator : IUriSchemeCreator
     {
         private ILogger logger;
         public MacUriSchemeCreator(ILogger logger)

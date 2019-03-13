@@ -290,7 +290,7 @@ namespace DiscordRPC
         #endregion
 
         /// <summary>
-        /// Attempts to call <see cref="StringTools.NullEmpty(string)"/> on the string and return the result, if its within a valid length.
+        /// Attempts to call <see cref="StringTools.GetNullOrString(string)"/> on the string and return the result, if its within a valid length.
         /// </summary>
         /// <param name="str">The string to check</param>
         /// <param name="result">The formatted string result</param>
@@ -311,7 +311,7 @@ namespace DiscordRPC
 				return false;
 
 			//Make sure its not empty
-			result = s.NullEmpty();
+			result = s.GetNullOrString();
 			return true;
 		}
 
@@ -698,7 +698,7 @@ namespace DiscordRPC
 		/// <para>Max 128 Bytes</para>
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string ID { get { return _partyid; } set { _partyid = value.NullEmpty(); } }
+		public string ID { get { return _partyid; } set { _partyid = value.GetNullOrString(); } }
 		private string _partyid;
 
 		/// <summary>

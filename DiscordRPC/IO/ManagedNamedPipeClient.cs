@@ -12,8 +12,11 @@ namespace DiscordRPC.IO
 	/// <summary>
 	/// A named pipe client using the .NET framework <see cref="NamedPipeClientStream"/>
 	/// </summary>
-	public class ManagedNamedPipeClient : INamedPipeClient
+	public sealed class ManagedNamedPipeClient : INamedPipeClient
 	{
+        /// <summary>
+        /// Name format of the pipe
+        /// </summary>
 		const string PIPE_NAME = @"discord-ipc-{0}";
 
 		/// <summary>

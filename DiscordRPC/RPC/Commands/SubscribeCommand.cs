@@ -6,7 +6,7 @@ using DiscordRPC.RPC.Payload;
 
 namespace DiscordRPC.RPC.Commands
 {
-	class SubscribeCommand : ICommand
+	internal class SubscribeCommand : ICommand
 	{
 		public ServerEvent Event { get; set; }
 		public bool IsUnsubscribe { get; set; }

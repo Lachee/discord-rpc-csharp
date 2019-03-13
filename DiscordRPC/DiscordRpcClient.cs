@@ -10,12 +10,15 @@ using System;
 
 namespace DiscordRPC
 {
+
 	/// <summary>
 	/// A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.
 	/// </summary>
 	public class DiscordRpcClient : IDisposable
 	{
 		#region Properties
+        
+
 		/// <summary>
 		/// Gets a value indicating if the client has registered a URI Scheme. If this is false, Join / Spectate events will fail.
         /// <para>To register a URI Scheme, call <see cref="RegisterUriScheme(string, string)"/>.</para>

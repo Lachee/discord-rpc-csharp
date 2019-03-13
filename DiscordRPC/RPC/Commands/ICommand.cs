@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DiscordRPC.RPC.Commands
 {
-	interface ICommand
+    internal interface ICommand
 	{
 		IPayload PreparePayload(long nonce);
 	}

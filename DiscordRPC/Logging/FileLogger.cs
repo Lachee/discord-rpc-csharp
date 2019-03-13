@@ -26,7 +26,6 @@ namespace DiscordRPC.Logging
         /// Creates a new instance of the file logger
         /// </summary>
         /// <param name="path">The path of the log file.</param>
-        /// <param name="level">The level to assign to the logger.</param>
         public FileLogger(string path)
             : this(path, LogLevel.Info) { }
 

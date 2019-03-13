@@ -9,7 +9,7 @@ namespace DiscordRPC.RPC.Payload
 	/// <summary>
 	/// The possible commands that can be sent and received by the server.
 	/// </summary>
-	public enum Command
+	internal enum Command
 	{
 		/// <summary>
 		/// event dispatch

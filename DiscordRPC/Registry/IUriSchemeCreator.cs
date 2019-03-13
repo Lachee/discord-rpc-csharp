@@ -2,7 +2,7 @@
 
 namespace DiscordRPC.Registry
 {
-    interface IUriSchemeCreator
+    internal interface IUriSchemeCreator
     {
         /// <summary>
         /// Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly.

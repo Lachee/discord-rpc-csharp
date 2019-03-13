@@ -6,7 +6,7 @@ using System.Text;
 namespace DiscordRPC.Logging
 {
 	/// <summary>
-	/// Level of logging to employ.
+	/// Level of logging to use.
 	/// </summary>
 	public enum LogLevel
 	{

@@ -7,7 +7,7 @@ namespace DiscordRPC.RPC.Payload
 	/// <summary>
 	/// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-events for documentation
 	/// </summary>
-	public enum ServerEvent
+	internal enum ServerEvent
 	{
 		/// <summary>
 		/// Sent when the server is ready to accept messages

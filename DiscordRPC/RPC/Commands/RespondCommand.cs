@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Commands
 {
-	class RespondCommand : ICommand
+    internal class RespondCommand : ICommand
 	{
 		/// <summary>
 		/// The user ID that we are accepting / rejecting

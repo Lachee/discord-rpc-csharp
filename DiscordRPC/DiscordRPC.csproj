@@ -96,7 +96,7 @@
     <Compile Include="Helper\BackoffDelay.cs" />
     <Compile Include="Helper\StringTools.cs" />
     <Compile Include="IO\Handshake.cs" />
-    <Compile Include="IO\InvalidPipeException.cs" />
+    <Compile Include="Exceptions\InvalidPipeException.cs" />
     <Compile Include="IO\INamedPipeClient.cs" />
     <Compile Include="IO\ManagedNamedPipeClient.cs" />
     <Compile Include="IO\Opcode.cs" />

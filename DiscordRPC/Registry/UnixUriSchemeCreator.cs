@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DiscordRPC.Registry
 {
-    class UnixUriSchemeCreator : IUriSchemeCreator
+    internal class UnixUriSchemeCreator : IUriSchemeCreator
     {
         private ILogger logger;
         public UnixUriSchemeCreator(ILogger logger)

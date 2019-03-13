@@ -10,13 +10,13 @@ namespace DiscordRPC.Helper
 	public static class StringTools
 	{
 		/// <summary>
-		/// Will return null if the string is empty, otherwise it will return the string. 
+		/// Will return null if the string is whitespace, otherwise it will return the string. 
 		/// </summary>
 		/// <param name="str">The string to check</param>
 		/// <returns>Null if the string is empty, otherwise the string</returns>
-		public static string NullEmpty(this string str)
+		public static string GetNullOrString(this string str)
 		{
-			return string.IsNullOrEmpty(str) ? null : str;
+			return str.Length == 0 || string.IsNullOrEmpty(str.Trim()) ? null : str;
 		}
 
 		/// <summary>
@@ -51,9 +51,8 @@ namespace DiscordRPC.Helper
         public static string ToCamelCase(this string str)
         {
             if (str == null) return null;
-
-			var contex = str.ToLower();
-            return contex.ToLower()
+            
+            return str.ToLower()
 				.Split(new[] { "_", " " }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(s => char.ToUpper(s[0]) + s.Substring(1, s.Length - 1))
 				.Aggregate(string.Empty, (s1, s2) => s1 + s2);

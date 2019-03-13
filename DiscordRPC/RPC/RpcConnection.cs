@@ -14,7 +14,7 @@ namespace DiscordRPC.RPC
 	/// <summary>
 	/// Communicates between the client and discord through RPC
 	/// </summary>
-	public class RpcConnection : IDisposable
+	internal class RpcConnection : IDisposable
 	{
 		/// <summary>
 		/// Version of the RPC Protocol
@@ -371,10 +371,10 @@ namespace DiscordRPC.RPC
 						Thread.Sleep(delay.NextDelay());
 					}
 				}
-				catch(InvalidPipeException e)
-				{
-					Logger.Error("Invalid Pipe Exception: {0}", e.Message);
-				}
+				//catch(InvalidPipeException e)
+				//{
+				//	Logger.Error("Invalid Pipe Exception: {0}", e.Message);
+				//}
 				catch (Exception e)
 				{
 					Logger.Error("Unhandled Exception: {0}", e.GetType().FullName);
