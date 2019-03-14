@@ -117,6 +117,26 @@ public class DiscordManager : MonoBehaviour {
 	}
 
 #endif
+
+#if UNITY_EDITOR
+    [UnityEditor.MenuItem("GameObject/Discord Manager", priority = 10)]
+    private static void CreateNewManager()
+    {
+        var prev = FindObjectOfType<DiscordManager>();
+        if (prev == null)
+        {
+            var go = new GameObject("Discord Manager");
+            prev = go.AddComponent<DiscordManager>();
+        }
+        else
+        {
+            Debug.LogWarning("Cannot create new Discord Manager because one already exists.");
+        }
+
+        UnityEditor.Selection.activeObject = prev;
+    }
+#endif
+
     #endregion
 
     /// <summary>
