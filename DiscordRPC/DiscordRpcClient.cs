@@ -14,7 +14,7 @@ namespace DiscordRPC
 	/// <summary>
 	/// A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.
 	/// </summary>
-	public class DiscordRpcClient : IDisposable
+	public sealed class DiscordRpcClient : IDisposable
 	{
 		#region Properties
         
