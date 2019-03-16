@@ -146,7 +146,7 @@ namespace DiscordRPC
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return Username + "#" + Discriminator;
+			return Username + "#" + Discriminator.ToString("D4");
 		}
 	}
 }
