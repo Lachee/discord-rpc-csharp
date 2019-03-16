@@ -23,9 +23,9 @@ namespace DiscordRPC.Example
         /// </summary>
         private static RichPresence presence = new RichPresence()
 		{
-			Details = "Example Project",
-			State = "csharp example",
-			Assets = new Assets()
+            Details = "Example Project",
+            State = "csharp example",
+            Assets = new Assets()
 			{
 				LargeImageKey = "image_large",
 				LargeImageText = "Lachee's Discord IPC Library",
@@ -168,16 +168,16 @@ namespace DiscordRPC.Example
                     Start = DateTime.UtcNow,
                     End = DateTime.UtcNow + TimeSpan.FromSeconds(15)
                 };
-                
+
+                //Subscribe to the join / spectate feature.
+                //These require the RegisterURI to be true.
+                client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
+
                 //Set some new presence to tell Discord we are in a game.
                 // If the connection is not yet available, this will be queued until a Ready event is called, 
                 // then it will be sent. All messages are queued until Discord is ready to receive them.
                 client.SetPresence(presence);
-                
-				//Subscribe to the join / spectate feature.
-				//These require the RegisterURI to be true.
-				client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
-				
+            
 				//Initialize the connection. This must be called ONLY once.
 				//It must be called before any updates are sent or received from the discord client.
 				client.Initialize();

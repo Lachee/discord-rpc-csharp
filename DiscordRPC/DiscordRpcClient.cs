@@ -422,7 +422,10 @@ namespace DiscordRPC
 			if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
-			connection.EnqueueCommand(new RespondCommand() { Accept = acceptRequest, UserID = request.User.ID.ToString() });
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            connection.EnqueueCommand(new RespondCommand() { Accept = acceptRequest, UserID = request.User.ID.ToString() });
 		}
 
 		/// <summary>
@@ -434,11 +437,11 @@ namespace DiscordRPC
 			if (Disposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
-            if (!IsInitialized)
-                throw new UninitializedException();
-
             if (connection == null)
 				throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
+
+            if (!IsInitialized)
+                Logger.Warning("The client is not yet initialized, storing the presence as a state instead.");
 
 			//Update our internal store of the presence
 			CurrentPresence = presence;
@@ -729,9 +732,17 @@ namespace DiscordRPC
         /// <param name="type">The new subscription as a flag. Events selected in the flag will be subscribed too and the other events will be unsubscribed.</param>
         public void SetSubscription(EventType type)
 		{
-			//Calculate what needs to be unsubscrinbed
-			SubscribeToTypes(Subscription & ~type, true);
-			SubscribeToTypes(~Subscription & type, false);
+            if (IsInitialized)
+            {
+                //Calculate what needs to be unsubscrinbed
+                SubscribeToTypes(Subscription & ~type, true);
+                SubscribeToTypes(~Subscription & type, false);
+            }
+            else
+            {
+                Logger.Warning("Client has not yet initialized, but events are being subscribed too. Storing them as state instead.");
+            }
+
 			Subscription = type;
 		}
 
