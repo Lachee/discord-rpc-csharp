@@ -186,10 +186,10 @@
             <param name="pipe">The pipe to connect too. If -1, then the client will scan for the first available instance of Discord.</param>
             <param name="logger">The logger used to report messages. If null, then a <see cref="T:DiscordRPC.Logging.NullLogger"/> will be created and logs will be ignored.</param>
             <param name="messageQueueSize">Optional queue size that limits how many messages from Discord can be queued at once.
-            <param name="client">The pipe client to use and communicate to discord through. If null, the default <see cref="T:DiscordRPC.IO.ManagedNamedPipeClient"/> will be used.</param>
             <para>For large amounts of time between Invoking events and clearing the queue, its recommended to increase this value.</para>
             <para>For situations where no events will be listened to and state tracking is not utilised, set to 0 to disable discord messages.</para>
             </param>
+            <param name="client">The pipe client to use and communicate to discord through. If null, the default <see cref="T:DiscordRPC.IO.ManagedNamedPipeClient"/> will be used.</param>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.Invoke">
             <summary>
@@ -549,6 +549,11 @@
             Creates a new uninitialized exception with default message.
             </summary>
         </member>
+        <member name="T:DiscordRPC.Exceptions.InvalidPipeException">
+            <summary>
+            The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Helper.BackoffDelay.Maximum">
             <summary>
             The maximum time the backoff can reach
@@ -584,9 +589,9 @@
             Collectin of helpful string extensions
             </summary>
         </member>
-        <member name="M:DiscordRPC.Helper.StringTools.NullEmpty(System.String)">
+        <member name="M:DiscordRPC.Helper.StringTools.GetNullOrString(System.String)">
             <summary>
-            Will return null if the string is empty, otherwise it will return the string. 
+            Will return null if the string is whitespace, otherwise it will return the string. 
             </summary>
             <param name="str">The string to check</param>
             <returns>Null if the string is empty, otherwise the string</returns>
@@ -630,11 +635,6 @@
         <member name="P:DiscordRPC.IO.Handshake.ClientID">
             <summary>
             The ID of the app.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.IO.InvalidPipeException">
-            <summary>
-            The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
             </summary>
         </member>
         <member name="T:DiscordRPC.IO.INamedPipeClient">
@@ -685,6 +685,11 @@
         <member name="T:DiscordRPC.IO.ManagedNamedPipeClient">
             <summary>
             A named pipe client using the .NET framework <see cref="T:System.IO.Pipes.NamedPipeClientStream"/>
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.IO.ManagedNamedPipeClient.PIPE_NAME">
+            <summary>
+            Name format of the pipe
             </summary>
         </member>
         <member name="P:DiscordRPC.IO.ManagedNamedPipeClient.Logger">
@@ -894,7 +899,6 @@
             Creates a new instance of the file logger
             </summary>
             <param name="path">The path of the log file.</param>
-            <param name="level">The level to assign to the logger.</param>
         </member>
         <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String,DiscordRPC.Logging.LogLevel)">
             <summary>
@@ -1031,7 +1035,7 @@
         </member>
         <member name="T:DiscordRPC.Logging.LogLevel">
             <summary>
-            Level of logging to employ.
+            Level of logging to use.
             </summary>
         </member>
         <member name="F:DiscordRPC.Logging.LogLevel.Trace">
@@ -1582,7 +1586,7 @@
         </member>
         <member name="M:DiscordRPC.RichPresence.ValidateString(System.String,System.String@,System.Int32,System.Text.Encoding)">
             <summary>
-            Attempts to call <see cref="M:DiscordRPC.Helper.StringTools.NullEmpty(System.String)"/> on the string and return the result, if its within a valid length.
+            Attempts to call <see cref="M:DiscordRPC.Helper.StringTools.GetNullOrString(System.String)"/> on the string and return the result, if its within a valid length.
             </summary>
             <param name="str">The string to check</param>
             <param name="result">The formatted string result</param>

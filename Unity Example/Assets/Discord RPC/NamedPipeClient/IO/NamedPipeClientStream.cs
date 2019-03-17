@@ -235,7 +235,7 @@ namespace Lachee.IO
             const string LIBRARY_NAME = "NativeNamedPipe";
 
             #region Creation and Destruction
-            [DllImport(LIBRARY_NAME, EntryPoint = "createClient", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(LIBRARY_NAME, EntryPoint = "createClient", CallingConvention = CallingConvention.Cdecl, ExactSpelling = false)]
             public static extern IntPtr CreateClient();
 
             [DllImport(LIBRARY_NAME, EntryPoint = "destroyClient", CallingConvention = CallingConvention.Cdecl)]

@@ -22,18 +22,20 @@ public class DiscordTimestamp
 	/// <summary>
 	/// Creates a new stamp of the current time.
 	/// </summary>
-	public DiscordTimestamp() : this(DateTime.UtcNow) { }
+	public DiscordTimestamp() 
+        : this(DateTime.UtcNow) { }
 
 	/// <summary>
 	/// Creates a new stamp with the supplied datetime
 	/// </summary>
 	/// <param name="time">The DateTime</param>
-	public DiscordTimestamp(DateTime time) : this(ToUnixTime(DateTime.UtcNow)) { }
+	public DiscordTimestamp(DateTime time) 
+        : this(ToUnixMilliseconds(DateTime.UtcNow)) { }
 	
 	/// <summary>
 	/// Creates a new stamp with the specified unix epoch
 	/// </summary>
-	/// <param name="timestamp">The time in unix epoch</param>
+	/// <param name="timestamp">The time in unix epoch milliseconds</param>
 	public DiscordTimestamp(long timestamp)
 	{
 		this.timestamp = timestamp;
@@ -50,7 +52,7 @@ public class DiscordTimestamp
 
 		//Convert to timespan and then to unix epoch
 		TimeSpan timespan = TimeSpan.FromSeconds(diff);		//Convert the difference to a TimeSpan for easier maths
-		timestamp = ToUnixTime(DateTime.UtcNow + timespan);	//Add the difference to the current time
+		timestamp = ToUnixMilliseconds(DateTime.UtcNow + timespan);	//Add the difference to the current time
 	}
 
 	/// <summary>
@@ -60,7 +62,7 @@ public class DiscordTimestamp
 	/// <returns></returns>
 	public DateTime GetDateTime()
 	{
-		return FromUnixTime(timestamp);
+		return FromUnixMilliseconds(timestamp);
 	}
 
 	/// <summary>
@@ -170,11 +172,12 @@ public class DiscordTimestamp
 	/// <summary>
 	/// Casts a unixh epoch count of seconds into a timestamp
 	/// </summary>
-	/// <param name="time">The time</param>
+	/// <param name="time">The time in milliseconds</param>
 	public static implicit operator DiscordTimestamp(long time)
 	{
 		return new DiscordTimestamp(time);
 	}
+
 	/// <summary>
 	/// Converts the <see cref="DateTime"/> into a timestamp
 	/// </summary>
@@ -191,27 +194,27 @@ public class DiscordTimestamp
 	{
 		return new DiscordTimestamp(time);
 	}
-	#endregion
+    #endregion
 
-	/// <summary>
-	/// Converts a Unix Epoch time into a <see cref="DateTime"/>.
-	/// </summary>
-	/// <param name="unixTime">The time in seconds since 1970 / 01 / 01</param>
-	/// <returns></returns>
-	public static DateTime FromUnixTime(long unixTime)
-	{
-		var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		return epoch.AddSeconds(unixTime);
-	}
+    /// <summary>
+    /// Converts a Unix Epoch time into a <see cref="DateTime"/>.
+    /// </summary>
+    /// <param name="unixTime">The time in milliseconds since 1970 / 01 / 01</param>
+    /// <returns></returns>
+    public static DateTime FromUnixMilliseconds(long unixTime)
+    {
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        return epoch.AddMilliseconds(Convert.ToDouble(unixTime));
+    }
 
-	/// <summary>
-	/// Converts a <see cref="DateTime"/> into a Unix Epoch time.
-	/// </summary>
-	/// <param name="date">The datetime to convert</param>
-	/// <returns></returns>
-	public static long ToUnixTime(DateTime date)
-	{
-		var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		return Convert.ToInt64((date - epoch).TotalSeconds);
-	}
+    /// <summary>
+    /// Converts a <see cref="DateTime"/> into a Unix Epoch time (in milliseconds).
+    /// </summary>
+    /// <param name="date">The datetime to convert</param>
+    /// <returns></returns>
+    public static long ToUnixMilliseconds(DateTime date)
+    {
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        return Convert.ToInt64((date - epoch).TotalMilliseconds);
+    }
 }

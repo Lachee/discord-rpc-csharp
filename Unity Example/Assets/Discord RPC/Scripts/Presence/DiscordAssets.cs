@@ -7,7 +7,7 @@ public class DiscordAsset
 	/// The key of the image to be displayed.
 	/// <para>Max 32 Bytes.</para>
 	/// </summary>
-	[CharacterLimit(32)]
+	[CharacterLimit(32, enforce = true)]
 	[Tooltip("The key of the image to be displayed in the large square.")]
 	public string image;
 
@@ -15,7 +15,7 @@ public class DiscordAsset
 	/// The tooltip of the image.
 	/// <para>Max 128 Bytes.</para>
 	/// </summary>
-	[CharacterLimit(128)]
+	[CharacterLimit(128, enforce = true)]
 	[Tooltip("The tooltip of the large image.")]
 	public string tooltip;
 

@@ -85,7 +85,7 @@ namespace DiscordRPC.Unity
             }
             catch(Exception e)
             {
-                Logger.Error("Failed: " + e.Message);
+                Logger.Error("Failed: " + e.GetType().FullName + ", " + e.Message);
                 ConnectedPipe = -1;
                 Close();
                 return false;
