@@ -15,6 +15,12 @@ namespace DiscordRPC.Registry
             this.logger = logger;
         }
 
+#if EXCLUDE_WIN32
+        public bool RegisterUriScheme(UriSchemeRegister register)
+        {
+            throw new PlatformNotSupportedException("Library has been built exluding Win32. This has removed the ability for Windows to register the UriScheme");
+        }
+#else
         public bool RegisterUriScheme(UriSchemeRegister register)
         {
             //Prepare our location
@@ -80,8 +86,8 @@ namespace DiscordRPC.Registry
                 return key.GetValue("SteamExe") as string;
             }
         }
+#endif
 
-   
 
     }
 }

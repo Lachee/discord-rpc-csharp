@@ -63,7 +63,12 @@ namespace DiscordRPC
 			}
 		}
 		private ILogger _logger = new NullLogger();
-		#endregion
+		
+        /// <summary>
+        /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called. 
+        /// </summary>
+        public bool AutoEvents { get; private set; }
+        #endregion
 
 		/// <summary>
 		/// The pipe the discord client is on, ranging from 0 to 9. Use -1 to scan through all pipes.
@@ -112,7 +117,9 @@ namespace DiscordRPC
             }
         }
 		private bool _shutdownOnly = true;
-        
+
+        private object _sync = new object();
+
 		#region Events
 
 		/// <summary>
@@ -179,6 +186,11 @@ namespace DiscordRPC
 		/// Failed to establish any connection with discord. Discord is potentially not running?
 		/// </summary>
 		public event OnConnectionFailedEvent OnConnectionFailed;
+
+        /// <summary>
+        /// The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.
+        /// </summary>
+        public event OnRpcMessageEvent OnRpcMessage;
         #endregion
 
         #region Initialization
@@ -195,12 +207,9 @@ namespace DiscordRPC
         /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
         /// <param name="pipe">The pipe to connect too. If -1, then the client will scan for the first available instance of Discord.</param>
         /// <param name="logger">The logger used to report messages. If null, then a <see cref="NullLogger"/> will be created and logs will be ignored.</param>
-        /// <param name="messageQueueSize">Optional queue size that limits how many messages from Discord can be queued at once.
-        /// <para>For large amounts of time between Invoking events and clearing the queue, its recommended to increase this value.</para>
-        /// <para>For situations where no events will be listened to and state tracking is not utilised, set to 0 to disable discord messages.</para>
-        /// </param>
+        /// <param name="autoEvents">Should events be automatically invoked from the RPC Thread as they arrive from discord?</param>
         /// <param name="client">The pipe client to use and communicate to discord through. If null, the default <see cref="ManagedNamedPipeClient"/> will be used.</param>
-        public DiscordRpcClient(string applicationID, int pipe = -1, ILogger logger = null, uint messageQueueSize = 128, INamedPipeClient client = null)
+        public DiscordRpcClient(string applicationID, int pipe = -1, ILogger logger = null, bool autoEvents = true, INamedPipeClient client = null)
         {
             //Make sure appID is NOT null.
             if (string.IsNullOrEmpty(applicationID))
@@ -215,15 +224,26 @@ namespace DiscordRPC
             TargetPipe = pipe;
             ProcessID = System.Diagnostics.Process.GetCurrentProcess().Id;
             HasRegisteredUriScheme = false;
+            AutoEvents = autoEvents;
 
             //Prepare the logger
             _logger = logger ?? new NullLogger();
 
 			//Create the RPC client, giving it the important details
-			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client ?? new ManagedNamedPipeClient(), messageQueueSize)
+			connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client ?? new ManagedNamedPipeClient(), autoEvents ? 0 : 128U)
             {
                 ShutdownOnly = _shutdownOnly,
                 Logger = _logger
+            };
+
+            //Subscribe to its event
+            connection.OnRpcMessage += (sender, msg) =>
+            {
+                if (OnRpcMessage != null)
+                    OnRpcMessage.Invoke(this, msg);
+
+                if (AutoEvents)
+                    ProcessMessage(msg);
             };
         }
 
@@ -236,135 +256,60 @@ namespace DiscordRPC
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{
-			//Dequeue all the messages and process them
-			IMessage[] messages = connection.DequeueMessages();
+            if (AutoEvents)
+            {
+                Logger.Error("Cannot Invoke client when AutomaticallyInvokeEvents has been set.");
+                return new IMessage[0];
+                //throw new InvalidOperationException("Cannot Invoke client when AutomaticallyInvokeEvents has been set.");
+            }
+
+            //Dequeue all the messages and process them
+            IMessage[] messages = connection.DequeueMessages();
 			for (int i = 0; i < messages.Length; i++)
 			{
 				//Do a bit of pre-processing
 				var message = messages[i];
-				HandleMessage(message);
-
-				//Invoke the appropriate methods
-				switch (message.Type)
-				{
-					case MessageType.Ready:
-						if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
-						break;
-
-					case MessageType.Close:
-						if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
-						break;
-
-					case MessageType.Error:
-						if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
-						break;
-
-					case MessageType.PresenceUpdate:
-						if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
-						break;
-
-					case MessageType.Subscribe:
-						if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
-						break;
-
-					case MessageType.Unsubscribe:
-						if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
-						break;
-
-					case MessageType.Join:
-						if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
-						break;
-
-					case MessageType.Spectate:
-						if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
-						break;
-
-					case MessageType.JoinRequest:
-						if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
-						break;
-
-					case MessageType.ConnectionEstablished:
-						if (OnConnectionEstablished != null) OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
-						break;
-
-					case MessageType.ConnectionFailed:
-						if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
-						break;
-
-					default:
-						//This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
-						Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
-						break;
-				}
+                ProcessMessage(message);
 			}
 
 			//Finally, return the messages
 			return messages;
 		}
 
-		/// <summary>
-		/// Dequeues a single message from Discord and processes it. No events will be invoked.
-		/// </summary>
-		/// <returns>Returns a single message that was dequeued from Discord</returns>
-        [System.Obsolete("This method enables inproper message handling. Use the Invoke() function instead.")]
-		public IMessage Dequeue()
-		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
-
-			//Dequeue the message and do some preprocessing
-			IMessage message = connection.DequeueMessage();
-			HandleMessage(message);
-
-			//return the message
-			return message;
-		}
-
         /// <summary>
-        /// Dequeues all messages from the Discord queue. This will be a empty array of size 0 if none are availble. This will process the messages and update internal state before handing it over.
+        /// Processes the message, updating our internal state and then invokes the events.
         /// </summary>
-        /// <returns></returns>
-        [System.Obsolete("This method enables inproper message handling. Use the Invoke() function instead.")]
-        public IMessage[] DequeueAll()
-		{
-			if (Disposed)
-				throw new ObjectDisposedException("Discord IPC Client");
-
-			//Dequeue all the messages and process them
-			IMessage[] messages = connection.DequeueMessages();
-			for (int i = 0; i < messages.Length; i++) HandleMessage(messages[i]);
-
-			//Return it
-			return messages;
-		}
-
-		private void HandleMessage(IMessage message)
-		{
-			if (message == null) return;
-			switch (message.Type)
+        /// <param name="message"></param>
+		private void ProcessMessage(IMessage message)
+        {
+            if (message == null) return;
+            switch (message.Type)
 			{
 				//We got a update, so we will update our current presence
 				case MessageType.PresenceUpdate:
-					var pm = message as PresenceMessage;
-					if (pm != null)
-					{
-						//We need to merge these presences together
-						if (CurrentPresence == null)
-						{
-                            CurrentPresence = pm.Presence;
-						}
-						else if (pm.Presence == null)
-						{
-                            CurrentPresence = null;
-						}
-						else
-						{
-                            CurrentPresence.Merge(pm.Presence);
-						}
+                    lock (_sync)
+                    {
+                        var pm = message as PresenceMessage;
+                        if (pm != null)
+                        {
+                            //We need to merge these presences together
+                            if (CurrentPresence == null)
+                            {
+                                CurrentPresence = pm.Presence;
+                            }
+                            else if (pm.Presence == null)
+                            {
+                                CurrentPresence = null;
+                            }
+                            else
+                            {
+                                CurrentPresence.Merge(pm.Presence);
+                            }
 
-						//Update the message
-						pm.Presence = CurrentPresence;
-					}
+                            //Update the message
+                            pm.Presence = CurrentPresence;
+                        }
+                    }
 
 					break;
 
@@ -373,8 +318,11 @@ namespace DiscordRPC
 					var rm = message as ReadyMessage;
 					if (rm != null)
 					{
-						Configuration = rm.Configuration;
-						CurrentUser = rm.User;
+                        lock (_sync)
+                        {
+                            Configuration = rm.Configuration;
+                            CurrentUser = rm.User;
+                        }
 
 						//Resend our presence and subscription
 						SynchronizeState();
@@ -392,20 +340,79 @@ namespace DiscordRPC
 					break;
 
 				case MessageType.Subscribe:
-					var sub = message as SubscribeMessage;
-					Subscription |= sub.Event;
+                    lock (_sync)
+                    {
+                        var sub = message as SubscribeMessage;
+                        Subscription |= sub.Event;
+                    }
 					break;
 
 				case MessageType.Unsubscribe:
-					var unsub = message as UnsubscribeMessage;
-                    Subscription &= ~unsub.Event;
+                    lock (_sync)
+                    {
+                        var unsub = message as UnsubscribeMessage;
+                        Subscription &= ~unsub.Event;
+                    }
 					break;
 
 				//We got a message we dont know what to do with.
 				default:
 					break;
 			}
-		}
+
+            //Invoke the appropriate methods
+            switch (message.Type)
+            {
+                case MessageType.Ready:
+                    if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
+                    break;
+
+                case MessageType.Close:
+                    if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
+                    break;
+
+                case MessageType.Error:
+                    if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
+                    break;
+
+                case MessageType.PresenceUpdate:
+                    if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
+                    break;
+
+                case MessageType.Subscribe:
+                    if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
+                    break;
+
+                case MessageType.Unsubscribe:
+                    if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
+                    break;
+
+                case MessageType.Join:
+                    if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
+                    break;
+
+                case MessageType.Spectate:
+                    if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
+                    break;
+
+                case MessageType.JoinRequest:
+                    if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
+                    break;
+
+                case MessageType.ConnectionEstablished:
+                    if (OnConnectionEstablished != null) OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
+                    break;
+
+                case MessageType.ConnectionFailed:
+                    if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
+                    break;
+
+                default:
+                    //This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
+                    Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
+                    break;
+            }
+        }
         #endregion
 
         /// <summary>
@@ -443,9 +450,8 @@ namespace DiscordRPC
             if (!IsInitialized)
                 Logger.Warning("The client is not yet initialized, storing the presence as a state instead.");
 
-			//Update our internal store of the presence
-			CurrentPresence = presence;
-			if (!CurrentPresence)
+            //SEnd the event
+			if (!presence)
 			{
 				//Clear the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = null });
@@ -466,7 +472,10 @@ namespace DiscordRPC
 				//Send the presence
 				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
 			}
-		}
+
+            //Update our local store
+            lock (_sync) { CurrentPresence = presence; }
+        }
 
 		#region Updates
 		/// <summary>
@@ -479,9 +488,12 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			CurrentPresence.Details = details;
-			SetPresence(CurrentPresence);
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                CurrentPresence.Details = details;
+                SetPresence(CurrentPresence);
+            }
 			return CurrentPresence;
 		}
 		/// <summary>
@@ -494,9 +506,12 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			CurrentPresence.State = state;
-			SetPresence(CurrentPresence);
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                CurrentPresence.State = state;
+                SetPresence(CurrentPresence);
+            }
 			return CurrentPresence;
 		}
 		/// <summary>
@@ -509,9 +524,13 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			CurrentPresence.Party = party;
-			SetPresence(CurrentPresence);
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                CurrentPresence.Party = party;
+            }
+
+            SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
 		/// <summary>
@@ -526,10 +545,10 @@ namespace DiscordRPC
                 throw new UninitializedException();
 
             if (CurrentPresence == null) return null;
-			if (CurrentPresence.Party == null)
-				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
+            if (CurrentPresence.Party == null)
+                throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-			try { UpdatePartySize(size, CurrentPresence.Party.Max); } catch (Exception) { throw; }
+            try { UpdatePartySize(size, CurrentPresence.Party.Max); } catch (Exception) { throw; }            
 			return CurrentPresence;
 		}
 		/// <summary>
@@ -548,13 +567,16 @@ namespace DiscordRPC
 			if (CurrentPresence.Party == null)
 				throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-			CurrentPresence.Party.Size = size;
-			CurrentPresence.Party.Max = max;
+            lock (_sync)
+            {
+                CurrentPresence.Party.Size = size;
+                CurrentPresence.Party.Max = max;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
-
-
+        
 		/// <summary>
 		/// Updates the large <see cref="Assets"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Both <paramref name="key"/> and <paramref name="tooltip"/> are optional and will be ignored it null.
 		/// </summary>
@@ -566,10 +588,14 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
-			CurrentPresence.Assets.LargeImageKey = key ?? CurrentPresence.Assets.LargeImageKey;
-			CurrentPresence.Assets.LargeImageText = tooltip ?? CurrentPresence.Assets.LargeImageText;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
+                CurrentPresence.Assets.LargeImageKey = key ?? CurrentPresence.Assets.LargeImageKey;
+                CurrentPresence.Assets.LargeImageText = tooltip ?? CurrentPresence.Assets.LargeImageText;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
@@ -585,10 +611,14 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
-			CurrentPresence.Assets.SmallImageKey = key ?? CurrentPresence.Assets.SmallImageKey;
-			CurrentPresence.Assets.SmallImageText = tooltip ?? CurrentPresence.Assets.SmallImageText;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
+                CurrentPresence.Assets.SmallImageKey = key ?? CurrentPresence.Assets.SmallImageKey;
+                CurrentPresence.Assets.SmallImageText = tooltip ?? CurrentPresence.Assets.SmallImageText;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
@@ -603,8 +633,12 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			CurrentPresence.Secrets = secrets;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                CurrentPresence.Secrets = secrets;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
@@ -625,9 +659,13 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
-			CurrentPresence.Timestamps.Start = time;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
+                CurrentPresence.Timestamps.Start = time;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
@@ -648,24 +686,32 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) CurrentPresence = new RichPresence();
-			if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
-			CurrentPresence.Timestamps.End = time;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) CurrentPresence = new RichPresence();
+                if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
+                CurrentPresence.Timestamps.End = time;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
 
-		/// <summary>
-		/// Sets the start and end time of <see cref="CurrentPresence"/> to null and sends it to Discord.
-		/// </summary>
-		/// <returns>Updated Rich Presence</returns>
-		public RichPresence UpdateClearTime()
-		{
+        /// <summary>
+        /// Sets the start and end time of <see cref="CurrentPresence"/> to null and sends it to Discord.
+        /// </summary>
+        /// <returns>Updated Rich Presence</returns>
+        public RichPresence UpdateClearTime()
+        {
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) return null;
-			CurrentPresence.Timestamps = null;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) return null;
+                CurrentPresence.Timestamps = null;
+            }
+
 			SetPresence(CurrentPresence);
 			return CurrentPresence;
 		}
@@ -743,7 +789,10 @@ namespace DiscordRPC
                 Logger.Warning("Client has not yet initialized, but events are being subscribed too. Storing them as state instead.");
             }
 
-			Subscription = type;
+            lock (_sync)
+            {
+                Subscription = type;
+            }
 		}
 
 		/// <summary>

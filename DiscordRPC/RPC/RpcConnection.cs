@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Newtonsoft.Json;
 using DiscordRPC.Logging;
+using DiscordRPC.Events;
 
 namespace DiscordRPC.RPC
 {
@@ -50,6 +51,11 @@ namespace DiscordRPC.RPC
 			}
 		}
 		private ILogger _logger;
+
+        /// <summary>
+        /// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
+        /// </summary>
+        public event OnRpcMessageEvent OnRpcMessage;
 
 		#region States
 
@@ -164,6 +170,19 @@ namespace DiscordRPC.RPC
 		/// <param name="message">The message to add</param>
 		private void EnqueueMessage(IMessage message)
 		{
+            //Invoke the message
+            try
+            {
+                if (OnRpcMessage != null)
+                    OnRpcMessage.Invoke(this, message);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Unhandled Exception while processing event: {0}", e.GetType().FullName);
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
+
             //Small queue sizes should just ignore messages
             if (_maxRxQueueSize <= 0)
             {

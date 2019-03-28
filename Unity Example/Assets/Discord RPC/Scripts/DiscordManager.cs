@@ -196,7 +196,8 @@ public class DiscordManager : MonoBehaviour {
         _client = new DiscordRPC.DiscordRpcClient(
             applicationID,                                  //The Discord Application ID            
             pipe: (int)targetPipe,                          //The target pipe to connect too
-            logger: logger,                                 //The logger
+            logger: logger,                                 //The logger,
+            autoEvents: false,                              //WE will manually invoke events
             client: new DiscordRPC.Unity.UnityNamedPipe()   //The client for the pipe to use. Unity MUST use a NativeNamedPipeClient since its managed client is broken.
         );
 

@@ -75,25 +75,29 @@ namespace DiscordRPC.Example
 
         static void BasicExample()
         {
-            //Create a new client
+            // == Create the client
             var client = new DiscordRpcClient("424087019149328395")
             {
                 Logger = new Logging.ConsoleLogger(logLevel, true)
             };
-            
-            //Create some events so we know things are happening
-            client.OnReady += (sender, msg) => { Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
-            client.OnPresenceUpdate += (sender, msg) => { Console.WriteLine("Presence has been updated!"); };
 
-            //Create a timer that will regularly call invoke
-            var timer = new System.Timers.Timer(150);
-            timer.Elapsed += (sender, evt) => { client.Invoke(); };
-            timer.Start();
+            // == Subscribe to some events
+            client.OnReady += (sender, msg) =>
+            {
+                //Create some events so we know things are happening
+                Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
+            };
 
-            //Connect
+            client.OnPresenceUpdate += (sender, msg) => 
+            {
+                //The presence has updated
+                Console.WriteLine("Presence has been updated! ");
+            };
+
+            // == Initialize
             client.Initialize();
 
-            //Send a presence. Do this as many times as you want
+            // == Set the presence
             client.SetPresence(new RichPresence()
             {
                 Details = "A Basic Example",
@@ -101,19 +105,24 @@ namespace DiscordRPC.Example
                 Timestamps = Timestamps.FromTimeSpan(10)
             });
 
-            //Do the rest of your program.
+            // == Do the rest of your program.
             //Simulated by a Console.ReadKey
+            // etc...
             Console.ReadKey();
 
-            //At the very end we need to dispose of it
-            timer.Dispose();
+            // == At the very end we need to dispose of it
             client.Dispose();
         }
 
 		static void FullClientExample()
 		{
-	    	//Create a new DiscordRpcClient. We are filling some of the defaults as examples.
-    	    using (client = new DiscordRpcClient("424087019149328395", pipe: discordPipe, logger: new Logging.ConsoleLogger(logLevel, true), messageQueueSize: 128))
+            //Create a new DiscordRpcClient. We are filling some of the defaults as examples.
+            using (client = new DiscordRpcClient("424087019149328395",          //The client ID of your Discord Application
+                    pipe: discordPipe,                                          //The pipe number we can locate discord on. If -1, then we will scan.
+                    logger: new Logging.ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
+                    autoEvents: true,                                           //Should the events be automatically called?
+                    client: new IO.ManagedNamedPipeClient()                     //The pipe client to use. Required in mono to be changed.
+                ))
             {
                 //If you are going to make use of the Join / Spectate buttons, you are required to register the URI Scheme with the client.
                 client.RegisterUriScheme();
@@ -187,7 +196,6 @@ namespace DiscordRPC.Example
 				MainLoop();
 			}
 		}
-
 		static void MainLoop()
 		{
 			/*
@@ -201,8 +209,9 @@ namespace DiscordRPC.Example
 			{
 				//We will invoke the client events. 
 				// In a game situation, you would do this in the Update.
-				if (client != null)
-					client.Invoke();
+                // Not required if AutoEvents is enabled.
+				//if (client != null && !client.AutoEvents)
+				//	client.Invoke();
 
 				//Try to read any keys if available
 				if (Console.KeyAvailable)
@@ -210,7 +219,7 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(100);
+				Thread.Sleep(5000);
 
 				//client.SetPresence(presence);
 			}
@@ -218,165 +227,7 @@ namespace DiscordRPC.Example
 			Console.WriteLine("Press any key to terminate");
 			Console.ReadKey();
 		}
-
-		static int cursorIndex = 0;
-		static string previousCommand = "";
-		static void ProcessKey()
-		{
-			//Read they key
-			var key = Console.ReadKey(true);
-			switch(key.Key)
-			{
-				case ConsoleKey.Enter:
-					//Write the new line
-					Console.WriteLine();
-					cursorIndex = 0;
-					
-					//The enter key has been sent, so send the message
-					previousCommand = word.ToString();
-					ExecuteCommand(previousCommand);
-
-					word.Clear();
-					break;
-
-				case ConsoleKey.Backspace:
-					word.Remove(cursorIndex - 1, 1);
-					Console.Write("\r                                         \r");
-					Console.Write(word);
-					cursorIndex--;
-					break;
-
-				case ConsoleKey.Delete:
-					if (cursorIndex < word.Length)
-					{
-						word.Remove(cursorIndex, 1);
-						Console.Write("\r                                         \r");
-						Console.Write(word);
-					}
-					break;
-
-				case ConsoleKey.LeftArrow:
-					cursorIndex--;
-					break;
-
-				case ConsoleKey.RightArrow:
-					cursorIndex++;
-					break;
-
-				case ConsoleKey.UpArrow:
-					word.Clear().Append(previousCommand);
-					Console.Write("\r                                         \r");
-					Console.Write(word);
-					break;
-
-				default:
-					if (!Char.IsControl(key.KeyChar))
-					{
-						//Some other character key was sent
-						Console.Write(key.KeyChar);
-						word.Insert(cursorIndex, key.KeyChar);
-						Console.Write("\r                                         \r");
-						Console.Write(word);
-						cursorIndex++;
-					}
-					break;
-			}
-
-			if (cursorIndex < 0) cursorIndex = 0;
-			if (cursorIndex >= Console.BufferWidth) cursorIndex = Console.BufferWidth - 1;
-			Console.SetCursorPosition(cursorIndex, Console.CursorTop);
-		}
-
-		static void ExecuteCommand(string word)
-		{
-			//Trim the extra spacing
-			word = word.Trim();
-
-			//Prepare the command and its body
-			string command = word;
-			string body = "";
-
-			//Split the command and the values.
-			int whitespaceIndex = word.IndexOf(' ');
-			if (whitespaceIndex >= 0)
-			{
-				command = word.Substring(0, whitespaceIndex);
-				if (whitespaceIndex < word.Length)
-					body = word.Substring(whitespaceIndex + 1);
-			}
-
-			//Parse the command
-			switch (command.ToLowerInvariant())
-			{
-				case "close":
-					client.Dispose();
-					break;
-
-				#region State & Details
-				case "state":
-					presence.State = body;
-					client.SetPresence(presence);
-					break;
-
-				case "details":
-					presence.Details = body;
-					client.SetPresence(presence);
-					break;
-				#endregion
-
-				#region Asset Examples
-				case "large_key":
-					//If we do not have a asset object already, we must create it
-					if (!presence.HasAssets())
-						presence.Assets = new Assets();
-
-					//Set the key then send it away
-					presence.Assets.LargeImageKey = body;
-					client.SetPresence(presence);
-					break;
-
-				case "large_text":
-					//If we do not have a asset object already, we must create it
-					if (!presence.HasAssets())
-						presence.Assets = new Assets();
-
-					//Set the key then send it away
-					presence.Assets.LargeImageText = body;
-					client.SetPresence(presence);
-					break;
-
-				case "small_key":
-					//If we do not have a asset object already, we must create it
-					if (!presence.HasAssets())
-						presence.Assets = new Assets();
-
-					//Set the key then send it away
-					presence.Assets.SmallImageKey = body;
-					client.SetPresence(presence);
-					break;
-
-				case "small_text":
-					//If we do not have a asset object already, we must create it
-					if (!presence.HasAssets())
-						presence.Assets = new Assets();
-
-					//Set the key then send it away
-					presence.Assets.SmallImageText = body;
-					client.SetPresence(presence);
-					break;
-				#endregion
-
-				case "help":
-					Console.WriteLine("Available Commands: state, details, large_key, large_text, small_key, small_text");
-					break;
-
-				default:
-					Console.WriteLine("Unkown Command '{0}'. Try 'help' for a list of commands", command);
-					break;
-			}
-
-		}
-
+        
 		#region Events
 
 		#region State Events
@@ -500,9 +351,168 @@ namespace DiscordRPC.Example
 			//All done.
 			Console.WriteLine(" - Sent a {0} invite to the client {1}", accept ? "ACCEPT" : "REJECT", args.User.Username);
 		}
-		#endregion
+        #endregion
 
-		#endregion
-		
-	}
+        #endregion
+
+
+        static int cursorIndex = 0;
+        static string previousCommand = "";
+        static void ProcessKey()
+        {
+            //Read they key
+            var key = Console.ReadKey(true);
+            switch (key.Key)
+            {
+                case ConsoleKey.Enter:
+                    //Write the new line
+                    Console.WriteLine();
+                    cursorIndex = 0;
+
+                    //The enter key has been sent, so send the message
+                    previousCommand = word.ToString();
+                    ExecuteCommand(previousCommand);
+
+                    word.Clear();
+                    break;
+
+                case ConsoleKey.Backspace:
+                    word.Remove(cursorIndex - 1, 1);
+                    Console.Write("\r                                         \r");
+                    Console.Write(word);
+                    cursorIndex--;
+                    break;
+
+                case ConsoleKey.Delete:
+                    if (cursorIndex < word.Length)
+                    {
+                        word.Remove(cursorIndex, 1);
+                        Console.Write("\r                                         \r");
+                        Console.Write(word);
+                    }
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    cursorIndex--;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    cursorIndex++;
+                    break;
+
+                case ConsoleKey.UpArrow:
+                    word.Clear().Append(previousCommand);
+                    Console.Write("\r                                         \r");
+                    Console.Write(word);
+                    break;
+
+                default:
+                    if (!Char.IsControl(key.KeyChar))
+                    {
+                        //Some other character key was sent
+                        Console.Write(key.KeyChar);
+                        word.Insert(cursorIndex, key.KeyChar);
+                        Console.Write("\r                                         \r");
+                        Console.Write(word);
+                        cursorIndex++;
+                    }
+                    break;
+            }
+
+            if (cursorIndex < 0) cursorIndex = 0;
+            if (cursorIndex >= Console.BufferWidth) cursorIndex = Console.BufferWidth - 1;
+            Console.SetCursorPosition(cursorIndex, Console.CursorTop);
+        }
+
+        static void ExecuteCommand(string word)
+        {
+            //Trim the extra spacing
+            word = word.Trim();
+
+            //Prepare the command and its body
+            string command = word;
+            string body = "";
+
+            //Split the command and the values.
+            int whitespaceIndex = word.IndexOf(' ');
+            if (whitespaceIndex >= 0)
+            {
+                command = word.Substring(0, whitespaceIndex);
+                if (whitespaceIndex < word.Length)
+                    body = word.Substring(whitespaceIndex + 1);
+            }
+
+            //Parse the command
+            switch (command.ToLowerInvariant())
+            {
+                case "close":
+                    client.Dispose();
+                    break;
+
+                #region State & Details
+                case "state":
+                    presence.State = body;
+                    client.SetPresence(presence);
+                    break;
+
+                case "details":
+                    presence.Details = body;
+                    client.SetPresence(presence);
+                    break;
+                #endregion
+
+                #region Asset Examples
+                case "large_key":
+                    //If we do not have a asset object already, we must create it
+                    if (!presence.HasAssets())
+                        presence.Assets = new Assets();
+
+                    //Set the key then send it away
+                    presence.Assets.LargeImageKey = body;
+                    client.SetPresence(presence);
+                    break;
+
+                case "large_text":
+                    //If we do not have a asset object already, we must create it
+                    if (!presence.HasAssets())
+                        presence.Assets = new Assets();
+
+                    //Set the key then send it away
+                    presence.Assets.LargeImageText = body;
+                    client.SetPresence(presence);
+                    break;
+
+                case "small_key":
+                    //If we do not have a asset object already, we must create it
+                    if (!presence.HasAssets())
+                        presence.Assets = new Assets();
+
+                    //Set the key then send it away
+                    presence.Assets.SmallImageKey = body;
+                    client.SetPresence(presence);
+                    break;
+
+                case "small_text":
+                    //If we do not have a asset object already, we must create it
+                    if (!presence.HasAssets())
+                        presence.Assets = new Assets();
+
+                    //Set the key then send it away
+                    presence.Assets.SmallImageText = body;
+                    client.SetPresence(presence);
+                    break;
+                #endregion
+
+                case "help":
+                    Console.WriteLine("Available Commands: state, details, large_key, large_text, small_key, small_text");
+                    break;
+
+                default:
+                    Console.WriteLine("Unkown Command '{0}'. Try 'help' for a list of commands", command);
+                    break;
+            }
+
+        }
+
+    }
 }

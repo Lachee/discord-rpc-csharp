@@ -83,4 +83,12 @@ namespace DiscordRPC.Events
 	/// <param name="sender">The Discord client handler that sent this event</param>
 	/// <param name="args">The arguments supplied with the event</param>
 	public delegate void OnConnectionFailedEvent(object sender, ConnectionFailedMessage args);
+
+
+    /// <summary>
+    /// A RPC Message is received.
+    /// </summary>
+    /// <param name="sender">The handler that sent this event</param>
+    /// <param name="msg">The raw message from the RPC</param>
+    public delegate void OnRpcMessageEvent(object sender, IMessage msg);
 }
