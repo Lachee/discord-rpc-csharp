@@ -148,11 +148,11 @@ namespace DiscordRPC.Example
 				{
 					//These secrets should contain enough data for external clients to be able to know which
 					// game to connect too. A simple approach would be just to use IP address, but this is highly discouraged
-					// and can leave your players vulnerable! 
+					// and can leave your players vulnerable!
 					JoinSecret = "join_myuniquegameid",
 					SpectateSecret = "spectate_myuniquegameid"
 				};
-                
+
 				//We also need to generate a initial party. This is because Join requires the party to be created too.
 				// If no party is set, the join feature will not work and may cause errors within the discord client itself.
 				presence.Party = new Party()
@@ -210,7 +210,7 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(1000);
+				Thread.Sleep(100);
 
 				//client.SetPresence(presence);
 			}

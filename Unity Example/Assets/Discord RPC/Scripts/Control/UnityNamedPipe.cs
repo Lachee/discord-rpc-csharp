@@ -39,7 +39,7 @@ namespace DiscordRPC.Unity
                 //Iterate until we connect to a pipe
                 for (int i = 0; i < 10; i++)
                 {
-                    if (AttemptConnection(i))
+                    if (AttemptConnection(i) || AttemptConnection(i, true))
                         return true;
                 }
 
@@ -49,11 +49,11 @@ namespace DiscordRPC.Unity
             else
             {
                 //We have a set one so we should just straight up try to connect to it
-                return AttemptConnection(pipe);
+                return AttemptConnection(pipe) || AttemptConnection(pipe, true);
             }
         }
 
-        private bool AttemptConnection(int pipe)
+        private bool AttemptConnection(int pipe, bool doSandbox = false)
         { 
             //Make sure the stream is null
             if (_stream != null)
@@ -71,11 +71,19 @@ namespace DiscordRPC.Unity
 
             try
             {
+                //Prepare the sandbox
+                string sandbox = doSandbox ? GetPipeSandbox() : "";
+                if (doSandbox && sandbox == null)
+                {
+                    Logger.Trace("Skipping sandbox because this platform does not support it.");
+                    return false;
+                }
+
                 //Prepare the name
                 string pipename = GetPipeName(pipe);
 
                 //Attempt to connect
-                Logger.Info("Connecting to " + pipename);
+                Logger.Info("Connecting to " + pipename + " (" + sandbox +")");
                 ConnectedPipe = pipe;
                 _stream = new NamedPipeClientStream(".", pipename);
                 _stream.Connect();
@@ -185,24 +193,49 @@ namespace DiscordRPC.Unity
             //We must have failed the try catch
             return false;
         }
-        
-        private string GetPipeName(int pipe)
-        {
-#if (UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX) || UNITY_STANDALONE_LINUX
 
+        private string GetPipeName(int pipe, string sandbox = "")
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                default:
+
+#if !UNITY_EDITOR_OSX
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                    Logger.Trace("PIPE WIN");
+                    return sandbox + string.Format(PIPE_NAME, pipe);
+#endif
+
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    Logger.Trace("PIPE UNIX / MACOSX");
+                    return GetEnviromentTemp() + "/" + sandbox + string.Format(PIPE_NAME, pipe);
+            }
+        }
+
+        private string GetPipeSandbox()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                default:
+                    return null;
+                case PlatformID.Unix:
+                    return "snap.discord/";
+            }
+        }
+
+        private string GetEnviromentTemp()
+        {
             string temp = null;
             temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
             temp = temp ?? Environment.GetEnvironmentVariable("TMPDIR");
             temp = temp ?? Environment.GetEnvironmentVariable("TMP");
             temp = temp ?? Environment.GetEnvironmentVariable("TEMP");
             temp = temp ?? "/tmp";
-
-            Logger.Trace("PIPE UNIX / MACOSX");
-            return temp + "/" + string.Format(PIPE_NAME, pipe);
-#else
-            Logger.Trace("PIPE WIN");
-            return string.Format(PIPE_NAME, pipe);
-#endif
+            return temp;
         }
     }
 }
