@@ -99,7 +99,11 @@ void Initialize()
 
 **Invoking**
 
-This stage is very important and is often missed. The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread saftey and order of operations (especially important in Unity3D applications).
+**Invoking is optional. Use this when thread saftey is paramount.**
+
+The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread saftey and order of operations (especially important in Unity3D applications).
+
+In order to enable this method of event calling, you need to set it in teh constructor of the DiscordRpcClient under `autoEvents`.
 ```csharp
 //The main loop of your application, or some sort of timer. Literally the Update function in Unity3D
 void Update() 
