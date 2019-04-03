@@ -124,51 +124,51 @@ namespace DiscordRPC
 
 		/// <summary>
 		/// Called when the discord client is ready to send and receive messages.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
+		/// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
 		/// </summary>
 		public event OnReadyEvent OnReady;
 
-		/// <summary>
-		/// Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnCloseEvent OnClose;
+        /// <summary>
+        /// Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
+		/// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnCloseEvent OnClose;
 
-		/// <summary>
-		/// Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnErrorEvent OnError;
+        /// <summary>
+        /// Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnErrorEvent OnError;
 
-		/// <summary>
-		/// Called when the Discord Client has updated the presence.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnPresenceUpdateEvent OnPresenceUpdate;
+        /// <summary>
+        /// Called when the Discord Client has updated the presence.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnPresenceUpdateEvent OnPresenceUpdate;
 
-		/// <summary>
-		/// Called when the Discord Client has subscribed to an event.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnSubscribeEvent OnSubscribe;
+        /// <summary>
+        /// Called when the Discord Client has subscribed to an event.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnSubscribeEvent OnSubscribe;
 
-		/// <summary>
-		/// Called when the Discord Client has unsubscribed from an event.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnUnsubscribeEvent OnUnsubscribe;
+        /// <summary>
+        /// Called when the Discord Client has unsubscribed from an event.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnUnsubscribeEvent OnUnsubscribe;
 
-		/// <summary>
-		/// Called when the Discord Client wishes for this process to join a game.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnJoinEvent OnJoin;
+        /// <summary>
+        /// Called when the Discord Client wishes for this process to join a game.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnJoinEvent OnJoin;
 
-		/// <summary>
-		/// Called when the Discord Client wishes for this process to spectate a game.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnSpectateEvent OnSpectate;
+        /// <summary>
+        /// Called when the Discord Client wishes for this process to spectate a game.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnSpectateEvent OnSpectate;
 
 		/// <summary>
 		/// Called when another discord user requests permission to join this game.
@@ -176,16 +176,17 @@ namespace DiscordRPC
 		/// </summary>
 		public event OnJoinRequestedEvent OnJoinRequested;
 
-		/// <summary>
-		/// The connection to the discord client was succesfull. This is called before <see cref="MessageType.Ready"/>.
-		/// <para>This event is not invoked untill <see cref="Invoke"/> is executed.</para>
-		/// </summary>
-		public event OnConnectionEstablishedEvent OnConnectionEstablished;
+        /// <summary>
+        /// The connection to the discord client was succesfull. This is called before <see cref="MessageType.Ready"/>.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnConnectionEstablishedEvent OnConnectionEstablished;
 
-		/// <summary>
-		/// Failed to establish any connection with discord. Discord is potentially not running?
-		/// </summary>
-		public event OnConnectionFailedEvent OnConnectionFailed;
+        /// <summary>
+        /// Failed to establish any connection with discord. Discord is potentially not running?
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnConnectionFailedEvent OnConnectionFailed;
 
         /// <summary>
         /// The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.
@@ -252,7 +253,8 @@ namespace DiscordRPC
 		#region Message Handling
 		/// <summary>
 		/// Dequeues all the messages from Discord, processes them and then invoke appropriate event handlers. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked in the order they were invoked.
-		/// </summary>
+		/// <para>This method cannot be used if <see cref="AutoEvents"/> is enabled.</para>
+        /// </summary>
 		/// <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
 		public IMessage[] Invoke()
 		{

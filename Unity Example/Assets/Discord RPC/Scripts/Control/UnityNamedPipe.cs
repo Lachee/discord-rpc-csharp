@@ -212,7 +212,7 @@ namespace DiscordRPC.Unity
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     Logger.Trace("PIPE UNIX / MACOSX");
-                    return GetEnviromentTemp() + "/" + sandbox + string.Format(PIPE_NAME, pipe);
+                    return Path.Combine(GetEnviromentTemp(), sandbox + string.Format(PIPE_NAME, pipe));
             }
         }
 
