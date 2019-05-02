@@ -84,7 +84,6 @@ namespace DiscordRPC
 		/// <summary>
 		/// Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.
 		/// </summary>
-		/// <returns></returns>
 		public RichPresence Clone()
 		{
 			return new RichPresence
@@ -187,7 +186,7 @@ namespace DiscordRPC
         /// <summary>
         /// Does the Rich Presence have valid timestamps?
         /// </summary>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         public bool HasTimestamps()
 		{
 			return this.Timestamps != null && (Timestamps.Start != null || Timestamps.End != null);
@@ -424,7 +423,7 @@ namespace DiscordRPC
 		/// Creates a secret word using more readable friendly characters. Useful for debugging purposes. This is not a cryptographic function and should NOT be used for sensitive information.
 		/// </summary>
 		/// <param name="random">The random used to generate the characters</param>
-		/// <returns></returns>
+		/// <returns>n/a</returns>
 		public static string CreateFriendlySecret(Random random)
 		{
 			string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
