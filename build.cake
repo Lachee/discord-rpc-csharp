@@ -51,7 +51,7 @@ Task ("OutputVariables")
 
 Task("SetVersion")
    .Does(() => {
-	   version = major_version + "." + buildCounter.ToString() + ".0";
+	   //version = major_version + "." + buildCounter.ToString() + ".0";
 	   Information("Version: " + version);
        ReplaceRegexInFiles(asm,  "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))", version);
    });
