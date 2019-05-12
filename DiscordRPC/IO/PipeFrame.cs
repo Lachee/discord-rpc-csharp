@@ -149,6 +149,9 @@ namespace DiscordRPC.IO
 
 		}
 
+        /// <summary>
+        /// Returns minimum value between a int and a unsigned int
+        /// </summary>
 		private int Min(int a, uint b)
 		{
 			if (b >= a) return a;

@@ -48,7 +48,7 @@ namespace DiscordRPC
 		/// <summary>
 		/// The dispose state of the client object.
 		/// </summary>
-		public bool Disposed { get; private set; }
+		public bool IsDisposed { get; private set; }
         
 		/// <summary>
 		/// The logger used this client and its associated components. <see cref="ILogger"/> are not called safely and can come from any thread. It is upto the <see cref="ILogger"/> to account for this and apply appropriate thread safe methods.
@@ -62,7 +62,7 @@ namespace DiscordRPC
 				if (connection != null) connection.Logger = value;
 			}
 		}
-		private ILogger _logger = new NullLogger();
+        private ILogger _logger;
 		
         /// <summary>
         /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called. 
@@ -425,7 +425,7 @@ namespace DiscordRPC
         /// <param name="acceptRequest">Accept the join request.</param>
         public void Respond(JoinRequestMessage request, bool acceptRequest)
 		{
-			if (Disposed)
+			if (IsDisposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
 			if (connection == null)
@@ -443,7 +443,7 @@ namespace DiscordRPC
 		/// <param name="presence">The Rich Presence to set on the current Discord user.</param>
 		public void SetPresence(RichPresence presence)
 		{
-			if (Disposed)
+			if (IsDisposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
             if (connection == null)
@@ -724,7 +724,7 @@ namespace DiscordRPC
 		/// </summary>
 		public void ClearPresence()
 		{
-			if (Disposed)
+			if (IsDisposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
             if (!IsInitialized)
@@ -809,7 +809,7 @@ namespace DiscordRPC
 			if (type == EventType.None) return;
 
 			//We cannot do anything if we are disposed or missing our connection.
-			if (Disposed)
+			if (IsDisposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
             if (!IsInitialized)
@@ -856,7 +856,7 @@ namespace DiscordRPC
 		/// <returns></returns>
 		public bool Initialize()
 		{
-			if (Disposed)
+			if (IsDisposed)
 				throw new ObjectDisposedException("Discord IPC Client");
 
             if (IsInitialized)
@@ -885,9 +885,9 @@ namespace DiscordRPC
 		/// </summary>
 		public void Dispose()
 		{
-			if (Disposed) return;
+			if (IsDisposed) return;
             if (IsInitialized) Deinitialize();
-            Disposed = true;
+            IsDisposed = true;
 		}
 
 	}
