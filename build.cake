@@ -54,6 +54,7 @@ Task("SetVersion")
 	   //version = major_version + "." + buildCounter.ToString() + ".0";
 	   Information("Version: " + version);
        ReplaceRegexInFiles(asm,  "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))", version);
+       ReplaceRegexInFiles(asm,  "(?<=Version\\(\")(.+?)(?=\"\\))", version);
    });
 
 // Builds the code
