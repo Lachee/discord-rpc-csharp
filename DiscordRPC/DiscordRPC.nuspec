@@ -23,7 +23,7 @@ This is an unoffical, non-discord supported library.
     <tags>Discord Discord Rich Presence RPC Discord-RPC</tags>
 
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="11.0.1" />
+      <dependency id="Newtonsoft.Json" version="12.0.0" />
     </dependencies>
   </metadata>
 
