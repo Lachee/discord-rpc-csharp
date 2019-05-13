@@ -30,7 +30,7 @@ namespace DiscordRPC.Examples.RichPresence
 			UpdateFields(presence);
 
 			//Register to a presence change
-			DiscordManager.instance.events.OnPresenceUpdate.AddListener((message) =>
+			DiscordManager.current.events.OnPresenceUpdate.AddListener((message) =>
 			{
 				Debug.Log("Received a new presence! Current App: " + message.ApplicationID + ", " + message.Name);
 				UpdateFields(new DiscordPresence(message.Presence));
@@ -40,7 +40,7 @@ namespace DiscordRPC.Examples.RichPresence
 		public void SendPresence()
 		{
 			UpdatePresence();
-			DiscordManager.instance.SetPresence(presence);
+			DiscordManager.current.SetPresence(presence);
 		}
 
 		public void UpdateFields(DiscordPresence presence)

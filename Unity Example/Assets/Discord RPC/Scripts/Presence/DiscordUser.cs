@@ -2,6 +2,10 @@
 using System.IO;
 using UnityEngine;
 
+#if UNITY_2017_4_OR_NEWER
+using UnityEngine.Networking;
+#endif
+
 [System.Serializable]
 public class DiscordUser
 {
@@ -201,53 +205,80 @@ public class DiscordUser
 			}
 			else
 			{
-				using (WWW www = new WWW(GetAvatarURL(DiscordUser.AvatarFormat, size)))
-				{
-					//Download the texture
-					yield return www;
-
-					//Update the holder
-					www.LoadImageIntoTexture(avatarTexture);
-
-                    //Encode and cache the files
-                    if (CacheLevel != CacheLevelFlag.None)
+#if UNITY_2017_4_OR_NEWER
+                using (UnityWebRequest req = UnityWebRequestTexture.GetTexture(GetAvatarURL(DiscordUser.AvatarFormat, size)))
+                {
+                    //Download the texture
+                    yield return req.SendWebRequest();
+                    if (req.isNetworkError || req.isHttpError)
                     {
-                        //Create the directory if it doesnt already exist
-                        if (!Directory.Exists(CacheDirectory))
-                            Directory.CreateDirectory(CacheDirectory);
-
-                        Debug.Log("<color=#FA0B0F>Saving Cache:</color> " + path);
-
-                        //Encode the image
-                        byte[] bytes;
-                        switch (DiscordUser.AvatarFormat)
-                        {
-                            default:
-                            case DiscordAvatarFormat.PNG:
-                                bytes = avatarTexture.EncodeToPNG();
-                                break;
-
-                            case DiscordAvatarFormat.JPEG:
-                                bytes = avatarTexture.EncodeToJPG();
-                                break;
-                        }
-
-                        //Save the image
-                        File.WriteAllBytes(path, bytes);
+                        //Report errors
+                        Debug.LogError("Failed to download user avatar: " + req.error);
                     }
-				}
+                    else
+                    {
+                        //Update the avatar
+                        avatarTexture = DownloadHandlerTexture.GetContent(req);
+                    }
+                }
+#else
+                using (WWW www = new WWW(GetAvatarURL(DiscordUser.AvatarFormat, size)))
+                {
+                    //Download the texture
+                    yield return www;
+
+                    //Update the holder
+                    www.LoadImageIntoTexture(avatarTexture);
+                }
+#endif
 			}
 
-			//Apply our avatar and update our cache
-			_avatar = avatarTexture;
-			_cacheFormat = DiscordUser.AvatarFormat;
-			_cacheSize = size;
+            //Apply our avatar and update our cache
+            if (avatarTexture != null)
+            {
+                CacheAvatarTexture(avatarTexture, path);
+                _avatar = avatarTexture;
+                _cacheFormat = DiscordUser.AvatarFormat;
+                _cacheSize = size;
 
-			//Execute the callback (if any)
-			if (callback != null)
-				callback.Invoke(this, avatarTexture);
+                //Execute the callback (if any)
+                if (callback != null)
+                    callback.Invoke(this, avatarTexture);
+            }
 		}
 	}
+    
+    /// <summary>Caches the avatar</summary>
+    private void CacheAvatarTexture(Texture2D texture, string path)
+    {
+        //Encode and cache the files
+        if (CacheLevel != CacheLevelFlag.None)
+        {
+            //Create the directory if it doesnt already exist
+            if (!Directory.Exists(CacheDirectory))
+                Directory.CreateDirectory(CacheDirectory);
+
+            Debug.Log("<color=#FA0B0F>Saving Cache:</color> " + path);
+
+            //Encode the image
+            byte[] bytes;
+            switch (DiscordUser.AvatarFormat)
+            {
+                default:
+                case DiscordAvatarFormat.PNG:
+                    bytes = texture.EncodeToPNG();
+                    break;
+
+                case DiscordAvatarFormat.JPEG:
+                    bytes = texture.EncodeToJPG();
+                    break;
+            }
+
+            //Save the image
+            File.WriteAllBytes(path, bytes);
+        }
+    }
+
 
     /// <summary>
     /// Gets the default avatar for the given user. Will check the cache first, and if none are available it will then download the default from discord.	
@@ -291,29 +322,47 @@ public class DiscordUser
 		else
 		{
 			string url = string.Format("https://{0}/embed/avatars/{1}.png?size={2}", _cdnEndpoint, discrim, (int)size);
-			using (WWW www = new WWW(url))
-			{
-				//Download the texture
-				yield return www;
 
-				//Update the holder
-				www.LoadImageIntoTexture(avatarTexture);
-
-                //We have been told to cache, so do so.
-                if (CacheLevel != CacheLevelFlag.None)
+#if UNITY_2017_4_OR_NEWER
+            using (UnityWebRequest req = UnityWebRequestTexture.GetTexture(url))
+            {
+                //Download the texture
+                yield return req.SendWebRequest();
+                if (req.isNetworkError || req.isHttpError)
                 {
-                    //Create the directory if it doesnt already exist
-                    if (!Directory.Exists(CacheDirectory))
-                        Directory.CreateDirectory(CacheDirectory);
-
-                    byte[] bytes = avatarTexture.EncodeToPNG();
-                    File.WriteAllBytes(path, bytes);
+                    //Report errors
+                    Debug.LogError("Failed to download default avatar: " + req.error);
                 }
-			}
-		}
+                else
+                {
+                    //Update the avatar
+                    avatarTexture = DownloadHandlerTexture.GetContent(req);
+                }
+            }
+#else
+            using (WWW www = new WWW(url))
+            {
+                //Download the texture
+                yield return www;
 
-		//Apply our avatar and update our cache
-		_avatar = avatarTexture;
+                //Update the holder
+                www.LoadImageIntoTexture(avatarTexture);
+            }
+#endif
+            //We have been told to cache, so do so.
+            if (CacheLevel != CacheLevelFlag.None)
+            {
+                //Create the directory if it doesnt already exist
+                if (!Directory.Exists(CacheDirectory))
+                    Directory.CreateDirectory(CacheDirectory);
+
+                byte[] bytes = avatarTexture.EncodeToPNG();
+                File.WriteAllBytes(path, bytes);
+            }
+        }
+            
+        //Apply our avatar and update our cache
+        _avatar = avatarTexture;
 		_cacheFormat = DiscordAvatarFormat.PNG;
 		_cacheSize = size;
 		
@@ -331,7 +380,7 @@ public class DiscordUser
             CacheDirectory = Application.dataPath + "/Discord Rpc/Cache";
     }
 
-    #region Obsolete Functions
+#region Obsolete Functions
     [System.Obsolete("Now known as GetAvatar instead.")]
 	public void CacheAvatar(MonoBehaviour coroutineCaller, DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { GetAvatar(coroutineCaller, size, callback); }
 
@@ -340,7 +389,7 @@ public class DiscordUser
 
 	[System.Obsolete("Now known as GetAGetDefaultAvatarCoroutinevatar instead.")]
 	public IEnumerator CacheDefaultAvatarCoroutine(DiscordAvatarSize size = DiscordAvatarSize.x128, AvatarDownloadCallback callback = null) { return GetDefaultAvatarCoroutine(size, callback); }
-	#endregion
+#endregion
 
 	private string GetAvatarURL(DiscordAvatarFormat format, DiscordAvatarSize size)
 	{
