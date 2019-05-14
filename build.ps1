@@ -5,7 +5,8 @@ Param(
 	[switch]$MakeNugetPackage,
 	[switch]$IgnoreLibraryBuild,
 	[int]$BuildCount,
-	[string]$BuildTag
+	[string]$BuildTag,
+    [string]$Certificate
 )
 
 function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$include_nuget)
@@ -45,9 +46,14 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$inclu
 
 function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 {
-	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
+	Write-Host "-buildCounter=$buildCount",'-buildType="Release"'
 	$args = "-buildCounter=$buildCount",'-buildType="Release"'
-	if ($buildTag) { $args += "-buildTag=$buildTag" }
+	if (![string]::IsNullOrEmpty($buildTag)) { $args += "-buildTag=$buildTag" }
+    if (![string]::IsNullOrEmpty($Certificate))
+    {
+        $args += "-signCertificate=$Certificate"
+        $args += "-signPassword=$env:CERTIFICATE_PASSWORD"
+    }
 	
 	if ($makeNuget) 
 	{
