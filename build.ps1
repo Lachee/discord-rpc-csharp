@@ -54,6 +54,7 @@ function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
         $args += "-signCertificate=$Certificate"
         $args += "-signPassword=$env:CERTIFICATE_PASSWORD"
     }
+    
 	
 	if ($makeNuget) 
 	{
