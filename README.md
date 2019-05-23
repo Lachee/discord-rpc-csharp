@@ -145,7 +145,7 @@ You can build the solution easily in Visual Studio, its a simple matter of right
 
 **Unity3D**
 
-The project does have a `Unity Pacakge` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
+The project does have a `Unity Package` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
 
 You can build the Unity3D package using the command below. Make sure you update the `DiscordRPC.dll` within the Unity Project first as it is not automatically updated:
 ```
