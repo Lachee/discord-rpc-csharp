@@ -4,7 +4,7 @@
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
-While the offical C++ library has been depreciated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
+While the offical C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
 
 Here are some key features of this library:
  - **Message Queuing**
