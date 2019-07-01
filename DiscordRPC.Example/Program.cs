@@ -219,9 +219,9 @@ namespace DiscordRPC.Example
 				
 				//This can be what ever value you want, as long as it is faster than 30 seconds.
 				//Console.Write("+");
-				Thread.Sleep(5000);
+				Thread.Sleep(25);
 
-				//client.SetPresence(presence);
+				client.SetPresence(presence);
 			}
 
 			Console.WriteLine("Press any key to terminate");
@@ -233,9 +233,12 @@ namespace DiscordRPC.Example
 		#region State Events
 		private static void OnReady(object sender, ReadyMessage args)
 		{
-			//This is called when we are all ready to start receiving and sending discord events. 
-			// It will give us some basic information about discord to use in the future.
-			
+            //This is called when we are all ready to start receiving and sending discord events. 
+            // It will give us some basic information about discord to use in the future.
+
+            //DEBUG: Update the presence timestamp
+            presence.Timestamps = Timestamps.Now;
+
 			//It can be a good idea to send a inital presence update on this event too, just to setup the inital game state.
 			Console.WriteLine("On Ready. RPC Version: {0}", args.Version);
 

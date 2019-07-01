@@ -102,6 +102,7 @@ namespace DiscordRPC.RPC
 		private int targetPipe;							    //The pipe to taget. Leave as -1 for any available pipe.
 
 		private readonly object l_rtqueue = new object();	//Lock for the send queue
+        private readonly uint _maxRtQueueSize;
 		private Queue<ICommand> _rtqueue;				    //The send queue
 
 		private readonly object l_rxqueue = new object();	//Lock for the receive queue
@@ -120,7 +121,8 @@ namespace DiscordRPC.RPC
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
         /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
-		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128)
+        /// <param name="maxRtQueueSize">The maximum size of the in queue</param>
+		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
@@ -132,7 +134,8 @@ namespace DiscordRPC.RPC
 			Logger = new ConsoleLogger();
 
 			delay = new BackoffDelay(500, 60 * 1000);
-			_rtqueue = new Queue<ICommand>();
+            _maxRtQueueSize = maxRtQueueSize;
+			_rtqueue = new Queue<ICommand>((int)_maxRtQueueSize + 1);
 
             _maxRxQueueSize = maxRxQueueSize;
             _rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
@@ -161,7 +164,17 @@ namespace DiscordRPC.RPC
 
 			//Enqueue the set presence argument
 			lock (l_rtqueue)
-				_rtqueue.Enqueue(command);
+            {
+                //If we are too big drop the last element
+                if (_rtqueue.Count == _maxRtQueueSize)
+                {
+                    Logger.Error("Too many enqueued commands, dropping oldest one. Maybe you are pushing new presences to fast?");
+                    _rtqueue.Dequeue();
+                }
+
+                //Enqueue the message
+                _rtqueue.Enqueue(command);
+            }
 		}
 
 		/// <summary>
