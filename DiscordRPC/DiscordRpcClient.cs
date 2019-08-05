@@ -122,7 +122,6 @@ namespace DiscordRPC
             }
         }
 		private bool _shutdownOnly = true;
-
         private object _sync = new object();
 
 		#region Events
@@ -484,7 +483,7 @@ namespace DiscordRPC
 			}
 
             //Update our local store
-            lock (_sync) { CurrentPresence = presence.Clone(); }
+            lock (_sync) { CurrentPresence = presence != null ? presence.Clone() : null; }
         }
 
 		#region Updates
@@ -837,9 +836,9 @@ namespace DiscordRPC
 			if ((type & EventType.Join) == EventType.Join)
 				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
 
-			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
-				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
-		}
+            if ((type & EventType.JoinRequest) == EventType.JoinRequest)
+                connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
+        }
 
         #endregion
 

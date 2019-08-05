@@ -33,6 +33,7 @@ namespace DiscordRPC.Message
 				case ServerEvent.ActivitySpectate:
 					Event = EventType.Spectate;
 					break;
+
 			}
 		}
 	}
