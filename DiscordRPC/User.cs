@@ -34,12 +34,12 @@ namespace DiscordRPC
 			/// </summary>
 			WebP,
 
-			/// <summary>
-			/// Graphics Interchange Format (.gif)
-			/// <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
-			/// </summary>
-			GIF
-		}
+            /// <summary>
+            /// Graphics Interchange Format (.gif)
+            /// <para>Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif.</para>
+            /// </summary>
+            GIF                 //Gif, as in gift. 
+        }
 
 		/// <summary>
 		/// Possible square sizes of avatars.
@@ -81,9 +81,9 @@ namespace DiscordRPC
 		/// </summary>
 		[JsonProperty("discriminator")]
 		public int Discriminator { get; private set; }
-
+        
 		/// <summary>
-		/// The avatar hash of the user. Too get a URI for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
+		/// The avatar hash of the user. Too get a URL for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
 		/// </summary>
 		[JsonProperty("avatar")]
 		public string Avatar { get; private set; }
@@ -125,7 +125,7 @@ namespace DiscordRPC
             /// <summary>The HypeSquad House of Brilliance.</summary>
             HouseBrilliance = 1 << 7,
 
-            /// <summary>The best HypeSquad House of Balance.</summary>
+            /// <summary>The HypeSquad House of Balance (the best one).</summary>
             HouseBalance = 1 << 8,
 
             /// <summary>Early Supporter of Discord and had Nitro before the store was released.</summary>
@@ -148,21 +148,28 @@ namespace DiscordRPC
         /// </summary>
         public enum PremiumType
         {
-            /// <summary>No permium.</summary>
+            /// <summary>No subscription to any forms of Nitro.</summary>
             None = 0,
 
-            /// <summary>Nitro Class ($5/m). Has access to global emojis</summary>
-            NitroClass = 1,
+            /// <summary>Nitro Classic subscription. Has chat perks and animated avatars.</summary>
+            NitroClassic = 1,
 
-            /// <summary>Nitro ($10/m). Has access to Nitro Games.</summary>
+            /// <summary>Nitro subscription. Has chat perks, animated avatars, server boosting, and access to free Nitro Games.</summary>
             Nitro = 2
         }
 
 		/// <summary>
-		/// The endpoint for the CDN. Normally cdn.discordapp.com
+		/// The endpoint for the CDN. Normally cdn.discordapp.com.
 		/// </summary>
-		public string CdnEndpoint { get { return _cdn; } private set { _cdn = value; } }
-		private string _cdn = "cdn.discordapp.com";
+		public string CdnEndpoint { get; private set; }
+
+        /// <summary>
+        /// Creates a new User instance.
+        /// </summary>
+        internal User()
+        {
+            CdnEndpoint = "cdn.discordapp.com";
+        }
 
 		/// <summary>
 		/// Updates the URL paths to the appropriate configuration
@@ -170,7 +177,7 @@ namespace DiscordRPC
 		/// <param name="configuration">The configuration received by the OnReady event.</param>
 		internal void SetConfiguration(Configuration configuration)
 		{
-			this._cdn = configuration.CdnHost;
+			this.CdnEndpoint = configuration.CdnHost;
 		}
 
 		/// <summary>

@@ -76,7 +76,7 @@ namespace DiscordRPC.Example
         static void BasicExample()
         {
             // == Create the client
-            var client = new DiscordRpcClient("424087019149328395")
+            var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
                 Logger = new Logging.ConsoleLogger(logLevel, true)
             };

@@ -82,9 +82,9 @@ namespace DiscordRPC.IO
             if (pipe > 9)
                 throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
 
-            //Iterate until we connect to a pipe
             if (pipe < 0)
             {
+                //Iterate until we connect to a pipe
                 for (int i = 0; i < 10; i++)
                 {
                     if (AttemptConnection(i) || AttemptConnection(i, true))
@@ -94,26 +94,34 @@ namespace DiscordRPC.IO
                     }
                 }
             }
-
-            //Attempt to connect to a specific pipe
-            if (AttemptConnection(pipe) || AttemptConnection(pipe, true))
+            else
             {
-                BeginReadStream();
-                return true;
+                //Attempt to connect to a specific pipe
+                if (AttemptConnection(pipe) || AttemptConnection(pipe, true))
+                {
+                    BeginReadStream();
+                    return true;
+                }
             }
 
             //We failed to connect
             return false;
         }
 
-        private bool AttemptConnection(int pipe, bool doSandbox = false)
+        /// <summary>
+        /// Attempts a new connection
+        /// </summary>
+        /// <param name="pipe">The pipe number to connect too.</param>
+        /// <param name="isSandbox">Should the connection to a sandbox be attempted?</param>
+        /// <returns></returns>
+        private bool AttemptConnection(int pipe, bool isSandbox = false)
         {
             if (_isDisposed)
                 throw new ObjectDisposedException("_stream");
 
             //If we are sandbox but we dont support sandbox, then skip
-            string sandbox = doSandbox ? GetPipeSandbox() : "";
-            if (doSandbox && sandbox == null)
+            string sandbox = isSandbox ? GetPipeSandbox() : "";
+            if (isSandbox && sandbox == null)
             {
                 Logger.Trace("Skipping sandbox connection.");
                 return false;
@@ -424,12 +432,12 @@ namespace DiscordRPC.IO
         }
 
         /// <summary>
-        /// Gets the name of the pipe, resolving the complete path.
+        /// Returns a platform specific path that Discord is hosting the IPC on.
         /// </summary>
-        /// <param name="pipe"></param>
-        /// <param name="sandbox"></param>
+        /// <param name="pipe">The pipe number.</param>
+        /// <param name="sandbox">The sandbox the pipe is in. Leave blank for no sandbox.</param>
         /// <returns></returns>
-        private string GetPipeName(int pipe, string sandbox = "")
+        public static string GetPipeName(int pipe, string sandbox = "")
         {
             switch (Environment.OSVersion.Platform)
             {
@@ -438,21 +446,19 @@ namespace DiscordRPC.IO
                 case PlatformID.Win32S:
                 case PlatformID.Win32Windows:
                 case PlatformID.WinCE:
-                    Logger.Trace("PIPE WIN");
                     return sandbox + string.Format(PIPE_NAME, pipe);
 
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
-                    Logger.Trace("PIPE UNIX / MACOSX");
-                    return Path.Combine(GetEnviromentTemp(), sandbox + string.Format(PIPE_NAME, pipe));
+                    return Path.Combine(GetTemporaryDirectory(), sandbox + string.Format(PIPE_NAME, pipe));
             }
         }
 
         /// <summary>
-        /// Gets the name of the possible sandbox enviroment the pipe maybe in.
+        /// Gets the name of the possible sandbox enviroment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
         /// </summary>
         /// <returns></returns>
-        private string GetPipeSandbox()
+        public static string GetPipeSandbox()
         {
             switch (Environment.OSVersion.Platform)
             {
@@ -464,10 +470,10 @@ namespace DiscordRPC.IO
         }
 
         /// <summary>
-        /// Gets the enviroment temporary path.
+        /// Gets the temporary path for the current enviroment. Only applicable for UNIX based systems.
         /// </summary>
         /// <returns></returns>
-        private string GetEnviromentTemp()
+        private static string GetTemporaryDirectory()
         {
             string temp = null;
             temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
