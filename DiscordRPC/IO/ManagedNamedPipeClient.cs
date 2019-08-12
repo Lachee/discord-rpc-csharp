@@ -76,6 +76,8 @@ namespace DiscordRPC.IO
         /// <returns></returns>
         public bool Connect(int pipe)
         {
+            Logger.Trace("ManagedNamedPipeClient.Connection(" + pipe + ")");
+
             if (_isDisposed)
                 throw new ObjectDisposedException("NamedPipe");
 
@@ -274,6 +276,20 @@ namespace DiscordRPC.IO
                     }
                 }
             }
+            else
+            {
+                //If we read 0 bytes, its probably a broken pipe. However, I have only confirmed this is the case for MacOSX.
+                // I have added this check here just so the Windows builds are not effected and continue to work as expected.
+                if (IsUnix())
+                {
+                    Logger.Error("Empty frame was read on " + Environment.OSVersion.ToString() + ", aborting.");
+                    Close();
+                }
+                else
+                {
+                    Logger.Warning("Empty frame was read. Please send report to Lachee.");
+                }
+            }
 
             //We are still connected, so continue to read
             if (!_isClosed && IsConnected)
@@ -439,19 +455,8 @@ namespace DiscordRPC.IO
         /// <returns></returns>
         public static string GetPipeName(int pipe, string sandbox = "")
         {
-            switch (Environment.OSVersion.Platform)
-            {
-                default:
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    return sandbox + string.Format(PIPE_NAME, pipe);
-
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    return Path.Combine(GetTemporaryDirectory(), sandbox + string.Format(PIPE_NAME, pipe));
-            }
+            if (!IsUnix()) return sandbox + string.Format(PIPE_NAME, pipe);
+            return Path.Combine(GetTemporaryDirectory(), sandbox + string.Format(PIPE_NAME, pipe));
         }
 
         /// <summary>
@@ -482,6 +487,23 @@ namespace DiscordRPC.IO
             temp = temp ?? Environment.GetEnvironmentVariable("TEMP");
             temp = temp ?? "/tmp";
             return temp;
+        }
+
+        /// <summary>
+        /// Returns true if the current OS platform is Unix based (Unix or MacOSX).
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsUnix()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                default:
+                    return false;
+
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    return true;
+            }
         }
     }
 }

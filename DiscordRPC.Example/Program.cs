@@ -11,7 +11,7 @@ namespace DiscordRPC.Example
         /// <summary>
         /// The level of logging to use.
         /// </summary>
-        private static Logging.LogLevel logLevel = Logging.LogLevel.Info;
+        private static Logging.LogLevel logLevel = Logging.LogLevel.Trace;
 
         /// <summary>
         /// The pipe to connect too.

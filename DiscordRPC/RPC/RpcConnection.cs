@@ -262,12 +262,25 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		private void MainLoop()
 		{
-			//initialize the pipe
-			Logger.Trace("Initializing Thread. Creating pipe object.");
+            //initialize the pipe
+            Logger.Info("RPC Connection Started");
+            if (Logger.Level <= LogLevel.Trace)
+            {
+                Logger.Trace("============================");
+                Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
+                Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
+                Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
+                Logger.Trace("applicationID:        " + applicationID);
+                Logger.Trace("targetPipe:           " + targetPipe);
+                Logger.Trace("POLL_RATE:            " + POLL_RATE);
+                Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
+                Logger.Trace("_maxRxQueueSize:      " + _maxRxQueueSize);
+                Logger.Trace("============================");
+            }
 
-			//Forever trying to connect unless the abort signal is sent
-			//Keep Alive Loop
-			while (!aborting && !shutdown)
+            //Forever trying to connect unless the abort signal is sent
+            //Keep Alive Loop
+            while (!aborting && !shutdown)
 			{
 				try
 				{
