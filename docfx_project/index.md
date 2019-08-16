@@ -1,7 +1,7 @@
 #Discord Rich Presence
 
 [![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp)  [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/)
- [![GitHub stars](https://img.shields.io/github/stars/lachee/discord-rpc-csharp.svg?color=yellow&label=GitHub%20Stars&logo=github)](https://github.com/Lachee/discord-rpc-csharp)
+ [![GitHub stars](https://img.shields.io/github/stars/lachee/discord-rpc-csharp.svg?color=yellow&label=GitHub%20Stars&logo=github)](https://github.com/Lachee/discord-rpc-csharp) [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P2YOWG)
  
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 

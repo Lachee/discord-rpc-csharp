@@ -21,7 +21,7 @@
   ],
   "build": {
 	"sitemap":{
-        "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs",
+        "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs"
 	}
     "content": [
       {
