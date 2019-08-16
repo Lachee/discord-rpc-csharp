@@ -84,11 +84,7 @@ function BuildUnity()
 
 function BuildDocs()
 {
-	.\build-docs.ps1
-	if ($LASTEXITCODE -ne 0) 
-	{
-		Throw "Failed to build docs."
-	}
+	
 
 	if ($ReleaseDocs)
 	{
@@ -100,7 +96,16 @@ function BuildDocs()
 
 		Write-Host "Checking Out Pages"
 		git checkout gh-pages
-		
+	}
+
+	.\build-docs.ps1
+	if ($LASTEXITCODE -ne 0) 
+	{
+		Throw "Failed to build docs."
+	}
+
+	if ($ReleaseDocs)
+	{		
 		Write-Host "Commiting Changes"
 		git add .
 		git commit -m "Doc Changes"
