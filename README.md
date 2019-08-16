@@ -18,6 +18,9 @@ Here are some key features of this library:
  - **Ghost Prevention** (Tells discord to clear the RP on disposal)
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
 
+# Documentation
+All the documentation can be found https://lachee.github.io/discord-rpc-csharp/docs/
+
 # Installation
 
 **Dependencies:**
