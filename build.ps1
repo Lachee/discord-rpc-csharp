@@ -104,13 +104,15 @@ function BuildDocs()
 		Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
 		git config --global user.email "$($env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL)"
 		git config --global user.name "Lachee - AppVeyor"
+		git config core.autocrlf true
 
 		Write-Host "Commiting Changes"
 		git add .
 		git commit -m "Doc Changes"
-
+		git show-ref
+		
 		Write-Host "Pushing Changes"
-		git push -f origin gh-pages
+		git push -f origin HEAD:gh-pages
 	}
 }
 
