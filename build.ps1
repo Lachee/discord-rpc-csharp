@@ -4,6 +4,8 @@ Param(
 	[switch]$MakeUnityPackage,
 	[switch]$MakeNugetPackage,
 	[switch]$IgnoreLibraryBuild,
+	[switch]$MakeDocs,
+	[switch]$ReleaseDocs,
 	[int]$BuildCount,
 	[string]$BuildTag,
     [string]$Certificate
@@ -80,6 +82,24 @@ function BuildUnity()
 	}
 }
 
+function BuildDocs()
+{
+	.\build-docs.ps1
+	if ($LASTEXITCODE -ne 0) 
+	{
+		Throw "Failed to build docs."
+	}
+
+	if ($ReleaseDocs)
+	{
+		git checkout gh-pages
+		git add .
+		git commit -m "Updated Documentation"
+		git pull
+		git push
+	}
+}
+
 #Build the library 
 if (!($IgnoreLibraryBuild)) {
 	Write-Host ">>> Building Library";
@@ -98,6 +118,17 @@ if ($MakeUnityPackage)
 	if ($LASTEXITCODE -ne 0)
 	{
 		throw "Error occured while building the unity package.";
+	}
+}
+
+#Build the documentation
+if ($MakeDocs)
+{
+	Write-Host ">>> Building Documenation";
+	BuildDocs
+	if ($LASTEXITCODE -ne 0)
+	{
+		throw "Error occured while building the docs.";
 	}
 }
 

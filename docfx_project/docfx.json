@@ -63,7 +63,7 @@
         ]
       }
     ],
-    "dest": "_site",
+    "dest": "../docs",
 	"globalMetadata": {
 	  "_appFooter": "© 2019 Lachee"
 	},
