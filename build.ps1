@@ -92,10 +92,13 @@ function BuildDocs()
 
 	if ($ReleaseDocs)
 	{
+		git config --global credential.helper store
+		Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+		git config --global user.email "$($env:email)"
+		git config --global user.name "Lachee - AppVeyor"
 		git checkout gh-pages
 		git add .
-		git commit -m "Updated Documentation"
-		git pull
+		git commit -m "Doc Changes"
 		git push
 	}
 }
