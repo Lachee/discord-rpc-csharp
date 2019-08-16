@@ -110,7 +110,7 @@ function BuildDocs()
 		git commit -m "Doc Changes"
 
 		Write-Host "Pushing Changes"
-		git push origin gh-pages --force
+		git push -f origin gh-pages
 	}
 }
 
