@@ -1,9 +1,5 @@
 ﻿using DiscordRPC.Logging;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Registry
 {
@@ -15,14 +11,13 @@ namespace DiscordRPC.Registry
             this.logger = logger;
         }
 
-#if EXCLUDE_WIN32
         public bool RegisterUriScheme(UriSchemeRegister register)
         {
-            throw new PlatformNotSupportedException("Library has been built exluding Win32. This has removed the ability for Windows to register the UriScheme");
-        }
-#else
-        public bool RegisterUriScheme(UriSchemeRegister register)
-        {
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
+                throw new PlatformNotSupportedException("URI schemes can only be registered on Windows");
+            }
+
             //Prepare our location
             string location = register.ExecutablePath;
             if (location == null)
@@ -86,8 +81,5 @@ namespace DiscordRPC.Registry
                 return key.GetValue("SteamExe") as string;
             }
         }
-#endif
-
-
     }
 }
