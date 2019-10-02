@@ -2,4 +2,4 @@
 Write-Host "=========== Building Docs ===========" -ForegroundColor Green
 
 choco install docfx -y
-docfx .\docfx_project\docfx.json -o docs\
+docfx ".\docfx_project\docfx.json" -o docs
