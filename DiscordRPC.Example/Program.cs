@@ -16,14 +16,14 @@ namespace DiscordRPC.Example
         /// <summary>
         /// The pipe to connect too.
         /// </summary>
-        private static int discordPipe = -1;
+        private static int discordPipe = 1;
 
         /// <summary>
         /// The current presence to send to discord.
         /// </summary>
         private static RichPresence presence = new RichPresence()
         {
-            Details = "Example Project",
+            Details = "Example Project 🎁",
             State = "csharp example",
             Assets = new Assets()
             {

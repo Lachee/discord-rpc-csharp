@@ -329,7 +329,7 @@ namespace DiscordRPC
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        internal bool HasDifference(RichPresence other)
+        internal bool Matches(RichPresence other)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             if (other == null)

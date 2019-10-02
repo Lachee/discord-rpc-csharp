@@ -478,7 +478,7 @@ namespace DiscordRPC
                     Logger.Warning("The presence has set the secrets but no buttons will show as there is no party available.");
 				
                 //Send the presence, but only if we are not skipping
-                if (!SkipIdenticalPresence || !presence.HasDifference(CurrentPresence))
+                if (!SkipIdenticalPresence || !presence.Matches(CurrentPresence))
 				    connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
 			}
 
