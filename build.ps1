@@ -85,12 +85,10 @@ function BuildUnity()
 function BuildDocs()
 {
 	
-
-	if ($ReleaseDocs)
-	{
-		
-	}
-
+	Write-Host "Removing Doc Folder"
+	Remove-Item –path docs –recurse
+	
+	Write-Host "Building Documentation"
 	.\build-docs.ps1
 	if ($LASTEXITCODE -ne 0) 
 	{
@@ -106,8 +104,10 @@ function BuildDocs()
 		git config --global user.name "Lachee - AppVeyor"
 		git config core.autocrlf true
 
+
 		Write-Host "Commiting Changes"
-		git add .
+		git add -A
+		git status
 		git commit -m "Doc Changes"
 		git show-ref
 		
