@@ -1,4 +1,5 @@
 # Unity3D
+
 This library has full Unity3D intergration and custom editor scripts to help enhance your usage with the library. Please note there are some technical limitations with Unity3D however:
 
 * .NET 2.0+ is required (no subset).
@@ -16,11 +17,13 @@ Use the automatically built `.UnityPackage` that can be found in the artifacts o
 [![Unity Package](/images/unity_package.png)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts)
 
 ## Importing
+
 Import the unity package normally and make sure all content is selected. Once imported you may get the following warning. This library does not support the .NET 2.0 **Subset** and requires the full .NET 2.0 or greater. Proceeding with `Yes` will convert the project automatically to .NET 2.0.
 
 ![import Warning](/images/unity_netconvert.png)
 
 ## Creating a Manager
+
 The Discord Manager is a wrapper class around the DiscordRpcClient. It will handle the initialization, deinitialization and event invoking for you automatically. 
 
 Create a new Discord Manager in your very first loaded scene by following `GameObject -> Discord Manager`. 
@@ -44,20 +47,23 @@ Once created, a new object will appear in your scene. You can _only_ have 1 Disc
 ![Configuration](/images/unity_inspector_hierarchy.png)
 
 ## Usage
-Setting Rich Presence is done via your game code. It is upto you on how you implement it, but as an example from the Survival Shooter example by Unity3D:
-```cs
-	public void UpdatePresence()
-	{
-		presence.state = "Score: " + CompleteProject.ScoreManager.score;
-		presence.largeAsset = new DiscordAsset()
-		{
-			image = health.isDead ? "dead" : "alive",
-			tooltip = health.currentHealth + "HP"
-		};
 
-		DiscordManager.current.SetPresence(presence);
-	}
+Setting Rich Presence is done via your game code. It is upto you on how you implement it, but as an example from the Survival Shooter example by Unity3D:
+
+```cs
+public void UpdatePresence()
+{
+	presence.state = "Score: " + CompleteProject.ScoreManager.score;
+	presence.largeAsset = new DiscordAsset()
+	{
+		image = health.isDead ? "dead" : "alive",
+		tooltip = health.currentHealth + "HP"
+	};
+
+	DiscordManager.current.SetPresence(presence);
+}
 ```
 
 ## Further Reading
+
 If you wish to implement the Join and Spectate feature within your project (those buttons), please read [Joining & Spectating Introduction](../join_spectate/intro.md) to get started.
