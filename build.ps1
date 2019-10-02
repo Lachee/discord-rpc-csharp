@@ -86,7 +86,7 @@ function BuildDocs()
 {
 	
 	Write-Host "Removing Doc Folder"
-	Remove-Item –path docs –recurse
+	Remove-Item -Path docs -Recurse
 	
 	Write-Host "Building Documentation"
 	.\build-docs.ps1
