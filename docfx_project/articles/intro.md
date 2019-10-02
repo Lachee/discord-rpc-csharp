@@ -1,3 +1,7 @@
+---
+uid: Articles.Intro
+---
+
 # Getting started with DiscordRPC C#
 
 Getting started with DiscordRPC-C# is easy! With automatic nuget packages and a fully fledge Unity3D package, you can get started in no time.
