@@ -3,16 +3,9 @@
     {
       "src": [
         {
-		  "src": "..",
+          "src": "../",
           "files": [
-            "**.cs"
-          ],
-          "exclude": [
-            "**/obj/**",
-            "**/bin/**",
-            "_site/**",
-            "Unity Example/**",
-            "DiscordRPC.Example/**"
+            "**.csproj"
           ]
         }
       ],
@@ -20,6 +13,9 @@
     }
   ],
   "build": {
+	"sitemap":{
+        "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs"
+	},
     "content": [
       {
         "files": [
@@ -30,14 +26,13 @@
       {
         "files": [
           "articles/**.md",
-          "articles/**/toc.yml",
-		  "natives/**.md",
+          "articles/**/toc.yml"
+        ]
+      },
+      {
+        "files": [
           "toc.yml",
-          "*.md"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
+          "index.md"
         ]
       }
     ],
@@ -45,36 +40,18 @@
       {
         "files": [
           "images/**"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
         ]
       }
     ],
-    "overwrite": [
-      {
-        "files": [
-          "apidoc/**.md"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
-        ]
-      }
-    ],
-    "dest": "_site",
-	"globalMetadata": {
-	  "_appFooter": "© 2019 Lachee"
-	},
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
+    "dest": "../docs",
+    "globalMetadata": {
+      "_appFooter": "© 2019 Lachee"
+    },
     "template": [
       "default"
     ],
-    "postProcessors": [],
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false
+    "xrefService": [
+      "https://xref.docs.microsoft.com/query?uid={uid}"
+    ]
   }
 }

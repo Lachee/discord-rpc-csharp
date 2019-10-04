@@ -44,7 +44,7 @@ namespace DiscordRPC.Helper
 
 		
 		/// <summary>
-		/// Converts the string into CamelCase (Pascal Case).
+		/// Converts the string into UpperCamelCase (Pascal Case).
 		/// </summary>
 		/// <param name="str">The string to convert</param>
 		/// <returns></returns>

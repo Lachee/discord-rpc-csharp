@@ -1,10 +1,10 @@
 # Discord Rich Presence
 
-[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/)
+[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
-While the offical C++ library has been depreciated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
+While the offical C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
 
 Here are some key features of this library:
  - **Message Queuing**
@@ -17,6 +17,9 @@ Here are some key features of this library:
  - **Helper Functionality** (eg: AvatarURL generator from Join Requests)
  - **Ghost Prevention** (Tells discord to clear the RP on disposal)
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
+
+# Documentation
+All the documentation can be found https://lachee.github.io/discord-rpc-csharp/docs/
 
 # Installation
 
@@ -105,7 +108,7 @@ void Initialize()
 
 The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread saftey and order of operations (especially important in Unity3D applications).
 
-In order to enable this method of event calling, you need to set it in teh constructor of the DiscordRpcClient under `autoEvents`.
+In order to enable this method of event calling, you need to set it in the constructor of the DiscordRpcClient under `autoEvents`.
 ```csharp
 //The main loop of your application, or some sort of timer. Literally the Update function in Unity3D
 void Update() 
@@ -145,7 +148,7 @@ You can build the solution easily in Visual Studio, its a simple matter of right
 
 **Unity3D**
 
-The project does have a `Unity Pacakge` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
+The project does have a `Unity Package` available on the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) and it is always recommended to use that. Its automatically built and guaranteed to be the latest. 
 
 You can build the Unity3D package using the command below. Make sure you update the `DiscordRPC.dll` within the Unity Project first as it is not automatically updated:
 ```

@@ -11,6 +11,8 @@ var target = Argument ("target", "Default");
 var buildType = Argument<string>("buildType", "Release");
 var buildCounter = Argument<int>("buildCounter", 0);
 var buildTag = Argument<string>("buildTag", "v1.0");
+var signCertificate = Argument<string>("signCertificate", "certificate.pfx");
+var signPassword = Argument<string>("signPassword", "");
 
 // Project Variables
 var asm = string.Format("./{0}/Properties/AssemblyInfo.cs", projectName);
@@ -114,6 +116,26 @@ Task ("Push")
 			ApiKey = apiKey
 		});
 	});
+Task ("Sign")
+    .IsDependentOn("Build")
+    .Does(() => {
+        if (!String.IsNullOrEmpty(signPassword))
+        {
+		    Information("Signing Assembly");
+            var file = MakeAbsolute(Directory(releaseFolder)) + releaseDll;
+            var asmb = new FilePath(file);
+            Sign(asmb, new SignToolSignSettings {
+                Description = "Signed by Lachee during a automated build",
+                TimeStampUri = new Uri("http://timestamp.digicert.com"),
+                CertPath = signCertificate,
+                Password = signPassword
+            });
+        }
+        else
+        {
+		    Information("Skipping Signing");
+        }
+    });
 
 Task ("Default")
 	.IsDependentOn ("OutputVariables")
@@ -127,6 +149,7 @@ Task ("NugetBuild")
 	.IsDependentOn ("NugetRestore")
 	.IsDependentOn ("SetVersion")
 	.IsDependentOn ("Build")
+	.IsDependentOn ("Sign")
     .IsDependentOn ("Nuget");
 Task ("NugetBuildPush")
 	.IsDependentOn ("OutputVariables")
@@ -134,6 +157,7 @@ Task ("NugetBuildPush")
 	.IsDependentOn ("NugetRestore")
 	.IsDependentOn ("SetVersion")
 	.IsDependentOn ("Build")
+	.IsDependentOn ("Sign")
     .IsDependentOn ("Nuget")
     .IsDependentOn ("Push");
     

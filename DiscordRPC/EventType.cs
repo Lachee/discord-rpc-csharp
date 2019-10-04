@@ -29,7 +29,6 @@ namespace DiscordRPC
 		/// <summary>
 		/// Called when another Discord Client has requested permission to join this game.
 		/// </summary>
-		JoinRequest = 0x4,
-
+		JoinRequest = 0x4
 	}
 }

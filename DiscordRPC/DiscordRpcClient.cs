@@ -68,6 +68,11 @@ namespace DiscordRPC
         /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called. 
         /// </summary>
         public bool AutoEvents { get; private set; }
+
+        /// <summary>
+        /// Skips sending presences that are identical to the current one.
+        /// </summary>
+        public bool SkipIdenticalPresence { get; set; }
         #endregion
 
 		/// <summary>
@@ -117,7 +122,6 @@ namespace DiscordRPC
             }
         }
 		private bool _shutdownOnly = true;
-
         private object _sync = new object();
 
 		#region Events
@@ -226,6 +230,7 @@ namespace DiscordRPC
             ProcessID = System.Diagnostics.Process.GetCurrentProcess().Id;
             HasRegisteredUriScheme = false;
             AutoEvents = autoEvents;
+            SkipIdenticalPresence = true;
 
             //Prepare the logger
             _logger = logger ?? new NullLogger();
@@ -452,11 +457,12 @@ namespace DiscordRPC
             if (!IsInitialized)
                 Logger.Warning("The client is not yet initialized, storing the presence as a state instead.");
 
-            //SEnd the event
+            //Send the event
 			if (!presence)
-			{
-				//Clear the presence
-				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = null });
+            {
+                //Clear the presence
+                if (!SkipIdenticalPresence || CurrentPresence != null)
+				    connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = null });
 			}
 			else
 			{
@@ -471,12 +477,13 @@ namespace DiscordRPC
                 if (presence.HasSecrets() && !presence.HasParty())
                     Logger.Warning("The presence has set the secrets but no buttons will show as there is no party available.");
 				
-				//Send the presence
-				connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
+                //Send the presence, but only if we are not skipping
+                if (!SkipIdenticalPresence || !presence.Matches(CurrentPresence))
+				    connection.EnqueueCommand(new PresenceCommand() { PID = this.ProcessID, Presence = presence.Clone() });
 			}
 
             //Update our local store
-            lock (_sync) { CurrentPresence = presence; }
+            lock (_sync) { CurrentPresence = presence != null ? presence.Clone() : null; }
         }
 
 		#region Updates
@@ -829,9 +836,9 @@ namespace DiscordRPC
 			if ((type & EventType.Join) == EventType.Join)
 				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
 
-			if ((type & EventType.JoinRequest) == EventType.JoinRequest)
-				connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
-		}
+            if ((type & EventType.JoinRequest) == EventType.JoinRequest)
+                connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
+        }
 
         #endregion
 

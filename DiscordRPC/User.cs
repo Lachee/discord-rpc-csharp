@@ -34,12 +34,12 @@ namespace DiscordRPC
 			/// </summary>
 			WebP,
 
-			/// <summary>
-			/// Graphics Interchange Format (.gif)
-			/// <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
-			/// </summary>
-			GIF
-		}
+            /// <summary>
+            /// Graphics Interchange Format (.gif)
+            /// <para>Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif.</para>
+            /// </summary>
+            GIF                 //Gif, as in gift. 
+        }
 
 		/// <summary>
 		/// Possible square sizes of avatars.
@@ -68,31 +68,108 @@ namespace DiscordRPC
 		/// The snowflake ID of the user. 
 		/// </summary>
 		[JsonProperty("id")]
-		public ulong ID { get; set; }
+		public ulong ID { get; private set; }
 
 		/// <summary>
 		/// The username of the player.
 		/// </summary>
 		[JsonProperty("username")]
-		public string Username { get; set; }
+		public string Username { get; private set; }
 
 		/// <summary>
 		/// The discriminator of the user.
 		/// </summary>
 		[JsonProperty("discriminator")]
-		public int Discriminator { get; set; }
-
+		public int Discriminator { get; private set; }
+        
 		/// <summary>
-		/// The avatar hash of the user. Too get a URI for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
+		/// The avatar hash of the user. Too get a URL for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
 		/// </summary>
 		[JsonProperty("avatar")]
-		public string Avatar { get; set; }
+		public string Avatar { get; private set; }
+
+        /// <summary>
+        /// The flags on a users account, often represented as a badge.
+        /// </summary>
+        [JsonProperty("flags")]
+        public Flag Flags { get; private set; }
+
+        /// <summary>
+        /// A flag on the user account
+        /// </summary>
+        [Flags]
+        public enum Flag
+        {
+            /// <summary>No flag</summary>
+            None = 0,
+
+            /// <summary>Staff of Discord.</summary>
+            Employee = 1 << 0,
+
+            /// <summary>Partners of Discord.</summary>
+            Partner = 1 << 1,
+
+            /// <summary>Original HypeSquad which organise events.</summary>
+            HypeSquad = 1 << 2,
+
+            /// <summary>Bug Hunters that found and reported bugs in Discord.</summary>
+            BugHunter = 1 << 3,
+
+            //These 2 are mistery types
+            //A = 1 << 4,
+            //B = 1 << 5,
+
+            /// <summary>The HypeSquad House of Bravery.</summary>
+            HouseBravery = 1 << 6,
+
+            /// <summary>The HypeSquad House of Brilliance.</summary>
+            HouseBrilliance = 1 << 7,
+
+            /// <summary>The HypeSquad House of Balance (the best one).</summary>
+            HouseBalance = 1 << 8,
+
+            /// <summary>Early Supporter of Discord and had Nitro before the store was released.</summary>
+            EarlySupporter = 1 << 9,
+
+            /// <summary>Apart of a team.
+            /// <para>Unclear if it is reserved for members that share a team with the current application.</para>
+            /// </summary>
+            TeamUser = 1 << 10
+        }
+
+        /// <summary>
+        /// The premium type of the user.
+        /// </summary>
+        [JsonProperty("premium_type")]
+        public PremiumType Premium { get; private set; }
+
+        /// <summary>
+        /// Type of premium
+        /// </summary>
+        public enum PremiumType
+        {
+            /// <summary>No subscription to any forms of Nitro.</summary>
+            None = 0,
+
+            /// <summary>Nitro Classic subscription. Has chat perks and animated avatars.</summary>
+            NitroClassic = 1,
+
+            /// <summary>Nitro subscription. Has chat perks, animated avatars, server boosting, and access to free Nitro Games.</summary>
+            Nitro = 2
+        }
 
 		/// <summary>
-		/// The endpoint for the CDN. Normally cdn.discordapp.com
+		/// The endpoint for the CDN. Normally cdn.discordapp.com.
 		/// </summary>
-		public string CdnEndpoint { get { return _cdn; } private set { _cdn = value; } }
-		private string _cdn = "cdn.discordapp.com";
+		public string CdnEndpoint { get; private set; }
+
+        /// <summary>
+        /// Creates a new User instance.
+        /// </summary>
+        internal User()
+        {
+            CdnEndpoint = "cdn.discordapp.com";
+        }
 
 		/// <summary>
 		/// Updates the URL paths to the appropriate configuration
@@ -100,7 +177,7 @@ namespace DiscordRPC
 		/// <param name="configuration">The configuration received by the OnReady event.</param>
 		internal void SetConfiguration(Configuration configuration)
 		{
-			this._cdn = configuration.CdnHost;
+			this.CdnEndpoint = configuration.CdnHost;
 		}
 
 		/// <summary>

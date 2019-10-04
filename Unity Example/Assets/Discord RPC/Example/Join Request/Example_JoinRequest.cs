@@ -12,7 +12,7 @@ namespace DiscordRPC.Examples.JoinRequest
 
 		private void Start()
 		{
-			DiscordManager.instance.events.OnJoinRequest.AddListener(OnJoinRequest);
+			DiscordManager.current.events.OnJoinRequest.AddListener(OnJoinRequest);
 		}
 
 		//This event is subscribed to the Discord Manager using the inspector

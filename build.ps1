@@ -4,8 +4,11 @@ Param(
 	[switch]$MakeUnityPackage,
 	[switch]$MakeNugetPackage,
 	[switch]$IgnoreLibraryBuild,
+	[switch]$MakeDocs,
+	[switch]$ReleaseDocs,
 	[int]$BuildCount,
-	[string]$BuildTag
+	[string]$BuildTag,
+    [string]$Certificate
 )
 
 function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$include_nuget)
@@ -45,9 +48,15 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$inclu
 
 function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 {
-	Write-Host "-buildCounter=$buildcount",'-buildType="Release"'
+	Write-Host "-buildCounter=$buildCount",'-buildType="Release"'
 	$args = "-buildCounter=$buildCount",'-buildType="Release"'
-	if ($buildTag) { $args += "-buildTag=$buildTag" }
+	if (![string]::IsNullOrEmpty($buildTag)) { $args += "-buildTag=$buildTag" }
+    if (![string]::IsNullOrEmpty($Certificate))
+    {
+        $args += "-signCertificate=$Certificate"
+        $args += "-signPassword=$env:CERTIFICATE_PASSWORD"
+    }
+    
 	
 	if ($makeNuget) 
 	{
@@ -73,6 +82,40 @@ function BuildUnity()
 	}
 }
 
+function BuildDocs()
+{
+	
+	Write-Host "Removing Doc Folder"
+	Remove-Item -Path docs -Recurse
+	
+	Write-Host "Building Documentation"
+	.\build-docs.ps1
+	if ($LASTEXITCODE -ne 0) 
+	{
+		Throw "Failed to build docs."
+	}
+
+	if ($ReleaseDocs)
+	{		
+		Write-Host "Configuring Git Credentials"
+		git config --global credential.helper store
+		Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+		git config --global user.email "$($env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL)"
+		git config --global user.name "Lachee - AppVeyor"
+		git config core.autocrlf true
+
+
+		Write-Host "Commiting Changes"
+		git add -A
+		git status
+		git commit -m "Doc Changes"
+		git show-ref
+		
+		Write-Host "Pushing Changes"
+		git push -f origin HEAD:gh-pages
+	}
+}
+
 #Build the library 
 if (!($IgnoreLibraryBuild)) {
 	Write-Host ">>> Building Library";
@@ -91,6 +134,17 @@ if ($MakeUnityPackage)
 	if ($LASTEXITCODE -ne 0)
 	{
 		throw "Error occured while building the unity package.";
+	}
+}
+
+#Build the documentation
+if ($MakeDocs)
+{
+	Write-Host ">>> Building Documenation";
+	BuildDocs
+	if ($LASTEXITCODE -ne 0)
+	{
+		throw "Error occured while building the docs.";
 	}
 }
 

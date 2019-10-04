@@ -66,7 +66,7 @@ public class DiscordInviteUI : MonoBehaviour
 
 	public void OnResponsePressed(bool approved)
 	{
-		DiscordManager.instance.Respond(message, approved);
+		DiscordManager.current.Respond(message, approved);
 		Destroy(gameObject);
 	}
 

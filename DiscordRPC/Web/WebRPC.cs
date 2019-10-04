@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
+#if INCLUDE_WEB_RPC
 namespace DiscordRPC.Web
 {
 	/// <summary>
@@ -187,3 +188,4 @@ namespace DiscordRPC.Web
 		}
 	}
 }
+#endif
