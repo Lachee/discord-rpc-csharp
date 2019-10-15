@@ -19,7 +19,7 @@ Here are some key features of this library:
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
 
 # Documentation
-All the documentation can be found https://lachee.github.io/discord-rpc-csharp/docs/
+All the documentation can be found [lachee.github.io/discord-rpc-csharp/docs/](https://lachee.github.io/discord-rpc-csharp/docs/)
 
 # Installation
 
