@@ -17,7 +17,7 @@
 Write-Host "=========== Building Unity3D Package ===========" -ForegroundColor Green
 
 $libdir = "./";
-$artifacts = "$libdir/DiscordRPC/bin/Release";
+$artifacts = "$libdir/DiscordRPC/bin/Release/net35";
 
 $dll_src = "$artifacts/DiscordRPC*";
 $dll_dst = "$libdir/Unity Example/Assets/Discord RPC/Plugins";

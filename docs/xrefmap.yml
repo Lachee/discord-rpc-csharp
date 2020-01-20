@@ -1,0 +1,60 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: API.Docs
+  name: PLACEHOLDER
+  href: api/index.html
+- uid: Articles.Intro
+  name: Getting started with DiscordRPC C#
+  href: articles/intro.html
+- uid: UnityPackageExporter
+  name: UnityPackageExporter
+  href: api/UnityPackageExporter.html
+  commentId: N:UnityPackageExporter
+  fullName: UnityPackageExporter
+  nameWithType: UnityPackageExporter
+- uid: UnityPackageExporter.TarOutputExtensions
+  name: TarOutputExtensions
+  href: api/UnityPackageExporter.TarOutputExtensions.html
+  commentId: T:UnityPackageExporter.TarOutputExtensions
+  fullName: UnityPackageExporter.TarOutputExtensions
+  nameWithType: TarOutputExtensions
+- uid: UnityPackageExporter.TarOutputExtensions.ReadNextFile(ICSharpCode.SharpZipLib.Tar.TarInputStream,System.IO.Stream)
+  name: ReadNextFile(TarInputStream, Stream)
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_ReadNextFile_ICSharpCode_SharpZipLib_Tar_TarInputStream_System_IO_Stream_
+  commentId: M:UnityPackageExporter.TarOutputExtensions.ReadNextFile(ICSharpCode.SharpZipLib.Tar.TarInputStream,System.IO.Stream)
+  fullName: UnityPackageExporter.TarOutputExtensions.ReadNextFile(ICSharpCode.SharpZipLib.Tar.TarInputStream, System.IO.Stream)
+  nameWithType: TarOutputExtensions.ReadNextFile(TarInputStream, Stream)
+- uid: UnityPackageExporter.TarOutputExtensions.ReadNextFile*
+  name: ReadNextFile
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_ReadNextFile_
+  commentId: Overload:UnityPackageExporter.TarOutputExtensions.ReadNextFile
+  isSpec: "True"
+  fullName: UnityPackageExporter.TarOutputExtensions.ReadNextFile
+  nameWithType: TarOutputExtensions.ReadNextFile
+- uid: UnityPackageExporter.TarOutputExtensions.WriteAllText(ICSharpCode.SharpZipLib.Tar.TarOutputStream,System.String,System.String)
+  name: WriteAllText(TarOutputStream, String, String)
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_WriteAllText_ICSharpCode_SharpZipLib_Tar_TarOutputStream_System_String_System_String_
+  commentId: M:UnityPackageExporter.TarOutputExtensions.WriteAllText(ICSharpCode.SharpZipLib.Tar.TarOutputStream,System.String,System.String)
+  fullName: UnityPackageExporter.TarOutputExtensions.WriteAllText(ICSharpCode.SharpZipLib.Tar.TarOutputStream, System.String, System.String)
+  nameWithType: TarOutputExtensions.WriteAllText(TarOutputStream, String, String)
+- uid: UnityPackageExporter.TarOutputExtensions.WriteAllText*
+  name: WriteAllText
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_WriteAllText_
+  commentId: Overload:UnityPackageExporter.TarOutputExtensions.WriteAllText
+  isSpec: "True"
+  fullName: UnityPackageExporter.TarOutputExtensions.WriteAllText
+  nameWithType: TarOutputExtensions.WriteAllText
+- uid: UnityPackageExporter.TarOutputExtensions.WriteFile(ICSharpCode.SharpZipLib.Tar.TarOutputStream,System.String,System.String)
+  name: WriteFile(TarOutputStream, String, String)
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_WriteFile_ICSharpCode_SharpZipLib_Tar_TarOutputStream_System_String_System_String_
+  commentId: M:UnityPackageExporter.TarOutputExtensions.WriteFile(ICSharpCode.SharpZipLib.Tar.TarOutputStream,System.String,System.String)
+  fullName: UnityPackageExporter.TarOutputExtensions.WriteFile(ICSharpCode.SharpZipLib.Tar.TarOutputStream, System.String, System.String)
+  nameWithType: TarOutputExtensions.WriteFile(TarOutputStream, String, String)
+- uid: UnityPackageExporter.TarOutputExtensions.WriteFile*
+  name: WriteFile
+  href: api/UnityPackageExporter.TarOutputExtensions.html#UnityPackageExporter_TarOutputExtensions_WriteFile_
+  commentId: Overload:UnityPackageExporter.TarOutputExtensions.WriteFile
+  isSpec: "True"
+  fullName: UnityPackageExporter.TarOutputExtensions.WriteFile
+  nameWithType: TarOutputExtensions.WriteFile
