@@ -17,7 +17,7 @@ var signPassword = Argument<string>("signPassword", "");
 // Project Variables
 var asm = string.Format("./{0}/Properties/AssemblyInfo.cs", projectName);
 var sln = string.Format("./{0}/{0}.sln", projectName);
-var releaseFolder = string.Format("./{0}/bin/{1}", projectName, buildType);
+var releaseFolder = string.Format("./{0}/bin/{1}/net35", projectName, buildType);
 var releaseDll = "/DiscordRPC.dll";
 var nuspecFile = string.Format("./{0}/{0}.nuspec", projectName);
 
@@ -68,7 +68,8 @@ Task ("Build")
 					{
 						Verbosity = Verbosity.Quiet,
 						Configuration = buildType
-					}.WithProperty("build", buildCounter.ToString()));
+					}.WithProperty("build", buildCounter.ToString())
+					.UseToolVersion(MSBuildToolVersion.VS2019));
 					
 						
 		var file = MakeAbsolute(Directory(releaseFolder)) + releaseDll;

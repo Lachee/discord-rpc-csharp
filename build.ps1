@@ -11,11 +11,10 @@ Param(
     [string]$Certificate
 )
 
-function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$include_nuget)
+function GatherArtifacts([string] $dest_root, [string] $target, [bool]$include_unity, [bool]$include_nuget)
 {
 	$project = "DiscordRPC";
-	$target = "Release"
-
+	
 	#Prepare the DLL and package names
 	$manage_dll = "$project.dll";
 	$unity_pack = "$project.unitypackage";
@@ -49,7 +48,7 @@ function GatherArtifacts([string] $dest_root, [bool]$include_unity, [bool]$inclu
 function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 {
 	Write-Host "-buildCounter=$buildCount",'-buildType="Release"'
-	$args = "-buildCounter=$buildCount",'-buildType="Release"'
+	$args = "-buildCounter=$buildCount",'-buildType="Release"',"-Verbosity=diagnostic"
 	if (![string]::IsNullOrEmpty($buildTag)) { $args += "-buildTag=$buildTag" }
     if (![string]::IsNullOrEmpty($Certificate))
     {
@@ -69,6 +68,7 @@ function BuildLibrary($buildCount, $buildTag, [bool]$makeNuget)
 
 	if ($LASTEXITCODE -ne 0) 
 	{
+		Write-Host "Exit Failure: $LASTEXITCODE"
 		Throw "Failed to build library."
 	}
 }
@@ -150,6 +150,7 @@ if ($MakeDocs)
 
 #Gather artifacts
 Write-Host ">>> Copying Packages";
-GatherArtifacts ./artifacts $MakeUnityPackage $MakeNugetPackage
+GatherArtifacts "./artifacts/net35" "Release/net35" $MakeUnityPackage $MakeNugetPackage
+GatherArtifacts "./artifacts/netstandard2.0" "Release/netstandard2.0" $MakeUnityPackage $MakeNugetPackage
 
 Write-Host ">>> Build Complete"
