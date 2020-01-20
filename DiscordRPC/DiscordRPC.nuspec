@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/21.0.07/nuspec.xsd">
     <id>DiscordRichPresence</id>
-    <version>1.143.0</version>
+    <version>0.0.0</version>
     <authors>Lachee</authors>
     <owners>Lachee</owners>
     <title>Discord Rich Presence</title>
@@ -23,7 +23,14 @@ This is an unoffical, non-discord supported library.
     <tags>Discord Discord Rich Presence RPC Discord-RPC</tags>
 
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="12.0.2" />
+	  <group targetFramework="net35">
+		<dependency id="Newtonsoft.Json" version="12.0.2" />
+    </group>
+	<group targetFramework="netstandard2.0">
+		<dependency id="Newtonsoft.Json" version="12.0.2" />
+        <dependency id="Microsoft.Win32.Registry" version="4.5.0" />
+    </group>
+	
     </dependencies>
   </metadata>
 
