@@ -20,7 +20,7 @@ Use the automatically built `.UnityPackage` that can be found in the artifacts o
 
 Import the unity package normally and make sure all content is selected. Once imported you may get the following warning. This library does not support the .NET 2.0 **Subset** and requires the full .NET 2.0 or greater. Proceeding with `Yes` will convert the project automatically to .NET 2.0.
 
-![import Warning](/images/unity_netconvert.png)
+![import Warning](https://i.imgur.com/noRnm33.png)
 
 ## Creating a Manager
 
@@ -28,7 +28,7 @@ The Discord Manager is a wrapper class around the DiscordRpcClient. It will hand
 
 Create a new Discord Manager in your very first loaded scene by following `GameObject -> Discord Manager`. 
 
-![Import Settings](/images/unity_add_marked.png)
+![Import Settings](https://i.imgur.com/rRsGCf2.png)
 
 ### Discord Manager Inspector
 
@@ -44,7 +44,7 @@ Once created, a new object will appear in your scene. You can _only_ have 1 Disc
 | Active | If enabled, the Discord Manager will create a connection and maintain it. |
 | **State** | The current state of the connected client. These values are generally `Read Only` |
 
-![Configuration](/images/unity_inspector_hierarchy.png)
+![Configuration](https://i.imgur.com/rrjEOHA.png)
 
 ## Usage
 
