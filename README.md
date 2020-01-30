@@ -1,6 +1,7 @@
 # Discord Rich Presence
 
-[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
+[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget)
+ [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e)](https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&utm_medium=referral&utm_content=Lachee/discord-rpc-csharp&utm_campaign=badger) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
@@ -138,6 +139,17 @@ void Deinitialize()
 ```
 
 ## Building
+
+
+**Master** 
+
+[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/master?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/master)
+
+**Nuget** 
+
+[![Build status](https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true)](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget)
+
+
 
 **DiscordRPC Library**
 
