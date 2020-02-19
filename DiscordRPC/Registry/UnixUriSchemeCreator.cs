@@ -78,6 +78,7 @@ MimeType=x-scheme-handler/discord-{2}";
                 return false;
             }
 
+            logger.Trace("Registered {0}, {1}, {2}", filepath + filename, file, command);
             return true;
         }
 

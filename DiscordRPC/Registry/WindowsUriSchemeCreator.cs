@@ -67,6 +67,8 @@ namespace DiscordRPC.Registry
                 using (var commandKey = key.CreateSubKey("shell\\open\\command"))
                     commandKey.SetValue("", command);
             }
+
+            logger.Trace("Registered {0}, {1}, {2}", scheme, friendlyName, command);
         }
 
         /// <summary>

@@ -46,6 +46,7 @@ namespace DiscordRPC.Registry
 
             //Write the contents to file
             File.WriteAllText(filepath + "/" + register.ApplicationID + ".json", "{ \"command\": \"" + command + "\" }");
+            logger.Trace("Registered {0}, {1}", filepath + "/" + register.ApplicationID + ".json", command);
             return true;
         }
         
