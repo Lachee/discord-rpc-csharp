@@ -5,7 +5,7 @@
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
-While the offical C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
+While the official C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.
 
 Here are some key features of this library:
  - **Message Queuing**
@@ -14,7 +14,7 @@ Here are some key features of this library:
  - **Error Handling** & **Error Checking** with automatic reconnects
  - **Events from Discord** (such as presence update and join requests)
  - **Full Rich Presence Implementation** (including Join / Spectate)
- - **Inline Documented** (for all your intelli-sense needs)
+ - **Inline Documented** (for all your IntelliSense needs)
  - **Helper Functionality** (eg: AvatarURL generator from Join Requests)
  - **Ghost Prevention** (Tells discord to clear the RP on disposal)
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
@@ -43,17 +43,17 @@ You can also [Download or Build](#building) your own version of the library if y
 
 **Source: Unity3D Game Engine**
 
-There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) AppVoyer generates. This includes the native library and the managed library prebuilt, so you dont need to worry about a thing.  
+There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts) AppVoyer generates. This includes prebuilt native library and the managed library, so you don't need to worry about a thing.  
 
 For building your own package, read the [building](#building) guide.
 
 ## Usage
 
-The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. Its important you follow all 3 stages to ensure proper behaviour of the library.
+The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. It's important you follow all 3 stages to ensure proper behaviour of the library.
 
 **Initialization**
 
-This stage will setup the connection to Discord and establish the events. Once you have done the intialization you can call `SetPresence` and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same discord client at the same time.
+This stage will setup the connection to Discord and establish the events. Once you have done the initialization you can call `SetPresence` and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same discord client at the same time.
 ```csharp
 public DiscordRpcClient client;
 
@@ -62,7 +62,7 @@ public DiscordRpcClient client;
 void Initialize() 
 {
 	/*
-	Create a discord client
+	Create a Discord client
 	NOTE: 	If you are using Unity3D, you must use the full constructor and define
 			 the pipe connection.
 	*/
@@ -105,9 +105,9 @@ void Initialize()
 
 **Invoking**
 
-**Invoking is optional. Use this when thread saftey is paramount.**
+**Invoking is optional. Use this when thread safety is paramount.**
 
-The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread saftey and order of operations (especially important in Unity3D applications).
+The client will store messages from the pipe and won't invoke them until you call `Invoke()` or `DequeueMessages()`. It does this because the pipe is working on another thread, and manually invoking ensures proper thread safety and order of operations (especially important in Unity3D applications).
 
 In order to enable this method of event calling, you need to set it in the constructor of the DiscordRpcClient under `autoEvents`.
 ```csharp
@@ -128,7 +128,7 @@ timer.Start();
 
 **Deinitialization**
 
-Its important that you dispose your client before you application terminates. This will stop the threads, abort the pipe reads and tell discord to clear the presence. Failure to do so may result in a memory leak!
+It's important that you dispose your client before your application terminates. This will stop the threads, abort the pipe reads, and tell Discord to clear the presence. Failure to do so may result in a memory leak!
 ```csharp
 //Called when your application terminates.
 //For example, just after your main loop, on OnDisable for unity.
@@ -153,7 +153,7 @@ void Deinitialize()
 
 **DiscordRPC Library**
 
-You can build the solution easily in Visual Studio, its a simple matter of right clicking the project and hitting build. However if you wish to build via command line, you can do so with the PowerShell build script:
+You can build the solution easily in Visual Studio, it's a simple matter of right clicking the project and hitting build. However, if you wish to build via command line, you can do so with the PowerShell build script:
 ```
 .\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
 ```
@@ -168,5 +168,3 @@ You can build the Unity3D package using the command below. Make sure you update 
 ```
 
 If you wish to have barebones Unity3D implementation, you need to build the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). Put these in your own Unity Project and the `.dll`s in a folder called `Plugins`. 
-
-
