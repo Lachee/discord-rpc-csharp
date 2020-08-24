@@ -16,7 +16,7 @@ Here are some key features of this library:
  - **Full Rich Presence Implementation** (including Join / Spectate)
  - **Inline Documented** (for all your IntelliSense needs)
  - **Helper Functionality** (eg: AvatarURL generator from Join Requests)
- - **Ghost Prevention** (Tells discord to clear the RP on disposal)
+ - **Ghost Prevention** (Tells Discord to clear the RP on disposal)
  - **Full Unity3D Editor** (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).
 
 # Documentation
@@ -53,7 +53,7 @@ The Discord.Example project within the solution contains example code, showing h
 
 **Initialization**
 
-This stage will setup the connection to Discord and establish the events. Once you have done the initialization you can call `SetPresence` and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same discord client at the same time.
+This stage will setup the connection to Discord and establish the events. Once you have done the initialization you can call `SetPresence` and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same Discord client at the same time.
 ```csharp
 public DiscordRpcClient client;
 
