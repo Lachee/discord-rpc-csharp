@@ -16,7 +16,7 @@ var signPassword = Argument<string>("signPassword", "");
 
 // Project Variables
 var asm = string.Format("./{0}/Properties/AssemblyInfo.cs", projectName);
-var sln = string.Format("./{0}/{0}.sln", projectName);
+var sln = string.Format("./{0}.sln", projectName);
 var releaseFolder = string.Format("./{0}/bin/{1}/net35", projectName, buildType);
 var releaseDll = "/DiscordRPC.dll";
 var nuspecFile = string.Format("./{0}/{0}.nuspec", projectName);
