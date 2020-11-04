@@ -232,6 +232,10 @@ namespace DiscordRPC
             AutoEvents = autoEvents;
             SkipIdenticalPresence = true;
 
+            //Validate the process id
+            if (ProcessID < 10)
+                throw new InvalidOperationException("Process ID must be greater than 10.");
+
             //Prepare the logger
             _logger = logger ?? new NullLogger();
 
@@ -497,13 +501,18 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                CurrentPresence.Details = details;
-                SetPresence(CurrentPresence);
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
-            return CurrentPresence;
+
+            //Update the value 
+            presence.Details = details;
+            SetPresence(presence);
+            return presence;
         }
         /// <summary>
         /// Updates only the <see cref="RichPresence.State"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
@@ -515,13 +524,18 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                CurrentPresence.State = state;
-                SetPresence(CurrentPresence);
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
-            return CurrentPresence;
+
+            //Update the value 
+            presence.State = state;
+            SetPresence(presence);
+            return presence;
         }
         /// <summary>
         /// Updates only the <see cref="RichPresence.Party"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
@@ -533,14 +547,18 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                CurrentPresence.Party = party;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            presence.Party = party;
+            SetPresence(presence);
+            return presence;
         }
         /// <summary>
         /// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
@@ -553,13 +571,24 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) return null;
-            if (CurrentPresence.Party == null)
+            //Clone the presence
+            RichPresence presence;
+            lock (_sync)
+            {
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
+            }
+
+            //Ensure it has a party
+            if (presence.Party == null)
                 throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-            try { UpdatePartySize(size, CurrentPresence.Party.Max); } catch (Exception) { throw; }
-            return CurrentPresence;
+            //Update the value 
+            presence.Party.Size = size;
+            SetPresence(presence);
+            return presence;
         }
+
         /// <summary>
         /// Updates the <see cref="Party.Size"/> of the <see cref="CurrentPresence"/> and sends the update presence to Discord. Returns the newly edited Rich Presence.
         /// <para>Will return null if no presence exists and will throw a new <see cref="NullReferenceException"/> if the Party does not exist.</para>
@@ -572,18 +601,23 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            if (CurrentPresence == null) return null;
-            if (CurrentPresence.Party == null)
-                throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
-
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                CurrentPresence.Party.Size = size;
-                CurrentPresence.Party.Max = max;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Ensure it has a party
+            if (presence.Party == null)
+                throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
+
+            //Update the value 
+            presence.Party.Size = size;
+            presence.Party.Max = max;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
@@ -596,17 +630,20 @@ namespace DiscordRPC
         {
             if (!IsInitialized)
                 throw new UninitializedException();
-
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
-                CurrentPresence.Assets.LargeImageKey = key ?? CurrentPresence.Assets.LargeImageKey;
-                CurrentPresence.Assets.LargeImageText = tooltip ?? CurrentPresence.Assets.LargeImageText;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            if (presence.Assets == null) presence.Assets = new Assets();
+            presence.Assets.LargeImageKey = key ?? presence.Assets.LargeImageKey;
+            presence.Assets.LargeImageText = tooltip ?? presence.Assets.LargeImageText;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
@@ -619,17 +656,20 @@ namespace DiscordRPC
         {
             if (!IsInitialized)
                 throw new UninitializedException();
-
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                if (CurrentPresence.Assets == null) CurrentPresence.Assets = new Assets();
-                CurrentPresence.Assets.SmallImageKey = key ?? CurrentPresence.Assets.SmallImageKey;
-                CurrentPresence.Assets.SmallImageText = tooltip ?? CurrentPresence.Assets.SmallImageText;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            if (presence.Assets == null) presence.Assets = new Assets();
+            presence.Assets.SmallImageKey = key ?? presence.Assets.SmallImageKey;
+            presence.Assets.SmallImageText = tooltip ?? presence.Assets.SmallImageText;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
@@ -642,21 +682,25 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                CurrentPresence.Secrets = secrets;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            presence.Secrets = secrets;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
         /// Sets the start time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
         /// </summary>
         /// <returns>Updated Rich Presence</returns>
-        public RichPresence UpdateStartTime() { try { return UpdateStartTime(DateTime.UtcNow); } catch (Exception) { throw; } }
+        public RichPresence UpdateStartTime() { return UpdateStartTime(DateTime.UtcNow); }
 
         /// <summary>
         /// Sets the start time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
@@ -668,22 +712,26 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
-                CurrentPresence.Timestamps.Start = time;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
+            presence.Timestamps.Start = time;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
         /// Sets the end time of the <see cref="CurrentPresence"/> to now and sends the updated presence to Discord.
         /// </summary>
         /// <returns>Updated Rich Presence</returns>
-        public RichPresence UpdateEndTime() { try { return UpdateEndTime(DateTime.UtcNow); } catch (Exception) { throw; } }
+        public RichPresence UpdateEndTime() { return UpdateEndTime(DateTime.UtcNow); }
 
         /// <summary>
         /// Sets the end time of the <see cref="CurrentPresence"/> and sends the updated presence to Discord.
@@ -695,15 +743,19 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) CurrentPresence = new RichPresence();
-                if (CurrentPresence.Timestamps == null) CurrentPresence.Timestamps = new Timestamps();
-                CurrentPresence.Timestamps.End = time;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
+            presence.Timestamps.End = time;
+            SetPresence(presence);
+            return presence;
         }
 
         /// <summary>
@@ -715,14 +767,18 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
+            //Clone the presence
+            RichPresence presence;
             lock (_sync)
             {
-                if (CurrentPresence == null) return null;
-                CurrentPresence.Timestamps = null;
+                if (CurrentPresence == null) { presence = new RichPresence(); }
+                else { presence = CurrentPresence.Clone(); }
             }
 
-            SetPresence(CurrentPresence);
-            return CurrentPresence;
+            //Update the value 
+            presence.Timestamps = null;
+            SetPresence(presence);
+            return presence;
         }
         #endregion
 

@@ -117,7 +117,8 @@ namespace DiscordRPC
                 {
                     ID = this.Party.ID,
                     Size = this.Party.Size,
-                    Max = this.Party.Max
+                    Max = this.Party.Max,
+                    Privacy = this.Party.Privacy,
                 }
             };
         }
@@ -175,6 +176,7 @@ namespace DiscordRPC
                     this.Party.ID = presence.Party.ID ?? this.Party.ID;
                     this.Party.Size = presence.Party.Size;
                     this.Party.Max = presence.Party.Max;
+                    this.Party.Privacy = presence.Party.Privacy;
                 }
                 else
                 {
@@ -371,7 +373,8 @@ namespace DiscordRPC
                 if (other.Party == null ||
                     other.Party.ID != Party.ID ||
                     other.Party.Max != Party.Max ||
-                    other.Party.Size != Party.Size)
+                    other.Party.Size != Party.Size ||
+                    other.Party.Privacy != Party.Privacy)
                     return false;
             }
             else if (other.Party != null)
@@ -768,6 +771,22 @@ namespace DiscordRPC
     public class Party
     {
         /// <summary>
+        /// Privacy of the party
+        /// </summary>
+        public enum PrivacySetting
+        {
+            /// <summary>
+            /// The party is private, invites only.
+            /// </summary>
+            Private = 0,
+
+            /// <summary>
+            /// THe party is public, anyone can join.
+            /// </summary>
+            Public = 1
+        }
+
+        /// <summary>
         /// A unique ID for the player's current party / lobby / group. If this is not supplied, they player will not be in a party and the rest of the information will not be sent. 
         /// <para>Max 128 Bytes</para>
         /// </summary>
@@ -786,6 +805,13 @@ namespace DiscordRPC
         /// </summary>
         [JsonIgnore]
         public int Max { get; set; }
+
+        /// <summary>
+        /// The privacy of the party
+        /// </summary>
+        [JsonProperty("privacy", NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
+        public PrivacySetting Privacy { get; set; }
+
 
         [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
         private int[] _size
