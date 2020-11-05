@@ -151,6 +151,8 @@ void Deinitialize()
 
 
 
+
+
 **DiscordRPC Library**
 
 You can build the solution easily in Visual Studio, it's a simple matter of right clicking the project and hitting build. However, if you wish to build via command line, you can do so with the PowerShell build script:
