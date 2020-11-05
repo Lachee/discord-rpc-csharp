@@ -68,7 +68,13 @@ namespace DiscordRPC.Registry
             }
 
             //Regiser the app
-            return creator.RegisterUriScheme(this);
+            if (creator.RegisterUriScheme(this))
+            {
+                _logger.Info("URI scheme registered.");
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

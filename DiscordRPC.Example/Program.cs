@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace DiscordRPC.Example
 {
-    class Program
+    partial class Program
     {
         /// <summary>
         /// The level of logging to use.
@@ -67,7 +67,8 @@ namespace DiscordRPC.Example
 
             //Seting a random details to test the update rate of the presence
             //BasicExample();
-            FullClientExample();
+            //FullClientExample();
+            Issue104();
 
             Console.WriteLine("Press any key to terminate");
             Console.ReadKey();
@@ -168,7 +169,8 @@ namespace DiscordRPC.Example
                 {
                     ID = Secrets.CreateFriendlySecret(new Random()),
                     Size = 1,
-                    Max = 4
+                    Max = 4,
+                    Privacy = Party.PrivacySetting.Public
                 };
 
                 //Give the game some time so we have a nice countdown
@@ -454,6 +456,7 @@ namespace DiscordRPC.Example
 
                 #region State & Details
                 case "state":
+                    //presence.State = body;
                     presence.State = body;
                     client.SetPresence(presence);
                     break;
