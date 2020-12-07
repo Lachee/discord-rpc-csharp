@@ -232,10 +232,6 @@ namespace DiscordRPC
             AutoEvents = autoEvents;
             SkipIdenticalPresence = true;
 
-            //Validate the process id
-            if (ProcessID < 10)
-                throw new InvalidOperationException("Process ID must be greater than 10.");
-
             //Prepare the logger
             _logger = logger ?? new NullLogger();
 
