@@ -19,16 +19,16 @@ namespace DiscordRPC
 		/// <summary>
 		/// Called when the Discord Client wishes to enter a game to spectate
 		/// </summary>
-		Spectate = 0x1, 
+		Spectate		= 1 << 0, 
 
 		/// <summary>
 		/// Called when the Discord Client wishes to enter a game to play.
 		/// </summary>
-		Join = 0x2,
+		Join			= 1 << 2,
 
 		/// <summary>
 		/// Called when another Discord Client has requested permission to join this game.
 		/// </summary>
-		JoinRequest = 0x4
+		JoinRequest		= 1 << 3,
 	}
 }

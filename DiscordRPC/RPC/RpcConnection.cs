@@ -9,6 +9,9 @@ using System.Threading;
 using Newtonsoft.Json;
 using DiscordRPC.Logging;
 using DiscordRPC.Events;
+using Newtonsoft.Json.Serialization;
+using DiscordRPC.Entities;
+using System.Linq;
 
 namespace DiscordRPC.RPC
 {
@@ -17,6 +20,7 @@ namespace DiscordRPC.RPC
 	/// </summary>
 	internal class RpcConnection : IDisposable
 	{
+
 		/// <summary>
 		/// Version of the RPC Protocol
 		/// </summary>
@@ -36,6 +40,11 @@ namespace DiscordRPC.RPC
 		/// Should we work in a lock step manner? This option is semi-obsolete and may not work as expected.
 		/// </summary>
 		private static readonly bool LOCK_STEP = false;
+
+		/// <summary>
+		/// The endpoint used for exchanging the token
+		/// </summary>
+		private static readonly string TOKEN_ENDPOINT = "https://discord.com/api/v8/oauth2/token";
 
 		/// <summary>
 		/// The logger used by the RPC connection
@@ -67,6 +76,26 @@ namespace DiscordRPC.RPC
 		private readonly object l_states = new object();
 
 		/// <summary>
+		/// The current state of the RPC authorization
+		/// </summary>
+		public AuthorizationState AuthorizationState { get { var tmp = AuthorizationState.NotAuthorized; lock (l_states) tmp = _authstate; return tmp; } }
+		private AuthorizationState _authstate;
+
+		/// <summary>
+		/// Copy of the current authorization
+		/// </summary>
+		public Authorization Authorization { get {
+				Authorization tmp;
+				lock (l_states)
+				{
+					tmp = _auth != null ? _auth.Clone() : null;
+				}
+				return tmp;
+			} 
+		}
+		private Authorization _auth;
+
+		/// <summary>
 		/// The configuration received by the Ready
 		/// </summary>
 		public Configuration Configuration { get { Configuration tmp = null; lock (l_config) tmp = _configuration; return tmp; } }
@@ -75,7 +104,7 @@ namespace DiscordRPC.RPC
 
 		private volatile bool aborting = false;
 		private volatile bool shutdown = false;
-		
+
 		/// <summary>
 		/// Indicates if the RPC connection is still running in the background
 		/// </summary>
@@ -111,6 +140,12 @@ namespace DiscordRPC.RPC
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;                     //The backoff delay before reconnecting.
+
+		private string _authorizationSecret = null;
+		private string _authorizationRedirectUri = null;
+
+		public string[] Scopes { get { return _authorizationScopes;  } }
+		private string[] _authorizationScopes = new string[0];
 		#endregion
 
 		/// <summary>
@@ -120,8 +155,8 @@ namespace DiscordRPC.RPC
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
-        /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
-        /// <param name="maxRtQueueSize">The maximum size of the in queue</param>
+		/// <param name="maxRxQueueSize">The maximum size of the out queue</param>
+		/// <param name="maxRtQueueSize">The maximum size of the in queue</param>
 		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
 		{
 			this.applicationID = applicationID;
@@ -543,7 +578,29 @@ namespace DiscordRPC.RPC
 					case Command.CloseActivityJoinRequest:
 						Logger.Trace("Got invite response reject ack.");
 						break;
-						
+
+					case Command.Authorize:
+						try
+						{
+							Logger.Trace("Got authorization code");
+							var code = response.Data["code"].ToObject<string>();
+							this.ExchangeCode(code);
+						}catch(Exception e)
+						{
+							Logger.Error("Failed to authorize: {0}", e.Message);
+							this.SetAuthorizationState(AuthorizationState.NotAuthorized);
+							throw e;
+						}
+						break;
+
+					case Command.Authenticate:
+						Logger.Trace("Got authenticated");
+						AuthenticatedMessage authenticatedMessage = response.GetObject<AuthenticatedMessage>();
+						authenticatedMessage.Authorization = Authorization;
+						SetAuthorizationState(AuthorizationState.Authorized);
+						EnqueueMessage(authenticatedMessage);
+						break;
+
 					//we have no idea what we were sent
 					default:
 						Logger.Error("Unkown frame was received! {0}", response.Command);
@@ -576,6 +633,11 @@ namespace DiscordRPC.RPC
 				case ServerEvent.ActivityJoinRequest:
 					var request = response.GetObject<JoinRequestMessage>();
 					EnqueueMessage(request);
+					break;
+
+				case ServerEvent.MessageCreate:
+					var messageCreate = response.GetObject<MessageCreateMessage>();
+					EnqueueMessage(messageCreate);
 					break;
 
 				//Unkown dispatch event received. We should just ignore it.
@@ -782,6 +844,19 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
+		/// Sets the current state of the auth status, locking the l_states object.
+		/// </summary>
+		/// <param name="state"></param>
+		private void SetAuthorizationState(AuthorizationState state)
+		{
+			Logger.Trace("Setting the auth state to {0}", state.ToString().ToSnakeCase().ToUpperInvariant());
+			lock (l_states)
+			{
+				_authstate = state;
+			}
+		}
+
+		/// <summary>
 		/// Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye. 
 		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
 		/// </summary>
@@ -842,14 +917,84 @@ namespace DiscordRPC.RPC
 			ShutdownOnly = false;
 			Close();
 		}
-		#endregion
+        #endregion
 
-	}
+        #region Authorization
 
-	/// <summary>
-	/// State of the RPC connection
-	/// </summary>
-	internal enum RpcState
+		/// <summary>
+		/// Authorizes the connection with the current client.
+		/// </summary>
+		/// <param name="clientSecret"></param>
+		/// <param name="redirectUri"></param>
+		/// <param name="scopes"></param>
+		public void Authorize(string clientSecret, string redirectUri, string[] scopes)
+		{
+			//Validate its scopes
+			if (!scopes.Contains("rpc"))
+				throw new ArgumentException("The scopes must contain 'rpc'", "scopes");
+
+			//Validate it's state
+			if (this.AuthorizationState != AuthorizationState.NotAuthorized)
+				throw new InvalidOperationException("Cannot authorize twice");
+						
+			this._authorizationSecret = clientSecret;
+			this._authorizationRedirectUri = redirectUri;
+			this._authorizationScopes = scopes;
+
+			//Set it's state
+			SetAuthorizationState(AuthorizationState.WaitingForUser);
+			EnqueueCommand(new AuthorizeCommand()
+			{
+				ClientId = this.applicationID,
+				Scopes = scopes
+			});
+		}
+
+		/// <summary>
+		/// Exchanges the oAuth2 code and authorizes the connection.
+		/// </summary>
+		/// <param name="code"></param>
+		private void ExchangeCode(string code)
+		{
+			//Validate it's state
+			if (this.AuthorizationState != AuthorizationState.WaitingForUser)
+				throw new InvalidOperationException("Attempted to authorize but in a invalid state.");
+
+			Logger.Trace("Exchanging code");
+			using (System.Net.WebClient client = new System.Net.WebClient())
+			{
+				//Create the query
+				string query = (new System.Text.StringBuilder())
+				.Append("client_id=").Append(this.applicationID)
+					.Append("&client_secret=").Append(this._authorizationSecret)
+					.Append("&grant_type=authorization_code")
+					.Append("&code=").Append(code)
+					.Append("&redirect_uri=").Append(this._authorizationRedirectUri)
+					.Append("&scope=").Append(string.Join(" ", this._authorizationScopes))
+					.ToString();
+
+				//Set the header and send a POST request for the results
+				client.Headers.Add("content-type", "application/x-www-form-urlencoded");
+				var result = client.UploadString(TOKEN_ENDPOINT, query);
+
+				//Clearout shit we dont need anymore.
+				this._authorizationSecret = null;
+				this._authorizationRedirectUri = null; 
+
+				//Decode and enqueue the new event
+				lock (l_states) this._auth = JsonConvert.DeserializeObject<Authorization>(result);
+				SetAuthorizationState(AuthorizationState.Authorizing);
+				EnqueueCommand(new AuthenticateCommand() { AccessToken = this.Authorization.AccessToken});
+			}
+		}
+
+        #endregion
+    }
+
+    /// <summary>
+    /// State of the RPC connection
+    /// </summary>
+    internal enum RpcState
 	{
 		/// <summary>
 		/// Disconnected from the discord client
@@ -865,5 +1010,28 @@ namespace DiscordRPC.RPC
 		/// We are connect to the client and can send and receive messages.
 		/// </summary>
 		Connected
+	}
+
+	internal enum AuthorizationState
+	{
+		/// <summary>
+		/// Not yet authorized
+		/// </summary>
+		NotAuthorized,
+
+		/// <summary>
+		/// Currently waiting for the user to approve
+		/// </summary>
+		WaitingForUser,
+
+		/// <summary>
+		/// Currently attempt to exchange the token
+		/// </summary>
+		Authorizing,
+
+		/// <summary>
+		/// Fully authorized
+		/// </summary>
+		Authorized
 	}
 }

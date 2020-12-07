@@ -7,13 +7,16 @@ using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Commands
 {
-	internal class SubscribeCommand : ICommand
+	internal class MessageSubscribeCommand : ICommand
 	{
 		[JsonIgnore]
 		public ServerEvent Event { get; set; }
 
 		[JsonIgnore]
 		public bool IsUnsubscribe { get; set; }
+
+		[JsonProperty("channel_id")]
+		public string ChannelId { get; set; }
 
 		public IPayload PreparePayload(long nonce)
 		{

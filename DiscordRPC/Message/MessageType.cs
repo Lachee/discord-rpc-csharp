@@ -59,6 +59,16 @@ namespace DiscordRPC.Message
 		/// <summary>
 		/// Failed to establish any connection with discord. Discord is potentially not running?
 		/// </summary>
-		ConnectionFailed
+		ConnectionFailed,
+
+		/// <summary>
+		/// The connection was authenticated.
+		/// </summary>
+		Authenticated,
+
+		/// <summary>
+		/// A message was created in a channel we are listening too.
+		/// </summary>
+		MessageCreate,
 	}
 }

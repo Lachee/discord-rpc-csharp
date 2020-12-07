@@ -40,6 +40,18 @@ namespace DiscordRPC.RPC.Payload
 		[EnumValue("ACTIVITY_JOIN_REQUEST")]
 		ActivityJoinRequest,
 
+        [Obsolete("This value is appart of the RPC API and is not supported by this library.")]
+        [EnumValue("MESSAGE_CREATE")]
+        MessageCreate,
+        
+        [Obsolete("This value is appart of the RPC API and is not supported by this library.")]
+        [EnumValue("MESSAGE_UPDATE")]
+        MessageUpdate,
+        
+        [Obsolete("This value is appart of the RPC API and is not supported by this library.")]
+        [EnumValue("MESSAGE_DELETE")]
+        MessageDelete,
+
 #if INCLUDE_FULL_RPC
         //Old things that are obsolete
         [Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
@@ -75,15 +87,7 @@ namespace DiscordRPC.RPC.Payload
 		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
         [EnumValue("SPEAKING_STOP")]
         SpeakingStop,
-		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
-        [EnumValue("MESSAGE_CREATE")]
-        MessageCreate,
-		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
-        [EnumValue("MESSAGE_UPDATE")]
-        MessageUpdate,
-		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
-        [EnumValue("MESSAGE_DELETE")]
-        MessageDelete,
+
         [Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
         [EnumValue("NOTIFICATION_CREATE")]
         NotificationCreate,

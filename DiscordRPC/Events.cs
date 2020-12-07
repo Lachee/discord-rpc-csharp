@@ -84,6 +84,12 @@ namespace DiscordRPC.Events
     /// <param name="args">The arguments supplied with the event</param>
     public delegate void OnConnectionFailedEvent(object sender, ConnectionFailedMessage args);
 
+    /// <summary>
+    /// The RPC connection as authenticated. It is safe to call protected subscribes now.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="msg"></param>
+    public delegate void OnAuthenticatedEvent(object sender, AuthenticatedMessage msg);
 
     /// <summary>
     /// A RPC Message is received.
@@ -91,4 +97,6 @@ namespace DiscordRPC.Events
     /// <param name="sender">The handler that sent this event</param>
     /// <param name="msg">The raw message from the RPC</param>
     public delegate void OnRpcMessageEvent(object sender, IMessage msg);
+
+
 }

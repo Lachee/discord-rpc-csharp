@@ -6,7 +6,12 @@ using DiscordRPC.Message;
 using DiscordRPC.Registry;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Commands;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace DiscordRPC
 {
@@ -193,9 +198,15 @@ namespace DiscordRPC
         public event OnConnectionFailedEvent OnConnectionFailed;
 
         /// <summary>
+        /// The connection was authenticated. It is now safe to use protected subscriptions like MessageCreate.
+        /// </summary>
+        public event OnAuthenticatedEvent OnAuthenticated;
+
+        /// <summary>
         /// The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.
         /// </summary>
         public event OnRpcMessageEvent OnRpcMessage;
+
         #endregion
 
         #region Initialization
@@ -255,6 +266,7 @@ namespace DiscordRPC
                 if (AutoEvents)
                     ProcessMessage(msg);
             };
+
         }
 
         #endregion
@@ -416,6 +428,11 @@ namespace DiscordRPC
 
                 case MessageType.ConnectionFailed:
                     if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
+                    break;
+
+                case MessageType.Authenticated:
+                    if (OnAuthenticated != null) OnAuthenticated.Invoke(this, message as AuthenticatedMessage);
+                    SynchronizeState();
                     break;
 
                 default:
@@ -823,13 +840,6 @@ namespace DiscordRPC
         public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        [System.Obsolete("Replaced with Unsubscribe", true)]
-        public void Unubscribe(EventType type) { SetSubscription(Subscription & ~type); }
-
-        /// <summary>
         /// Unsubscribe from the event sent by discord. Used for Join / Spectate feature.
         /// <para>Requires the UriScheme to be registered.</para>
         /// </summary>
@@ -867,6 +877,9 @@ namespace DiscordRPC
         /// <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
         private void SubscribeToTypes(EventType type, bool isUnsubscribe)
         {
+            const string REGISTER_ERROR = "Cannot subscribe/unsubscribe as the event expects a registered URI Scheme. Call RegisterUriScheme().";
+            const string AUTHORIZE_ERROR = "Cannot subscribe/unsubscribe as a privillaged event is being used without authorization. Call Authorize().";
+
             //Because of SetSubscription, this can actually be none as there is no differences. 
             //If that is the case, we should just stop here
             if (type == EventType.None) return;
@@ -881,19 +894,23 @@ namespace DiscordRPC
             if (connection == null)
                 throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
 
-            //We dont have the Uri Scheme registered, we should throw a exception to tell the user.
-            if (!HasRegisteredUriScheme)
-                throw new InvalidConfigurationException("Cannot subscribe/unsubscribe to an event as this application has not registered a URI Scheme. Call RegisterUriScheme().");
 
             //Add the subscribe command to be sent when the connection is able too
             if ((type & EventType.Spectate) == EventType.Spectate)
+            {
+                if (!HasRegisteredUriScheme) throw new InvalidConfigurationException(REGISTER_ERROR);
                 connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = isUnsubscribe });
+            }
 
-            if ((type & EventType.Join) == EventType.Join)
+            if ((type & EventType.Join) == EventType.Join) { 
+                if (!HasRegisteredUriScheme) throw new InvalidConfigurationException(REGISTER_ERROR);
                 connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
+            }
 
-            if ((type & EventType.JoinRequest) == EventType.JoinRequest)
+            if ((type & EventType.JoinRequest) == EventType.JoinRequest) { 
+                if (!HasRegisteredUriScheme) throw new InvalidConfigurationException(REGISTER_ERROR);
                 connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
+            }
         }
 
         #endregion
@@ -912,6 +929,47 @@ namespace DiscordRPC
             if (HasRegisteredUriScheme)
                 SubscribeToTypes(Subscription, false);
         }
+
+        #region Authorization
+
+        /// <summary>
+        /// Authorizes the connection with the current client.
+        /// </summary>
+        /// <param name="clientSecret"></param>
+        /// <param name="redirectUri"></param>
+        /// <param name="scopes"></param>
+        public void Authorize(string clientSecret, string redirectUri, string[] scopes)
+        {
+            //Cannot sync over uninitialized connection
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            this.connection.Authorize(clientSecret, redirectUri, scopes);
+        }
+
+        #endregion
+
+        #region Channels
+
+        /// <summary>
+        /// Subscribes to the channel's message events
+        /// </summary>
+        /// <param name="channelId"></param>
+        public void AddChannelListener(ulong channelId)
+        {
+            if (this.connection.AuthorizationState != AuthorizationState.Authorized)
+                throw new InvalidOperationException("Cannot listen to channel as the application hasn't been authorized yet.");
+
+            if (!this.connection.Scopes.Contains("messages.read"))
+                throw new InvalidOperationException("Cannot listen to channel as the application hasn't been authorized with the messages.read scope");
+
+            connection.EnqueueCommand(new MessageSubscribeCommand() { Event = RPC.Payload.ServerEvent.MessageCreate, ChannelId = channelId.ToString() });
+            connection.EnqueueCommand(new MessageSubscribeCommand() { Event = RPC.Payload.ServerEvent.MessageDelete, ChannelId = channelId.ToString() });
+            connection.EnqueueCommand(new MessageSubscribeCommand() { Event = RPC.Payload.ServerEvent.MessageUpdate, ChannelId = channelId.ToString() });
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Attempts to initalize a connection to the Discord IPC.
