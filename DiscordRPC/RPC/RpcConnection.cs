@@ -369,7 +369,13 @@ namespace DiscordRPC.RPC
 											Logger.Error("Data: " + frame.Message);
 										}
 
-										if (response != null) ProcessFrame(response);
+
+										try { if (response != null) ProcessFrame(response); } catch(Exception e)
+                                        {
+											Logger.Error("Failed to process event! " + e.Message);
+											Logger.Error("Data: " + frame.Message);
+										}
+
 										break;
 										
 
