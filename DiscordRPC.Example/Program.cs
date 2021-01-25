@@ -1,5 +1,4 @@
-﻿
-using DiscordRPC.Message;
+﻿using DiscordRPC.Message;
 using System;
 using System.Text;
 using System.Threading;
