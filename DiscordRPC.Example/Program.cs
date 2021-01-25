@@ -66,10 +66,11 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            //BasicExample();
+            BasicExample();
             //FullClientExample();
             //Issue104();
-            IssueMultipleSets();
+            //IssueMultipleSets();
+            //IssueJoinLogic();
 
             Console.WriteLine("Press any key to terminate");
             Console.ReadKey();
@@ -104,7 +105,11 @@ namespace DiscordRPC.Example
             {
                 Details = "A Basic Example",
                 State = "In Game",
-                Timestamps = Timestamps.FromTimeSpan(10)
+                Timestamps = Timestamps.FromTimeSpan(10),
+                Buttons = new Button[]
+                {
+                    new Button() { Label = "Fish", Url = "https://lachee.dev/" }
+                }
             });
 
             // == Do the rest of your program.

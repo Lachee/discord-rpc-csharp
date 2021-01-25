@@ -302,7 +302,7 @@ namespace DiscordRPC
                             //We need to merge these presences together
                             if (CurrentPresence == null)
                             {
-                                CurrentPresence = pm.Presence;
+                                CurrentPresence = (new RichPresence()).Merge(pm.Presence);
                             }
                             else if (pm.Presence == null)
                             {
@@ -488,7 +488,7 @@ namespace DiscordRPC
 
         #region Updates
         /// <summary>
-        /// Updates only the <see cref="RichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+        /// Updates only the <see cref="BaseRichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>
         /// <param name="details">The details of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>
@@ -511,7 +511,7 @@ namespace DiscordRPC
             return presence;
         }
         /// <summary>
-        /// Updates only the <see cref="RichPresence.State"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+        /// Updates only the <see cref="BaseRichPresence.State"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>
         /// <param name="state">The state of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>
@@ -534,7 +534,7 @@ namespace DiscordRPC
             return presence;
         }
         /// <summary>
-        /// Updates only the <see cref="RichPresence.Party"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+        /// Updates only the <see cref="BaseRichPresence.Party"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>
         /// <param name="party">The party of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>

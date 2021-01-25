@@ -23,7 +23,7 @@ namespace DiscordRPC.Message
 			}
 			else
 			{
-				Presence = (RichPresence)rpr;
+				Presence = (BaseRichPresence)rpr;
 				Name = rpr.Name;
 				ApplicationID = rpr.ClientID;
 			}
@@ -32,7 +32,7 @@ namespace DiscordRPC.Message
 		/// <summary>
 		/// The rich presence Discord has set
 		/// </summary>
-		public RichPresence Presence { get; internal set; }
+		public BaseRichPresence Presence { get; internal set; }
 
 		/// <summary>
 		/// The name of the application Discord has set it for
