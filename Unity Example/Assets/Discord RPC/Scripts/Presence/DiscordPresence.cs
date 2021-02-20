@@ -65,7 +65,7 @@ public class DiscordPresence
 	/// Creats a new Presence object, copying values of the Rich Presence
 	/// </summary>
 	/// <param name="presence">The rich presence, often received by discord.</param>
-	public DiscordPresence(DiscordRPC.RichPresence presence)
+	public DiscordPresence(DiscordRPC.BaseRichPresence presence)
 	{
 		if (presence != null)
 		{
