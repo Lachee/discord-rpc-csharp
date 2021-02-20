@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Unity3D </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Unity3D ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="unity3d">Unity3D</h1>
+
+<p>This library has full Unity3D intergration and custom editor scripts to help enhance your usage with the library. Please note there are some technical limitations with Unity3D however:</p>
+<ul>
+<li>.NET 2.0+ is required (no subset).</li>
+<li>Newtonsoft.Json is required.</li>
+<li>Native Named Pipe Wrapper is required.</li>
+</ul>
+<p>Luckily the provided Unity Package handles all this for you.</p>
+<h2 id="download">Download</h2>
+<p>Use the automatically built <code>.UnityPackage</code> that can be found in the artifacts of the AppVoyer build. This contains the extra dependencies for the platform and full editor support to make it easier to use.</p>
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Download Package</a> and import into your project.</p>
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts"><img src="/images/unity_package.png" alt="Unity Package"></a></p>
+<h2 id="importing">Importing</h2>
+<p>Import the unity package normally and make sure all content is selected. Once imported you may get the following warning. This library does not support the .NET 2.0 <strong>Subset</strong> and requires the full .NET 2.0 or greater. Proceeding with <code>Yes</code> will convert the project automatically to .NET 2.0.</p>
+<p><img src="https://i.imgur.com/noRnm33.png" alt="import Warning"></p>
+<h2 id="creating-a-manager">Creating a Manager</h2>
+<p>The Discord Manager is a wrapper class around the DiscordRpcClient. It will handle the initialization, deinitialization and event invoking for you automatically. </p>
+<p>Create a new Discord Manager in your very first loaded scene by following <code>GameObject -&gt; Discord Manager</code>. </p>
+<p><img src="https://i.imgur.com/rRsGCf2.png" alt="Import Settings"></p>
+<h3 id="discord-manager-inspector">Discord Manager Inspector</h3>
+<p>Once created, a new object will appear in your scene. You can <em>only</em> have 1 Discord Manager at a time and any extras will automatically be deleted. The manager has some default values, but will need to be configured to your application. </p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application ID</td>
+<td>The Client ID of your Discord App created in the <a href="https://discordapp.com/developers/applications/">Developer Portal</a>.</td>
+</tr>
+<tr>
+<td>Steam ID</td>
+<td>A optional Steam App ID of your game. This will let Discord launch your game through the steam client instead of directly when using the <a href="/join_spectate/intro.md">Join &amp; Spectate</a></td>
+</tr>
+<tr>
+<td>Target Pipe</td>
+<td>The pipe your Discord Client is running on. If you have 2 clients running for testing purposes, you can switch which client the game connects too.</td>
+</tr>
+<tr>
+<td>Log Level</td>
+<td>The level of logging to receive from the DiscordRpcClient.</td>
+</tr>
+<tr>
+<td>Register Uri Scheme</td>
+<td>Registers a custom URI scheme so Discord can launch your game. Only required if using the <a href="/join_spectate/intro.md">Join &amp; Spectate</a> feature.</td>
+</tr>
+<tr>
+<td>Active</td>
+<td>If enabled, the Discord Manager will create a connection and maintain it.</td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td>The current state of the connected client. These values are generally <code>Read Only</code></td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://i.imgur.com/rrjEOHA.png" alt="Configuration"></p>
+<h2 id="usage">Usage</h2>
+<p>Setting Rich Presence is done via your game code. It is upto you on how you implement it, but as an example from the Survival Shooter example by Unity3D:</p>
+<pre><code class="lang-cs">public void UpdatePresence()
+{
+    presence.state = &quot;Score: &quot; + CompleteProject.ScoreManager.score;
+    presence.largeAsset = new DiscordAsset()
+    {
+        image = health.isDead ? &quot;dead&quot; : &quot;alive&quot;,
+        tooltip = health.currentHealth + &quot;HP&quot;
+    };
+
+    DiscordManager.current.SetPresence(presence);
+}
+</code></pre><h2 id="further-reading">Further Reading</h2>
+<p>If you wish to implement the Join and Spectate feature within your project (those buttons), please read <a href="../join_spectate/intro.html">Joining &amp; Spectating Introduction</a> to get started.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/docfx_project/articles/getting_started/unity3d.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            © 2019 Lachee
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

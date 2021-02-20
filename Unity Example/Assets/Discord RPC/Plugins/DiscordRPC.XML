@@ -60,7 +60,7 @@
             The maximum size of the message queue received from Discord. 
             </summary>
         </member>
-        <member name="P:DiscordRPC.DiscordRpcClient.Disposed">
+        <member name="P:DiscordRPC.DiscordRpcClient.IsDisposed">
             <summary>
             The dispose state of the client object.
             </summary>
@@ -73,6 +73,11 @@
         <member name="P:DiscordRPC.DiscordRpcClient.AutoEvents">
             <summary>
             Indicates if the client will automatically invoke the events without <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> having to be called. 
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.DiscordRpcClient.SkipIdenticalPresence">
+            <summary>
+            Skips sending presences that are identical to the current one.
             </summary>
         </member>
         <member name="P:DiscordRPC.DiscordRpcClient.TargetPipe">
@@ -115,49 +120,49 @@
         <member name="E:DiscordRPC.DiscordRpcClient.OnReady">
             <summary>
             Called when the discord client is ready to send and receive messages.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnClose">
             <summary>
             Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnError">
             <summary>
             Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnPresenceUpdate">
             <summary>
             Called when the Discord Client has updated the presence.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnSubscribe">
             <summary>
             Called when the Discord Client has subscribed to an event.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnUnsubscribe">
             <summary>
             Called when the Discord Client has unsubscribed from an event.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnJoin">
             <summary>
             Called when the Discord Client wishes for this process to join a game.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnSpectate">
             <summary>
             Called when the Discord Client wishes for this process to spectate a game.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnJoinRequested">
@@ -169,12 +174,13 @@
         <member name="E:DiscordRPC.DiscordRpcClient.OnConnectionEstablished">
             <summary>
             The connection to the discord client was succesfull. This is called before <see cref="F:DiscordRPC.Message.MessageType.Ready"/>.
-            <para>This event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> is executed.</para>
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnConnectionFailed">
             <summary>
             Failed to establish any connection with discord. Discord is potentially not running?
+            <para>If <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="M:DiscordRPC.DiscordRpcClient.Invoke"/> and will be on the calling thread.</para>
             </summary>
         </member>
         <member name="E:DiscordRPC.DiscordRpcClient.OnRpcMessage">
@@ -201,6 +207,7 @@
         <member name="M:DiscordRPC.DiscordRpcClient.Invoke">
             <summary>
             Dequeues all the messages from Discord, processes them and then invoke appropriate event handlers. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked in the order they were invoked.
+            <para>This method cannot be used if <see cref="P:DiscordRPC.DiscordRpcClient.AutoEvents"/> is enabled.</para>
             </summary>
             <returns>Returns the messages that were invoked and in the order they were invoked.</returns>
         </member>
@@ -226,21 +233,21 @@
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.UpdateDetails(System.String)">
             <summary>
-            Updates only the <see cref="P:DiscordRPC.RichPresence.Details"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            Updates only the <see cref="P:DiscordRPC.BaseRichPresence.Details"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
             </summary>
             <param name="details">The details of the Rich Presence</param>
             <returns>Updated Rich Presence</returns>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.UpdateState(System.String)">
             <summary>
-            Updates only the <see cref="P:DiscordRPC.RichPresence.State"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            Updates only the <see cref="P:DiscordRPC.BaseRichPresence.State"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
             </summary>
             <param name="state">The state of the Rich Presence</param>
             <returns>Updated Rich Presence</returns>
         </member>
         <member name="M:DiscordRPC.DiscordRpcClient.UpdateParty(DiscordRPC.Party)">
             <summary>
-            Updates only the <see cref="P:DiscordRPC.RichPresence.Party"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+            Updates only the <see cref="P:DiscordRPC.BaseRichPresence.Party"/> of the <see cref="P:DiscordRPC.DiscordRpcClient.CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
             </summary>
             <param name="party">The party of the Rich Presence</param>
             <returns>Updated Rich Presence</returns>
@@ -505,6 +512,11 @@
             A InvalidConfigurationException is thrown when trying to perform a action that conflicts with the current configuration.
             </summary>
         </member>
+        <member name="T:DiscordRPC.Exceptions.InvalidPipeException">
+            <summary>
+            The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
+            </summary>
+        </member>
         <member name="T:DiscordRPC.Exceptions.StringOutOfRangeException">
             <summary>
             A StringOutOfRangeException is thrown when the length of a string exceeds the allowed limit.
@@ -555,11 +567,6 @@
         <member name="M:DiscordRPC.Exceptions.UninitializedException.#ctor">
             <summary>
             Creates a new uninitialized exception with default message.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Exceptions.InvalidPipeException">
-            <summary>
-            The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.
             </summary>
         </member>
         <member name="P:DiscordRPC.Helper.BackoffDelay.Maximum">
@@ -623,7 +630,7 @@
         </member>
         <member name="M:DiscordRPC.Helper.StringTools.ToCamelCase(System.String)">
             <summary>
-            Converts the string into CamelCase (Pascal Case).
+            Converts the string into UpperCamelCase (Pascal Case).
             </summary>
             <param name="str">The string to convert</param>
             <returns></returns>
@@ -727,12 +734,20 @@
             <param name="pipe"></param>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.tBeginRead">
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.AttemptConnection(System.Int32,System.Boolean)">
+            <summary>
+            Attempts a new connection
+            </summary>
+            <param name="pipe">The pipe number to connect too.</param>
+            <param name="isSandbox">Should the connection to a sandbox be attempted?</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.BeginReadStream">
             <summary>
             Starts a read. Can be executed in another thread.
             </summary>
         </member>
-        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.tEndRead(System.IAsyncResult)">
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.EndReadStream(System.IAsyncResult)">
             <summary>
             Ends a read. Can be executed in another thread.
             </summary>
@@ -761,6 +776,32 @@
             <summary>
             Disposes of the stream
             </summary>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.GetPipeName(System.Int32,System.String)">
+            <summary>
+            Returns a platform specific path that Discord is hosting the IPC on.
+            </summary>
+            <param name="pipe">The pipe number.</param>
+            <param name="sandbox">The sandbox the pipe is in. Leave blank for no sandbox.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.GetPipeSandbox">
+            <summary>
+            Gets the name of the possible sandbox enviroment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.GetTemporaryDirectory">
+            <summary>
+            Gets the temporary path for the current enviroment. Only applicable for UNIX based systems.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.IO.ManagedNamedPipeClient.IsUnix">
+            <summary>
+            Returns true if the current OS platform is Unix based (Unix or MacOSX).
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.IO.Opcode">
             <summary>
@@ -873,6 +914,11 @@
             <param name="stream"></param>
             <returns></returns>
         </member>
+        <member name="M:DiscordRPC.IO.PipeFrame.Min(System.Int32,System.UInt32)">
+            <summary>
+            Returns minimum value between a int and a unsigned int
+            </summary>
+        </member>
         <member name="M:DiscordRPC.IO.PipeFrame.TryReadUInt32(System.IO.Stream,System.UInt32@)">
             <summary>
             Attempts to read a UInt32
@@ -886,62 +932,6 @@
             Writes the frame into the target frame as one big byte block.
             </summary>
             <param name="stream"></param>
-        </member>
-        <member name="T:DiscordRPC.Logging.FileLogger">
-            <summary>
-            Logs the outputs to a file
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Logging.FileLogger.Level">
-            <summary>
-            The level of logging to apply to this logger.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Logging.FileLogger.File">
-            <summary>
-            Should the output be coloured?
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String)">
-            <summary>
-            Creates a new instance of the file logger
-            </summary>
-            <param name="path">The path of the log file.</param>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String,DiscordRPC.Logging.LogLevel)">
-            <summary>
-            Creates a new instance of the file logger
-            </summary>
-            <param name="path">The path of the log file.</param>
-            <param name="level">The level to assign to the logger.</param>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.Trace(System.String,System.Object[])">
-            <summary>
-            Informative log messages
-            </summary>
-            <param name="message"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.Info(System.String,System.Object[])">
-            <summary>
-            Informative log messages
-            </summary>
-            <param name="message"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.Warning(System.String,System.Object[])">
-            <summary>
-            Warning log messages
-            </summary>
-            <param name="message"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:DiscordRPC.Logging.FileLogger.Error(System.String,System.Object[])">
-            <summary>
-            Error log messsages
-            </summary>
-            <param name="message"></param>
-            <param name="args"></param>
         </member>
         <member name="T:DiscordRPC.Logging.ConsoleLogger">
             <summary>
@@ -997,6 +987,62 @@
             <param name="args"></param>
         </member>
         <member name="M:DiscordRPC.Logging.ConsoleLogger.Error(System.String,System.Object[])">
+            <summary>
+            Error log messsages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="T:DiscordRPC.Logging.FileLogger">
+            <summary>
+            Logs the outputs to a file
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.FileLogger.Level">
+            <summary>
+            The level of logging to apply to this logger.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Logging.FileLogger.File">
+            <summary>
+            Should the output be coloured?
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the file logger
+            </summary>
+            <param name="path">The path of the log file.</param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.#ctor(System.String,DiscordRPC.Logging.LogLevel)">
+            <summary>
+            Creates a new instance of the file logger
+            </summary>
+            <param name="path">The path of the log file.</param>
+            <param name="level">The level to assign to the logger.</param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Trace(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Info(System.String,System.Object[])">
+            <summary>
+            Informative log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Warning(System.String,System.Object[])">
+            <summary>
+            Warning log messages
+            </summary>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:DiscordRPC.Logging.FileLogger.Error(System.String,System.Object[])">
             <summary>
             Error log messsages
             </summary>
@@ -1109,61 +1155,6 @@
             <param name="message"></param>
             <param name="args"></param>
         </member>
-        <member name="T:DiscordRPC.Message.ConnectionFailedMessage">
-            <summary>
-            Failed to establish any connection with discord. Discord is potentially not running?
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ConnectionFailedMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ConnectionFailedMessage.FailedPipe">
-            <summary>
-            The pipe we failed to connect too.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.ConnectionEstablishedMessage">
-            <summary>
-            The connection to the discord client was succesfull. This is called before <see cref="F:DiscordRPC.Message.MessageType.Ready"/>.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.ConnectedPipe">
-            <summary>
-            The pipe we ended up connecting too
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.PresenceMessage">
-            <summary>
-            Representation of the message received by discord when the presence has been updated.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.PresenceMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.PresenceMessage.Presence">
-            <summary>
-            The rich presence Discord has set
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.PresenceMessage.Name">
-            <summary>
-            The name of the application Discord has set it for
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.PresenceMessage.ApplicationID">
-            <summary>
-            The ID of the application discord has set it for
-            </summary>
-        </member>
         <member name="T:DiscordRPC.Message.CloseMessage">
             <summary>
             Called when the IPC has closed.
@@ -1182,6 +1173,105 @@
         <member name="P:DiscordRPC.Message.CloseMessage.Code">
             <summary>
             The closure code
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.ConnectionEstablishedMessage">
+            <summary>
+            The connection to the discord client was succesfull. This is called before <see cref="F:DiscordRPC.Message.MessageType.Ready"/>.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ConnectionEstablishedMessage.ConnectedPipe">
+            <summary>
+            The pipe we ended up connecting too
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.ConnectionFailedMessage">
+            <summary>
+            Failed to establish any connection with discord. Discord is potentially not running?
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ConnectionFailedMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ConnectionFailedMessage.FailedPipe">
+            <summary>
+            The pipe we failed to connect too.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.ErrorMessage">
+            <summary>
+            Created when a error occurs within the ipc and it is sent to the client.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Code">
+            <summary>
+            The Discord error code.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.ErrorMessage.Message">
+            <summary>
+            The message associated with the error code.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.ErrorCode">
+            <summary>
+            The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.Success">
+            <summary> Pipe was Successful </summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.PipeException">
+            <summary>The pipe had an exception</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.ReadCorrupt">
+            <summary>The pipe received corrupted data</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.NotImplemented">
+            <summary>The functionality was not yet implemented</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.UnkownError">
+            <summary>Unkown Discord error</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidPayload">
+            <summary>Invalid Payload received</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidCommand">
+            <summary>Invalid command was sent</summary>
+        </member>
+        <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
+            <summary>Invalid event was sent </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.IMessage">
+            <summary>
+            Messages received from discord.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.IMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.IMessage.TimeCreated">
+            <summary>
+            The time the message was created
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.Message.IMessage.#ctor">
+            <summary>
+            Creates a new instance of the message
             </summary>
         </member>
         <member name="T:DiscordRPC.Message.JoinMessage">
@@ -1212,91 +1302,6 @@
         <member name="P:DiscordRPC.Message.JoinRequestMessage.User">
             <summary>
             The discord user that is requesting access.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.SpectateMessage">
-            <summary>
-            Called when the Discord Client wishes for this process to spectate a game. D -> C. 
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.SpectateMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.UnsubscribeMessage">
-            <summary>
-            Called as validation of a subscribe
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Event">
-            <summary>
-            The event that was subscribed too.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.SubscribeMessage">
-            <summary>
-            Called as validation of a subscribe
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.SubscribeMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.SubscribeMessage.Event">
-            <summary>
-            The event that was subscribed too.
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.ReadyMessage">
-            <summary>
-            Called when the ipc is ready to send arguments.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ReadyMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ReadyMessage.Configuration">
-            <summary>
-            The configuration of the connection
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ReadyMessage.User">
-            <summary>
-            User the connection belongs too
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.ReadyMessage.Version">
-            <summary>
-            The version of the RPC
-            </summary>
-        </member>
-        <member name="T:DiscordRPC.Message.IMessage">
-            <summary>
-            Messages received from discord.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.IMessage.Type">
-            <summary>
-            The type of message received from discord
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Message.IMessage.TimeCreated">
-            <summary>
-            The time the message was created
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.Message.IMessage.#ctor">
-            <summary>
-            Creates a new instance of the message
             </summary>
         </member>
         <member name="T:DiscordRPC.Message.MessageType">
@@ -1359,54 +1364,95 @@
             Failed to establish any connection with discord. Discord is potentially not running?
             </summary>
         </member>
-        <member name="T:DiscordRPC.Message.ErrorMessage">
+        <member name="T:DiscordRPC.Message.PresenceMessage">
             <summary>
-            Created when a error occurs within the ipc and it is sent to the client.
+            Representation of the message received by discord when the presence has been updated.
             </summary>
         </member>
-        <member name="P:DiscordRPC.Message.ErrorMessage.Type">
+        <member name="P:DiscordRPC.Message.PresenceMessage.Type">
             <summary>
             The type of message received from discord
             </summary>
         </member>
-        <member name="P:DiscordRPC.Message.ErrorMessage.Code">
+        <member name="P:DiscordRPC.Message.PresenceMessage.Presence">
             <summary>
-            The Discord error code.
+            The rich presence Discord has set
             </summary>
         </member>
-        <member name="P:DiscordRPC.Message.ErrorMessage.Message">
+        <member name="P:DiscordRPC.Message.PresenceMessage.Name">
             <summary>
-            The message associated with the error code.
+            The name of the application Discord has set it for
             </summary>
         </member>
-        <member name="T:DiscordRPC.Message.ErrorCode">
+        <member name="P:DiscordRPC.Message.PresenceMessage.ApplicationID">
             <summary>
-            The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation
+            The ID of the application discord has set it for
             </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.Success">
-            <summary> Pipe was Successful </summary>
+        <member name="T:DiscordRPC.Message.ReadyMessage">
+            <summary>
+            Called when the ipc is ready to send arguments.
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.PipeException">
-            <summary>The pipe had an exception</summary>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.ReadCorrupt">
-            <summary>The pipe received corrupted data</summary>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Configuration">
+            <summary>
+            The configuration of the connection
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.NotImplemented">
-            <summary>The functionality was not yet implemented</summary>
+        <member name="P:DiscordRPC.Message.ReadyMessage.User">
+            <summary>
+            User the connection belongs too
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.UnkownError">
-            <summary>Unkown Discord error</summary>
+        <member name="P:DiscordRPC.Message.ReadyMessage.Version">
+            <summary>
+            The version of the RPC
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.InvalidPayload">
-            <summary>Invalid Payload received</summary>
+        <member name="T:DiscordRPC.Message.SpectateMessage">
+            <summary>
+            Called when the Discord Client wishes for this process to spectate a game. D -> C. 
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.InvalidCommand">
-            <summary>Invalid command was sent</summary>
+        <member name="P:DiscordRPC.Message.SpectateMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.InvalidEvent">
-            <summary>Invalid event was sent </summary>
+        <member name="T:DiscordRPC.Message.SubscribeMessage">
+            <summary>
+            Called as validation of a subscribe
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.SubscribeMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.SubscribeMessage.Event">
+            <summary>
+            The event that was subscribed too.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Message.UnsubscribeMessage">
+            <summary>
+            Called as validation of a subscribe
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Type">
+            <summary>
+            The type of message received from discord
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Message.UnsubscribeMessage.Event">
+            <summary>
+            The event that was subscribed too.
+            </summary>
         </member>
         <member name="M:DiscordRPC.Registry.IUriSchemeCreator.RegisterUriScheme(DiscordRPC.Registry.UriSchemeRegister)">
             <summary>
@@ -1461,138 +1507,84 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:DiscordRPC.RichPresence">
+        <member name="T:DiscordRPC.BaseRichPresence">
             <summary>
-            The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.
+            The base rich presence structure
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.State">
+        <member name="P:DiscordRPC.BaseRichPresence.State">
             <summary>
-            The user's current <see cref="P:DiscordRPC.RichPresence.Party"/> status. For example, "Playing Solo" or "With Friends".
+            The user's current <see cref="P:DiscordRPC.BaseRichPresence.Party"/> status. For example, "Playing Solo" or "With Friends".
             <para>Max 128 bytes</para>
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Details">
+        <member name="F:DiscordRPC.BaseRichPresence._state">
+            <summary>Inernal inner state string</summary>
+        </member>
+        <member name="P:DiscordRPC.BaseRichPresence.Details">
             <summary>
             What the user is currently doing. For example, "Competitive - Total Mayhem".
             <para>Max 128 bytes</para>
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Timestamps">
+        <member name="F:DiscordRPC.BaseRichPresence._details">
+            <summary>Inernal inner detail string</summary>
+        </member>
+        <member name="P:DiscordRPC.BaseRichPresence.Timestamps">
             <summary>
             The time elapsed / remaining time data.
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Assets">
+        <member name="P:DiscordRPC.BaseRichPresence.Assets">
             <summary>
             The names of the images to use and the tooltips to give those images.
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Party">
+        <member name="P:DiscordRPC.BaseRichPresence.Party">
             <summary>
             The party the player is currently in. The <see cref="P:DiscordRPC.Party.ID"/> must be set for this to be included in the RichPresence update.
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Secrets">
+        <member name="P:DiscordRPC.BaseRichPresence.Secrets">
             <summary>
             The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.
             <para>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</para>
             <para>Visit the <see href="https://discordapp.com/developers/docs/rich-presence/how-to#secrets">Rich Presence How-To</see> for more information.</para>
             </summary>
         </member>
-        <member name="P:DiscordRPC.RichPresence.Instance">
+        <member name="P:DiscordRPC.BaseRichPresence.Instance">
             <summary>
             Marks the <see cref="P:DiscordRPC.Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
             <para>
             "TLDR it marks the matchSecret field as an instance, that is to say a context in game that’s not like a lobby state/not in game state. It was gonna he used for notify me, but we scrapped that for ask to join. We may put it to another use in the future. For now, don’t worry about it" - Mason (Discord API Server 14 / 03 / 2018)
-            </para>
+               </para>
             </summary>
         </member>
-        <member name="M:DiscordRPC.RichPresence.Clone">
-            <summary>
-            Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.Merge(DiscordRPC.RichPresence)">
-            <summary>
-            Merges the passed presence with this one, taking into account the image key to image id annoyance.
-            </summary>
-            <param name="presence"></param>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.Update(DiscordRPC.RichPresence)">
-            <summary>
-            Updates this presence with any values from the previous one
-            </summary>
-            <param name="presence"></param>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.HasTimestamps">
+        <member name="M:DiscordRPC.BaseRichPresence.HasTimestamps">
             <summary>
             Does the Rich Presence have valid timestamps?
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.RichPresence.HasAssets">
+        <member name="M:DiscordRPC.BaseRichPresence.HasAssets">
             <summary>
             Does the Rich Presence have valid assets?
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.RichPresence.HasParty">
+        <member name="M:DiscordRPC.BaseRichPresence.HasParty">
             <summary>
             Does the Rich Presence have a valid party?
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.RichPresence.HasSecrets">
+        <member name="M:DiscordRPC.BaseRichPresence.HasSecrets">
             <summary>
             Does the Rich Presence have valid secrets?
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DiscordRPC.RichPresence.WithState(System.String)">
-            <summary>
-            Sets the state of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.State"/>.
-            </summary>
-            <param name="state">The user's current <see cref="P:DiscordRPC.RichPresence.Party"/> status.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.WithDetails(System.String)">
-            <summary>
-            Sets the details of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Details"/>.
-            </summary>
-            <param name="details">What the user is currently doing.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.WithTimestamps(DiscordRPC.Timestamps)">
-            <summary>
-            Sets the timestamp of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Timestamps"/>.
-            </summary>
-            <param name="timestamps">The time elapsed / remaining time data.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.WithAssets(DiscordRPC.Assets)">
-            <summary>
-            Sets the assets of the Rich Presence. See also <seealso cref="P:DiscordRPC.RichPresence.Assets"/>.
-            </summary>
-            <param name="assets">The names of the images to use and the tooltips to give those images.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)">
-            <summary>
-            Sets the Rich Presence's party. See also <seealso cref="P:DiscordRPC.RichPresence.Party"/>.
-            </summary>
-            <param name="party">The party the player is currently in.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.WithSecrets(DiscordRPC.Secrets)">
-            <summary>
-            Sets the Rich Presence's secrets. See also <seealso cref="P:DiscordRPC.RichPresence.Secrets"/>.
-            </summary>
-            <param name="secrets">The secrets used for Join / Spectate.</param>
-            <returns>The modified Rich Presence.</returns>
-        </member>
-        <member name="M:DiscordRPC.RichPresence.ValidateString(System.String,System.String@,System.Int32,System.Text.Encoding)">
+        <member name="M:DiscordRPC.BaseRichPresence.ValidateString(System.String,System.String@,System.Int32,System.Text.Encoding)">
             <summary>
             Attempts to call <see cref="M:DiscordRPC.Helper.StringTools.GetNullOrString(System.String)"/> on the string and return the result, if its within a valid length.
             </summary>
@@ -1602,11 +1594,18 @@
             <param name="encoding">The encoding to count the bytes with</param>
             <returns>True if the string fits within the number of bytes</returns>
         </member>
-        <member name="M:DiscordRPC.RichPresence.op_Implicit(DiscordRPC.RichPresence)~System.Boolean">
+        <member name="M:DiscordRPC.BaseRichPresence.op_Implicit(DiscordRPC.BaseRichPresence)~System.Boolean">
             <summary>
             Operator that converts a presence into a boolean for null checks.
             </summary>
             <param name="presesnce"></param>
+        </member>
+        <member name="M:DiscordRPC.BaseRichPresence.Matches(DiscordRPC.RichPresence)">
+            <summary>
+            Checks if the other rich presence differs from the current one
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
         </member>
         <member name="T:DiscordRPC.Secrets">
             <summary>
@@ -1716,18 +1715,18 @@
             </summary>
         </member>
         <member name="P:DiscordRPC.Timestamps.Now">
-            <summary> Creates a new timestamp for now. </summary>
+            <summary>A new timestamp that starts from the current time.</summary>
         </member>
         <member name="M:DiscordRPC.Timestamps.FromTimeSpan(System.Double)">
             <summary>
-            Creates a new timestamp starting at UtcNow and ending in the supplied timespan
+            Creates a new timestamp starting at the current time and ending in the supplied timespan
             </summary>
             <param name="seconds">How long the Timestamp will last for in seconds.</param>
             <returns>Returns a new timestamp with given duration.</returns>
         </member>
         <member name="M:DiscordRPC.Timestamps.FromTimeSpan(System.TimeSpan)">
             <summary>
-            Creates a new timestamp starting at UtcNow and ending in the supplied timespan
+            Creates a new timestamp starting at current time and ending in the supplied timespan
             </summary>
             <param name="timespan">How long the Timestamp will last for.</param>
             <returns>Returns a new timestamp with given duration.</returns>
@@ -1784,6 +1783,21 @@
             Structure representing the part the player is in.
             </summary>
         </member>
+        <member name="T:DiscordRPC.Party.PrivacySetting">
+            <summary>
+            Privacy of the party
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.Party.PrivacySetting.Private">
+            <summary>
+            The party is private, invites only.
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.Party.PrivacySetting.Public">
+            <summary>
+            THe party is public, anyone can join.
+            </summary>
+        </member>
         <member name="P:DiscordRPC.Party.ID">
             <summary>
             A unique ID for the player's current party / lobby / group. If this is not supplied, they player will not be in a party and the rest of the information will not be sent. 
@@ -1799,6 +1813,106 @@
             <summary>
             The maxium size of the party / lobby / group. This is required to be larger than <see cref="P:DiscordRPC.Party.Size"/>. If it is smaller than the current party size, it will automatically be set too <see cref="P:DiscordRPC.Party.Size"/> when the presence is sent.
             </summary>
+        </member>
+        <member name="P:DiscordRPC.Party.Privacy">
+            <summary>
+            The privacy of the party
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.Button">
+            <summary>
+            A Rich Presence button.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Button.Label">
+            <summary>
+            Text shown on the button
+            <para>Max 32 bytes.</para>
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.Button.Url">
+            <summary>
+            The URL opened when clicking the button.
+            <para>Max 512 bytes.</para>
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.RichPresence">
+            <summary>
+            The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RichPresence.Buttons">
+            <summary>
+            The buttons to display in the presence. 
+            <para>Max of 2</para>
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.HasButtons">
+            <summary>
+            Does the Rich Presence have any buttons?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithState(System.String)">
+            <summary>
+            Sets the state of the Rich Presence. See also <seealso cref="P:DiscordRPC.BaseRichPresence.State"/>.
+            </summary>
+            <param name="state">The user's current <see cref="T:DiscordRPC.Party"/> status.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithDetails(System.String)">
+            <summary>
+            Sets the details of the Rich Presence. See also <seealso cref="P:DiscordRPC.BaseRichPresence.Details"/>.
+            </summary>
+            <param name="details">What the user is currently doing.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithTimestamps(DiscordRPC.Timestamps)">
+            <summary>
+            Sets the timestamp of the Rich Presence. See also <seealso cref="T:DiscordRPC.Timestamps"/>.
+            </summary>
+            <param name="timestamps">The time elapsed / remaining time data.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithAssets(DiscordRPC.Assets)">
+            <summary>
+            Sets the assets of the Rich Presence. See also <seealso cref="T:DiscordRPC.Assets"/>.
+            </summary>
+            <param name="assets">The names of the images to use and the tooltips to give those images.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)">
+            <summary>
+            Sets the Rich Presence's party. See also <seealso cref="T:DiscordRPC.Party"/>.
+            </summary>
+            <param name="party">The party the player is currently in.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.WithSecrets(DiscordRPC.Secrets)">
+            <summary>
+            Sets the Rich Presence's secrets. See also <seealso cref="T:DiscordRPC.Secrets"/>.
+            </summary>
+            <param name="secrets">The secrets used for Join / Spectate.</param>
+            <returns>The modified Rich Presence.</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.Clone">
+            <summary>
+            Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.Merge(DiscordRPC.BaseRichPresence)">
+            <summary>
+            Merges the passed presence with this one, taking into account the image key to image id annoyance.
+            </summary>
+            <param name="presence"></param>
+            <returns>self</returns>
+        </member>
+        <member name="M:DiscordRPC.RichPresence.op_Implicit(DiscordRPC.RichPresence)~System.Boolean">
+            <summary>
+            Operator that converts a presence into a boolean for null checks.
+            </summary>
+            <param name="presesnce"></param>
         </member>
         <member name="T:DiscordRPC.RichPresenceResponse">
             <summary>
@@ -1825,16 +1939,6 @@
             The rich presence to be set. Can be null.
             </summary>
         </member>
-        <member name="P:DiscordRPC.RPC.Commands.RespondCommand.UserID">
-            <summary>
-            The user ID that we are accepting / rejecting
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.RPC.Commands.RespondCommand.Accept">
-            <summary>
-            If true, the user will be allowed to connect.
-            </summary>
-        </member>
         <member name="P:DiscordRPC.RPC.Commands.PresenceCommand.PID">
             <summary>
             The process ID
@@ -1843,6 +1947,16 @@
         <member name="P:DiscordRPC.RPC.Commands.PresenceCommand.Presence">
             <summary>
             The rich presence to be set. Can be null.
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Commands.RespondCommand.UserID">
+            <summary>
+            The user ID that we are accepting / rejecting
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Commands.RespondCommand.Accept">
+            <summary>
+            If true, the user will be allowed to connect.
             </summary>
         </member>
         <member name="P:DiscordRPC.RPC.Payload.ClosePayload.Code">
@@ -1955,6 +2069,21 @@
             used to capture a keyboard shortcut entered by the user RPC Events
             </summary>
         </member>
+        <member name="T:DiscordRPC.RPC.Payload.IPayload">
+            <summary>
+            Base Payload that is received by both client and server
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Payload.IPayload.Command">
+            <summary>
+            The type of payload
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.RPC.Payload.IPayload.Nonce">
+            <summary>
+            A incremental value to help identify payloads
+            </summary>
+        </member>
         <member name="T:DiscordRPC.RPC.Payload.ArgumentPayload">
             <summary>
             The payload that is sent by the client to discord for events such as setting the rich presence.
@@ -1980,21 +2109,6 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
-        </member>
-        <member name="T:DiscordRPC.RPC.Payload.IPayload">
-            <summary>
-            Base Payload that is received by both client and server
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.RPC.Payload.IPayload.Command">
-            <summary>
-            The type of payload
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.RPC.Payload.IPayload.Nonce">
-            <summary>
-            A incremental value to help identify payloads
-            </summary>
         </member>
         <member name="T:DiscordRPC.RPC.Payload.EventPayload">
             <summary>
@@ -2121,7 +2235,7 @@
             <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
             </summary>
         </member>
-        <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient,System.UInt32)">
+        <member name="M:DiscordRPC.RPC.RpcConnection.#ctor(System.String,System.Int32,System.Int32,DiscordRPC.IO.INamedPipeClient,System.UInt32,System.UInt32)">
             <summary>
             Creates a new instance of the RPC.
             </summary>
@@ -2130,6 +2244,7 @@
             <param name="targetPipe">The target pipe to connect too</param>
             <param name="client">The pipe client we shall use.</param>
             <param name="maxRxQueueSize">The maximum size of the out queue</param>
+            <param name="maxRtQueueSize">The maximum size of the in queue</param>
         </member>
         <member name="M:DiscordRPC.RPC.RpcConnection.EnqueueCommand(DiscordRPC.RPC.Commands.ICommand)">
             <summary>
@@ -2223,67 +2338,6 @@
             We are connect to the client and can send and receive messages.
             </summary>
         </member>
-        <member name="T:DiscordRPC.Web.WebRPC">
-            <summary>
-            Handles HTTP Rich Presence Requests
-            </summary>
-        </member>
-        <member name="M:DiscordRPC.Web.WebRPC.SetRichPresence(DiscordRPC.RichPresence,System.String,System.Int32)">
-            <summary>
-            Sets the Rich Presence over the HTTP protocol. Does not support Join / Spectate and by default is blocking.
-            </summary>
-            <param name="presence">The presence to send to discord</param>
-            <param name="applicationID">The ID of the application</param>
-            <param name="port">The port the discord client is currently on. Specify this for testing. Will start scanning from supplied port.</param>
-            <returns>Returns the rich presence result from the server. This can be null if presence was set to be null, or if there was no valid response from the client.</returns>
-        </member>
-        <member name="M:DiscordRPC.Web.WebRPC.TrySetRichPresence(DiscordRPC.RichPresence,DiscordRPC.RichPresence@,System.String,System.Int32)">
-            <summary>
-            Attempts to set the Rich Presence over the HTTP protocol. Does not support Join / Specate and by default is blocking.
-            </summary>
-            <param name="presence">The presence to send to discord</param>
-            <param name="response">The response object from the client</param>
-            <param name="applicationID">The ID of the application</param>
-            <param name="port">The port the discord client is currently on. Specify this for testing. Will start scanning from supplied port.</param>
-            <returns>True if the response was valid from the server, otherwise false.</returns>
-        </member>
-        <member name="M:DiscordRPC.Web.WebRPC.TryParseResponse(System.String,DiscordRPC.RichPresence@)">
-            <summary>
-            Attempts to parse the response of a Web Request to a rich presence
-            </summary>
-            <param name="json">The json data received by the client</param>
-            <param name="response">The parsed rich presence</param>
-            <returns>True if the parse was succesfull</returns>
-        </member>
-        <member name="M:DiscordRPC.Web.WebRPC.PrepareRequest(DiscordRPC.RichPresence,System.String,System.Int32)">
-            <summary>
-            Prepares a struct containing data requried to make a succesful web client request to set the rich presence.
-            </summary>
-            <param name="presence">The rich presence to set.</param>
-            <param name="applicationID">The ID of the application the presence belongs too.</param>
-            <param name="port">The port the client is located on. The default port for the discord client is 6463, but it may move iteratively upto 6473 if the ports are unavailable.</param>
-            <returns>Returns a web request containing nessary data to make a POST request</returns>
-        </member>
-        <member name="T:DiscordRPC.Web.WebRequest">
-            <summary>
-            Details of a HTTP Post request that will set the rich presence.
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Web.WebRequest.URL">
-            <summary>
-            The URL to send the POST request too
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Web.WebRequest.Data">
-            <summary>
-            The JSON formatted body to send with the POST request
-            </summary>
-        </member>
-        <member name="P:DiscordRPC.Web.WebRequest.Headers">
-            <summary>
-            The headers to send with the body
-            </summary>
-        </member>
         <member name="T:DiscordRPC.User">
             <summary>
             Object representing a Discord user. This is used for join requests.
@@ -2315,7 +2369,7 @@
         <member name="F:DiscordRPC.User.AvatarFormat.GIF">
             <summary>
             Graphics Interchange Format (.gif)
-            <para>If you pronounce it .jif, you need to re-evaluate your life choices.</para>
+            <para>Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif.</para>
             </summary>
         </member>
         <member name="T:DiscordRPC.User.AvatarSize">
@@ -2364,12 +2418,78 @@
         </member>
         <member name="P:DiscordRPC.User.Avatar">
             <summary>
-            The avatar hash of the user. Too get a URI for the avatar, use the <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/> will account for this and return the discord default.
+            The avatar hash of the user. Too get a URL for the avatar, use the <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="M:DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)"/> will account for this and return the discord default.
             </summary>
+        </member>
+        <member name="P:DiscordRPC.User.Flags">
+            <summary>
+            The flags on a users account, often represented as a badge.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.User.Flag">
+            <summary>
+            A flag on the user account
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.None">
+            <summary>No flag</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.Employee">
+            <summary>Staff of Discord.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.Partner">
+            <summary>Partners of Discord.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.HypeSquad">
+            <summary>Original HypeSquad which organise events.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.BugHunter">
+            <summary>Bug Hunters that found and reported bugs in Discord.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.HouseBravery">
+            <summary>The HypeSquad House of Bravery.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.HouseBrilliance">
+            <summary>The HypeSquad House of Brilliance.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.HouseBalance">
+            <summary>The HypeSquad House of Balance (the best one).</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.EarlySupporter">
+            <summary>Early Supporter of Discord and had Nitro before the store was released.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.Flag.TeamUser">
+            <summary>Apart of a team.
+            <para>Unclear if it is reserved for members that share a team with the current application.</para>
+            </summary>
+        </member>
+        <member name="P:DiscordRPC.User.Premium">
+            <summary>
+            The premium type of the user.
+            </summary>
+        </member>
+        <member name="T:DiscordRPC.User.PremiumType">
+            <summary>
+            Type of premium
+            </summary>
+        </member>
+        <member name="F:DiscordRPC.User.PremiumType.None">
+            <summary>No subscription to any forms of Nitro.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.PremiumType.NitroClassic">
+            <summary>Nitro Classic subscription. Has chat perks and animated avatars.</summary>
+        </member>
+        <member name="F:DiscordRPC.User.PremiumType.Nitro">
+            <summary>Nitro subscription. Has chat perks, animated avatars, server boosting, and access to free Nitro Games.</summary>
         </member>
         <member name="P:DiscordRPC.User.CdnEndpoint">
             <summary>
-            The endpoint for the CDN. Normally cdn.discordapp.com
+            The endpoint for the CDN. Normally cdn.discordapp.com.
+            </summary>
+        </member>
+        <member name="M:DiscordRPC.User.#ctor">
+            <summary>
+            Creates a new User instance.
             </summary>
         </member>
         <member name="M:DiscordRPC.User.SetConfiguration(DiscordRPC.Configuration)">

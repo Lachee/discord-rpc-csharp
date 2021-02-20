@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Discord Rich Presence </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Discord Rich Presence ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="discord-rich-presence">Discord Rich Presence</h1>
+
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397?svg=true" alt="Build status"></a>  <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a>
+ <a href="https://github.com/Lachee/discord-rpc-csharp"><img src="https://img.shields.io/github/stars/lachee/discord-rpc-csharp.svg?color=yellow&amp;label=GitHub%20Stars&amp;logo=github" alt="GitHub stars"></a> <a href="https://ko-fi.com/P5P2YOWG"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" alt="ko-fi"></a></p>
+<p>This is a C# <em>implementation</em> of the <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a> library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.</p>
+<p>This library supports all features of the Rich Presence that the official C++ library supports, plus a few extra:</p>
+<ul>
+<li><strong>Message Queuing</strong></li>
+<li><strong>Threaded Reads</strong></li>
+<li><strong>Managed Pipes</strong></li>
+<li><strong>Error Handling</strong> &amp; <strong>Error Checking</strong> with automatic reconnects</li>
+<li><strong>Events from Discord</strong> (such as presence update and join requests)</li>
+<li><strong>Full Rich Presence Implementation</strong> (including Join / Spectate)</li>
+<li><strong>Inline Documented</strong> (for all your intelli-sense needs)</li>
+<li><strong>Helper Functionality</strong> (eg: AvatarURL generator from Join Requests)</li>
+<li><strong>Ghost Prevention</strong> (Tells discord to clear the RP on disposal)</li>
+<li><strong>Full Unity3D Editor</strong> (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).</li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<p>Check out the <a href="/articles/intro.html">Introduction</a> article on how to get your Rich Presence working. Here is a summary of what is given:</p>
+<ol>
+<li>Download on <a href="https://nuget.org/packages/DiscordRichPresence/">Nuget</a> or <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Artifacts</a></li>
+<li>Include <a href="https://www.newtonsoft.com/json">Newtonsoft.JSON</a> Dependency</li>
+<li>Setup the client:</li>
+</ol>
+<pre><code class="lang-cs">client = new DiscordRpcClient(&quot;myappid&quot;);
+client.Initialize();
+</code></pre><ol>
+<li>Send Presence: <code>client.SetPresence(presence);</code></li>
+<li>Invoke Events Regularly: <code>client.Invoke();</code></li>
+<li>Dispose when done: <code>client.Dispose();</code></li>
+</ol>
+<h2 id="need-more-help">Need More Help?</h2>
+<p><a href="https://github.com/Lachee/discord-rpc-csharp/issues"><img src="https://img.shields.io/github/issues-raw/lachee/discord-rpc-csharp.svg?color=green&amp;label=issues%20opened&amp;logo=github" alt="GitHub issues"></a></p>
+<p>Need more help or looking for some of the more advance features? Check out the <a href="/articles/intro.html">articles</a> for more details on advance topics. Still stuck? Make a <a href="https://github.com/Lachee/discord-rpc-csharp/issues/new">new GitHub issue</a>! </p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/docfx_project/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            © 2019 Lachee
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

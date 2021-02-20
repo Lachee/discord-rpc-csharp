@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/21.0.07/nuspec.xsd">
     <id>DiscordRichPresence</id>
-    <version>0.0.0</version>
+    <version>1.0.176</version>
     <authors>Lachee</authors>
     <owners>Lachee</owners>
     <title>Discord Rich Presence</title>
