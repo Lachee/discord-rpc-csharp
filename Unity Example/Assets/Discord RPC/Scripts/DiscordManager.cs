@@ -421,4 +421,45 @@ public class DiscordManager : MonoBehaviour {
 
 		client.Respond(request, acceptRequest);
 	}
+
+	/// <summary>
+	/// Updates the UnsavedPresence and runs SetPresence() if autoSet is true. 
+	/// </summary>
+	/// <param name="autoSet">Pushes the UnsavedPresence to Discord if set to true</param>
+	public static void UpdatePresence(DiscordManager discordManager, string detail, string state = null, bool start = false, bool end = false, int endTime = 0, string largeKey = null, string largeText = null,
+		string smallKey = null, string smallText = null, string partyId = null, int size = 0, int max = 0, string join = null,
+		string spectate = null, bool autoSet = false)
+	{
+		discordManager.UnsavedPresence.state = state;
+		discordManager.UnsavedPresence.details = detail;
+		discordManager.UnsavedPresence.startTime = start ? new DiscordTimestamp(Time.realtimeSinceStartup) : DiscordTimestamp.Invalid;
+		Debug.Log(start);
+
+		discordManager.UnsavedPresence.largeAsset = new DiscordAsset()
+		{
+			image = largeKey,
+			tooltip = largeText
+		};
+		discordManager.UnsavedPresence.smallAsset = new DiscordAsset()
+		{
+			image = smallKey,
+			tooltip = smallText
+		};
+
+		discordManager.UnsavedPresence.party = new DiscordParty(partyId, size, max);
+
+		discordManager.UnsavedPresence.secrets.joinSecret = join;
+		discordManager.UnsavedPresence.secrets.spectateSecret = spectate;
+
+		discordManager.UnsavedPresence.endTime = endTime > 0 ? new DiscordTimestamp(Time.realtimeSinceStartup + endTime) : DiscordTimestamp.Invalid;
+
+		if (autoSet)
+		{
+			DiscordManager.current.SetPresence(discordManager.UnsavedPresence);
+		}
+		else
+		{
+			Debug.Log("Presance have been saved and waiting to be pushed to Discord");
+		}
+	}
 }
