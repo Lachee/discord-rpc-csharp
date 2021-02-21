@@ -82,16 +82,9 @@ public class DiscordManager : MonoBehaviour {
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
 	[SerializeField] private DiscordPresence _currentPresence;
 
-	/// <summary>
-	/// Unsaved Rich Presence waiting to be pushed to Discord.
-	/// </summary>
-	public DiscordPresence UnsavedPresence { get { return _unsavedPresence; } }
-	[Tooltip("Unsaved Rich Presence waiting to be pushed to Discord.")]
-	[SerializeField] private DiscordPresence _unsavedPresence;
+    #endregion
 
-	#endregion
-
-	[Header("Handlers and Events")]
+    [Header("Handlers and Events")]
     public DiscordRPC.Unity.DiscordEvents events = new DiscordRPC.Unity.DiscordEvents();
 
 	/// <summary>
@@ -436,7 +429,7 @@ public class DiscordManager : MonoBehaviour {
 	public static void UpdatePresence(DiscordManager discordManager, string detail, string state = null, bool start = false, bool end = false, int endTime = 0, string largeKey = null, string largeText = null,
 		string smallKey = null, string smallText = null, string partyId = null, int size = 0, int max = 0, string join = null,
 		string spectate = null, bool autoSet = false)
-    {
+	{
 		discordManager.UnsavedPresence.state = state;
 		discordManager.UnsavedPresence.details = detail;
 		discordManager.UnsavedPresence.startTime = start ? new DiscordTimestamp(Time.realtimeSinceStartup) : DiscordTimestamp.Invalid;
@@ -461,12 +454,12 @@ public class DiscordManager : MonoBehaviour {
 		discordManager.UnsavedPresence.endTime = endTime > 0 ? new DiscordTimestamp(Time.realtimeSinceStartup + endTime) : DiscordTimestamp.Invalid;
 
 		if (autoSet)
-        {
+		{
 			DiscordManager.current.SetPresence(discordManager.UnsavedPresence);
 		}
-        else
-        {
+		else
+		{
 			Debug.Log("Presance have been saved and waiting to be pushed to Discord");
-        }
+		}
 	}
 }
