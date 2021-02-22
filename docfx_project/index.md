@@ -20,7 +20,7 @@ This library supports all features of the Rich Presence that the official C++ li
 
 ## Quick Start
 
-Check out the [Introduction](/articles/intro.html) article on how to get your Rich Presence working. Here is a summary of what is given:
+Check out the [Introduction](https://lachee.github.io/discord-rpc-csharp/docs/articles/intro.html) article on how to get your Rich Presence working. Here is a summary of what is given:
 
 1. Download on [Nuget](https://nuget.org/packages/DiscordRichPresence/) or [Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts)
 2. Include [Newtonsoft.JSON](https://www.newtonsoft.com/json) Dependency
@@ -39,4 +39,4 @@ client.Initialize();
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/lachee/discord-rpc-csharp.svg?color=green&label=issues%20opened&logo=github)](https://github.com/Lachee/discord-rpc-csharp/issues)
 
-Need more help or looking for some of the more advance features? Check out the [articles](/articles/intro.html) for more details on advance topics. Still stuck? Make a [new GitHub issue](https://github.com/Lachee/discord-rpc-csharp/issues/new)! 
+Need more help or looking for some of the more advance features? Check out the [articles](https://lachee.github.io/discord-rpc-csharp/docs/articles/intro.html) for more details on advance topics. Still stuck? Make a [new GitHub issue](https://github.com/Lachee/discord-rpc-csharp/issues/new)! 
