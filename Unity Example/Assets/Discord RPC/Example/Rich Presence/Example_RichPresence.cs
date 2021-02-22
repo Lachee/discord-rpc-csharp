@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,17 +43,17 @@ namespace DiscordRPC.Examples.RichPresence
 
 		public void SendPresence()
 		{
-			UpdatePresence
+			DiscordManager.UpdatePresence
 			(
 				details: inputDetails.text,
-				state: inputState.text,
+				state: inputState.text,						
 
 				start: inputStartTime.isOn,
-				endTime: Int32.Parse(inputEndTime.text),
+				endTime: Int32.Parse(inputEndTime.text), 
 
-				largeKey: inputLargeKey.text,
-				largeText: inputLargeTooltip.text,
-				smallKey: inputSmallKey.text,
+				largeKey: inputLargeKey.text, 
+				largeText: inputLargeTooltip.text, 
+				smallKey: inputSmallKey.text, 
 				smallText: inputSmallTooltip.text
 			);
 			current.SetPresence(current.UnsavedPresence);
