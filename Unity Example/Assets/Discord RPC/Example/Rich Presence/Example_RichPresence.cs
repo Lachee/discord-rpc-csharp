@@ -22,15 +22,19 @@ namespace DiscordRPC.Examples.RichPresence
 		public InputField inputSmallKey;
 		public InputField inputSmallTooltip;
 
-		public DiscordManager discordManager;
+		private DiscordManager current;
 
 		private void Start()
 		{
+			//Get the current instance of DiscordManager
+			current = GameObject.Find("Discord Manager").GetComponent<DiscordManager>();
+
+
 			//Update the values
 			UpdateFields();
 
 			//Register to a presence change
-			DiscordManager.current.events.OnPresenceUpdate.AddListener((message) =>
+			current.events.OnPresenceUpdate.AddListener((message) =>
 			{
 				Debug.Log("Received a new presence! Current App: " + message.ApplicationID + ", " + message.Name);
 				UpdateFields();
@@ -39,21 +43,33 @@ namespace DiscordRPC.Examples.RichPresence
 
 		public void SendPresence()
 		{
-			DiscordManager.UpdatePresence(discordManager, inputDetails.text, inputState.text, inputStartTime.isOn, false, Int32.Parse(inputEndTime.text), inputLargeKey.text, inputLargeTooltip.text, inputSmallKey.text, inputSmallTooltip.text);
-			DiscordManager.current.SetPresence(discordManager.UnsavedPresence);
+			UpdatePresence
+			(
+				details: inputDetails.text,
+				state: inputState.text,
+
+				start: inputStartTime.isOn,
+				endTime: Int32.Parse(inputEndTime.text),
+
+				largeKey: inputLargeKey.text,
+				largeText: inputLargeTooltip.text,
+				smallKey: inputSmallKey.text,
+				smallText: inputSmallTooltip.text
+			);
+			current.SetPresence(current.UnsavedPresence);
 		}
 
 		public void UpdateFields()
 		{
-			inputState.text = discordManager.UnsavedPresence.state;
-			inputDetails.text = discordManager.UnsavedPresence.details;
+			inputState.text = current.UnsavedPresence.state;
+			inputDetails.text = current.UnsavedPresence.details;
 
 
-			inputLargeTooltip.text = discordManager.UnsavedPresence.largeAsset.tooltip;
-			inputLargeKey.text = discordManager.UnsavedPresence.largeAsset.image;
+			inputLargeTooltip.text = current.UnsavedPresence.largeAsset.tooltip;
+			inputLargeKey.text = current.UnsavedPresence.largeAsset.image;
 
-			inputSmallTooltip.text = discordManager.UnsavedPresence.smallAsset.tooltip;
-			inputSmallKey.text = discordManager.UnsavedPresence.smallAsset.image;
+			inputSmallTooltip.text = current.UnsavedPresence.smallAsset.tooltip;
+			inputSmallKey.text = current.UnsavedPresence.smallAsset.image;
 		}
 	}
 }

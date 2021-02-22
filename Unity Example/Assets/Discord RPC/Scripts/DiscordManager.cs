@@ -6,27 +6,28 @@ using UnityEngine;
 /// A wrapper for the Discord Sharp Client, providing useful utilities in a Unity-Friendly form.
 /// </summary>
 [ExecuteInEditMode]
-public class DiscordManager : MonoBehaviour {
+public class DiscordManager : MonoBehaviour
+{
 
 	public const string EXAMPLE_APPLICATION = "424087019149328395";
 
-    [System.Obsolete("Use current instead")]
-    public static DiscordManager instance { get { return _instance; } }
+	[System.Obsolete("Use current instead")]
+	public static DiscordManager instance { get { return _instance; } }
 
-    /// <summary>
-    /// The current instance of the Discord Manager
-    /// </summary>
-    public static DiscordManager current { get { return _instance; } }
-    private static DiscordManager _instance;
+	/// <summary>
+	/// The current instance of the Discord Manager
+	/// </summary>
+	public static DiscordManager current { get { return _instance; } }
+	private static DiscordManager _instance;
 
 	#region Properties and Configurations
-    [Header("Properties")]
+	[Header("Properties")]
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
 	public string applicationID = EXAMPLE_APPLICATION;
-	
+
 	[Tooltip("The Steam App ID. This is a optional field used to launch your game through steam instead of the executable.")]
 	public string steamID = "";
-	
+
 	[Tooltip("The pipe discord is located on. Useful for testing multiple clients.")]
 	public DiscordPipe targetPipe = DiscordPipe.FirstAvailable;
 
@@ -58,15 +59,15 @@ public class DiscordManager : MonoBehaviour {
 	[SerializeField]
 	[Tooltip("The enabled state of the IPC connection")]
 	private bool active = true;
-	
+
 	/// <summary>
 	/// The current Discord user. This does not get set until the first Ready event.
 	/// </summary>
 	public DiscordUser CurrentUser { get { return _currentUser; } }
 	[Tooltip("The current Discord user. This does not get set until the first Ready event.")]
 
-    [Header("State")]
-    [SerializeField] private DiscordUser _currentUser;
+	[Header("State")]
+	[SerializeField] private DiscordUser _currentUser;
 
 	/// <summary>
 	/// The current event subscription flag.
@@ -82,10 +83,17 @@ public class DiscordManager : MonoBehaviour {
 	[Tooltip("The current Rich Presence displayed on the Discord Client.")]
 	[SerializeField] private DiscordPresence _currentPresence;
 
-    #endregion
+	/// <summary>
+	/// Unsaved Rich Presence waiting to be pushed to Discord.
+	/// </summary>
+	public DiscordPresence UnsavedPresence { get { return _unsavedPresence; } }
+	[Tooltip("Unsaved Rich Presence waiting to be pushed to Discord.")]
+	[SerializeField] private DiscordPresence _unsavedPresence;
 
-    [Header("Handlers and Events")]
-    public DiscordRPC.Unity.DiscordEvents events = new DiscordRPC.Unity.DiscordEvents();
+	#endregion
+
+	[Header("Handlers and Events")]
+	public DiscordRPC.Unity.DiscordEvents events = new DiscordRPC.Unity.DiscordEvents();
 
 	/// <summary>
 	/// The current Discord Client.
@@ -93,12 +101,12 @@ public class DiscordManager : MonoBehaviour {
 	public DiscordRPC.DiscordRpcClient client { get { return _client; } }
 	private DiscordRPC.DiscordRpcClient _client = null;
 
-    public bool isInitialized { get { return _client != null && _client.IsInitialized; } }
+	public bool isInitialized { get { return _client != null && _client.IsInitialized; } }
 
-    #region Unity Events
-    
-    private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
-    private void OnDestroy() { Deinitialize(); }
+	#region Unity Events
+
+	private void OnDisable() { Deinitialize(); }    //Try to dispose the client when we are disabled
+	private void OnDestroy() { Deinitialize(); }
 
 #if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 
@@ -152,14 +160,14 @@ public class DiscordManager : MonoBehaviour {
     }
 #endif
 
-    #endregion
+	#endregion
 
-    /// <summary>
-    /// Initializes the discord client if able to. Wont initialize if <see cref="active"/> is false, we are not in playmode, we already have a instance or we already have a client.
-    /// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD is meet.</para>
-    /// </summary>
-    public void Initialize()
-    {
+	/// <summary>
+	/// Initializes the discord client if able to. Wont initialize if <see cref="active"/> is false, we are not in playmode, we already have a instance or we already have a client.
+	/// <para>This function is empty unless UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD is meet.</para>
+	/// </summary>
+	public void Initialize()
+	{
 #if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 
         if (!active) return;                //Are we allowed to be active?
@@ -205,7 +213,7 @@ public class DiscordManager : MonoBehaviour {
             client.RegisterUriScheme(steamID);
 
         //Subscribe to some initial events
-        #region Event Registration
+		#region Event Registration
         client.OnError += (s, args) => Debug.LogError("[DRP] Error Occured within the Discord IPC: (" + args.Code + ") " + args.Message);
         client.OnJoinRequested += (s, args) => Debug.Log("[DRP] Join Requested");
 
@@ -238,7 +246,7 @@ public class DiscordManager : MonoBehaviour {
   
         //Register the unity events
         events.RegisterEvents(client);
-        #endregion
+		#endregion
 
         //Set initial presence and sub. (This will enqueue it)
         SetSubscription(_currentSubscription);
@@ -249,29 +257,74 @@ public class DiscordManager : MonoBehaviour {
         Debug.Log("[DRP] Discord Rich Presence intialized and connecting...");
 
 #endif
-    }
-    
-    /// <summary>
-    /// If not already disposed, it will dispose and deinitialize the discord client.
-    /// </summary>
-    public void Deinitialize()
-    {
-        //We dispose outside the scripting symbols as we always want to be able to dispose (just in case).
-        if (_client != null)
-        {
-            Debug.Log("[DRP] Disposing Discord IPC Client...");
-            _client.Dispose();
-            _client = null;
-            Debug.Log("[DRP] Finished Disconnecting");
-        }
-    }
+	}
 
-    /// <summary>
-    /// Sets the Rich Presence of the Discord Client through the pipe connection. 
-    /// <para>This will log a error if the client is null or not yet initiated.</para>
-    /// </summary>
-    /// <param name="presence">The Rich Presence to be shown to the client</param>
-    public void SetPresence(DiscordPresence presence)
+	/// <summary>
+	/// If not already disposed, it will dispose and deinitialize the discord client.
+	/// </summary>
+	public void Deinitialize()
+	{
+		//We dispose outside the scripting symbols as we always want to be able to dispose (just in case).
+		if (_client != null)
+		{
+			Debug.Log("[DRP] Disposing Discord IPC Client...");
+			_client.Dispose();
+			_client = null;
+			Debug.Log("[DRP] Finished Disconnecting");
+		}
+	}
+
+	/// <summary>
+	/// Updates the UnsavedPresence and runs SetPresence() if autoSet is true. 
+	/// </summary>
+	/// <param name="details">What the player is currently doing</param>
+	/// <param name="state">The player's current party status</param>
+	/// <param name="start">Sets a timestamp for the start timer to the current time - Set to true to have an "elapsed" timer</param>
+	/// <param name="endTime">Sets a timestamp for the end timer from the current time plus the value - Send this to have a "remaining" timer</param>
+	/// <param name="largeKey">Keyname of an asset to display</param>
+	/// <param name="largeText">Hover text for the large image</param>
+	/// <param name="smallKey">Keyname of an asset to display</param>
+	/// <param name="smallText">Hover text for the small image</param>
+	/// <param name="partyId">A unique identifier for this party</param>
+	/// <param name="size">Info about the size of the party</param>
+	/// <param name="max">Info about the size of the party</param>
+	/// <param name="join">Unique hash for chat invites and Ask to Join</param>
+	/// <param name="spectate">Unique hash for Spectate button</param>
+	/// <param name="setNow">Pushes the UnsavedPresence to Discord if set to true</param>
+	public static void UpdatePresence(string details, string state = null, bool start = false, int endTime = 0, string largeKey = null, string largeText = null,
+		string smallKey = null, string smallText = null, string partyId = null, int size = 0, int max = 0, string join = null,
+		string spectate = null, bool setNow = false)
+	{
+		current.UnsavedPresence.state = state;
+		current.UnsavedPresence.details = details;
+
+		current.UnsavedPresence.startTime = start ? new DiscordTimestamp(Time.realtimeSinceStartup) : DiscordTimestamp.Invalid;
+		current.UnsavedPresence.endTime = endTime > 0 ? new DiscordTimestamp(Time.realtimeSinceStartup + endTime) : DiscordTimestamp.Invalid;
+
+		current.UnsavedPresence.largeAsset = new DiscordAsset() { image = largeKey, tooltip = largeText };
+		current.UnsavedPresence.smallAsset = new DiscordAsset() { image = smallKey, tooltip = smallText };
+
+		current.UnsavedPresence.party = new DiscordParty(partyId, size, max);
+
+		current.UnsavedPresence.secrets.joinSecret = join;
+		current.UnsavedPresence.secrets.spectateSecret = spectate;
+
+		if (setNow)
+		{
+			current.SetPresence(current.UnsavedPresence);
+		}
+		else
+		{
+			Debug.Log("[DRP] Presance have been saved and waiting to be pushed to Discord");
+		}
+	}
+
+	/// <summary>
+	/// Sets the Rich Presence of the Discord Client through the pipe connection. 
+	/// <para>This will log a error if the client is null or not yet initiated.</para>
+	/// </summary>
+	/// <param name="presence">The Rich Presence to be shown to the client</param>
+	public void SetPresence(DiscordPresence presence)
 	{
 		if (client == null)
 		{
@@ -295,14 +348,14 @@ public class DiscordManager : MonoBehaviour {
 		client.SetPresence(presence != null ? presence.ToRichPresence() : null);
 	}
 
-    /// <summary>
-    /// Resends the current Rich Presence to the Discord Client via the pipe connectoin.
-    /// </summary>
-    [ContextMenu("Resend Presence")]
-    public void ResetPresence()
-    {
-        SetPresence(_currentPresence);
-    }
+	/// <summary>
+	/// Resends the current Rich Presence to the Discord Client via the pipe connectoin.
+	/// </summary>
+	[ContextMenu("Resend Presence")]
+	public void ResetPresence()
+	{
+		SetPresence(_currentPresence);
+	}
 
 	/// <summary>
 	/// Sets the subscription flag, unsubscribing and then subscribing to the nessary events. Used for Join / Spectate feature. If you have not registered your application, this feature is unavailable.
@@ -331,7 +384,7 @@ public class DiscordManager : MonoBehaviour {
 	public DiscordPresence UpdateDetails(string details)
 	{
 		if (_client == null) return null;
-		return (DiscordPresence) _client.UpdateDetails(details);
+		return (DiscordPresence)_client.UpdateDetails(details);
 	}
 
 	public DiscordPresence UpdateState(string state)
@@ -420,46 +473,5 @@ public class DiscordManager : MonoBehaviour {
 
 
 		client.Respond(request, acceptRequest);
-	}
-
-	/// <summary>
-	/// Updates the UnsavedPresence and runs SetPresence() if autoSet is true. 
-	/// </summary>
-	/// <param name="autoSet">Pushes the UnsavedPresence to Discord if set to true</param>
-	public static void UpdatePresence(DiscordManager discordManager, string detail, string state = null, bool start = false, bool end = false, int endTime = 0, string largeKey = null, string largeText = null,
-		string smallKey = null, string smallText = null, string partyId = null, int size = 0, int max = 0, string join = null,
-		string spectate = null, bool autoSet = false)
-	{
-		discordManager.UnsavedPresence.state = state;
-		discordManager.UnsavedPresence.details = detail;
-		discordManager.UnsavedPresence.startTime = start ? new DiscordTimestamp(Time.realtimeSinceStartup) : DiscordTimestamp.Invalid;
-		Debug.Log(start);
-
-		discordManager.UnsavedPresence.largeAsset = new DiscordAsset()
-		{
-			image = largeKey,
-			tooltip = largeText
-		};
-		discordManager.UnsavedPresence.smallAsset = new DiscordAsset()
-		{
-			image = smallKey,
-			tooltip = smallText
-		};
-
-		discordManager.UnsavedPresence.party = new DiscordParty(partyId, size, max);
-
-		discordManager.UnsavedPresence.secrets.joinSecret = join;
-		discordManager.UnsavedPresence.secrets.spectateSecret = spectate;
-
-		discordManager.UnsavedPresence.endTime = endTime > 0 ? new DiscordTimestamp(Time.realtimeSinceStartup + endTime) : DiscordTimestamp.Invalid;
-
-		if (autoSet)
-		{
-			DiscordManager.current.SetPresence(discordManager.UnsavedPresence);
-		}
-		else
-		{
-			Debug.Log("Presance have been saved and waiting to be pushed to Discord");
-		}
 	}
 }
