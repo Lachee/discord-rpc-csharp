@@ -42,6 +42,15 @@ public class DiscordPresence
 	public DiscordAsset smallAsset;
 	public DiscordAsset largeAsset;
 
+	[Header("Button Details")]
+
+	/// <summary>
+	/// The buttons used for the presence.
+	/// </summary>
+	[Tooltip("The buttons used for the presence")]
+	public DiscordButton firstButton;
+	public DiscordButton secondButton;
+
 	[Header("Party Details")]
 
 	/// <summary>
@@ -98,11 +107,33 @@ public class DiscordPresence
 				this.largeAsset = new DiscordAsset();
 			}
 
+			if (presence.HasButtons())
+			{
+				this.firstButton = new DiscordButton()
+				{
+					label = presence.Buttons[0].Label,
+					url = presence.Buttons[0].Url,
+				};
+
+
+				this.secondButton = new DiscordButton()
+				{
+					label = presence.Buttons[1].Label,
+					url = presence.Buttons[2].Url,
+				};
+			}
+			else
+			{
+				this.firstButton = new DiscordButton();
+				this.secondButton = new DiscordButton();
+			}
+
+
 			if (presence.HasTimestamps())
 			{
-                //This could probably be made simpler
-				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp((long) presence.Timestamps.StartUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
-				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp((long) presence.Timestamps.EndUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
+				//This could probably be made simpler
+				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp((long)presence.Timestamps.StartUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
+				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp((long)presence.Timestamps.EndUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
 			}
 		}
 		else
@@ -113,6 +144,8 @@ public class DiscordPresence
 			this.secrets = new DiscordSecrets();
 			this.smallAsset = new DiscordAsset();
 			this.largeAsset = new DiscordAsset();
+			this.firstButton = new DiscordButton();
+			this.secondButton = new DiscordButton();
 			this.startTime = DiscordTimestamp.Invalid;
 			this.endTime = DiscordTimestamp.Invalid;
 		}
