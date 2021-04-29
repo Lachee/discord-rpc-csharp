@@ -955,41 +955,6 @@ namespace DiscordRPC
         {
             return presesnce != null;
         }
-
-        /// <summary>
-        /// Converts this RichPresence to BaseRichPresence
-        /// </summary>
-        /// <returns></returns>
-        public BaseRichPresence ToBaseRichPresence()
-        {
-            var presence = new BaseRichPresence();
-            presence.State = State;
-            presence.Details = Details;
-
-            presence.Party = !HasParty() ? Party : null;
-            presence.Secrets = !HasSecrets() ? Secrets : null;
-
-            if (HasAssets())
-            {
-                presence.Assets = new Assets()
-                {
-                    SmallImageKey = Assets.SmallImageKey,
-                    SmallImageText = Assets.SmallImageText,
-
-                    LargeImageKey = Assets.LargeImageKey,
-                    LargeImageText = Assets.LargeImageText
-                };
-            }
-
-            if (HasTimestamps())
-            {
-                presence.Timestamps = new Timestamps();
-                if (Timestamps.Start.HasValue) presence.Timestamps.Start = Timestamps.Start;
-                if (Timestamps.End.HasValue) presence.Timestamps.End = Timestamps.End;
-            }
-
-            return presence;
-        }
     }
 
     /// <summary>
