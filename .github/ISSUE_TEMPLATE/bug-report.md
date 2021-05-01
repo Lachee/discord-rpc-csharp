@@ -27,3 +27,8 @@ A clear and concise description of what you expected to happen.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Logs**
+```
+Provide your logs or a link to the logs here. Make sure you have at least LogLevel.Info enabled.
+```
