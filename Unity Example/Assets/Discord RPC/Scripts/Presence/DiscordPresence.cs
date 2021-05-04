@@ -119,7 +119,7 @@ public class DiscordPresence
 				this.secondButton = new DiscordButton()
 				{
 					label = presence.Buttons[1].Label,
-					url = presence.Buttons[2].Url,
+					url = presence.Buttons[1].Url,
 				};
 			}
 			else
@@ -182,6 +182,15 @@ public class DiscordPresence
 			presence.Timestamps = new DiscordRPC.Timestamps();
 			if (startTime.IsValid()) presence.Timestamps.Start = startTime.GetDateTime();
 			if (endTime.IsValid()) presence.Timestamps.End = endTime.GetDateTime();
+		}
+
+		if ((firstButton != null && !firstButton.IsEmpty()) || (secondButton != null && !secondButton.IsEmpty()))
+		{
+			presence.Buttons = new DiscordRPC.Button[]
+			{
+				new DiscordRPC.Button { Label = firstButton.label, Url = firstButton.url},
+				new DiscordRPC.Button { Label = secondButton.label, Url = secondButton.url}
+			};
 		}
 
 		return presence;
