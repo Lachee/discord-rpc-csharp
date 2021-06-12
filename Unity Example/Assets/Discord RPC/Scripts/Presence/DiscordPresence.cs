@@ -42,6 +42,14 @@ public class DiscordPresence
 	public DiscordAsset smallAsset;
 	public DiscordAsset largeAsset;
 
+	[Header("Button Details")]
+
+	/// <summary>
+	/// The buttons used for the presence.
+	/// </summary>
+	[Tooltip("The buttons used for the presence")]
+	public DiscordButton[] buttons;
+
 	[Header("Party Details")]
 
 	/// <summary>
@@ -65,7 +73,7 @@ public class DiscordPresence
 	/// Creats a new Presence object, copying values of the Rich Presence
 	/// </summary>
 	/// <param name="presence">The rich presence, often received by discord.</param>
-	public DiscordPresence(DiscordRPC.BaseRichPresence presence)
+	public DiscordPresence(DiscordRPC.RichPresence presence)
 	{
 		if (presence != null)
 		{
@@ -98,11 +106,30 @@ public class DiscordPresence
 				this.largeAsset = new DiscordAsset();
 			}
 
+			if (presence.HasButtons())
+			{
+				this.buttons = new DiscordButton[presence.Buttons.Length];
+
+				for (int i = 0; i < presence.Buttons.Length; i++)
+				{
+					this.buttons[i] = new DiscordButton()
+					{
+						label = presence.Buttons[i].Label,
+						url = presence.Buttons[i].Url
+					};
+				}
+			}
+			else
+			{
+				this.buttons = new DiscordButton[0];
+			}
+
+
 			if (presence.HasTimestamps())
 			{
-                //This could probably be made simpler
-				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp((long) presence.Timestamps.StartUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
-				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp((long) presence.Timestamps.EndUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
+				//This could probably be made simpler
+				this.startTime = presence.Timestamps.Start.HasValue ? new DiscordTimestamp((long)presence.Timestamps.StartUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
+				this.endTime = presence.Timestamps.End.HasValue ? new DiscordTimestamp((long)presence.Timestamps.EndUnixMilliseconds.Value) : DiscordTimestamp.Invalid;
 			}
 		}
 		else
@@ -113,6 +140,7 @@ public class DiscordPresence
 			this.secrets = new DiscordSecrets();
 			this.smallAsset = new DiscordAsset();
 			this.largeAsset = new DiscordAsset();
+			this.buttons = new DiscordButton[0];
 			this.startTime = DiscordTimestamp.Invalid;
 			this.endTime = DiscordTimestamp.Invalid;
 		}
@@ -149,6 +177,20 @@ public class DiscordPresence
 			presence.Timestamps = new DiscordRPC.Timestamps();
 			if (startTime.IsValid()) presence.Timestamps.Start = startTime.GetDateTime();
 			if (endTime.IsValid()) presence.Timestamps.End = endTime.GetDateTime();
+		}
+
+		if (buttons.Length > 0)
+		{
+			presence.Buttons = new DiscordRPC.Button[buttons.Length];
+
+			for (int i = 0; i < buttons.Length; i++)
+			{
+				presence.Buttons[i] = new DiscordRPC.Button
+				{
+					Label = buttons[i].label,
+					Url = buttons[i].url
+				};
+			}
 		}
 
 		return presence;

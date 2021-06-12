@@ -33,7 +33,7 @@ namespace DiscordRPC.Examples.RichPresence
 			DiscordManager.current.events.OnPresenceUpdate.AddListener((message) =>
 			{
 				Debug.Log("Received a new presence! Current App: " + message.ApplicationID + ", " + message.Name);
-				UpdateFields(new DiscordPresence(message.Presence));
+				UpdateFields(new DiscordPresence(message.Presence.ToRichPresence()));
 			});
 		}
 
