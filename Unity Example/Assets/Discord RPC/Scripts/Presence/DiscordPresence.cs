@@ -108,19 +108,16 @@ public class DiscordPresence
 
 			if (presence.HasButtons())
 			{
-				this.buttons = new DiscordButton[]
+				this.buttons = new DiscordButton[presence.Buttons.Length];
+
+				for (int i = 0; i < presence.Buttons.Length; i++)
 				{
-					new DiscordButton()
+					this.buttons[i] = new DiscordButton()
 					{
-						label = presence.Buttons[0].Label,
-						url = presence.Buttons[0].Url,
-					},
-					new DiscordButton()
-					{
-						label = presence.Buttons[1].Label,
-						url = presence.Buttons[1].Url,
-					}
-				};
+						label = presence.Buttons[i].Label,
+						url = presence.Buttons[i].Url
+					};
+				}
 			}
 			else
 			{
@@ -184,11 +181,16 @@ public class DiscordPresence
 
 		if (buttons.Length > 0)
 		{
-			presence.Buttons = new DiscordRPC.Button[]
+			presence.Buttons = new DiscordRPC.Button[buttons.Length];
+
+			for (int i = 0; i < buttons.Length; i++)
 			{
-				new DiscordRPC.Button { Label = buttons[0].label, Url = buttons[0].url},
-				new DiscordRPC.Button { Label = buttons[1].label, Url = buttons[1].url}
-			};
+				presence.Buttons[i] = new DiscordRPC.Button
+				{
+					Label = buttons[i].label,
+					Url = buttons[i].url
+				};
+			}
 		}
 
 		return presence;
