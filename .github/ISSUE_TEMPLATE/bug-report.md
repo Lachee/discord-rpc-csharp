@@ -23,8 +23,8 @@ A clear and concise description of what you expected to happen.
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - Framework: [e.g. dotnet core 3 / .net fx 4.5 / Unity 5 .NET 2.0 Subset / Unity 2020 .NET Standard / Monogame ]
- - Buget Version: [ e.g. 0.202 ]
-
+ - Library Version: [ e.g. 0.202 ]
+ 
 **Additional context**
 Add any other context about the problem here.
 
