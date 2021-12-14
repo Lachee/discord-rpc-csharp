@@ -210,7 +210,7 @@ public class DiscordUser
                 {
                     //Download the texture
                     yield return req.SendWebRequest();
-                    if (req.isNetworkError || req.isHttpError)
+                    if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
                     {
                         //Report errors
                         Debug.LogError("Failed to download user avatar: " + req.error);
@@ -328,7 +328,7 @@ public class DiscordUser
             {
                 //Download the texture
                 yield return req.SendWebRequest();
-                if (req.isNetworkError || req.isHttpError)
+                if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
                 {
                     //Report errors
                     Debug.LogError("Failed to download default avatar: " + req.error);
