@@ -127,11 +127,12 @@ namespace DiscordRPC.IO
 			//Read the contents
 			using (var mem = new MemoryStream())
 			{
-				byte[] buffer = new byte[Min(2048, len)]; // read in chunks of 2KB
+				uint chunkSize = (uint)Min(2048, len); // read in chunks of 2KB
+				byte[] buffer = new byte[chunkSize];
 				int bytesRead;
 				while ((bytesRead = stream.Read(buffer, 0, Min(buffer.Length, readsRemaining))) > 0)
 				{
-					readsRemaining -= len;
+					readsRemaining -= chunkSize;
 					mem.Write(buffer, 0, bytesRead);
 				}
 
