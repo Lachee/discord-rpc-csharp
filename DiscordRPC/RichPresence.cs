@@ -391,7 +391,7 @@ namespace DiscordRPC
     {
         /// <summary>
         /// Name of the uploaded image for the large profile artwork.
-        /// <para>Max 32 Bytes.</para>
+        /// <para>Max 256 Bytes.</para>
         /// </summary>
         [JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
         public string LargeImageKey
@@ -399,14 +399,27 @@ namespace DiscordRPC
             get { return _largeimagekey; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _largeimagekey, 32, Encoding.UTF8))
-                    throw new StringOutOfRangeException(32);
+                if (!BaseRichPresence.ValidateString(value, out _largeimagekey, 256, Encoding.UTF8))
+                    throw new StringOutOfRangeException(256);
 
+                //Get if this is a external link
+                _islargeimagekeyexternal = _largeimagekey?.StartsWith("mp:external/") ?? false;
+                
                 //Reset the large image ID
                 _largeimageID = null;
             }
         }
         private string _largeimagekey;
+
+        /// <summary>
+        /// Gets if the large square image is from an external link
+        /// </summary>
+        [JsonIgnore]
+        public bool IsLargeImageKeyExternal
+        {
+            get { return _islargeimagekeyexternal; }
+        }
+        private bool _islargeimagekeyexternal;
 
         /// <summary>
         /// The tooltip for the large square image. For example, "Summoners Rift" or "Horizon Lunar Colony".
@@ -427,7 +440,7 @@ namespace DiscordRPC
 
         /// <summary>
         /// Name of the uploaded image for the small profile artwork.
-        /// <para>Max 32 Bytes.</para>
+        /// <para>Max 256 Bytes.</para>
         /// </summary>
         [JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
         public string SmallImageKey
@@ -435,8 +448,11 @@ namespace DiscordRPC
             get { return _smallimagekey; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _smallimagekey, 32, Encoding.UTF8))
-                    throw new StringOutOfRangeException(32);
+                if (!BaseRichPresence.ValidateString(value, out _smallimagekey, 256, Encoding.UTF8))
+                    throw new StringOutOfRangeException(256);
+
+                //Get if this is a external link
+                _issmallimagekeyexternal = _smallimagekey?.StartsWith("mp:external/") ?? false;
 
                 //Reset the small image id
                 _smallimageID = null;
@@ -444,6 +460,16 @@ namespace DiscordRPC
         }
         private string _smallimagekey;
 
+        /// <summary>
+        /// Gets if the small profile artwork is from an external link
+        /// </summary>
+        [JsonIgnore]
+        public bool IsSmallImageKeyExternal
+        {
+            get { return _issmallimagekeyexternal; }
+        }
+        private bool _issmallimagekeyexternal;
+        
         /// <summary>
         /// The tooltip for the small circle image. For example, "LvL 6" or "Ultimate 85%".
         /// <para>Max 128 Bytes.</para>
