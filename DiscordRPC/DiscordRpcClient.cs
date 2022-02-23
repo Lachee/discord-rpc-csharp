@@ -487,6 +487,77 @@ namespace DiscordRPC
         }
 
         #region Updates
+	
+	/// <summary>
+        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
+        /// </summary>
+        /// <param name="Button">The buttons of the Rich Presence</param>
+        /// <returns>Updated Rich Presence</returns>
+	public RichPresence UpdateButtons(Button[] button = null)
+        {
+            if (!IsInitialized)
+            {
+                throw new UninitializedException();
+            }
+
+ 	    // Clone the presence
+            RichPresence presence;
+            lock (_sync)
+            {
+                if (CurrentPresence == null)
+                {
+                    presence = new RichPresence();
+                }
+                else
+                {
+                    presence = CurrentPresence.Clone();
+                }
+            }
+
+	    // Update the buttons.
+            presence.Buttons = button;
+            SetPresence(presence);
+
+            return presence;
+        }
+	
+	/// <summary>
+        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
+        /// </summary>
+        /// <param name="Button">The buttons of the Rich Presence</param>
+	/// <param name="buttonId">The number of the button</param>
+        /// <returns>Updated Rich Presence</returns>
+	public RichPresence UpdateButtons(Button[] button, int buttonId)
+        {
+            if (!IsInitialized)
+            {
+                throw new UninitializedException();
+            }
+
+	    // Get the original index of the button
+            var buttonIndex = buttonId - 1;
+	    
+	    // Clone the presence
+            RichPresence presence;
+            lock (_sync)
+            {
+                if (CurrentPresence == null)
+                {
+                    presence = new RichPresence();
+                }
+                else
+                {
+                    presence = CurrentPresence.Clone();
+                }
+            }
+            
+	    // Update the buttons
+            presence.Buttons[buttonIndex] = button[buttonIndex];
+            SetPresence(presence);
+
+            return presence;
+        }
+	
         /// <summary>
         /// Updates only the <see cref="BaseRichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>
