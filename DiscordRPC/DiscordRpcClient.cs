@@ -525,17 +525,14 @@ namespace DiscordRPC
         /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
         /// </summary>
         /// <param name="Button">The buttons of the Rich Presence</param>
-	/// <param name="buttonId">The number of the button</param>
+	/// <param name="Index">The number of the button</param>
         /// <returns>Updated Rich Presence</returns>
-	public RichPresence UpdateButtons(Button[] button, int buttonId)
+	public RichPresence SetButton(Button button, int index = 0)
         {
             if (!IsInitialized)
             {
                 throw new UninitializedException();
             }
-
-	    // Get the original index of the button
-            var buttonIndex = buttonId - 1;
 	    
 	    // Clone the presence
             RichPresence presence;
@@ -552,7 +549,7 @@ namespace DiscordRPC
             }
             
 	    // Update the buttons
-            presence.Buttons[buttonIndex] = button[buttonIndex];
+            presence.Buttons[index] = button;
             SetPresence(presence);
 
             return presence;
