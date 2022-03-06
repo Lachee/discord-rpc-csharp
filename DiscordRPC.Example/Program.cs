@@ -73,8 +73,8 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            BasicExample();
-            //FullClientExample();
+            //BasicExample();
+            FullClientExample();
             //Issue104();
             //IssueMultipleSets();
             //IssueJoinLogic();
@@ -135,7 +135,7 @@ namespace DiscordRPC.Example
         static void FullClientExample()
         {
             //Create a new DiscordRpcClient. We are filling some of the defaults as examples.
-            using (client = new DiscordRpcClient("424087019149328395",          //The client ID of your Discord Application
+            using (client = new DiscordRpcClient("943468729851850823",          //The client ID of your Discord Application
                     pipe: discordPipe,                                          //The pipe number we can locate discord on. If -1, then we will scan.
                     logger: new ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
                     autoEvents: true,                                           //Should the events be automatically called?

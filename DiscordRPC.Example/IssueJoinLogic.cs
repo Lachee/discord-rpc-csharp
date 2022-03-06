@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DiscordRPC.Core.Logging;
+using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.RPC;
+using DiscordRPC.RPC.Events;
+using DiscordRPC.RPC.Types.RPC;
 
 namespace DiscordRPC.Example
 {
@@ -15,7 +20,7 @@ namespace DiscordRPC.Example
             var random = new Random();
             var client = new DiscordRpcClient("424087019149328395", pipe: 0)
             {
-                Logger = new Logging.ConsoleLogger(Logging.LogLevel.Info, true)
+                Logger = new ConsoleLogger(LogLevel.Info, true)
             };
 
             // == Subscribe to some events
@@ -48,10 +53,10 @@ namespace DiscordRPC.Example
                 Details = "Testing Join Feature",
                 Party = new Party()
                 {
-                    ID = Secrets.CreateFriendlySecret(random),
+                    Id = Secrets.CreateFriendlySecret(random),
                     Size = 1,
                     Max = 4,
-                    Privacy = Party.PrivacySetting.Public
+                    Privacy = PrivacySetting.Public
                 },
                 Secrets = new Secrets()
                 {

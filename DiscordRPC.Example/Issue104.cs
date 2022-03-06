@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.RPC;
+using DiscordRPC.RPC.Types.RPC;
 
 namespace DiscordRPC.Example
 {
@@ -14,7 +13,7 @@ namespace DiscordRPC.Example
             // == Create the client
             var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
-                Logger = new Logging.ConsoleLogger(logLevel, true)
+                Logger = new ConsoleLogger(logLevel, true)
             };
 
             // == Subscribe to some events

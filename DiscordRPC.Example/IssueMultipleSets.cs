@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.RPC.Types.RPC;
 
 namespace DiscordRPC.Example
 {
@@ -14,7 +16,7 @@ namespace DiscordRPC.Example
             // == Create the client
             var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
-                Logger = new Logging.ConsoleLogger(logLevel, true)
+                Logger = new ConsoleLogger(logLevel, true)
             };
 
             // == Subscribe to some events
@@ -40,7 +42,7 @@ namespace DiscordRPC.Example
                 attempt++;
 
                 Console.WriteLine("Setting: {0}", attempt);
-                client.SetPresence(new DiscordRPC.RichPresence()
+                client.SetPresence(new DiscordRPC.RPC.RichPresence()
                 {
                     Details = "Test",
                     State = attempt.ToString() + " attempt",
