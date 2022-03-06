@@ -1,4 +1,4 @@
-﻿using DiscordRPC.Converters;
+﻿using DiscordRPC.Core.Converters;
 using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Payload
@@ -26,10 +26,7 @@ namespace DiscordRPC.RPC.Payload
 			Nonce = nonce.ToString();
 		}
 
-		public override string ToString()
-		{
-			return "Payload || Command: " + Command.ToString() + ", Nonce: " + (Nonce != null ? Nonce.ToString() : "NULL");
-		}
+		public override string ToString() => $"Payload || Command: {Command}, Nonce {Nonce ?? "NULL"}";
 	}
 }
 
