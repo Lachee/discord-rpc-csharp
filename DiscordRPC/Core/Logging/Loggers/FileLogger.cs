@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
-namespace DiscordRPC.Logging
+namespace DiscordRPC.Core.Logging.Loggers
 {
 	/// <summary>
 	/// Logs the outputs to a file
@@ -16,32 +13,27 @@ namespace DiscordRPC.Logging
 		public LogLevel Level { get; set; }
 
 		/// <summary>
-		/// Should the output be coloured?
+		/// The path of the log file
 		/// </summary>
-		public string File { get; set; }
+		private readonly string _filePath;
 
-		private object filelock;
+		/// <summary>
+		/// TODO: Add documentation here?
+		/// </summary>
+		private readonly object _isFileLocked;
 
-        /// <summary>
-        /// Creates a new instance of the file logger
-        /// </summary>
-        /// <param name="path">The path of the log file.</param>
-        public FileLogger(string path)
-            : this(path, LogLevel.Info) { }
-
-        /// <summary>
-        /// Creates a new instance of the file logger
+		/// <summary>
+        /// Creates a new instance of the FileLogger
         /// </summary>
         /// <param name="path">The path of the log file.</param>
         /// <param name="level">The level to assign to the logger.</param>
-        public FileLogger(string path, LogLevel level)
+        public FileLogger(string path, LogLevel level = LogLevel.Info)
         {
             Level = level;
-            File = path;
-            filelock = new object();
+            _filePath = path;
+            _isFileLocked = new object();
         }
-
-
+		
         /// <summary>
         /// Informative log messages
         /// </summary>
@@ -50,7 +42,7 @@ namespace DiscordRPC.Logging
         public void Trace(string message, params object[] args)
         {
             if (Level > LogLevel.Trace) return;
-            lock (filelock) System.IO.File.AppendAllText(File, "\r\nTRCE: " + (args.Length > 0 ? string.Format(message, args) : message));
+            Log($"\r\nTRCE: {(args.Length > 0 ? string.Format(message, args) : message)}");
         }
 
         /// <summary>
@@ -61,7 +53,7 @@ namespace DiscordRPC.Logging
         public void Info(string message, params object[] args)
 		{
 			if (Level > LogLevel.Info) return;
-			lock(filelock) System.IO.File.AppendAllText(File, "\r\nINFO: " + (args.Length > 0 ? string.Format(message, args) : message));
+			Log($"\r\nINFO: {(args.Length > 0 ? string.Format(message, args) : message)}");
 		}
 
 		/// <summary>
@@ -72,21 +64,30 @@ namespace DiscordRPC.Logging
 		public void Warning(string message, params object[] args)
 		{
 			if (Level > LogLevel.Warning) return;
-			lock (filelock)
-				System.IO.File.AppendAllText(File, "\r\nWARN: " + (args.Length > 0 ? string.Format(message, args) : message));
+			Log($"\r\nWARN: {(args.Length > 0 ? string.Format(message, args) : message)}");
 		}
 
 		/// <summary>
-		/// Error log messsages
+		/// Error log messages
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
 		public void Error(string message, params object[] args)
 		{
 			if (Level > LogLevel.Error) return;
-			lock (filelock)
-				System.IO.File.AppendAllText(File, "\r\nERR : " + (args.Length > 0 ? string.Format(message, args) : message));
+			Log($"\r\nERR : {(args.Length > 0 ? string.Format(message, args) : message)}");
 		}
 
+		/// <summary>
+		/// Log the message to the file when the Trace, Info, Warning or Error method is called.
+		/// </summary>
+		/// <param name="message"></param>
+		private void Log(string message)
+		{
+			lock (_isFileLocked)
+			{
+				File.AppendAllText(_filePath, message);
+			}
+		}
 	}
 }
