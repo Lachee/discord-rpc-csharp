@@ -136,7 +136,7 @@ namespace DiscordRPC.IO
 				}
 
 				byte[] result = mem.ToArray();
-				if (result.LongLength != len)
+				if (result.LongLength < len)
 					return false;
 
 				Opcode = (Opcode)op;
