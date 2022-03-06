@@ -1,8 +1,4 @@
 ﻿using DiscordRPC.RPC.Payload;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.RPC.Commands
 {
