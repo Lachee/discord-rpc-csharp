@@ -1,7 +1,15 @@
-﻿using DiscordRPC.Message;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
+using DiscordRPC.Core.IO;
+using DiscordRPC.Core.Logging;
+using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.RPC;
+using DiscordRPC.RPC.Events;
+using DiscordRPC.RPC.Messaging.Messages;
+using DiscordRPC.RPC.Types.RPC;
+using DiscordRPC.RPC.Types.Users;
+
 
 namespace DiscordRPC.Example
 {
@@ -10,7 +18,7 @@ namespace DiscordRPC.Example
         /// <summary>
         /// The level of logging to use.
         /// </summary>
-        private static Logging.LogLevel logLevel = Logging.LogLevel.Trace;
+        private static LogLevel logLevel = LogLevel.Trace;
 
         /// <summary>
         /// The pipe to connect too.
@@ -80,7 +88,11 @@ namespace DiscordRPC.Example
             // == Create the client
             var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
-                Logger = new Logging.ConsoleLogger(logLevel, true)
+                //Logger = new Logging.ConsoleLogger(logLevel, true)
+                Logger = new ConsoleLogger()
+                {
+                    Colored = true
+                }
             };
 
             // == Subscribe to some events
@@ -125,9 +137,9 @@ namespace DiscordRPC.Example
             //Create a new DiscordRpcClient. We are filling some of the defaults as examples.
             using (client = new DiscordRpcClient("424087019149328395",          //The client ID of your Discord Application
                     pipe: discordPipe,                                          //The pipe number we can locate discord on. If -1, then we will scan.
-                    logger: new Logging.ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
+                    logger: new ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
                     autoEvents: true,                                           //Should the events be automatically called?
-                    client: new IO.ManagedNamedPipeClient()                     //The pipe client to use. Required in mono to be changed.
+                    client: new ManagedNamedPipeClient()                     //The pipe client to use. Required in mono to be changed.
                 ))
             {
                 //If you are going to make use of the Join / Spectate buttons, you are required to register the URI Scheme with the client.
@@ -172,10 +184,10 @@ namespace DiscordRPC.Example
                 // If no party is set, the join feature will not work and may cause errors within the discord client itself.
                 presence.Party = new Party()
                 {
-                    ID = Secrets.CreateFriendlySecret(new Random()),
+                    Id = Secrets.CreateFriendlySecret(new Random()),
                     Size = 1,
                     Max = 4,
-                    Privacy = Party.PrivacySetting.Public
+                    Privacy = PrivacySetting.Public
                 };
 
                 //Give the game some time so we have a nice countdown
@@ -345,9 +357,9 @@ namespace DiscordRPC.Example
 
             //We have received a request, dump a bunch of information for the user
             Console.WriteLine("'{0}' has requested to join our game.", args.User.Username);
-            Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarURL(User.AvatarFormat.GIF, User.AvatarSize.x2048));
+            Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarUrl(AvatarFormat.GIF, AvatarSize.x2048));
             Console.WriteLine(" - User's Descrim: {0}", args.User.Discriminator);
-            Console.WriteLine(" - User's Snowflake: {0}", args.User.ID);
+            Console.WriteLine(" - User's Snowflake: {0}", args.User.Id);
             Console.WriteLine();
 
             //Ask the user if they wish to accept the join request.
