@@ -1,6 +1,4 @@
-﻿using DiscordRPC.Logging;
-
-namespace DiscordRPC.Registry
+﻿namespace DiscordRPC.Core.Registry
 {
     internal interface IUriSchemeCreator
     {

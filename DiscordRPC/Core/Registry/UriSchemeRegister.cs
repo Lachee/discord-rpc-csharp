@@ -1,37 +1,39 @@
-﻿using DiscordRPC.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
+using DiscordRPC.Core.Logging;
+using DiscordRPC.Core.Registry.SchemeCreators;
 
-namespace DiscordRPC.Registry
+namespace DiscordRPC.Core.Registry
 {
     internal class UriSchemeRegister
 	{
         /// <summary>
         /// The ID of the Discord App to register
         /// </summary>
-        public string ApplicationID { get; set; }
+        public string ApplicationId { get; set; }
 
         /// <summary>
         /// Optional Steam App ID to register. If given a value, then the game will launch through steam instead of Discord.
         /// </summary>
-        public string SteamAppID { get; set; }
+        public string SteamAppId { get; set; }
 
         /// <summary>
         /// Is this register using steam?
         /// </summary>
-        public bool UsingSteamApp { get { return !string.IsNullOrEmpty(SteamAppID) && SteamAppID != ""; } }
+        public bool UsingSteamApp => !string.IsNullOrEmpty(SteamAppId) && SteamAppId != "";
 
         /// <summary>
         /// The full executable path of the application.
         /// </summary>
         public string ExecutablePath { get; set; }
 
-        private ILogger _logger;
-        public UriSchemeRegister(ILogger logger, string applicationID, string steamAppID = null, string executable = null)
+        private readonly ILogger _logger;
+        
+        public UriSchemeRegister(ILogger logger, string applicationId, string steamAppId = null, string executable = null)
         {
             _logger = logger;
-            ApplicationID = applicationID.Trim();
-            SteamAppID = steamAppID != null ? steamAppID.Trim() : null;
+            ApplicationId = applicationId.Trim();
+            SteamAppId = steamAppId?.Trim();
             ExecutablePath = executable ?? GetApplicationLocation();
         }
 
@@ -40,8 +42,8 @@ namespace DiscordRPC.Registry
         /// </summary>
         public bool RegisterUriScheme()
         {
-            //Get the creator
-            IUriSchemeCreator creator = null;
+            // Get the creator
+            IUriSchemeCreator creator;
             switch(Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32Windows:
@@ -63,11 +65,11 @@ namespace DiscordRPC.Registry
                     break;
 
                 default:
-                    _logger.Error("Unkown Platform: " + Environment.OSVersion.Platform);
+                    _logger.Error($"Unknown Platform: {Environment.OSVersion.Platform}");
                     throw new PlatformNotSupportedException("Platform does not support registration.");
             }
 
-            //Regiser the app
+            // Register the app
             if (creator.RegisterUriScheme(this))
             {
                 _logger.Info("URI scheme registered.");
@@ -81,9 +83,6 @@ namespace DiscordRPC.Registry
         /// Gets the FileName for the currently executing application
         /// </summary>
         /// <returns></returns>
-        public static string GetApplicationLocation()
-        {
-            return Process.GetCurrentProcess().MainModule.FileName;
-        }
+        public static string GetApplicationLocation() => Process.GetCurrentProcess().MainModule?.FileName;
     }
 }
