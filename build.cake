@@ -1,7 +1,7 @@
 // Addins
-#addin nuget:?package=Cake.FileHelpers
-#addin nuget:?package=Cake.Git
-#addin nuget:?package=Cake.VersionReader
+#addin nuget:?package=Cake.FileHelpers&version=4.0.1
+#addin nuget:?package=Cake.Git&version=1.1.0
+#addin nuget:?package=Cake.VersionReader&version=5.1.0
 
 // Adjustable Variables
 var projectName = "DiscordRPC";
