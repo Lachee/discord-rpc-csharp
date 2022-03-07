@@ -14,12 +14,8 @@ namespace DiscordRPC.Core.Registry.SchemeCreators
 
         public bool RegisterUriScheme(UriSchemeRegister register)
         {
-            /*
-             * var home = Environment.GetEnvironmentVariable("HOME");
-             * if (string.IsNullOrEmpty(home)) return;
-             * TODO: Log Error
-             */
-            
+            // TODO: Log Error
+
             var exe = register.ExecutablePath;
             if (string.IsNullOrEmpty(exe))
             {

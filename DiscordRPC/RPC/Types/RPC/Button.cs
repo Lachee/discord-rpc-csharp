@@ -39,7 +39,7 @@ namespace DiscordRPC.RPC.Types.RPC
                 if (!BaseRichPresence.ValidateString(value, out _url, 512, Encoding.UTF8))
                     throw new StringOutOfRangeException(512);
 
-                if (!Uri.TryCreate(_url, UriKind.Absolute, out var uriResult)) // || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                if (!Uri.TryCreate(_url, UriKind.Absolute, out _))
                     throw new ArgumentException("Url must be a valid URI");
             }
         }
