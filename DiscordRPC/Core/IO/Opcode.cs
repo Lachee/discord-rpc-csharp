@@ -5,29 +5,19 @@
     /// </summary>
     public enum Opcode : uint
     {
-        /// <summary>
-        /// Initial handshake frame
-        /// </summary>
+        /// <summary>Initial handshake frame</summary>
         Handshake = 0,
 
-        /// <summary>
-        /// Generic message frame
-        /// </summary>
+        /// <summary>Generic message frame</summary>
         Frame = 1,
 
-        /// <summary>
-        /// Discord has closed the connection
-        /// </summary>
+        /// <summary>Discord has closed the connection</summary>
         Close = 2,
 		
-        /// <summary>
-        /// Ping frame (not used?)
-        /// </summary>
+        /// <summary>Ping frame (not used?)</summary>
         Ping = 3,
 
-        /// <summary>
-        /// Pong frame (not used?)
-        /// </summary>
+        /// <summary>Pong frame (not used?)</summary>
         Pong = 4
     }
 }

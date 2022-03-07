@@ -210,7 +210,7 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
-		/// Adds a message to the message queue. Does not copy the message, so besure to copy it yourself or dereference it.
+		/// Adds a message to the message queue. Does not copy the message, so be sure to copy it yourself or dereference it.
 		/// </summary>
 		/// <param name="message">The message to add</param>
 		private void EnqueueMessage(IMessage message)
@@ -456,10 +456,6 @@ namespace DiscordRPC.RPC
 					Logger.Trace("Waiting {0}ms before attempting to connect again", sleep);
 					Thread.Sleep(_delay.NextDelay());
 				}
-				//catch(InvalidPipeException e)
-				//{
-				//	Logger.Error("Invalid Pipe Exception: {0}", e.Message);
-				//}
 				catch (Exception e)
 				{
 					Logger.Error("Unhandled Exception: {0}", e.GetType().FullName);
@@ -813,7 +809,7 @@ namespace DiscordRPC.RPC
 		}
 		
 		/// <summary>
-		/// Sets the current state of the pipe, locking the l_states object for thread saftey.
+		/// Sets the current state of the pipe, locking the l_states object for thread safety.
 		/// </summary>
 		/// <param name="state">The state to set it too.</param>
 		private void SetConnectionState(RpcState state)

@@ -11,7 +11,7 @@
         Private = 0,
 
         /// <summary>
-        /// THe party is public, anyone can join.
+        /// The party is public, anyone can join.
         /// </summary>
         Public = 1
     }

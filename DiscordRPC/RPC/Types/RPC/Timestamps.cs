@@ -36,7 +36,6 @@ namespace DiscordRPC.RPC.Types.RPC
         public ulong? StartUnixMilliseconds
         {
             get => Start.HasValue ? ToUnixMilliseconds(Start.Value) : (ulong?)null;
-
             set => Start = value.HasValue ? FromUnixMilliseconds(value.Value) : (DateTime?)null;
         }
 
@@ -48,7 +47,6 @@ namespace DiscordRPC.RPC.Types.RPC
         public ulong? EndUnixMilliseconds
         {
             get => End.HasValue ? ToUnixMilliseconds(End.Value) : (ulong?)null;
-
             set => End = value.HasValue ? FromUnixMilliseconds(value.Value) : (DateTime?)null;
         }
         

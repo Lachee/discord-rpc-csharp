@@ -20,7 +20,7 @@
         /// <summary>Bug Hunters that found and reported bugs in Discord.</summary>
         BugHunter = 1 << 3,
 
-        //vThese 2 are mystery types
+        // These 2 are mystery types
         //A = 1 << 4,
         //B = 1 << 5,
 

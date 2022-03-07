@@ -62,7 +62,7 @@ namespace DiscordRPC.RPC
         public Assets Assets { get; set; }
 
         /// <summary>
-        /// The party the player is currently in. The <see cref="Party.ID"/> must be set for this to be included in the RichPresence update.
+        /// The party the player is currently in. The <see cref="Party.Id"/> must be set for this to be included in the RichPresence update.
         /// </summary>
         [JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
         public Party Party { get; set; }

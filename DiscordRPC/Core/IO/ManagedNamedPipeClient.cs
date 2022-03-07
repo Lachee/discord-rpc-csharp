@@ -242,7 +242,7 @@ namespace DiscordRPC.Core.IO
             // Did we read anything? If we did we should enqueue it.
             if (bytes > 0)
             {
-                //Load it into a memory stream and read the frame
+                // Load it into a memory stream and read the frame
                 using (var memory = new MemoryStream(_buffer, 0, bytes))
                 {
                     try
