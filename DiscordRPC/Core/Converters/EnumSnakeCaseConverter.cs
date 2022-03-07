@@ -76,7 +76,7 @@ namespace DiscordRPC.Core.Converters
 					var enumVal = (EnumValueAttribute)a;
 					if (str.Equals(enumVal.Value))
 					{
-						obj = Enum.Parse(type, m.Name, ignoreCase: true);
+						obj = Enum.Parse(type, m.Name, true);
 
 						return true;
 					}
