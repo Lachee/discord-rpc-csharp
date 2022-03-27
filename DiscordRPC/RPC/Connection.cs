@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using DiscordRPC.Core;
-using DiscordRPC.Core.Converters;
-using DiscordRPC.Core.Helpers;
-using DiscordRPC.Core.IO;
-using DiscordRPC.Core.Logging;
-using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.Converters;
+using DiscordRPC.Helpers;
+using DiscordRPC.IO;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
 using DiscordRPC.RPC.Events;
 using DiscordRPC.RPC.Messaging;
 using DiscordRPC.RPC.Messaging.Messages;
@@ -19,7 +20,7 @@ namespace DiscordRPC.RPC
 	/// <summary>
 	/// Communicates between the client and discord through RPC
 	/// </summary>
-	internal class RpcConnection : IDisposable
+	internal class Connection : IDisposable
 	{
 		/// <summary>
 		/// Version of the RPC Protocol
@@ -159,7 +160,7 @@ namespace DiscordRPC.RPC
 		/// <param name="client">The pipe client we shall use.</param>
         /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
         /// <param name="maxRtQueueSize">The maximum size of the in queue</param>
-		public RpcConnection(string applicationId, int processId, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
+		public Connection(string applicationId, int processId, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
 		{
 			_applicationId = applicationId;
 			_processId = processId;
