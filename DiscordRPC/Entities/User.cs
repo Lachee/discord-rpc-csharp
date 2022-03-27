@@ -2,7 +2,7 @@
 using DiscordRPC.Core;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC.Types.Users
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// Object representing a Discord user. This is used for join requests.

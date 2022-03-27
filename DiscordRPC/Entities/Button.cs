@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using DiscordRPC.Core.Exceptions;
+using DiscordRPC.Exceptions;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC.Types.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// A Rich Presence button.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using DiscordRPC.Core.Exceptions;
+using DiscordRPC.Exceptions;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC.Types.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.

@@ -1,4 +1,4 @@
-﻿namespace DiscordRPC.RPC.Types.RPC
+﻿namespace DiscordRPC.Entities
 {
     /// <summary>
     /// Privacy of the party

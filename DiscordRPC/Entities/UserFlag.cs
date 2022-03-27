@@ -1,4 +1,4 @@
-﻿namespace DiscordRPC.RPC.Types.Users
+﻿namespace DiscordRPC.Entities
 {
     /// <summary>
     /// A flag on the user account

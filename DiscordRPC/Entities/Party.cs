@@ -1,8 +1,8 @@
 ﻿using System;
-using DiscordRPC.Core.Helpers;
+using DiscordRPC.Helpers;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC.Types.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// Structure representing the part the player is in.

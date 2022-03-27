@@ -1,4 +1,4 @@
-﻿namespace DiscordRPC.RPC.Types.Users
+﻿namespace DiscordRPC.Entities
 {
     /// <summary>
     /// Possible formats for avatars

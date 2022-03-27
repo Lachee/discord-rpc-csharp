@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC.Types.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// Structure representing the start and end-times of a match.
