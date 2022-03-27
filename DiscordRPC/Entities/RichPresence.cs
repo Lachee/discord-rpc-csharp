@@ -1,7 +1,6 @@
-﻿using DiscordRPC.RPC.Types.RPC;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.

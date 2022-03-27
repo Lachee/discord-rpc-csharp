@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// A rich presence that has been parsed from the pipe as a response.

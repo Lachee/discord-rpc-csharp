@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Text;
-using DiscordRPC.Core.Exceptions;
-using DiscordRPC.Core.Helpers;
-using DiscordRPC.RPC.Types.RPC;
+using DiscordRPC.Exceptions;
+using DiscordRPC.Helpers;
 using Newtonsoft.Json;
 
-namespace DiscordRPC.RPC
+namespace DiscordRPC.Entities
 {
     /// <summary>
     /// The base rich presence structure
