@@ -2,16 +2,15 @@
 using DiscordRPC.RPC.Commands;
 using System;
 using DiscordRPC.Core;
-using DiscordRPC.Core.Exceptions;
-using DiscordRPC.Core.IO;
-using DiscordRPC.Core.Logging;
-using DiscordRPC.Core.Logging.Loggers;
-using DiscordRPC.Core.Registry;
+using DiscordRPC.Exceptions;
+using DiscordRPC.IO;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Registry;
+using DiscordRPC.Entities;
 using DiscordRPC.RPC.Events;
 using DiscordRPC.RPC.Messaging;
 using DiscordRPC.RPC.Messaging.Messages;
-using DiscordRPC.RPC.Types.RPC;
-using DiscordRPC.RPC.Types.Users;
 
 namespace DiscordRPC
 {
@@ -86,7 +85,7 @@ namespace DiscordRPC
         /// </summary>
         public int TargetPipe { get; private set; }
 
-        private readonly RpcConnection _connection;
+        private readonly Connection _connection;
 
         /// <summary>
         /// The current presence that the client has. Gets set with <see cref="SetPresence(RichPresence)"/> and updated on <see cref="OnPresenceUpdate"/>.
@@ -133,74 +132,74 @@ namespace DiscordRPC
 
         /// <summary>
         /// Called when the discord client is ready to send and receive messages.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event ReadyEvent OnReady;
+        public event ReadyEvent ReadyEvent;
 
         /// <summary>
         /// Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.
-		/// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+		/// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event CloseEvent OnClose;
+        public event CloseEvent CloseEvent;
 
         /// <summary>
         /// Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event ErrorEvent OnError;
+        public event ErrorEvent ErrorEvent;
 
         /// <summary>
         /// Called when the Discord Client has updated the presence.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event PresenceUpdateEvent OnPresenceUpdate;
+        public event PresenceUpdateEvent PresenceUpdateEvent;
 
         /// <summary>
         /// Called when the Discord Client has subscribed to an event.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event SubscribeEvent OnSubscribe;
+        public event SubscribeEvent SubscribeEvent;
 
         /// <summary>
         /// Called when the Discord Client has unsubscribed from an event.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event UnsubscribeEvent OnUnsubscribe;
+        public event UnsubscribeEvent UnsubscribeEvent;
 
         /// <summary>
         /// Called when the Discord Client wishes for this process to join a game.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event JoinEvent OnJoin;
+        public event JoinEvent JoinEvent;
 
         /// <summary>
         /// Called when the Discord Client wishes for this process to spectate a game.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event SpectateEvent OnSpectate;
+        public event SpectateEvent SpectateEvent;
 
         /// <summary>
         /// Called when another discord user requests permission to join this game.
         /// <para>This event is not invoked until <see cref="Invoke"/> is executed.</para>
         /// </summary>
-        public event JoinRequestedEvent OnJoinRequested;
+        public event JoinRequestedEvent JoinRequestedEvent;
 
         /// <summary>
         /// The connection to the discord client was successful. This is called before <see cref="MessageType.Ready"/>.
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event ConnectionEstablishedEvent OnConnectionEstablished;
+        public event ConnectionEstablishedEvent ConnectionEstablishedEvent;
 
         /// <summary>
         /// Failed to establish any connection with discord. Discord is potentially not running?
-        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked until <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
-        public event ConnectionFailedEvent OnConnectionFailed;
+        public event ConnectionFailedEvent ConnectionFailedEvent;
 
         /// <summary>
         /// The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.
         /// </summary>
-        public event RpcMessageEvent OnRpcMessage;
+        public event RpcMessageEvent RpcMessageEvent;
         #endregion
 
         #region Initialization
@@ -240,7 +239,7 @@ namespace DiscordRPC
             _logger = logger ?? new NullLogger();
 
             // Create the RPC client, giving it the important details
-            _connection = new RpcConnection(ApplicationId, ProcessId, TargetPipe, client ?? new ManagedNamedPipeClient(), autoEvents ? 0 : 128U)
+            _connection = new Connection(ApplicationId, ProcessId, TargetPipe, client ?? new ManagedNamedPipeClient(), autoEvents ? 0 : 128U)
             {
                 ShutdownOnly = _shutdownOnly,
                 Logger = _logger
@@ -249,7 +248,7 @@ namespace DiscordRPC
             // Subscribe to its event
             _connection.OnRpcMessage += (sender, msg) =>
             {
-                OnRpcMessage?.Invoke(this, msg);
+                RpcMessageEvent?.Invoke(this, msg);
 
                 if (AutoEvents) ProcessMessage(msg);
             };
@@ -363,47 +362,47 @@ namespace DiscordRPC
             switch (message.Type)
             {
                 case MessageType.Ready:
-                    OnReady?.Invoke(this, message as ReadyMessage);
+                    ReadyEvent?.Invoke(this, message as ReadyMessage);
                     break;
 
                 case MessageType.Close:
-                    OnClose?.Invoke(this, message as CloseMessage);
+                    CloseEvent?.Invoke(this, message as CloseMessage);
                     break;
 
                 case MessageType.Error:
-                    OnError?.Invoke(this, message as ErrorMessage);
+                    ErrorEvent?.Invoke(this, message as ErrorMessage);
                     break;
 
                 case MessageType.PresenceUpdate:
-                    OnPresenceUpdate?.Invoke(this, message as PresenceMessage);
+                    PresenceUpdateEvent?.Invoke(this, message as PresenceMessage);
                     break;
 
                 case MessageType.Subscribe:
-                    OnSubscribe?.Invoke(this, message as SubscribeMessage);
+                    SubscribeEvent?.Invoke(this, message as SubscribeMessage);
                     break;
 
                 case MessageType.Unsubscribe:
-                    OnUnsubscribe?.Invoke(this, message as UnsubscribeMessage);
+                    UnsubscribeEvent?.Invoke(this, message as UnsubscribeMessage);
                     break;
 
                 case MessageType.Join:
-                    OnJoin?.Invoke(this, message as JoinMessage);
+                    JoinEvent?.Invoke(this, message as JoinMessage);
                     break;
 
                 case MessageType.Spectate:
-                    OnSpectate?.Invoke(this, message as SpectateMessage);
+                    SpectateEvent?.Invoke(this, message as SpectateMessage);
                     break;
 
                 case MessageType.JoinRequest:
-                    OnJoinRequested?.Invoke(this, message as JoinRequestMessage);
+                    JoinRequestedEvent?.Invoke(this, message as JoinRequestMessage);
                     break;
 
                 case MessageType.ConnectionEstablished:
-                    OnConnectionEstablished?.Invoke(this, message as ConnectionEstablishedMessage);
+                    ConnectionEstablishedEvent?.Invoke(this, message as ConnectionEstablishedMessage);
                     break;
 
                 case MessageType.ConnectionFailed:
-                    OnConnectionFailed?.Invoke(this, message as ConnectionFailedMessage);
+                    ConnectionFailedEvent?.Invoke(this, message as ConnectionFailedMessage);
                     break;
 
                 default:
@@ -482,24 +481,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
 	    public RichPresence UpdateButtons(Button[] button = null)
         {
-            if (!IsInitialized)
-            {
-                throw new UninitializedException();
-            }
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null)
-                {
-                    presence = new RichPresence();
-                }
-                else
-                {
-                    presence = CurrentPresence.Clone();
-                }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the buttons.
             presence.Buttons = button;
@@ -516,24 +499,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
 	    public RichPresence SetButton(Button button, int index = 0)
         {
-            if (!IsInitialized)
-            {
-                throw new UninitializedException();
-            }
-	    
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null)
-                {
-                    presence = new RichPresence();
-                }
-                else
-                {
-                    presence = CurrentPresence.Clone();
-                }
-            }
+            var presence = CloneCurrentPresence();
             
             // Update the buttons
             presence.Buttons[index] = button;
@@ -549,15 +516,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateDetails(string details)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             presence.Details = details;
@@ -571,15 +531,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateState(string state)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             presence.State = state;
@@ -593,15 +546,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateParty(Party party)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             presence.Party = party;
@@ -616,15 +562,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdatePartySize(int size)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Ensure it has a party
             if (presence.Party == null)
@@ -645,15 +584,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdatePartySize(int size, int max)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Ensure it has a party
             if (presence.Party == null)
@@ -674,15 +606,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateLargeAsset(string key = null, string tooltip = null)
         {
-            if (!IsInitialized) throw new UninitializedException();
-            
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             if (presence.Assets == null) presence.Assets = new Assets();
@@ -700,15 +625,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateSmallAsset(string key = null, string tooltip = null)
         {
-            if (!IsInitialized) throw new UninitializedException();
-            
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             if (presence.Assets == null) presence.Assets = new Assets();
@@ -725,15 +643,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateSecrets(Secrets secrets)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             presence.Secrets = secrets;
@@ -754,15 +665,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateStartTime(DateTime time)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
@@ -784,15 +688,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateEndTime(DateTime time)
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
@@ -807,15 +704,8 @@ namespace DiscordRPC
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateClearTime()
         {
-            if (!IsInitialized) throw new UninitializedException();
-
             // Clone the presence
-            RichPresence presence;
-            lock (_sync)
-            {
-                if (CurrentPresence == null) { presence = new RichPresence(); }
-                else { presence = CurrentPresence.Clone(); }
-            }
+            var presence = CloneCurrentPresence();
 
             // Update the value 
             presence.Timestamps = null;
@@ -824,6 +714,25 @@ namespace DiscordRPC
         }
         #endregion
 
+        /// <summary>
+        /// Clones the current presence if there is one or else it will create a new presence instance
+        /// </summary>
+        /// <returns></returns>
+        private RichPresence CloneCurrentPresence()
+        {
+            // Check if the client has been initialized
+            if (!IsInitialized) throw new UninitializedException();
+            
+            // Close the presence
+            RichPresence presence;
+            lock (_sync)
+            {
+                presence = CurrentPresence == null ? new RichPresence() : CurrentPresence.Clone();
+            }
+
+            return presence;
+        }
+        
         /// <summary>
         /// Clears the Rich Presence. Use this just before disposal to prevent ghosting.
         /// </summary>
@@ -927,13 +836,13 @@ namespace DiscordRPC
 
             // Add the subscribe command to be sent when the connection is able too
             if ((type & EventType.Spectate) == EventType.Spectate)
-                _connection.EnqueueCommand(new SubscribeCommand { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = isUnsubscribe });
+                _connection.EnqueueCommand(new SubscribeCommand { Event = ServerEvent.ActivitySpectate, IsUnsubscribe = isUnsubscribe });
 
             if ((type & EventType.Join) == EventType.Join)
-                _connection.EnqueueCommand(new SubscribeCommand { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
+                _connection.EnqueueCommand(new SubscribeCommand { Event = ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });
 
             if ((type & EventType.JoinRequest) == EventType.JoinRequest)
-                _connection.EnqueueCommand(new SubscribeCommand { Event = RPC.Payload.ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
+                _connection.EnqueueCommand(new SubscribeCommand { Event = ServerEvent.ActivityJoinRequest, IsUnsubscribe = isUnsubscribe });
         }
 
         #endregion
