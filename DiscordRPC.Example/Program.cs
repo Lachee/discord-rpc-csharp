@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using DiscordRPC.Core.IO;
-using DiscordRPC.Core.Logging;
-using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.IO;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Events;
 using DiscordRPC.RPC.Messaging.Messages;
-using DiscordRPC.RPC.Types.RPC;
-using DiscordRPC.RPC.Types.Users;
+using DiscordRPC.Entities;
 
 
 namespace DiscordRPC.Example
@@ -96,13 +96,13 @@ namespace DiscordRPC.Example
             };
 
             // == Subscribe to some events
-            client.OnReady += (sender, msg) =>
+            client.ReadyEvent += (sender, msg) =>
             {
                 //Create some events so we know things are happening
                 Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
             };
 
-            client.OnPresenceUpdate += (sender, msg) =>
+            client.PresenceUpdateEvent += (sender, msg) =>
             {
                 //The presence has updated
                 Console.WriteLine("Presence has been updated! ");
@@ -152,21 +152,21 @@ namespace DiscordRPC.Example
 
                 //Register to the events we care about. We are registering to everyone just to show off the events
 
-                client.OnReady += OnReady;                                      //Called when the client is ready to send presences
-                client.OnClose += OnClose;                                      //Called when connection to discord is lost
-                client.OnError += OnError;                                      //Called when discord has a error
+                client.ReadyEvent += OnReady;                                      //Called when the client is ready to send presences
+                client.CloseEvent += OnClose;                                      //Called when connection to discord is lost
+                client.ErrorEvent += OnError;                                      //Called when discord has a error
 
-                client.OnConnectionEstablished += OnConnectionEstablished;      //Called when a pipe connection is made, but not ready
-                client.OnConnectionFailed += OnConnectionFailed;                //Called when a pipe connection failed.
+                client.ConnectionEstablishedEvent += OnConnectionEstablished;      //Called when a pipe connection is made, but not ready
+                client.ConnectionFailedEvent += OnConnectionFailed;                //Called when a pipe connection failed.
 
-                client.OnPresenceUpdate += OnPresenceUpdate;                    //Called when the presence is updated
+                client.PresenceUpdateEvent += OnPresenceUpdate;                    //Called when the presence is updated
 
-                client.OnSubscribe += OnSubscribe;                              //Called when a event is subscribed too
-                client.OnUnsubscribe += OnUnsubscribe;                          //Called when a event is unsubscribed from.
+                client.SubscribeEvent += OnSubscribe;                              //Called when a event is subscribed too
+                client.UnsubscribeEvent += OnUnsubscribe;                          //Called when a event is unsubscribed from.
 
-                client.OnJoin += OnJoin;                                        //Called when the client wishes to join someone else. Requires RegisterUriScheme to be called.
-                client.OnSpectate += OnSpectate;                                //Called when the client wishes to spectate someone else. Requires RegisterUriScheme to be called.
-                client.OnJoinRequested += OnJoinRequested;                      //Called when someone else has requested to join this client.
+                client.JoinEvent += OnJoin;                                        //Called when the client wishes to join someone else. Requires RegisterUriScheme to be called.
+                client.SpectateEvent += OnSpectate;                                //Called when the client wishes to spectate someone else. Requires RegisterUriScheme to be called.
+                client.JoinRequestedEvent += OnJoinRequested;                      //Called when someone else has requested to join this client.
 
                 //Before we send a initial presence, we will generate a random "game ID" for this example.
                 // For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 

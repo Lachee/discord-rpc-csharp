@@ -1,5 +1,5 @@
 ﻿using System;
-using DiscordRPC.Core.Converters;
+using DiscordRPC.Converters;
 
 namespace DiscordRPC.RPC.Payload
 {

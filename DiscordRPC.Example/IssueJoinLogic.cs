@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DiscordRPC.Core.Logging;
-using DiscordRPC.Core.Logging.Loggers;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Events;
-using DiscordRPC.RPC.Types.RPC;
+using DiscordRPC.Entities;
 
 namespace DiscordRPC.Example
 {
@@ -24,21 +25,21 @@ namespace DiscordRPC.Example
             };
 
             // == Subscribe to some events
-            client.OnReady += (sender, msg) => {  Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
-            client.OnPresenceUpdate += (sender, msg) => { Console.WriteLine("Presence has been updated! ");  };
+            client.ReadyEvent += (sender, msg) => {  Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
+            client.PresenceUpdateEvent += (sender, msg) => { Console.WriteLine("Presence has been updated! ");  };
 
             //Setup the join event
             client.Subscribe(EventType.Join | EventType.JoinRequest);
             client.RegisterUriScheme();
 
             //= Request Event
-            client.OnJoinRequested += (sender, msg) =>
+            client.JoinRequestedEvent += (sender, msg) =>
             {
                 Console.WriteLine("Someone wants to join us: {0}", msg.User.Username);
             };
 
             //= Join Event
-            client.OnJoin += (sender, msg) =>
+            client.JoinEvent += (sender, msg) =>
             {
                 Console.WriteLine("Joining this dude: {0}", msg.Secret);
             };

@@ -1,5 +1,4 @@
-﻿using DiscordRPC.RPC.Types.RPC;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Messaging.Messages
 {

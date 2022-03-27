@@ -1,4 +1,4 @@
-﻿using DiscordRPC.Core.Converters;
+﻿using DiscordRPC.Converters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -1,4 +1,6 @@
-﻿namespace DiscordRPC.RPC.Messaging.Messages
+﻿using DiscordRPC.Entities;
+
+namespace DiscordRPC.RPC.Messaging.Messages
 {
     /// <summary>
     /// Representation of the message received by discord when the presence has been updated.

@@ -1,4 +1,5 @@
-﻿using DiscordRPC.RPC.Payload;
+﻿using DiscordRPC.Entities;
+using DiscordRPC.RPC.Payload;
 using Newtonsoft.Json;
 
 namespace DiscordRPC.RPC.Commands

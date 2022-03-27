@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using DiscordRPC.Core.Exceptions;
+using DiscordRPC.Exceptions;
 using DiscordRPC.RPC.Commands;
 using DiscordRPC.RPC.Payload;
 using Newtonsoft.Json;

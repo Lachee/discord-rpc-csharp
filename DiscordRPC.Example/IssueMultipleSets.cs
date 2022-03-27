@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DiscordRPC.Core.Logging.Loggers;
-using DiscordRPC.RPC.Types.RPC;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
+using DiscordRPC.Entities;
+using DiscordRPC.Logging;
 
 namespace DiscordRPC.Example
 {
@@ -16,17 +18,17 @@ namespace DiscordRPC.Example
             // == Create the client
             var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
-                Logger = new ConsoleLogger(logLevel, true)
+                Logger = new ConsoleLogger(LogLevel.Info, true)
             };
 
             // == Subscribe to some events
-            client.OnReady += (sender, msg) =>
+            client.ReadyEvent += (sender, msg) =>
             {
                 //Create some events so we know things are happening
                 Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
             };
 
-            client.OnPresenceUpdate += (sender, msg) =>
+            client.PresenceUpdateEvent += (sender, msg) =>
             {
                 //The presence has updated
                 Console.WriteLine("Presence has been updated! ");
@@ -42,7 +44,7 @@ namespace DiscordRPC.Example
                 attempt++;
 
                 Console.WriteLine("Setting: {0}", attempt);
-                client.SetPresence(new DiscordRPC.RPC.RichPresence()
+                client.SetPresence(new RichPresence()
                 {
                     Details = "Test",
                     State = attempt.ToString() + " attempt",
