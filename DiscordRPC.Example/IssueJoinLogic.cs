@@ -4,6 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
+using DiscordRPC.RPC;
+using DiscordRPC.RPC.Events;
+using DiscordRPC.Entities;
 
 namespace DiscordRPC.Example
 {
@@ -15,25 +21,25 @@ namespace DiscordRPC.Example
             var random = new Random();
             var client = new DiscordRpcClient("424087019149328395", pipe: 0)
             {
-                Logger = new Logging.ConsoleLogger(Logging.LogLevel.Info, true)
+                Logger = new ConsoleLogger(LogLevel.Info, true)
             };
 
             // == Subscribe to some events
-            client.OnReady += (sender, msg) => {  Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
-            client.OnPresenceUpdate += (sender, msg) => { Console.WriteLine("Presence has been updated! ");  };
+            client.ReadyEvent += (sender, msg) => {  Console.WriteLine("Connected to discord with user {0}", msg.User.Username); };
+            client.PresenceUpdateEvent += (sender, msg) => { Console.WriteLine("Presence has been updated! ");  };
 
             //Setup the join event
             client.Subscribe(EventType.Join | EventType.JoinRequest);
             client.RegisterUriScheme();
 
             //= Request Event
-            client.OnJoinRequested += (sender, msg) =>
+            client.JoinRequestedEvent += (sender, msg) =>
             {
                 Console.WriteLine("Someone wants to join us: {0}", msg.User.Username);
             };
 
             //= Join Event
-            client.OnJoin += (sender, msg) =>
+            client.JoinEvent += (sender, msg) =>
             {
                 Console.WriteLine("Joining this dude: {0}", msg.Secret);
             };
@@ -48,10 +54,10 @@ namespace DiscordRPC.Example
                 Details = "Testing Join Feature",
                 Party = new Party()
                 {
-                    ID = Secrets.CreateFriendlySecret(random),
+                    Id = Secrets.CreateFriendlySecret(random),
                     Size = 1,
                     Max = 4,
-                    Privacy = Party.PrivacySetting.Public
+                    Privacy = PrivacySetting.Public
                 },
                 Secrets = new Secrets()
                 {

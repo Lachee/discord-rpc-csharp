@@ -1,8 +1,7 @@
-﻿using DiscordRPC.Helper;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace DiscordRPC.Converters
 {
@@ -11,29 +10,24 @@ namespace DiscordRPC.Converters
 	/// </summary>
 	internal class EnumSnakeCaseConverter : JsonConverter
 	{
-		public override bool CanConvert(Type objectType)
-		{
-			return objectType.IsEnum;
-		}
+		public override bool CanConvert(Type objectType) => objectType.IsEnum;
 
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			if (reader.Value == null) return null;
 
-			object val = null;
-			if (TryParseEnum(objectType, (string)reader.Value, out val))
-				return val;
+			if (TryParseEnum(objectType, (string)reader.Value, out var val)) return val;
 
 			return existingValue;
 		}
 
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 		{
-			var enumtype = value.GetType();
-			var name = Enum.GetName(enumtype, value);
+			var enumType = value.GetType();
+			var name = Enum.GetName(enumType, value);
 
-			//Get each member and look for hte correct one
-			var members = enumtype.GetMembers(BindingFlags.Public | BindingFlags.Static);
+			// Get each member and look for hte correct one
+			var members = enumType.GetMembers(BindingFlags.Public | BindingFlags.Static);
 			foreach (var m in members)
 			{
 				if (m.Name.Equals(name))
@@ -52,19 +46,19 @@ namespace DiscordRPC.Converters
 
 		public bool TryParseEnum(Type enumType, string str, out object obj)
 		{
-			//Make sure the string isn;t null
+			// Make sure the string isn;t null
 			if (str == null)
 			{
 				obj = null;
 				return false;
 			}	
 
-			//Get the real type
-			Type type = enumType;
+			// Get the real type
+			var type = enumType;
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
 				type = type.GetGenericArguments().First();
 
-			//Make sure its actually a enum
+			// Make sure its actually a enum
 			if (!type.IsEnum)
 			{
 				obj = null;
@@ -72,24 +66,24 @@ namespace DiscordRPC.Converters
 			}
 
 
-			//Get each member and look for hte correct one
+			// Get each member and look for hte correct one
 			var members = type.GetMembers(BindingFlags.Public | BindingFlags.Static);
 			foreach (var m in members)
 			{
 				var attributes = m.GetCustomAttributes(typeof(EnumValueAttribute), true);
 				foreach(var a in attributes)
 				{
-					var enumval = (EnumValueAttribute)a;
-					if (str.Equals(enumval.Value))
+					var enumVal = (EnumValueAttribute)a;
+					if (str.Equals(enumVal.Value))
 					{
-						obj = Enum.Parse(type, m.Name, ignoreCase: true);
+						obj = Enum.Parse(type, m.Name, true);
 
 						return true;
 					}
 				}
 			}
 
-			//We failed
+			// We failed
 			obj = null;
 			return false;
 		}

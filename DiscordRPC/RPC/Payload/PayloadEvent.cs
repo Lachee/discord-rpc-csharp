@@ -37,20 +37,13 @@ namespace DiscordRPC.RPC.Payload
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public T GetObject<T>()
-		{
-			if (Data == null) return default(T);
-            return Data.ToObject<T>();
-		}
+		public T GetObject<T>() => Data == null ? default : Data.ToObject<T>();
 
-        /// <summary>
+		/// <summary>
         /// Converts the object into a human readable string
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-		{
-			return "Event " + base.ToString() + ", Event: " + (Event.HasValue ? Event.ToString() : "N/A");
-		}
+		public override string ToString() => $"Event {base.ToString()}, Event: {(Event.HasValue ? Event.ToString() : "N/A")}";
 	}
 	
 

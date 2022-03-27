@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace DiscordRPC.IO
 {
@@ -13,9 +11,9 @@ namespace DiscordRPC.IO
 	public struct PipeFrame
 	{
 		/// <summary>
-		/// The maxium size of a pipe frame (16kb).
+		/// The maximum size of a pipe frame (16kb).
 		/// </summary>
-		public static readonly int MAX_SIZE = 16 * 1024;
+		public const int MaxSize = 16 * 1024;
 
 		/// <summary>
 		/// The opcode of the frame
@@ -25,7 +23,7 @@ namespace DiscordRPC.IO
 		/// <summary>
 		/// The length of the frame data
 		/// </summary>
-		public uint Length { get { return (uint) Data.Length; } }
+		public uint Length => (uint) Data.Length;
 
 		/// <summary>
 		/// The data in the frame
@@ -37,8 +35,8 @@ namespace DiscordRPC.IO
 		/// </summary>
 		public string Message
 		{
-			get { return GetMessage(); }
-			set { SetMessage(value); }
+			get => GetMessage();
+			set => SetMessage(value);
 		}
 		
 		/// <summary>
@@ -59,7 +57,7 @@ namespace DiscordRPC.IO
 		/// <summary>
 		/// Gets the encoding used for the pipe frames
 		/// </summary>
-		public Encoding MessageEncoding { get { return Encoding.UTF8; } }
+		private static Encoding MessageEncoding => Encoding.UTF8;
 
 		/// <summary>
 		/// Sets the data based of a string
@@ -71,17 +69,13 @@ namespace DiscordRPC.IO
 		/// Gets a string based of the data
 		/// </summary>
 		/// <returns></returns>
-		private string GetMessage() { return MessageEncoding.GetString(Data); }
+		private string GetMessage() => MessageEncoding.GetString(Data);
 
 		/// <summary>
 		/// Serializes the object into json string then encodes it into <see cref="Data"/>.
 		/// </summary>
 		/// <param name="obj"></param>
-		public void SetObject(object obj)
-		{
-			string json = JsonConvert.SerializeObject(obj);
-			SetMessage(json);
-		}
+		public void SetObject(object obj) => SetMessage(JsonConvert.SerializeObject(obj));
 
 		/// <summary>
 		/// Sets the opcodes and serializes the object into a json string.
@@ -99,11 +93,7 @@ namespace DiscordRPC.IO
 		/// </summary>
 		/// <typeparam name="T">The type to deserialize into</typeparam>
 		/// <returns></returns>
-		public T GetObject<T>()
-		{
-			string json = GetMessage();
-			return JsonConvert.DeserializeObject<T>(json);
-		}
+		public T GetObject<T>() => JsonConvert.DeserializeObject<T>(GetMessage());
 
 		/// <summary>
 		/// Attempts to read the contents of the frame from the stream
@@ -112,23 +102,19 @@ namespace DiscordRPC.IO
 		/// <returns></returns>
 		public bool ReadStream(Stream stream)
 		{
-			//Try to read the opcode
-			uint op;
-			if (!TryReadUInt32(stream, out op))
-				return false;
+			// Try to read the opcode
+			if (!TryReadUInt32(stream, out var op)) return false;
 
-			//Try to read the length
-			uint len;
-			if (!TryReadUInt32(stream, out len))
-				return false;
+			// Try to read the length
+			if (!TryReadUInt32(stream, out var len)) return false;
 
-			uint readsRemaining = len;
+			var readsRemaining = len;
 
-			//Read the contents
+			// Read the contents
 			using (var mem = new MemoryStream())
 			{
-				uint chunkSize = (uint)Min(2048, len); // read in chunks of 2KB
-				byte[] buffer = new byte[chunkSize];
+				var chunkSize = (uint)Min(2048, len); // Read in chunks of 2KB
+				var buffer = new byte[chunkSize];
 				int bytesRead;
 				while ((bytesRead = stream.Read(buffer, 0, Min(buffer.Length, readsRemaining))) > 0)
 				{
@@ -136,24 +122,23 @@ namespace DiscordRPC.IO
 					mem.Write(buffer, 0, bytesRead);
 				}
 
-				byte[] result = mem.ToArray();
-				if (result.LongLength != len)
-					return false;
+				var result = mem.ToArray();
+				if (result.LongLength != len) return false;
 
 				Opcode = (Opcode)op;
 				Data = result;
 				return true;
 			}
 
-			//fun
-			//if (a != null) { do { yield return true; switch (a) { case 1: await new Task(); default: lock (obj) { foreach (b in c) { for (int d = 0; d < 1; d++) { a++; } } } while (a is typeof(int) || (new Class()) != null) } goto MY_LABEL;
+			// fun
+			// if (a != null) { do { yield return true; switch (a) { case 1: await new Task(); default: lock (obj) { foreach (b in c) { for (int d = 0; d < 1; d++) { a++; } } } while (a is typeof(int) || (new Class()) != null) } goto MY_LABEL;
 
 		}
 
         /// <summary>
         /// Returns minimum value between a int and a unsigned int
         /// </summary>
-		private int Min(int a, uint b)
+		private static int Min(int a, uint b)
 		{
 			if (b >= a) return a;
 			return (int) b;
@@ -165,13 +150,13 @@ namespace DiscordRPC.IO
 		/// <param name="stream"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		private bool TryReadUInt32(Stream stream, out uint value)
+		private static bool TryReadUInt32(Stream stream, out uint value)
 		{
-			//Read the bytes available to us
-			byte[] bytes = new byte[4];
-			int cnt = stream.Read(bytes, 0, bytes.Length);
+			// Read the bytes available to us
+			var bytes = new byte[4];
+			var cnt = stream.Read(bytes, 0, bytes.Length);
 
-			//Make sure we actually have a valid value
+			// Make sure we actually have a valid value
 			if (cnt != 4)
 			{
 				value = default(uint);
@@ -188,17 +173,17 @@ namespace DiscordRPC.IO
 		/// <param name="stream"></param>
 		public void WriteStream(Stream stream)
 		{
-			//Get all the bytes
-			byte[] op = BitConverter.GetBytes((uint) Opcode);
-			byte[] len = BitConverter.GetBytes(Length);
+			// Get all the bytes
+			var op = BitConverter.GetBytes((uint) Opcode);
+			var len = BitConverter.GetBytes(Length);
 
-			//Copy it all into a buffer
-			byte[] buff = new byte[op.Length + len.Length + Data.Length];
+			// Copy it all into a buffer
+			var buff = new byte[op.Length + len.Length + Data.Length];
 			op.CopyTo(buff, 0);
 			len.CopyTo(buff, op.Length);
 			Data.CopyTo(buff, op.Length + len.Length);
 
-			//Write it to the stream
+			// Write it to the stream
 			stream.Write(buff, 0, buff.Length);
 		}		
 	}

@@ -1,7 +1,15 @@
-﻿using DiscordRPC.Message;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
+using DiscordRPC.IO;
+using DiscordRPC.Logging;
+using DiscordRPC.Logging.Loggers;
+using DiscordRPC.Entities;
+using DiscordRPC.RPC;
+using DiscordRPC.RPC.Events;
+using DiscordRPC.RPC.Messaging.Messages;
+using DiscordRPC.Entities;
+
 
 namespace DiscordRPC.Example
 {
@@ -10,7 +18,7 @@ namespace DiscordRPC.Example
         /// <summary>
         /// The level of logging to use.
         /// </summary>
-        private static Logging.LogLevel logLevel = Logging.LogLevel.Trace;
+        private static LogLevel logLevel = LogLevel.Trace;
 
         /// <summary>
         /// The pipe to connect too.
@@ -65,8 +73,8 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            BasicExample();
-            //FullClientExample();
+            //BasicExample();
+            FullClientExample();
             //Issue104();
             //IssueMultipleSets();
             //IssueJoinLogic();
@@ -80,17 +88,21 @@ namespace DiscordRPC.Example
             // == Create the client
             var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
             {
-                Logger = new Logging.ConsoleLogger(logLevel, true)
+                //Logger = new Logging.ConsoleLogger(logLevel, true)
+                Logger = new ConsoleLogger()
+                {
+                    Colored = true
+                }
             };
 
             // == Subscribe to some events
-            client.OnReady += (sender, msg) =>
+            client.ReadyEvent += (sender, msg) =>
             {
                 //Create some events so we know things are happening
                 Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
             };
 
-            client.OnPresenceUpdate += (sender, msg) =>
+            client.PresenceUpdateEvent += (sender, msg) =>
             {
                 //The presence has updated
                 Console.WriteLine("Presence has been updated! ");
@@ -123,11 +135,11 @@ namespace DiscordRPC.Example
         static void FullClientExample()
         {
             //Create a new DiscordRpcClient. We are filling some of the defaults as examples.
-            using (client = new DiscordRpcClient("424087019149328395",          //The client ID of your Discord Application
+            using (client = new DiscordRpcClient("943468729851850823",          //The client ID of your Discord Application
                     pipe: discordPipe,                                          //The pipe number we can locate discord on. If -1, then we will scan.
-                    logger: new Logging.ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
+                    logger: new ConsoleLogger(logLevel, true),          //The loger to get information back from the client.
                     autoEvents: true,                                           //Should the events be automatically called?
-                    client: new IO.ManagedNamedPipeClient()                     //The pipe client to use. Required in mono to be changed.
+                    client: new ManagedNamedPipeClient()                     //The pipe client to use. Required in mono to be changed.
                 ))
             {
                 //If you are going to make use of the Join / Spectate buttons, you are required to register the URI Scheme with the client.
@@ -140,21 +152,21 @@ namespace DiscordRPC.Example
 
                 //Register to the events we care about. We are registering to everyone just to show off the events
 
-                client.OnReady += OnReady;                                      //Called when the client is ready to send presences
-                client.OnClose += OnClose;                                      //Called when connection to discord is lost
-                client.OnError += OnError;                                      //Called when discord has a error
+                client.ReadyEvent += OnReady;                                      //Called when the client is ready to send presences
+                client.CloseEvent += OnClose;                                      //Called when connection to discord is lost
+                client.ErrorEvent += OnError;                                      //Called when discord has a error
 
-                client.OnConnectionEstablished += OnConnectionEstablished;      //Called when a pipe connection is made, but not ready
-                client.OnConnectionFailed += OnConnectionFailed;                //Called when a pipe connection failed.
+                client.ConnectionEstablishedEvent += OnConnectionEstablished;      //Called when a pipe connection is made, but not ready
+                client.ConnectionFailedEvent += OnConnectionFailed;                //Called when a pipe connection failed.
 
-                client.OnPresenceUpdate += OnPresenceUpdate;                    //Called when the presence is updated
+                client.PresenceUpdateEvent += OnPresenceUpdate;                    //Called when the presence is updated
 
-                client.OnSubscribe += OnSubscribe;                              //Called when a event is subscribed too
-                client.OnUnsubscribe += OnUnsubscribe;                          //Called when a event is unsubscribed from.
+                client.SubscribeEvent += OnSubscribe;                              //Called when a event is subscribed too
+                client.UnsubscribeEvent += OnUnsubscribe;                          //Called when a event is unsubscribed from.
 
-                client.OnJoin += OnJoin;                                        //Called when the client wishes to join someone else. Requires RegisterUriScheme to be called.
-                client.OnSpectate += OnSpectate;                                //Called when the client wishes to spectate someone else. Requires RegisterUriScheme to be called.
-                client.OnJoinRequested += OnJoinRequested;                      //Called when someone else has requested to join this client.
+                client.JoinEvent += OnJoin;                                        //Called when the client wishes to join someone else. Requires RegisterUriScheme to be called.
+                client.SpectateEvent += OnSpectate;                                //Called when the client wishes to spectate someone else. Requires RegisterUriScheme to be called.
+                client.JoinRequestedEvent += OnJoinRequested;                      //Called when someone else has requested to join this client.
 
                 //Before we send a initial presence, we will generate a random "game ID" for this example.
                 // For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 
@@ -172,10 +184,10 @@ namespace DiscordRPC.Example
                 // If no party is set, the join feature will not work and may cause errors within the discord client itself.
                 presence.Party = new Party()
                 {
-                    ID = Secrets.CreateFriendlySecret(new Random()),
+                    Id = Secrets.CreateFriendlySecret(new Random()),
                     Size = 1,
                     Max = 4,
-                    Privacy = Party.PrivacySetting.Public
+                    Privacy = PrivacySetting.Public
                 };
 
                 //Give the game some time so we have a nice countdown
@@ -345,9 +357,9 @@ namespace DiscordRPC.Example
 
             //We have received a request, dump a bunch of information for the user
             Console.WriteLine("'{0}' has requested to join our game.", args.User.Username);
-            Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarURL(User.AvatarFormat.GIF, User.AvatarSize.x2048));
+            Console.WriteLine(" - User's Avatar: {0}", args.User.GetAvatarUrl(AvatarFormat.GIF, AvatarSize.x2048));
             Console.WriteLine(" - User's Descrim: {0}", args.User.Discriminator);
-            Console.WriteLine(" - User's Snowflake: {0}", args.User.ID);
+            Console.WriteLine(" - User's Snowflake: {0}", args.User.Id);
             Console.WriteLine();
 
             //Ask the user if they wish to accept the join request.

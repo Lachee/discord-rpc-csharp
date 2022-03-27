@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Exceptions
 {
@@ -11,7 +8,7 @@ namespace DiscordRPC.Exceptions
     public class UninitializedException : Exception
     {
         /// <summary>
-        /// Creates a new unintialized exception
+        /// Creates a new uninitialized exception
         /// </summary>
         /// <param name="message"></param>
         internal UninitializedException(string message) : base(message) { }
@@ -19,6 +16,6 @@ namespace DiscordRPC.Exceptions
         /// <summary>
         /// Creates a new uninitialized exception with default message.
         /// </summary>
-        internal UninitializedException() : this("Cannot perform action because the client has not been initialized yet or has been deinitialized.") { }
+        internal UninitializedException() : this("Cannot perform action because the client has not been initialized yet or has been de-initialized.") { }
     }
 }
