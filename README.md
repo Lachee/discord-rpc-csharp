@@ -157,7 +157,7 @@ void Deinitialize()
 
 You can build the solution easily in Visual Studio, it's a simple matter of right clicking the project and hitting build. However, if you wish to build via command line, you can do so with the PowerShell build script:
 ```
-.\build.ps1 -target Default -ScriptArgs '-buildType="Release"'
+.\build.ps1 -target Default
 ```
 
 **Unity3D**
@@ -166,7 +166,7 @@ The project does have a `Unity Package` available on the [Artifacts](https://ci.
 
 You can build the Unity3D package using the command below. Make sure you update the `DiscordRPC.dll` within the Unity Project first as it is not automatically updated:
 ```
-.\build.ps1 -target Default -MakeUnityPackage -ScriptArgs '-buildType="Release"'
+.\build.ps1 -target Default -MakeUnityPackage
 ```
 
 If you wish to have barebones Unity3D implementation, you need to build the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). Put these in your own Unity Project and the `.dll`s in a folder called `Plugins`. 
