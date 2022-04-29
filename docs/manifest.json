@@ -1,0 +1,1137 @@
+{
+  "sitemap": {
+    "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs/"
+  },
+  "homepages": [],
+  "source_base_path": "C:/projects/discord-rpc-csharp/docfx_project",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Assets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Assets.html",
+          "hash": "huhFEzQka7XR0Ql8zNPJNpzqOo3mp4XLqtknTSEPUy0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.BaseRichPresence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.BaseRichPresence.html",
+          "hash": "Al9n6til7RMufRcO2oKryEsG7GOJ+AoGvasPMHIhRs0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Button.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Button.html",
+          "hash": "4UZ1Y69EZoErvLs9TVVm61qhx3Egb+VScpsh4qYY2XI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Configuration.html",
+          "hash": "hrU8HzpcIg9FIIReacxW07JVcqu0Ch/7/nd1otGYVmg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.DiscordRpcClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.DiscordRpcClient.html",
+          "hash": "kcCcg05f0+d/WnRlysjSl8uwtywwHVQ6U12YK3hx2Tc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.EventType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.EventType.html",
+          "hash": "Af0jXkbbvoXYQ3PJstoetg4KnXxNG7ijBCYDqcv7eLA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnCloseEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnCloseEvent.html",
+          "hash": "EKGTdyt1sGaZmQCMRnCD3s//ZgsnHhSdYdnzZRHOZY8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnConnectionEstablishedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnConnectionEstablishedEvent.html",
+          "hash": "JQiqEClzTygyRB0Nokyc8GNIfinMHo37N1W4NDxDdaI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnConnectionFailedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnConnectionFailedEvent.html",
+          "hash": "i2kQv6BWqzk6jcpxwDJLBvB/L1CLwIZz0hk61LGAZow="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnErrorEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnErrorEvent.html",
+          "hash": "jLKhm2OtIxMENGOenHb+j8OMyGJxJszexIErXFudxec="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnJoinEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnJoinEvent.html",
+          "hash": "5JwOSm/kxsRdlL9T6G4yCjNgeXg0uEeFDcoe6Mm2uqI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnJoinRequestedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnJoinRequestedEvent.html",
+          "hash": "cCRzUCfRvDE4ofvXg94/zT8SyYPHUA9ErTeh+6NWsCY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnPresenceUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnPresenceUpdateEvent.html",
+          "hash": "nma3dSNA8BRt3ctKL78ESIdkRy8MfINu19Em7kzxXKg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnReadyEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnReadyEvent.html",
+          "hash": "XRqRbPMHPn4ceSO+5gW7FVRweXSlBDHNZMaDGMkJ5cQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnRpcMessageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnRpcMessageEvent.html",
+          "hash": "H38wi2UGIbfNtliJ5AvKpmNWcV7L8S2tGyW1mvRtmWY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnSpectateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnSpectateEvent.html",
+          "hash": "5eGBs7Ie3QJ6HJdDTAhRPT7Jacab8g8+CA4mm2UbzUg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnSubscribeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnSubscribeEvent.html",
+          "hash": "+S4e1ro+JO42y/4eIrksQw2HwPz55e+te/bJOb1H170="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnUnsubscribeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnUnsubscribeEvent.html",
+          "hash": "MP8/IferLPAlmYQ0ANGePrmszKOWq/M0f2wbKWTbGzU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.html",
+          "hash": "2WgVO1Erk8MqG3LMFN2qldN1g5a4cCy008+lNaViY98="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.BadPresenceException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.BadPresenceException.html",
+          "hash": "og/ZnHaGdxrS9RArtRIJsPtb7+HUvTaZgNmewOxBkl8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.InvalidConfigurationException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.InvalidConfigurationException.html",
+          "hash": "Mn7YfvxP+G9BaGSMLwjnKHSnB3VqlyalX96GQRjDOY4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.InvalidPipeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.InvalidPipeException.html",
+          "hash": "ToTqwlYyoGzJhAFwbapd+dVWKrJYE7LHMQ4vBq5EFdA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.StringOutOfRangeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.StringOutOfRangeException.html",
+          "hash": "+Ie4w5Rvt6OxEJo2YUIufr8P0+SmA7dqPjsdwLJaDK8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.UninitializedException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.UninitializedException.html",
+          "hash": "S9+G+xzu8Mqjh8Xqve0eLxsbMNXbk2t1QdIyK+ArA38="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.html",
+          "hash": "vjIb7DuNI3jEDe6JqMOz+bu9z2EC+GDSDfulM8qSOHg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Helper.StringTools.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Helper.StringTools.html",
+          "hash": "rq2T5hRfVZfmV/PjUANYKYDhP1HpKkWL8TXldlejSWQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Helper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Helper.html",
+          "hash": "bXd7mYzqU2/mYpy+AMwOlGLEhcZo6ETy4ZwHdPVyJs4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.INamedPipeClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.INamedPipeClient.html",
+          "hash": "tnUc1RH9gHzz64ZlusS4fYFqFvga3XRy6YGVyu5l2bQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.ManagedNamedPipeClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.ManagedNamedPipeClient.html",
+          "hash": "EQbUMqQ/jjCbORrbqHHsj7SfgBh4dk5zzXRFMtYveSw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.Opcode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.Opcode.html",
+          "hash": "6r5AmqhEwDyaQfKceVmchJuaX6LfaEjP3WdcJ3XUOqg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.PipeFrame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.PipeFrame.html",
+          "hash": "kvb0YCk++PP2nkYl+Btm5Vs8ADrBo/EHBlXlZ20Bqy0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.html",
+          "hash": "Rq7uIVzz4+Ab1mIu7RwsuvW9o379iRpe8f9n4mVDrbo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.ConsoleLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.ConsoleLogger.html",
+          "hash": "+PNXq5IZuQzLT2xAo5yUidHsuuBoQA/xq7TIqT2R7fs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.FileLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.FileLogger.html",
+          "hash": "qrxs8PMYfbv+npUAv5hujMRNW1Fo4++baWVR1Hm1JV4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.ILogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.ILogger.html",
+          "hash": "9VNJk43oywBQCKYbIHg+6Nxx/2GYslitLySeD9FXzic="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.LogLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.LogLevel.html",
+          "hash": "G0614UYq2n9906efqCmZ46ZIl+6LXK7sRGhYhUjs1yA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.NullLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.NullLogger.html",
+          "hash": "5BUjJfTaI5KQ6cwJ7ILcszz1ZjlW3kg/ywWAFiSZL4g="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.html",
+          "hash": "B7Bc5cMlvDEUFVM+asDI/N94xI56sHpWsgpL3ELAVr8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.CloseMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.CloseMessage.html",
+          "hash": "qPbqqVve1jWQrC5ok1euFJ+ljfwXyIc+j7rESIa37Fk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ConnectionEstablishedMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ConnectionEstablishedMessage.html",
+          "hash": "qGZiNEdeeV+yAlRjRRsiJBgu+5Vf6RPYJUpJwJ3i1yk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ConnectionFailedMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ConnectionFailedMessage.html",
+          "hash": "/XUcU3GHUDpCkmVI4TPqOz7IRzaN5yezUw2kNT4/RDk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ErrorCode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ErrorCode.html",
+          "hash": "RmbJvRPAKBZU7uZMVBCNxY2N1q6Qi4Q/UDZi4AWC0ck="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ErrorMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ErrorMessage.html",
+          "hash": "S03ssgPg/SwGFExFv0Lt38lMG/VXR0g1aT4KfHHwO+s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.IMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.IMessage.html",
+          "hash": "vac1o9IZ3Mq57MdHQE5BUSptRxkp5qMF2WU5gS/1brc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.JoinMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.JoinMessage.html",
+          "hash": "d56+58GGu3tODpO1KpO/gfAGE58m2ECXEOviJEJXvAQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.JoinRequestMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.JoinRequestMessage.html",
+          "hash": "3LlMrV22C7NdBjiEQkaY5e6e/nJYjMu4mGti2Qvjh04="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.MessageType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.MessageType.html",
+          "hash": "yFqM9QY44+Fe42SaxX8flVcyRmJo2IZ/MDG6+wHORsI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.PresenceMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.PresenceMessage.html",
+          "hash": "srJu6jlMJp3lwLXKFn2E96nbXE3cue5AxEm7fsE+q7c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ReadyMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ReadyMessage.html",
+          "hash": "J4uC2CGHFcKnkBSKqKYnK0CmNuOPUiQrjpOUnkWMDOw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.SpectateMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.SpectateMessage.html",
+          "hash": "tAzCfdr1LBc9TQbQDMi0jHz1lqKCUKAZETP/I9EifCo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.SubscribeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.SubscribeMessage.html",
+          "hash": "1Eix4tFmEeUB/OSxAVx8yns1oJ50TtcDPPWUDQ31wjU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.UnsubscribeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.UnsubscribeMessage.html",
+          "hash": "OVQhvDzvNGGDRfftjGn80sEYCqLQfUuJK/X+LscMO3Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.html",
+          "hash": "ym+GHHVPOgns0CPtSSE9P+Hah4RGXB/rgo7dFI0b6OM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Party.PrivacySetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Party.PrivacySetting.html",
+          "hash": "oCxytI75vdqSjNzjuqzVYxzKjK4V48maS2jj2jSgAaY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Party.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Party.html",
+          "hash": "8Mpuhzc5KGCyg0e6ZhuMUo9eandLfUGIDCBI+9X+1rs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.RichPresence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.RichPresence.html",
+          "hash": "iHot7awXx52B5MNmppwSmUCRHRZdBvBLeWOzYwapejs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Secrets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Secrets.html",
+          "hash": "29c+bo6cN9/PBNQedsZc0FVdnE06wW8wdj0mReBQLQY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Timestamps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Timestamps.html",
+          "hash": "QHcFVvzQzrfkQHTlPvJxy9Z1TwQz4uw2wRaYWnZE4mk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.AvatarFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.AvatarFormat.html",
+          "hash": "yqiOzdy1ytITcn5zrpZD6i0pDXmgqc3veHPr9ePGojo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.AvatarSize.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.AvatarSize.html",
+          "hash": "vO5mtyuCRsRN66oHHxBWzOLtVje71lNiVTbfhl4wNJw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.Flag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.Flag.html",
+          "hash": "3Lp17mYAP+vRhLarZAXRaZE+4Yp8Vp16Qhgtt021cfM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.PremiumType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.PremiumType.html",
+          "hash": "4M89VnYbMUL+wte/vbiwd8ceQOhMi2enq6MzHMNh7jc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.html",
+          "hash": "8cWtgRGxibn1sK0zg9BWYE3D1JnEc51WAdrmtKMQJQk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.html",
+          "hash": "bmxLr7kvkLjtU3VI25oRroCIMpIIeLIeQB62SIauuxM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/UnityPackageExporter.TarOutputExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/UnityPackageExporter.TarOutputExtensions.html",
+          "hash": "sALXyDK8/xHcnQGGLCgk64CKoKDwp65SsWvJQMK/jsw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/UnityPackageExporter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/UnityPackageExporter.html",
+          "hash": "MSOCFDpJVyHBrLku2bzUVWM0uIizqXJbE7SGETs4ZsI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "i164dDzhYTnLuATYwPxgrW8fmAWsU8o7dgmBA7sQZ9Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "RmwNMAVET7WhM7HxzZCOyoEZg4KkpXT65N4wLMP2SSA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting_started/monogame.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started/monogame.html",
+          "hash": "5Hk/qGQ1a3I//+ZepSzPk79YITfpZ7vzM+4DH+/j+Lg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting_started/standard.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started/standard.html",
+          "hash": "Zm540uWcy2irAOL/AvGczIQtvz3gtAY6Pj1JFKIBqrc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting_started/unity3d.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started/unity3d.html",
+          "hash": "pi5+9Vanc/9FdGPe+2SY/iebR9Ait5SEoCRBYZSx4XU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "r2GgBhSt1LxEcH4ZEdE9oNSA2lLCzodIMH7U5vBAx84="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/join_spectate/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/join_spectate/intro.html",
+          "hash": "UOOsUZW4NJIYMFMTSXzbLZMSRHr+EAAJlI6qWPxHGwA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/join_spectate/join.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/join_spectate/join.html",
+          "hash": "GjTzKuyp8J9X4LOLSWt9oMaUN8/pZxnGu2mheKoGpVs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/join_spectate/join_requests.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/join_spectate/join_requests.html",
+          "hash": "Rx5PhIVkCccXt8mbA0c6qDwhFrrTZVh87o6Ab4W/0Ro="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/join_spectate/spectate.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/join_spectate/spectate.html",
+          "hash": "CoevJgWUkCA/UJZ1xhmGB+9M2DjiTJkqNjW8yCbqtAc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/rich_presence/guidelines.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/rich_presence/guidelines.html",
+          "hash": "JVirPyfZPzsIwB79/WG0gHyY4elpDjn6b93YiFb4nY0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/rich_presence/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/rich_presence/intro.html",
+          "hash": "nqZwqfhBecqLQXHXO1qpUvFYTme8rkKQJ5nzk/4pQA8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "EhrifH8paib6PzvkQbEoEyLd5KA8p9yj2E+1+OHqjCI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_add_marked.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_add_marked.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_add_unmarked.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_add_unmarked.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_entire_add.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_entire_add.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_import-large.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_import-large.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_inspector_hierarchy.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_inspector_hierarchy.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_netconvert.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_netconvert.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_package.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_package.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_project.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_project.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/unity_project_short.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/unity_project_short.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "dtpYWBzBQXOAYFeqYc0F6wt/nG4xQYtp035EJrmH2D8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Oa9PuD4E1hvZnCkVjUgzNBX6S00Zo5YilamTERTZo54="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 12,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 66,
+          "skipped_file_count": 0
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
