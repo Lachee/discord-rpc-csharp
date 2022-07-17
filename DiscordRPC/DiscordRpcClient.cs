@@ -300,15 +300,13 @@ namespace DiscordRPC
                         if (pm != null)
                         {
                             //We need to merge these presences together
-                            if (CurrentPresence == null)
-                            {
-                                CurrentPresence = (new RichPresence()).Merge(pm.Presence);
-                            }
-                            else if (pm.Presence == null)
+                            if (pm.Presence == null)
                             {
                                 CurrentPresence = null;
-                            }
-                            else
+                            } else if (CurrentPresence == null)
+                            {
+                                CurrentPresence = (new RichPresence()).Merge(pm.Presence);
+                            } else
                             {
                                 CurrentPresence.Merge(pm.Presence);
                             }
