@@ -3,7 +3,7 @@ name: Create Release 📦
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   # Tag the build
