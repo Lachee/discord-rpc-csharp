@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Discord Rich Presence | Discord RPC C# </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Discord Rich Presence | Discord RPC C# ">
+    <meta name="generator" content="docfx 2.59.3.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="discord-rich-presence">Discord Rich Presence</h1>
+
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true" alt="Build status"></a>
+ <a href="https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=badger"><img src="https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> </p>
+<p>This is a C# <em>implementation</em> of the <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a> library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.</p>
+<p>While the official C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.</p>
+<p>Here are some key features of this library:</p>
+<ul>
+<li><strong>Message Queuing</strong></li>
+<li><strong>Threaded Reads</strong></li>
+<li><strong>Managed Pipes</strong>*</li>
+<li><strong>Error Handling</strong> &amp; <strong>Error Checking</strong> with automatic reconnects</li>
+<li><strong>Events from Discord</strong> (such as presence update and join requests)</li>
+<li><strong>Full Rich Presence Implementation</strong> (including Join / Spectate)</li>
+<li><strong>Inline Documented</strong> (for all your IntelliSense needs)</li>
+<li><strong>Helper Functionality</strong> (eg: AvatarURL generator from Join Requests)</li>
+<li><strong>Ghost Prevention</strong> (Tells Discord to clear the RP on disposal)</li>
+<li><strong>Full Unity3D Editor</strong> (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).</li>
+</ul>
+<h1 id="documentation">Documentation</h1>
+<p>All the documentation can be found <a href="https://lachee.github.io/discord-rpc-csharp/docs/">lachee.github.io/discord-rpc-csharp/docs/</a></p>
+<h1 id="installation">Installation</h1>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li>Newtonsoft.Json </li>
+<li>.NET 3.5+</li>
+</ul>
+<p><strong>Unity3D Dependencies:</strong></p>
+<ul>
+<li>Newtonsoft.Json  (included in Unity Package).</li>
+<li>.NET 2.0+ (not subset)</li>
+<li><a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library (included in Unity Package).</li>
+</ul>
+<p><strong>Source: .NET Project</strong></p>
+<p>For projects that target either .NET Core or .NETFX, you can get the package on <a href="https://www.nuget.org/packages/DiscordRichPresence/">nuget</a>:</p>
+<pre><code>PM&gt; Install-Package DiscordRichPresence
+</code></pre><p>You can also <a href="#building">Download or Build</a> your own version of the library if you have more specific requirements.</p>
+<p><strong>Source: Unity3D Game Engine</strong></p>
+<p>There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Artifacts</a> AppVoyer generates. This includes prebuilt native library and the managed library, so you don&#39;t need to worry about a thing.  </p>
+<p>For building your own package, read the <a href="#building">building</a> guide.</p>
+<h2 id="usage">Usage</h2>
+<p>The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. It&#39;s important you follow all 3 stages to ensure proper behaviour of the library.</p>
+<p><strong>Initialization</strong></p>
+<p>This stage will setup the connection to Discord and establish the events. Once you have done the initialization you can call <code>SetPresence</code> and other variants as many times as you wish throughout your code. Please note that ideally this should only run once, otherwise conflicts may occur with them trying to access the same Discord client at the same time.</p>
+<pre><code class="lang-csharp">public DiscordRpcClient client;
+
+//Called when your application first starts.
+//For example, just before your main loop, on OnEnable for unity.
+void Initialize() 
+{
+    /*
+    Create a Discord client
+    NOTE:   If you are using Unity3D, you must use the full constructor and define
+             the pipe connection.
+    */
+    client = new DiscordRpcClient(&quot;my_client_id&quot;);          
+
+    //Set the logger
+    client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+
+    //Subscribe to events
+    client.OnReady += (sender, e) =&gt;
+    {
+        Console.WriteLine(&quot;Received Ready from user {0}&quot;, e.User.Username);
+    };
+
+    client.OnPresenceUpdate += (sender, e) =&gt;
+    {
+        Console.WriteLine(&quot;Received Update! {0}&quot;, e.Presence);
+    };
+
+    //Connect to the RPC
+    client.Initialize();
+
+    //Set the rich presence
+    //Call this as many times as you want and anywhere in your code.
+    client.SetPresence(new RichPresence()
+    {
+        Details = &quot;Example Project&quot;,
+        State = &quot;csharp example&quot;,
+        Assets = new Assets()
+        {
+            LargeImageKey = &quot;image_large&quot;,
+            LargeImageText = &quot;Lachee&#39;s Discord IPC Library&quot;,
+            SmallImageKey = &quot;image_small&quot;
+        }
+    }); 
+}
+</code></pre><p><strong>Invoking</strong></p>
+<p><strong>Invoking is optional. Use this when thread safety is paramount.</strong></p>
+<p>The client will store messages from the pipe and won&#39;t invoke them until you call <code>Invoke()</code> or <code>DequeueMessages()</code>. It does this because the pipe is working on another thread, and manually invoking ensures proper thread safety and order of operations (especially important in Unity3D applications).</p>
+<p>In order to enable this method of event calling, you need to set it in the constructor of the DiscordRpcClient under <code>autoEvents</code>.</p>
+<pre><code class="lang-csharp">//The main loop of your application, or some sort of timer. Literally the Update function in Unity3D
+void Update() 
+{
+    //Invoke all the events, such as OnPresenceUpdate
+    client.Invoke();
+};
+</code></pre><p>Here is an example on how a Timer could be used to invoke the events for a WinForm</p>
+<pre><code class="lang-csharp">var timer = new System.Timers.Timer(150);
+timer.Elapsed += (sender, args) =&gt; { client.Invoke(); };
+timer.Start();
+</code></pre><p><strong>Deinitialization</strong></p>
+<p>It&#39;s important that you dispose your client before your application terminates. This will stop the threads, abort the pipe reads, and tell Discord to clear the presence. Failure to do so may result in a memory leak!</p>
+<pre><code class="lang-csharp">//Called when your application terminates.
+//For example, just after your main loop, on OnDisable for unity.
+void Deinitialize() 
+{
+    client.Dispose();
+}
+</code></pre><h2 id="building">Building</h2>
+<p><strong>Master</strong> </p>
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/master"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/master?svg=true" alt="Build status"></a></p>
+<p><strong>Nuget</strong> </p>
+<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true" alt="Build status"></a></p>
+<p><strong>DiscordRPC Library</strong></p>
+<p>You can build the solution easily in Visual Studio, it&#39;s a simple matter of right clicking the project and hitting build. However, if you wish to build via command line, you can do so with the PowerShell build script:</p>
+<pre><code>.\build.ps1 -target Default
+</code></pre><p><strong>Unity3D</strong></p>
+<p>The project does have a <code>Unity Package</code> available on the <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Artifacts</a> and it is always recommended to use that. Its automatically built and guaranteed to be the latest. </p>
+<p>You can build the Unity3D package using the command below. Make sure you update the <code>DiscordRPC.dll</code> within the Unity Project first as it is not automatically updated:</p>
+<pre><code>.\build.ps1 -target Default -MakeUnityPackage
+</code></pre><p>If you wish to have barebones Unity3D implementation, you need to build the <code>DiscordRPC.dll</code>, the <a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library and the <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs">UnityNamedPipe.cs</a>. Put these in your own Unity Project and the <code>.dll</code>s in a folder called <code>Plugins</code>. </p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="toggle-mode">
+                <div class="icon">
+                  <i aria-hidden="true">☀</i>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="switch-style">
+                  <span class="slider round"></span>
+                </label>
+                <div class="icon">
+                  <i aria-hidden="true">☾</i>
+                </div>
+              </div>
+          
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <h5>In This Article</h5>
+              <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <div class="pull-left">
+              MIT by Lachee
+              
+            </div>
+            <div class="toggle-mode pull-right visible-sm visible-xs">
+              <div class="icon">
+                <i aria-hidden="true">☀</i>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="switch-style-m">
+                <span class="slider round"></span>
+              </label>
+              <div class="icon">
+                <i aria-hidden="true">☾</i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="styles/toggle-theme.js"></script>
+      </footer>    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
