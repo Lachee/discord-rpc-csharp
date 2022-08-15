@@ -1,0 +1,23 @@
+name: Publish Package 💌
+
+on:
+  release:
+    types: [published, released]
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v2
+      
+      - name: Fetch Release Asset
+        uses: dsaltares/fetch-gh-release-asset@1.0.0
+        with:
+          file: "DiscordRichPresence(.[0-9]+)+.nupkg"
+          version: ${{github.event.release.id}}
+          regex: true
+      
+      - name: Publish Package
+        run: |
+          dotnet nuget push "**/*.nupkg" -k ${{secrets.NUGET_KEY}} -s https://api.nuget.org/v3/index.json

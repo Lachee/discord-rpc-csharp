@@ -1,0 +1,75 @@
+name: Create Release 📦
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # Tag the build
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: Klemensas/action-autotag@stable
+      id: auto-tag
+      with:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        tag_prefix: "v"
+    outputs:
+      version: "${{steps.auto-tag.outputs.version}}.${{github.run_number}}"
+      tag: ${{ steps.auto-tag.outputs.tagname }}
+
+  # build the packages
+  build:  
+    runs-on: ubuntu-latest
+    needs: [ tag ]
+    steps:
+      # Check-out repository
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v2
+
+      # Version the repository
+      - name: Update Versions
+        shell: pwsh
+        run: |
+          ./.github/workflows/scripts/PatchAssemblyInfoVersion.ps1 ${{needs.tag.outputs.version}}
+          ./.github/workflows/scripts/PatchNuspecVersion.ps1 ${{needs.tag.outputs.version}}
+
+      # Library Build
+      - name: Build Library
+        run: dotnet build DiscordRPC -c Release
+
+      - name: Upload Library
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: "netstandard2.0-dll"
+          path: "DiscordRPC/bin/Release/netstandard2.0"
+
+      # Nuget Builds
+      - name: Build Nuget
+        run: dotnet pack DiscordRPC -c Release
+
+      - name: Upload Nuget
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: "netstandard2.0-nuget"
+          path: "DiscordRPC/bin/Release/*.nupkg"
+  
+  # Update the release
+  release:
+    runs-on: ubuntu-latest
+    needs: [ tag, build ]
+    if: ${{ startsWith(needs.tag.outputs.tag, 'v') }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ needs.tag.outputs.tag }}
+          prerelease: true
+          title: Release ${{ needs.tag.outputs.tag }}
+          files: artifacts/**/*

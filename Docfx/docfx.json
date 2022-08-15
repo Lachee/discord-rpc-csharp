@@ -13,9 +13,6 @@
     }
   ],
   "build": {
-	"sitemap":{
-        "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs"
-	},
     "content": [
       {
         "files": [
@@ -43,15 +40,25 @@
         ]
       }
     ],
-    "dest": "../docs",
+
     "globalMetadata": {
-      "_appFooter": "© 2019 Lachee"
+      "_appTitle": "Discord RPC C#",
+      "_appFooter": "MIT by Lachee",
+      "_enableSearch": true
     },
-    "template": [
-      "default"
-    ],
-    "xrefService": [
-      "https://xref.docs.microsoft.com/query?uid={uid}"
-    ]
+    
+    "sitemap":
+    {
+      "baseUrl": "https://lachee.github.io/discord-rpc-csharp/docs",
+      "changefreq": "yearly",
+      "fileOptions": {
+          "api/*": {
+              "changefreq": "daily"
+          }
+      }
+    },
+    "xref": [ "https://normanderwan.github.io/UnityXrefMaps/xrefmap.yml" ],
+    "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
+    "dest": "../_site"
   }
 }
