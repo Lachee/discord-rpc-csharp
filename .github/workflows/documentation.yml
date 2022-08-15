@@ -1,0 +1,53 @@
+name: Create Documentation 📚
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Build the documentation
+  build:
+    runs-on: ubuntu-latest #windows-latest # Required by DocFX
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v2
+      - uses: crazy-max/ghaction-chocolatey@v2.0.0
+        
+      - name: Install DocFX
+        run: choco install -y docfx && docfx --version
+
+      - name: Use README.md as index.md
+        run: cp README.md Docfx/index.md
+
+      - name: Build Site
+        run: docfx Docfx/docfx.json -t default,templates/darkfx
+
+      # Upload the generated documentation
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: _site
+          path: _site # Must equals the 'build.dest' value on your docfx.json
+
+  # Deploy the generated documentation to the gh-pages branch
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+
+      # Download the generated documentation
+      - name: Download site artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: _site
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: _site
