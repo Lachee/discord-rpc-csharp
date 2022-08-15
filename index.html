@@ -71,8 +71,8 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="discord-rich-presence">Discord Rich Presence</h1>
 
-<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true" alt="Build status"></a>
- <a href="https://app.codacy.com/app/Lachee/discord-rpc-csharp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=badger"><img src="https://api.codacy.com/project/badge/Grade/a3fc8999eb734774bff83179fee2409e" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> </p>
+<p><a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦"></a>
+<a href="https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> </p>
 <p>This is a C# <em>implementation</em> of the <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a> library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.</p>
 <p>While the official C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.</p>
 <p>Here are some key features of this library:</p>
@@ -89,7 +89,7 @@
 <li><strong>Full Unity3D Editor</strong> (Contains all the tools, inspectors and helpers for a Unity3D game all in one package).</li>
 </ul>
 <h1 id="documentation">Documentation</h1>
-<p>All the documentation can be found <a href="https://lachee.github.io/discord-rpc-csharp/docs/">lachee.github.io/discord-rpc-csharp/docs/</a></p>
+<p>All the documentation can be found <a href="https://lachee.github.io/discord-rpc-csharp/">lachee.github.io/discord-rpc-csharp/docs/</a></p>
 <h1 id="installation">Installation</h1>
 <p><strong>Dependencies:</strong></p>
 <ul>
@@ -107,7 +107,7 @@
 <pre><code>PM&gt; Install-Package DiscordRichPresence
 </code></pre><p>You can also <a href="#building">Download or Build</a> your own version of the library if you have more specific requirements.</p>
 <p><strong>Source: Unity3D Game Engine</strong></p>
-<p>There is a Unity Package available for quick setup, which includes the editor scripts, managers and tools to make your life 100x easier. Simply download the package from the <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Artifacts</a> AppVoyer generates. This includes prebuilt native library and the managed library, so you don&#39;t need to worry about a thing.  </p>
+<p>Unity Package is being moved to <a href="https://github.com/Lachee/discord-rpc-unity">Lachee/Discord-RPC-Unity</a>. Please check the releases / documentation there.</p>
 <p>For building your own package, read the <a href="#building">building</a> guide.</p>
 <h2 id="usage">Usage</h2>
 <p>The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. It&#39;s important you follow all 3 stages to ensure proper behaviour of the library.</p>
@@ -180,18 +180,11 @@ void Deinitialize()
     client.Dispose();
 }
 </code></pre><h2 id="building">Building</h2>
-<p><strong>Master</strong> </p>
-<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/master"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/master?svg=true" alt="Build status"></a></p>
-<p><strong>Nuget</strong> </p>
-<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/branch/nuget"><img src="https://ci.appveyor.com/api/projects/status/dpu2l7ta05uvm397/branch/nuget?svg=true" alt="Build status"></a></p>
+<p><a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦"></a> <a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml/badge.svg" alt="Documentation 📚"></a></p>
 <p><strong>DiscordRPC Library</strong></p>
-<p>You can build the solution easily in Visual Studio, it&#39;s a simple matter of right clicking the project and hitting build. However, if you wish to build via command line, you can do so with the PowerShell build script:</p>
-<pre><code>.\build.ps1 -target Default
+<pre><code>dotnet build -c Release
 </code></pre><p><strong>Unity3D</strong></p>
-<p>The project does have a <code>Unity Package</code> available on the <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Artifacts</a> and it is always recommended to use that. Its automatically built and guaranteed to be the latest. </p>
-<p>You can build the Unity3D package using the command below. Make sure you update the <code>DiscordRPC.dll</code> within the Unity Project first as it is not automatically updated:</p>
-<pre><code>.\build.ps1 -target Default -MakeUnityPackage
-</code></pre><p>If you wish to have barebones Unity3D implementation, you need to build the <code>DiscordRPC.dll</code>, the <a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library and the <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs">UnityNamedPipe.cs</a>. Put these in your own Unity Project and the <code>.dll</code>s in a folder called <code>Plugins</code>. </p>
+<p>If you wish to have barebones Unity3D implementation, you need to build the <code>DiscordRPC.dll</code>, the <a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library and the <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs">UnityNamedPipe.cs</a>. Put these in your own Unity Project and the <code>.dll</code>s in a folder called <code>Plugins</code>. </p>
 </article>
           </div>
           
