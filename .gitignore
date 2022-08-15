@@ -299,3 +299,7 @@ __pycache__/
 # Cake - Uncomment if you are using it
 tools/
 Thumbs.db
+
+# Docfx generation
+docs/
+_site/
