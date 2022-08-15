@@ -3,20 +3,21 @@ name: Create Documentation 📚
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   # Build the documentation
   build:
-    runs-on: ubuntu-latest #windows-latest # Required by DocFX
+    runs-on: windows-latest # Required by DocFX
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v2
-      - uses: crazy-max/ghaction-chocolatey@v2.0.0
-        
-      - name: Install DocFX
-        run: choco install -y docfx && docfx --version
 
+      - name: Install DocFX
+        run: | 
+          choco install -y docfx
+          docfx --version
+          
       - name: Use README.md as index.md
         run: cp README.md Docfx/index.md
 
