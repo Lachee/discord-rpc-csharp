@@ -1,6 +1,4 @@
 - name: Articles
   href: articles/
-  topicUid: Articles.Intro
-- name: API Documentation
+- name: API Reference
   href: api/
-  topicUid: API.Docs
