@@ -299,10 +299,12 @@ namespace DiscordRPC
                             if (pm.Presence == null)
                             {
                                 CurrentPresence = null;
-                            } else if (CurrentPresence == null)
+                            }
+                            else if (CurrentPresence == null)
                             {
                                 CurrentPresence = (new RichPresence()).Merge(pm.Presence);
-                            } else
+                            }
+                            else
                             {
                                 CurrentPresence.Merge(pm.Presence);
                             }
@@ -481,20 +483,20 @@ namespace DiscordRPC
         }
 
         #region Updates
-	
-	/// <summary>
-        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
+
+        /// <summary>
+        /// Updates only the <see cref="RichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
         /// </summary>
-        /// <param name="Button">The buttons of the Rich Presence</param>
+        /// <param name="button">The buttons of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>
-	public RichPresence UpdateButtons(Button[] button = null)
+        public RichPresence UpdateButtons(Button[] button = null)
         {
             if (!IsInitialized)
             {
                 throw new UninitializedException();
             }
 
- 	    // Clone the presence
+            // Clone the presence
             RichPresence presence;
             lock (_sync)
             {
@@ -508,27 +510,27 @@ namespace DiscordRPC
                 }
             }
 
-	    // Update the buttons.
+            // Update the buttons.
             presence.Buttons = button;
             SetPresence(presence);
 
             return presence;
         }
-	
-	/// <summary>
-        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
+
+        /// <summary>
+        /// Updates only the <see cref="RichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
         /// </summary>
-        /// <param name="Button">The buttons of the Rich Presence</param>
-	/// <param name="Index">The number of the button</param>
+        /// <param name="button">The buttons of the Rich Presence</param>
+        /// <param name="index">The number of the button</param>
         /// <returns>Updated Rich Presence</returns>
-	public RichPresence SetButton(Button button, int index = 0)
+        public RichPresence SetButton(Button button, int index = 0)
         {
             if (!IsInitialized)
             {
                 throw new UninitializedException();
             }
-	    
-	    // Clone the presence
+
+            // Clone the presence
             RichPresence presence;
             lock (_sync)
             {
@@ -541,14 +543,14 @@ namespace DiscordRPC
                     presence = CurrentPresence.Clone();
                 }
             }
-            
-	    // Update the buttons
+
+            // Update the buttons
             presence.Buttons[index] = button;
             SetPresence(presence);
 
             return presence;
         }
-	
+
         /// <summary>
         /// Updates only the <see cref="BaseRichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>
