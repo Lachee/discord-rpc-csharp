@@ -78,80 +78,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="unity3d">Unity3D</h1>
 
-<p>This library has full Unity3D intergration and custom editor scripts to help enhance your usage with the library. Please note there are some technical limitations with Unity3D however:</p>
-<ul>
-<li>.NET 2.0+ is required (no subset).</li>
-<li>Newtonsoft.Json is required.</li>
-<li>Native Named Pipe Wrapper is required.</li>
-</ul>
-<p>Luckily the provided Unity Package handles all this for you.</p>
-<h2 id="download">Download</h2>
-<p>Use the automatically built <code>.UnityPackage</code> that can be found in the artifacts of the AppVoyer build. This contains the extra dependencies for the platform and full editor support to make it easier to use.</p>
-<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">Download Package</a> and import into your project.</p>
-<p><a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts"><img src="/images/unity_package.png" alt="Unity Package"></a></p>
-<h2 id="importing">Importing</h2>
-<p>Import the unity package normally and make sure all content is selected. Once imported you may get the following warning. This library does not support the .NET 2.0 <strong>Subset</strong> and requires the full .NET 2.0 or greater. Proceeding with <code>Yes</code> will convert the project automatically to .NET 2.0.</p>
-<p><img src="https://i.imgur.com/noRnm33.png" alt="import Warning"></p>
-<h2 id="creating-a-manager">Creating a Manager</h2>
-<p>The Discord Manager is a wrapper class around the DiscordRpcClient. It will handle the initialization, deinitialization and event invoking for you automatically. </p>
-<p>Create a new Discord Manager in your very first loaded scene by following <code>GameObject -&gt; Discord Manager</code>. </p>
-<p><img src="https://i.imgur.com/rRsGCf2.png" alt="Import Settings"></p>
-<h3 id="discord-manager-inspector">Discord Manager Inspector</h3>
-<p>Once created, a new object will appear in your scene. You can <em>only</em> have 1 Discord Manager at a time and any extras will automatically be deleted. The manager has some default values, but will need to be configured to your application. </p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Application ID</td>
-<td>The Client ID of your Discord App created in the <a href="https://discordapp.com/developers/applications/">Developer Portal</a>.</td>
-</tr>
-<tr>
-<td>Steam ID</td>
-<td>A optional Steam App ID of your game. This will let Discord launch your game through the steam client instead of directly when using the <a href="/join_spectate/intro.md">Join &amp; Spectate</a></td>
-</tr>
-<tr>
-<td>Target Pipe</td>
-<td>The pipe your Discord Client is running on. If you have 2 clients running for testing purposes, you can switch which client the game connects too.</td>
-</tr>
-<tr>
-<td>Log Level</td>
-<td>The level of logging to receive from the DiscordRpcClient.</td>
-</tr>
-<tr>
-<td>Register Uri Scheme</td>
-<td>Registers a custom URI scheme so Discord can launch your game. Only required if using the <a href="/join_spectate/intro.md">Join &amp; Spectate</a> feature.</td>
-</tr>
-<tr>
-<td>Active</td>
-<td>If enabled, the Discord Manager will create a connection and maintain it.</td>
-</tr>
-<tr>
-<td><strong>State</strong></td>
-<td>The current state of the connected client. These values are generally <code>Read Only</code></td>
-</tr>
-</tbody>
-</table>
-<p><img src="https://i.imgur.com/rrjEOHA.png" alt="Configuration"></p>
-<h2 id="usage">Usage</h2>
-<p>Setting Rich Presence is done via your game code. It is upto you on how you implement it, but as an example from the Survival Shooter example by Unity3D:</p>
-<pre><code class="lang-cs">public void UpdatePresence()
-{
-    presence.state = &quot;Score: &quot; + CompleteProject.ScoreManager.score;
-    presence.largeAsset = new DiscordAsset()
-    {
-        image = health.isDead ? &quot;dead&quot; : &quot;alive&quot;,
-        tooltip = health.currentHealth + &quot;HP&quot;
-    };
-
-    DiscordManager.current.SetPresence(presence);
-}
-</code></pre><h2 id="further-reading">Further Reading</h2>
-<p>If you wish to implement the Join and Spectate feature within your project (those buttons), please read <a href="../join_spectate/intro.html">Joining &amp; Spectating Introduction</a> to get started.</p>
+<p>Please visit the documentation for <a href="https://github.com/Lachee/discord-rpc-unity">Lachee/Discord-RPC-Unity</a></p>
 </article>
           </div>
           
@@ -195,7 +122,7 @@
               <a href="#top">Back to top</a>
             </span>
             <div class="pull-left">
-              MIT by Lachee
+              <a href="https://github.com/Lachee/discord-rpc-csharp">Contribute</a> on GitHub
               
             </div>
             <div class="toggle-mode pull-right visible-sm visible-xs">
