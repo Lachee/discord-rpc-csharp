@@ -76,7 +76,7 @@ namespace DiscordRPC.IO
         /// <returns></returns>
         public bool Connect(int pipe)
         {
-            Logger.Trace("ManagedNamedPipeClient.Connection(" + pipe + ")");
+            Logger.Trace("ManagedNamedPipeClient.Connection({0})", pipe);
 
             if (_isDisposed)
                 throw new ObjectDisposedException("NamedPipe");
@@ -130,7 +130,7 @@ namespace DiscordRPC.IO
             }
 
             //Prepare the pipename
-            Logger.Trace("Connection Attempt " + pipe + " (" + sandbox + ")");
+            Logger.Trace("Connection Attempt {0} ({1})", pipe, sandbox);
             string pipename = GetPipeName(pipe, sandbox);
 
             try
@@ -138,7 +138,7 @@ namespace DiscordRPC.IO
                 //Create the client
                 lock (l_stream)
                 {
-                    Logger.Info("Attempting to connect to " + pipename);
+                    Logger.Info("Attempting to connect to '{0}'", pipename);
                     _stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
                     _stream.Connect(1000);
 
@@ -148,7 +148,7 @@ namespace DiscordRPC.IO
                 }
 
                 //Store the value
-                Logger.Info("Connected to " + pipename);
+                Logger.Info("Connected to '{0}'", pipename);
                 _connectedPipe = pipe;
                 _isClosed = false;
             }
@@ -271,7 +271,7 @@ namespace DiscordRPC.IO
                     }
                     catch (Exception e)
                     {
-                        Logger.Error("A exception has occured while trying to parse the pipe data: " + e.Message);
+                        Logger.Error("A exception has occured while trying to parse the pipe data: {0}", e.Message);
                         Close();
                     }
                 }
@@ -282,7 +282,7 @@ namespace DiscordRPC.IO
                 // I have added this check here just so the Windows builds are not effected and continue to work as expected.
                 if (IsUnix())
                 {
-                    Logger.Error("Empty frame was read on " + Environment.OSVersion.ToString() + ", aborting.");
+                    Logger.Error("Empty frame was read on {0}, aborting.", Environment.OSVersion);
                     Close();
                 }
                 else

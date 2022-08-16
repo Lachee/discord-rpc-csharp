@@ -27,8 +27,8 @@ namespace DiscordRPC.Registry
             }
 
             //Prepare the Scheme, Friendly name, default icon and default command
-            string scheme = "discord-" + register.ApplicationID;
-            string friendlyName = "Run game " + register.ApplicationID + " protocol";
+            string scheme = $"discord-{register.ApplicationID}";
+            string friendlyName = $"Run game {register.ApplicationID} protocol";
             string defaultIcon = location;
             string command = location;
 
@@ -56,9 +56,9 @@ namespace DiscordRPC.Registry
         /// <param name="command"></param>
         private void CreateUriScheme(string scheme, string friendlyName, string defaultIcon, string command)
         {
-            using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + scheme))
+            using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey($"SOFTWARE\\Classes\\{scheme}"))
             {
-                key.SetValue("", "URL:" + friendlyName);
+                key.SetValue("", $"URL:{friendlyName}");
                 key.SetValue("URL Protocol", "");
 
                 using (var iconKey = key.CreateSubKey("DefaultIcon"))

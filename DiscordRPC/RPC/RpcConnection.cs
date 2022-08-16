@@ -164,7 +164,7 @@ namespace DiscordRPC.RPC
 		/// <param name="command">The command to enqueue</param>
 		internal void EnqueueCommand(ICommand command)
         {
-            Logger.Trace("Enqueue Command: " + command.GetType().FullName);
+            Logger.Trace("Enqueue Command: {0}", command.GetType().FullName);
 
             //We cannot add anything else if we are aborting or shutting down.
             if (aborting || shutdown) return;
@@ -211,7 +211,7 @@ namespace DiscordRPC.RPC
             }
 
             //Large queue sizes should keep the queue in check
-            Logger.Trace("Enqueue Message: " + message.Type);
+            Logger.Trace("Enqueue Message: {0}", message.Type);
             lock (l_rxqueue)
             {
                 //If we are too big drop the last element
@@ -372,15 +372,15 @@ namespace DiscordRPC.RPC
 										EventPayload response = null;
 										try { response = frame.GetObject<EventPayload>(); } catch (Exception e)
 										{
-											Logger.Error("Failed to parse event! " + e.Message);
-											Logger.Error("Data: " + frame.Message);
+											Logger.Error("Failed to parse event! {0}", e.Message);
+											Logger.Error("Data: {0}", frame.Message);
 										}
 
 
 										try { if (response != null) ProcessFrame(response); } catch(Exception e)
                                         {
-											Logger.Error("Failed to process event! " + e.Message);
-											Logger.Error("Data: " + frame.Message);
+											Logger.Error("Failed to process event! {0}", e.Message);
+											Logger.Error("Data: {0}", frame.Message);
 										}
 
 										break;
@@ -638,7 +638,7 @@ namespace DiscordRPC.RPC
 				
 				//Prepare the payload
 				IPayload payload = item.PreparePayload(GetNextNonce());
-				Logger.Trace("Attempting to send payload: " + payload.Command);
+				Logger.Trace("Attempting to send payload: {0}", payload.Command);
 
 				//Prepare the frame
 				PipeFrame frame = new PipeFrame();
@@ -669,7 +669,7 @@ namespace DiscordRPC.RPC
 						frame.SetObject(Opcode.Frame, payload);
 
 						//Write it and if it wrote perfectly fine, we will dequeue it
-						Logger.Trace("Sending payload: " + payload.Command);
+						Logger.Trace("Sending payload: {0}", payload.Command);
 						if (namedPipe.WriteFrame(frame))
 						{
 							//We sent it, so now dequeue it
