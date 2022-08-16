@@ -72,7 +72,8 @@
 <h1 id="discord-rich-presence">Discord Rich Presence</h1>
 
 <p><a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦"></a>
-<a href="https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> </p>
+<a href="https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> 
+<a href="https://github.com/Lachee/discord-rpc-csharp/tags"><img src="https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=master" alt="GitHub package.json version"></a></p>
 <p>This is a C# <em>implementation</em> of the <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a> library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.</p>
 <p>While the official C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.</p>
 <p>Here are some key features of this library:</p>
@@ -94,21 +95,15 @@
 <p><strong>Dependencies:</strong></p>
 <ul>
 <li>Newtonsoft.Json </li>
-<li>.NET 3.5+</li>
+<li>.NET Standard 2.0</li>
 </ul>
-<p><strong>Unity3D Dependencies:</strong></p>
-<ul>
-<li>Newtonsoft.Json  (included in Unity Package).</li>
-<li>.NET 2.0+ (not subset)</li>
-<li><a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library (included in Unity Package).</li>
-</ul>
-<p><strong>Source: .NET Project</strong></p>
+<h3 id="net-project"><strong>.NET Project</strong></h3>
 <p>For projects that target either .NET Core or .NETFX, you can get the package on <a href="https://www.nuget.org/packages/DiscordRichPresence/">nuget</a>:</p>
 <pre><code>PM&gt; Install-Package DiscordRichPresence
 </code></pre><p>You can also <a href="#building">Download or Build</a> your own version of the library if you have more specific requirements.</p>
-<p><strong>Source: Unity3D Game Engine</strong></p>
-<p>Unity Package is being moved to <a href="https://github.com/Lachee/discord-rpc-unity">Lachee/Discord-RPC-Unity</a>. Please check the releases / documentation there.</p>
-<p>For building your own package, read the <a href="#building">building</a> guide.</p>
+<h3 id="unity3d-game-engine"><strong>Unity3D Game Engine</strong></h3>
+<p>Unity Package is being moved to <a href="https://github.com/Lachee/discord-rpc-unity">Lachee/Discord-RPC-Unity</a>. 
+Please check the releases / documentation there.</p>
 <h2 id="usage">Usage</h2>
 <p>The Discord.Example project within the solution contains example code, showing how to use all available features. For Unity Specific examples, check out the example project included. There are 3 important stages of usage, Initialization, Invoking and Deinitialization. It&#39;s important you follow all 3 stages to ensure proper behaviour of the library.</p>
 <p><strong>Initialization</strong></p>
