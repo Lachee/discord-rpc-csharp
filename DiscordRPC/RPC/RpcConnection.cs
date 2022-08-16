@@ -62,7 +62,14 @@ namespace DiscordRPC.RPC
 		/// <summary>
 		/// The current state of the RPC connection
 		/// </summary>
-		public RpcState State { get { var tmp = RpcState.Disconnected; lock (l_states) tmp = _state; return tmp; } }
+		public RpcState State
+		{
+			get
+			{
+				lock (l_states)
+					return _state;
+			}
+		}
 		private RpcState _state;
 		private readonly object l_states = new object();
 

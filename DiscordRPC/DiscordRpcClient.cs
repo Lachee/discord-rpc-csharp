@@ -454,7 +454,7 @@ namespace DiscordRPC
                 Logger.Warning("The client is not yet initialized, storing the presence as a state instead.");
 
             //Send the event
-            if (!presence)
+            if (presence == null)
             {
                 //Clear the presence
                 if (!SkipIdenticalPresence || CurrentPresence != null)
@@ -479,7 +479,10 @@ namespace DiscordRPC
             }
 
             //Update our local store
-            lock (_sync) { CurrentPresence = presence != null ? presence.Clone() : null; }
+            lock (_sync) 
+            {
+                CurrentPresence = presence?.Clone();
+            }
         }
 
         #region Updates
