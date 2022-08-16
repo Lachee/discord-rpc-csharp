@@ -588,11 +588,21 @@ namespace DiscordRPC
         }
 
         /// <summary>
-        /// Creates a timestamp with the set start or end time.
+        /// Creates a timestamp with the set start time
+        /// </summary>
+        /// <param name="start"></param>
+        public Timestamps(DateTime start)
+        {
+            Start = start;
+            End = null;
+        }
+
+        /// <summary>
+        /// Creates a timestamp with a set duration
         /// </summary>
         /// <param name="start">The start time</param>
         /// <param name="end">The end time</param>
-        public Timestamps(DateTime start, DateTime? end = null)
+        public Timestamps(DateTime start, DateTime end)
         {
             Start = start;
             End = end;

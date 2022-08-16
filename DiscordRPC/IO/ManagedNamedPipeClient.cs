@@ -451,13 +451,21 @@ namespace DiscordRPC.IO
         /// Returns a platform specific path that Discord is hosting the IPC on.
         /// </summary>
         /// <param name="pipe">The pipe number.</param>
-        /// <param name="sandbox">The sandbox the pipe is in. Leave blank for no sandbox.</param>
+        /// <param name="sandbox">The sandbox environment the pipe is in</param>
         /// <returns></returns>
-        public static string GetPipeName(int pipe, string sandbox = "")
+        public static string GetPipeName(int pipe, string sandbox)
         {
             if (!IsUnix()) return sandbox + string.Format(PIPE_NAME, pipe);
             return Path.Combine(GetTemporaryDirectory(), sandbox + string.Format(PIPE_NAME, pipe));
         }
+
+        /// <summary>
+        /// returns a platform specific path that Discord is hosting the IPC on.
+        /// </summary>
+        /// <param name="pipe">The pipe number</param>
+        /// <returns></returns>
+        public static string GetPipeName(int pipe)
+            => GetPipeName(pipe, "");
 
         /// <summary>
         /// Gets the name of the possible sandbox enviroment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
