@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace DiscordRPC.Example
 {
-    partial class Program
+    class Program
     {
         /// <summary>
         /// The level of logging to use.
