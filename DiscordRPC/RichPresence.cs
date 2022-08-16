@@ -543,7 +543,7 @@ namespace DiscordRPC
     public class Timestamps
     {
         /// <summary>A new timestamp that starts from the current time.</summary>
-        public static Timestamps Now { get { return new Timestamps(DateTime.UtcNow, end: null); } }
+        public static Timestamps Now { get { return new Timestamps(DateTime.UtcNow); } }
 
         /// <summary>
         /// Creates a new timestamp starting at the current time and ending in the supplied timespan
