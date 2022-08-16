@@ -220,10 +220,6 @@ namespace DiscordRPC
             if (string.IsNullOrEmpty(applicationID))
                 throw new ArgumentNullException("applicationID");
 
-            //Ensure we actually have json ahead of time. If statement is pointless, but its there just to ensure there is no unused warnings.
-            var jsonConverterType = typeof(Newtonsoft.Json.JsonConverter);
-            if (jsonConverterType == null) throw new Exception("JsonConverter Type Not Found");
-
             //Store the properties
             ApplicationID = applicationID.Trim();
             TargetPipe = pipe;
