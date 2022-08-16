@@ -314,6 +314,9 @@ namespace DiscordRPC
                         }
                     }
 
+                    if (OnPresenceUpdate != null)
+                        OnPresenceUpdate.Invoke(this, message as PresenceMessage);
+
                     break;
 
                 //Update our configuration
@@ -330,6 +333,20 @@ namespace DiscordRPC
                         //Resend our presence and subscription
                         SynchronizeState();
                     }
+                   
+                    if (OnReady != null) 
+                        OnReady.Invoke(this, message as ReadyMessage);
+                 
+                    break;
+
+                case MessageType.Close:
+                    if (OnClose != null) 
+                        OnClose.Invoke(this, message as CloseMessage);
+                    break;
+
+                case MessageType.Error:
+                    if (OnError != null)
+                        OnError.Invoke(this, message as ErrorMessage);
                     break;
 
                 //Update the request's CDN for the avatar helpers
@@ -340,6 +357,8 @@ namespace DiscordRPC
                         var jrm = message as JoinRequestMessage;
                         if (jrm != null) jrm.User.SetConfiguration(Configuration);
                     }
+                    if (OnJoinRequested != null)
+                        OnJoinRequested.Invoke(this, message as JoinRequestMessage);
                     break;
 
                 case MessageType.Subscribe:
@@ -347,7 +366,11 @@ namespace DiscordRPC
                     {
                         var sub = message as SubscribeMessage;
                         Subscription |= sub.Event;
-                    }
+                    }   
+                    
+                    if (OnSubscribe != null) 
+                        OnSubscribe.Invoke(this, message as SubscribeMessage);
+
                     break;
 
                 case MessageType.Unsubscribe:
@@ -356,62 +379,34 @@ namespace DiscordRPC
                         var unsub = message as UnsubscribeMessage;
                         Subscription &= ~unsub.Event;
                     }
+
+                    if (OnUnsubscribe != null)
+                        OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
+
+                    break;
+
+                case MessageType.Join:
+                    if (OnJoin != null)
+                        OnJoin.Invoke(this, message as JoinMessage);
+                    break;
+
+                case MessageType.Spectate:
+                    if (OnSpectate != null)
+                        OnSpectate.Invoke(this, message as SpectateMessage);
+                    break;
+
+                case MessageType.ConnectionEstablished:
+                    if (OnConnectionEstablished != null)
+                        OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
+                    break;
+
+                case MessageType.ConnectionFailed:
+                    if (OnConnectionFailed != null)
+                        OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
                     break;
 
                 //We got a message we dont know what to do with.
                 default:
-                    break;
-            }
-
-            //Invoke the appropriate methods
-            switch (message.Type)
-            {
-                case MessageType.Ready:
-                    if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
-                    break;
-
-                case MessageType.Close:
-                    if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
-                    break;
-
-                case MessageType.Error:
-                    if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
-                    break;
-
-                case MessageType.PresenceUpdate:
-                    if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
-                    break;
-
-                case MessageType.Subscribe:
-                    if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
-                    break;
-
-                case MessageType.Unsubscribe:
-                    if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
-                    break;
-
-                case MessageType.Join:
-                    if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
-                    break;
-
-                case MessageType.Spectate:
-                    if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
-                    break;
-
-                case MessageType.JoinRequest:
-                    if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
-                    break;
-
-                case MessageType.ConnectionEstablished:
-                    if (OnConnectionEstablished != null) OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
-                    break;
-
-                case MessageType.ConnectionFailed:
-                    if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
-                    break;
-
-                default:
-                    //This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
                     Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
                     break;
             }
