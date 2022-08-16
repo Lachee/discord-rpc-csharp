@@ -23,7 +23,11 @@ namespace DiscordRPC.Logging
 		/// <summary>
 		/// A alias too <see cref="Coloured"/>
 		/// </summary>
-		public bool Colored { get { return Coloured; } set { Coloured = value; } }
+		[System.Obsolete("Use Coloured")]
+		public bool Colored {
+			get => Coloured;
+			set => Coloured = value;
+		}
        
         /// <summary>
         /// Creates a new instance of a Console Logger.
@@ -34,12 +38,22 @@ namespace DiscordRPC.Logging
             Coloured = false;
         }
 
+		/// <summary>
+		/// Creates a new instance of a Console Logger
+		/// </summary>
+		/// <param name="level">The log level</param>
+		public ConsoleLogger(LogLevel level)
+			: this()
+        {
+			Level = level;
+        }
+
         /// <summary>
         /// Creates a new instance of a Console Logger with a set log level
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="coloured"></param>
-        public ConsoleLogger(LogLevel level, bool coloured = false)
+        /// <param name="level">The log level</param>
+        /// <param name="coloured">Should the logs be in colour?</param>
+        public ConsoleLogger(LogLevel level, bool coloured)
         {
             Level = level;
             Coloured = coloured;

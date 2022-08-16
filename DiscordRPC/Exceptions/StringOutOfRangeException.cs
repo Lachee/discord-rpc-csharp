@@ -38,13 +38,13 @@ namespace DiscordRPC.Exceptions
         /// <param name="minumum"></param>
         /// <param name="max"></param>
         internal StringOutOfRangeException(int minumum, int max) 
-            : this("Length of string is out of range. Expected a value between " + minumum + " and " + max, minumum, max) { }
+            : this($"Length of string is out of range. Expected a value between {minumum} and {max}", minumum, max) { }
 
         /// <summary>
         /// Creates a new sting out of range exception with a range of 0 to max
         /// </summary>
         /// <param name="max"></param>
         internal StringOutOfRangeException(int max)           
-            : this("Length of string is out of range. Expected a value with a maximum length of " + max, 0, max) { }
+            : this($"Length of string is out of range. Expected a value with a maximum length of {max}", 0, max) { }
     }
 }

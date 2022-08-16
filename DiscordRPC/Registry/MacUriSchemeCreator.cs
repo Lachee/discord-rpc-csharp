@@ -32,7 +32,7 @@ namespace DiscordRPC.Registry
 
             //Prepare the command
             string command = exe;
-            if (register.UsingSteamApp) command = "steam://rungameid/" + register.SteamAppID;
+            if (register.UsingSteamApp) command = $"steam://rungameid/{register.SteamAppID}";
             else logger.Warning("This library does not fully support MacOS URI Scheme Registration.");
 
             //get the folder ready
@@ -45,8 +45,9 @@ namespace DiscordRPC.Registry
             }
 
             //Write the contents to file
-            File.WriteAllText(filepath + "/" + register.ApplicationID + ".json", "{ \"command\": \"" + command + "\" }");
-            logger.Trace("Registered {0}, {1}", filepath + "/" + register.ApplicationID + ".json", command);
+            string applicationSchemeFilePath = $"{filepath}/{register.ApplicationID}.json";
+            File.WriteAllText(applicationSchemeFilePath, "{ \"command\": \""+ command + "\" }");
+            logger.Trace("Registered {0}, {1}", applicationSchemeFilePath, command);
             return true;
         }
         

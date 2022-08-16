@@ -3,7 +3,7 @@
 Currently no guide for Mono Game setup. Please follow the [Standard Guide](standard.md) and include the follow files from the Unity Package:
 
 * The [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library
-* The [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs)
+* The [Lachee/Discord-RPC-Unity](https://github.com/Lachee/discord-rpc-unity) Named Pipe
 
 # Help Wanted Here
 

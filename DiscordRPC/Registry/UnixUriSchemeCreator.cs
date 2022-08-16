@@ -37,7 +37,7 @@ namespace DiscordRPC.Registry
             if (register.UsingSteamApp)
             {
                 //A steam command isntead
-                command = "xdg-open steam://rungameid/" + register.SteamAppID;
+                command = $"xdg-open steam://rungameid/{register.SteamAppID}";
             }
             else
             {
@@ -59,7 +59,7 @@ MimeType=x-scheme-handler/discord-{2}";
             string file = string.Format(desktopFileFormat, register.ApplicationID, command, register.ApplicationID);
 
             //Prepare the path
-            string filename = "/discord-" + register.ApplicationID + ".desktop";
+            string filename = $"/discord-{register.ApplicationID}.desktop";
             string filepath = home + "/.local/share/applications";
             var directory = Directory.CreateDirectory(filepath);
             if (!directory.Exists)

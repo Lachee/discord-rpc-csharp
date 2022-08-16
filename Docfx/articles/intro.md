@@ -15,9 +15,9 @@ Getting started with DiscordRPC-C# is easy! With automatic nuget packages and a 
 
 [**Standard .NET Project**](getting_started/standard.md) - Recommended. For most users that are making a .NET Application
 
-[**Unity3D Project**](getting_started/unity3d.md) - For Unity3D users that want to add Rich Presence to their game.
+[**Lachee/Discord-RPC-Unity**](https://github.com/Lachee/discord-rpc-unity) - For Unity3D users that want to add Rich Presence to their game.
 
-[**MonoGame Project / Modding**](getting_started/monogame.md) - For developers using custom MonoGame engines or modding existing games.
+[**MonoGame Project / Modding / Godot**](getting_started/monogame.md) - For developers using custom MonoGame engines or modding existing games.
 
 ## Need More Help?
 

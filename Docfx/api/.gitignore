@@ -1,5 +1,4 @@
-###############
-#  temp file  #
-###############
+# All the documentation is built and then published via a GH Action
+# So there is no need for us to store the actual built YML files, that just takes up sapce.
 *.yml
 .manifest
