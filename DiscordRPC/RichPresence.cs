@@ -373,12 +373,12 @@ namespace DiscordRPC
         public static string CreateFriendlySecret(Random random)
         {
             string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string secret = "";
 
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < SecretLength; i++)
-                secret += charset[random.Next(charset.Length)];
+                builder.Append(charset[random.Next(charset.Length)]);
 
-            return secret;
+            return builder.ToString();
         }
         #endregion
     }
