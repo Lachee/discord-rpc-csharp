@@ -52,7 +52,7 @@ namespace DiscordRPC.Helper
         {
             if (str == null) return null;
             
-            return str.ToLower()
+            return str.ToLowerInvariant()
 				.Split(new[] { "_", " " }, StringSplitOptions.RemoveEmptyEntries)
 				.Select(s => char.ToUpper(s[0]) + s.Substring(1, s.Length - 1))
 				.Aggregate(string.Empty, (s1, s2) => s1 + s2);
@@ -67,7 +67,7 @@ namespace DiscordRPC.Helper
         {
             if (str == null) return null;
 			var concat = string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()).ToArray());
-			return concat.ToUpper();
+			return concat.ToUpperInvariant();
         }
     }
 }
