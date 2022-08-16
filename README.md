@@ -27,14 +27,9 @@ All the documentation can be found [lachee.github.io/discord-rpc-csharp/docs/](h
 
 **Dependencies:**
  - Newtonsoft.Json 
- - .NET 3.5+
+ - .NET Standard 2.0
  
-**Unity3D Dependencies:**
- - Newtonsoft.Json  (included in Unity Package).
- - .NET 2.0+ (not subset)
- - [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library (included in Unity Package).
-  
-**Source: .NET Project**
+### **.NET Project**
 
 For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
@@ -42,11 +37,10 @@ PM> Install-Package DiscordRichPresence
 ```
 You can also [Download or Build](#building) your own version of the library if you have more specific requirements.
 
-**Source: Unity3D Game Engine**
+### **Unity3D Game Engine**
 
-Unity Package is being moved to [Lachee/Discord-RPC-Unity](https://github.com/Lachee/discord-rpc-unity). Please check the releases / documentation there.
-
-For building your own package, read the [building](#building) guide.
+Unity Package is being moved to [Lachee/Discord-RPC-Unity](https://github.com/Lachee/discord-rpc-unity). 
+Please check the releases / documentation there.
 
 ## Usage
 
