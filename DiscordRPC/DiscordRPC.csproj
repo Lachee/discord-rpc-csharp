@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\link.xml">
+      <LogicalName>DiscordRPC.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
