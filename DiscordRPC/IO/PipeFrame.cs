@@ -10,7 +10,7 @@ namespace DiscordRPC.IO
 	/// <summary>
 	/// A frame received and sent to the Discord client for RPC communications.
 	/// </summary>
-	public struct PipeFrame
+	public struct PipeFrame : IEquatable<PipeFrame>
 	{
 		/// <summary>
 		/// The maxium size of a pipe frame (16kb).
@@ -200,6 +200,18 @@ namespace DiscordRPC.IO
 
 			//Write it to the stream
 			stream.Write(buff, 0, buff.Length);
-		}		
-	}
+		}
+
+		/// <summary>
+		/// Compares if the frame equals the other frame.
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+        public bool Equals(PipeFrame other)
+        {
+			return Opcode == other.Opcode &&
+					Length == other.Length &&
+					Data == other.Data;
+        }
+    }
 }
