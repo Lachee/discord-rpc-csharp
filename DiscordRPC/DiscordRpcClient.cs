@@ -220,10 +220,6 @@ namespace DiscordRPC
             if (string.IsNullOrEmpty(applicationID))
                 throw new ArgumentNullException("applicationID");
 
-            //Ensure we actually have json ahead of time. If statement is pointless, but its there just to ensure there is no unused warnings.
-            var jsonConverterType = typeof(Newtonsoft.Json.JsonConverter);
-            if (jsonConverterType == null) throw new Exception("JsonConverter Type Not Found");
-
             //Store the properties
             ApplicationID = applicationID.Trim();
             TargetPipe = pipe;
@@ -303,10 +299,12 @@ namespace DiscordRPC
                             if (pm.Presence == null)
                             {
                                 CurrentPresence = null;
-                            } else if (CurrentPresence == null)
+                            }
+                            else if (CurrentPresence == null)
                             {
                                 CurrentPresence = (new RichPresence()).Merge(pm.Presence);
-                            } else
+                            }
+                            else
                             {
                                 CurrentPresence.Merge(pm.Presence);
                             }
@@ -315,6 +313,9 @@ namespace DiscordRPC
                             pm.Presence = CurrentPresence;
                         }
                     }
+
+                    if (OnPresenceUpdate != null)
+                        OnPresenceUpdate.Invoke(this, message as PresenceMessage);
 
                     break;
 
@@ -332,6 +333,20 @@ namespace DiscordRPC
                         //Resend our presence and subscription
                         SynchronizeState();
                     }
+                   
+                    if (OnReady != null) 
+                        OnReady.Invoke(this, message as ReadyMessage);
+                 
+                    break;
+
+                case MessageType.Close:
+                    if (OnClose != null) 
+                        OnClose.Invoke(this, message as CloseMessage);
+                    break;
+
+                case MessageType.Error:
+                    if (OnError != null)
+                        OnError.Invoke(this, message as ErrorMessage);
                     break;
 
                 //Update the request's CDN for the avatar helpers
@@ -342,6 +357,8 @@ namespace DiscordRPC
                         var jrm = message as JoinRequestMessage;
                         if (jrm != null) jrm.User.SetConfiguration(Configuration);
                     }
+                    if (OnJoinRequested != null)
+                        OnJoinRequested.Invoke(this, message as JoinRequestMessage);
                     break;
 
                 case MessageType.Subscribe:
@@ -349,7 +366,11 @@ namespace DiscordRPC
                     {
                         var sub = message as SubscribeMessage;
                         Subscription |= sub.Event;
-                    }
+                    }   
+                    
+                    if (OnSubscribe != null) 
+                        OnSubscribe.Invoke(this, message as SubscribeMessage);
+
                     break;
 
                 case MessageType.Unsubscribe:
@@ -358,62 +379,34 @@ namespace DiscordRPC
                         var unsub = message as UnsubscribeMessage;
                         Subscription &= ~unsub.Event;
                     }
+
+                    if (OnUnsubscribe != null)
+                        OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
+
+                    break;
+
+                case MessageType.Join:
+                    if (OnJoin != null)
+                        OnJoin.Invoke(this, message as JoinMessage);
+                    break;
+
+                case MessageType.Spectate:
+                    if (OnSpectate != null)
+                        OnSpectate.Invoke(this, message as SpectateMessage);
+                    break;
+
+                case MessageType.ConnectionEstablished:
+                    if (OnConnectionEstablished != null)
+                        OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
+                    break;
+
+                case MessageType.ConnectionFailed:
+                    if (OnConnectionFailed != null)
+                        OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
                     break;
 
                 //We got a message we dont know what to do with.
                 default:
-                    break;
-            }
-
-            //Invoke the appropriate methods
-            switch (message.Type)
-            {
-                case MessageType.Ready:
-                    if (OnReady != null) OnReady.Invoke(this, message as ReadyMessage);
-                    break;
-
-                case MessageType.Close:
-                    if (OnClose != null) OnClose.Invoke(this, message as CloseMessage);
-                    break;
-
-                case MessageType.Error:
-                    if (OnError != null) OnError.Invoke(this, message as ErrorMessage);
-                    break;
-
-                case MessageType.PresenceUpdate:
-                    if (OnPresenceUpdate != null) OnPresenceUpdate.Invoke(this, message as PresenceMessage);
-                    break;
-
-                case MessageType.Subscribe:
-                    if (OnSubscribe != null) OnSubscribe.Invoke(this, message as SubscribeMessage);
-                    break;
-
-                case MessageType.Unsubscribe:
-                    if (OnUnsubscribe != null) OnUnsubscribe.Invoke(this, message as UnsubscribeMessage);
-                    break;
-
-                case MessageType.Join:
-                    if (OnJoin != null) OnJoin.Invoke(this, message as JoinMessage);
-                    break;
-
-                case MessageType.Spectate:
-                    if (OnSpectate != null) OnSpectate.Invoke(this, message as SpectateMessage);
-                    break;
-
-                case MessageType.JoinRequest:
-                    if (OnJoinRequested != null) OnJoinRequested.Invoke(this, message as JoinRequestMessage);
-                    break;
-
-                case MessageType.ConnectionEstablished:
-                    if (OnConnectionEstablished != null) OnConnectionEstablished.Invoke(this, message as ConnectionEstablishedMessage);
-                    break;
-
-                case MessageType.ConnectionFailed:
-                    if (OnConnectionFailed != null) OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
-                    break;
-
-                default:
-                    //This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
                     Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
                     break;
             }
@@ -456,7 +449,7 @@ namespace DiscordRPC
                 Logger.Warning("The client is not yet initialized, storing the presence as a state instead.");
 
             //Send the event
-            if (!presence)
+            if (presence == null)
             {
                 //Clear the presence
                 if (!SkipIdenticalPresence || CurrentPresence != null)
@@ -481,24 +474,27 @@ namespace DiscordRPC
             }
 
             //Update our local store
-            lock (_sync) { CurrentPresence = presence != null ? presence.Clone() : null; }
+            lock (_sync) 
+            {
+                CurrentPresence = presence?.Clone();
+            }
         }
 
         #region Updates
-	
-	/// <summary>
-        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
+
+        /// <summary>
+        /// Updates only the <see cref="RichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
         /// </summary>
-        /// <param name="Button">The buttons of the Rich Presence</param>
+        /// <param name="button">The buttons of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>
-	public RichPresence UpdateButtons(Button[] button = null)
+        public RichPresence UpdateButtons(Button[] button = null)
         {
             if (!IsInitialized)
             {
                 throw new UninitializedException();
             }
 
- 	    // Clone the presence
+            // Clone the presence
             RichPresence presence;
             lock (_sync)
             {
@@ -512,27 +508,27 @@ namespace DiscordRPC
                 }
             }
 
-	    // Update the buttons.
+            // Update the buttons.
             presence.Buttons = button;
             SetPresence(presence);
 
             return presence;
         }
-	
-	/// <summary>
-        /// Updates only the <see cref="BaseRichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
+
+        /// <summary>
+        /// Updates only the <see cref="RichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates the button with the given index. Returns the newly edited Rich Presence.
         /// </summary>
-        /// <param name="Button">The buttons of the Rich Presence</param>
-	/// <param name="Index">The number of the button</param>
+        /// <param name="button">The buttons of the Rich Presence</param>
+        /// <param name="index">The number of the button</param>
         /// <returns>Updated Rich Presence</returns>
-	public RichPresence SetButton(Button button, int index = 0)
+        public RichPresence SetButton(Button button, int index = 0)
         {
             if (!IsInitialized)
             {
                 throw new UninitializedException();
             }
-	    
-	    // Clone the presence
+
+            // Clone the presence
             RichPresence presence;
             lock (_sync)
             {
@@ -545,14 +541,14 @@ namespace DiscordRPC
                     presence = CurrentPresence.Clone();
                 }
             }
-            
-	    // Update the buttons
+
+            // Update the buttons
             presence.Buttons[index] = button;
             SetPresence(presence);
 
             return presence;
         }
-	
+
         /// <summary>
         /// Updates only the <see cref="BaseRichPresence.Details"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
         /// </summary>

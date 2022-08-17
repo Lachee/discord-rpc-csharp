@@ -2,6 +2,7 @@
 
 [![Release 📦](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf)](https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=master)](https://github.com/Lachee/discord-rpc-csharp/tags)
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
 
@@ -26,14 +27,9 @@ All the documentation can be found [lachee.github.io/discord-rpc-csharp/docs/](h
 
 **Dependencies:**
  - Newtonsoft.Json 
- - .NET 3.5+
+ - .NET Standard 2.0
  
-**Unity3D Dependencies:**
- - Newtonsoft.Json  (included in Unity Package).
- - .NET 2.0+ (not subset)
- - [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library (included in Unity Package).
-  
-**Source: .NET Project**
+### **.NET Project**
 
 For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
@@ -41,11 +37,10 @@ PM> Install-Package DiscordRichPresence
 ```
 You can also [Download or Build](#building) your own version of the library if you have more specific requirements.
 
-**Source: Unity3D Game Engine**
+### **Unity3D Game Engine**
 
-Unity Package is being moved to [Lachee/Discord-RPC-Unity](https://github.com/Lachee/discord-rpc-unity). Please check the releases / documentation there.
-
-For building your own package, read the [building](#building) guide.
+Unity Package is being moved to [Lachee/Discord-RPC-Unity](https://github.com/Lachee/discord-rpc-unity). 
+Please check the releases / documentation there.
 
 ## Usage
 

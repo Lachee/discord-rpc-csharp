@@ -180,16 +180,26 @@ namespace DiscordRPC
 			this.CdnEndpoint = configuration.CdnHost;
 		}
 
+
+		/// <summary>
+		/// Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
+		/// </summary>
+		/// <remarks>The file returned will be 128px x 128px</remarks>
+		/// <param name="format">The format of the target avatar</param>
+		/// <returns>URL to the discord CDN for the particular avatar</returns>
+		public string GetAvatarURL(AvatarFormat format)
+			=> GetAvatarURL(format, AvatarSize.x128);
+
 		/// <summary>
 		/// Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
 		/// </summary>
 		/// <param name="format">The format of the target avatar</param>
-		/// <param name="size">The optional size of the avatar you wish for. Defaults to x128.</param>
-		/// <returns></returns>
-		public string GetAvatarURL(AvatarFormat format, AvatarSize size = AvatarSize.x128)
+		/// <param name="size">The optional size of the avatar you wish for.</param>
+		/// <returns>URL to the discord CDN for the particular avatar</returns>
+		public string GetAvatarURL(AvatarFormat format, AvatarSize size)
 		{
 			//Prepare the endpoint
-			string endpoint = "/avatars/" + ID + "/" + Avatar;
+			string endpoint = $"/avatars/{ID}/{Avatar}";
 
 			//The user has no avatar, so we better replace it with the default
 			if (string.IsNullOrEmpty(Avatar))
@@ -200,7 +210,7 @@ namespace DiscordRPC
 
 				//Get the endpoint
 				int descrim = Discriminator % 5;
-				endpoint = "/embed/avatars/" + descrim;
+				endpoint = $"/embed/avatars/{descrim}";
 			}
 
 			//Finish of the endpoint

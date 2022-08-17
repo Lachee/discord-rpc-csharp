@@ -373,12 +373,12 @@ namespace DiscordRPC
         public static string CreateFriendlySecret(Random random)
         {
             string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string secret = "";
 
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < SecretLength; i++)
-                secret += charset[random.Next(charset.Length)];
+                builder.Append(charset[random.Next(charset.Length)]);
 
-            return secret;
+            return builder.ToString();
         }
         #endregion
     }
@@ -543,7 +543,7 @@ namespace DiscordRPC
     public class Timestamps
     {
         /// <summary>A new timestamp that starts from the current time.</summary>
-        public static Timestamps Now { get { return new Timestamps(DateTime.UtcNow, end: null); } }
+        public static Timestamps Now { get { return new Timestamps(DateTime.UtcNow); } }
 
         /// <summary>
         /// Creates a new timestamp starting at the current time and ending in the supplied timespan
@@ -588,11 +588,21 @@ namespace DiscordRPC
         }
 
         /// <summary>
-        /// Creates a timestamp with the set start or end time.
+        /// Creates a timestamp with the set start time
+        /// </summary>
+        /// <param name="start"></param>
+        public Timestamps(DateTime start)
+        {
+            Start = start;
+            End = null;
+        }
+
+        /// <summary>
+        /// Creates a timestamp with a set duration
         /// </summary>
         /// <param name="start">The start time</param>
         /// <param name="end">The end time</param>
-        public Timestamps(DateTime start, DateTime? end = null)
+        public Timestamps(DateTime start, DateTime end)
         {
             Start = start;
             End = end;
