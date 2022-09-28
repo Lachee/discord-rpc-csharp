@@ -69,8 +69,18 @@ namespace DiscordRPC.Logging
             if (Level > LogLevel.Trace) return;
 
             if (Coloured) Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("TRACE: " + message, args);
-        }
+
+			string prefixedMessage = "TRACE: " + message;
+
+			if (args.Length > 0)
+			{
+				Console.WriteLine(prefixedMessage, args);
+			}
+			else
+			{
+				Console.WriteLine(prefixedMessage);
+			}
+		}
 
         /// <summary>
         /// Informative log messages
@@ -82,7 +92,17 @@ namespace DiscordRPC.Logging
 			if (Level > LogLevel.Info) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.White;
-			Console.WriteLine("INFO: " + message, args);
+
+			string prefixedMessage = "INFO: " + message;
+
+			if (args.Length > 0)
+			{
+				Console.WriteLine(prefixedMessage, args);
+			}
+			else
+			{
+				Console.WriteLine(prefixedMessage);
+			}
 		}
 
 		/// <summary>
@@ -95,7 +115,17 @@ namespace DiscordRPC.Logging
 			if (Level > LogLevel.Warning) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine("WARN: " + message, args);
+
+			string prefixedMessage = "WARN: " + message;
+
+			if (args.Length > 0)
+			{
+				Console.WriteLine(prefixedMessage, args);
+			}
+			else
+			{
+				Console.WriteLine(prefixedMessage);
+			}
 		}
 
 		/// <summary>
@@ -108,7 +138,17 @@ namespace DiscordRPC.Logging
 			if (Level > LogLevel.Error) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("ERR : " + message, args);
+
+			string prefixedMessage = "ERR : " + message;
+
+			if (args.Length > 0)
+			{
+				Console.WriteLine(prefixedMessage, args);
+			}
+			else
+			{
+				Console.WriteLine(prefixedMessage);
+			}
 		}
 
 	}
