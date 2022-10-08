@@ -140,7 +140,7 @@ namespace DiscordRPC
         /// <summary>
         /// The premium type of the user.
         /// </summary>
-        [JsonProperty("premium_type")]
+        [JsonProperty("premium_type", NullValueHandling = NullValueHandling.Ignore)]
         public PremiumType Premium { get; private set; }
 
         /// <summary>
