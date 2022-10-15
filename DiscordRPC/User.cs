@@ -91,7 +91,7 @@ namespace DiscordRPC
         /// <summary>
         /// The flags on a users account, often represented as a badge.
         /// </summary>
-        [JsonProperty("flags")]
+        [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
         public Flag Flags { get; private set; }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace DiscordRPC
         /// <summary>
         /// The premium type of the user.
         /// </summary>
-        [JsonProperty("premium_type")]
+        [JsonProperty("premium_type", NullValueHandling = NullValueHandling.Ignore)]
         public PremiumType Premium { get; private set; }
 
         /// <summary>
