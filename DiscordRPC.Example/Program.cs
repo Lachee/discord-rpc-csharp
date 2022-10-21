@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DiscordRPC.Example
 {
@@ -65,7 +66,8 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            BasicExample();
+            //BasicExample();
+            ReadyTaskExample();
             //FullClientExample();
             //Issue104();
             //IssueMultipleSets();
@@ -233,6 +235,36 @@ namespace DiscordRPC.Example
 
             Console.WriteLine("Press any key to terminate");
             Console.ReadKey();
+        }
+
+        static async void ReadyTaskExample()
+        {
+            TaskCompletionSource<User> readyCompletionSource = new TaskCompletionSource<User>();
+
+            // == Create the client
+            // We are using the `using` keyword because we want to automatically call Dispose
+            //  once we finish this method. We only care to get the user info.
+            // If you want to update the presence, dont do this but rather make it a singleton
+            //  that lives throughout the lifetime of your app.
+            using var client = new DiscordRpcClient("424087019149328395", pipe: discordPipe)
+            {
+                Logger = new Logging.ConsoleLogger(logLevel, true)
+            };
+
+            // == Sub to ready
+            // We are going to listen to the On Ready. Once we have it, we will tell the completion
+            //  source to continue with the result.
+            client.OnReady += (sender, msg) =>
+            {
+                readyCompletionSource.SetResult(msg.User);
+            };
+
+            // == Initialize
+            client.Initialize();
+
+            // == Wait for user
+            var user = await readyCompletionSource.Task;
+            Console.WriteLine("Connected to discord with user {0}: {1}", user.Username, user.Avatar);
         }
 
         #region Events
