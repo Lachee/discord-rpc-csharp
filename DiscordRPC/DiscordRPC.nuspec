@@ -18,14 +18,16 @@ This is an unoffical, non-discord supported library.
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Lachee/discord-rpc-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <copyright>Copyright (c) Lachee 2018</copyright>
     <releaseNotes></releaseNotes>
     <tags>Discord Discord Rich Presence RPC Discord-RPC</tags>
 
     <dependencies>
       <group targetFramework="netstandard2.0">
-        <dependency id="Newtonsoft.Json" version="12.0.2" />
+        <dependency id="Newtonsoft.Json" version="13.0.1" />
         <dependency id="Microsoft.Win32.Registry" version="4.5.0" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="Newtonsoft.Json" version="13.0.1" />
       </group>
     </dependencies>
   </metadata>
@@ -34,5 +36,9 @@ This is an unoffical, non-discord supported library.
     <file src="./bin/Release/netstandard2.0/DiscordRPC.dll" target="lib\netstandard2.0" />
     <file src="./bin/Release/netstandard2.0/DiscordRPC.pdb" target="lib\netstandard2.0" />
     <file src="./bin/Release/netstandard2.0/DiscordRPC.xml" target="lib\netstandard2.0" />
+	
+	<file src="./bin/Release/net45/DiscordRPC.dll" target="lib\net45" />
+    <file src="./bin/Release/net45/DiscordRPC.pdb" target="lib\net45" />
+    <file src="./bin/Release/net45/DiscordRPC.xml" target="lib\net45" />
   </files>
 </package>
