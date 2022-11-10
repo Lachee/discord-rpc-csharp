@@ -1,6 +1,13 @@
-﻿using DiscordRPC.Logging;
+﻿#if NETSTANDARD1_1_OR_GREATER
+#define USE_RUNTIME_INFO
+#endif
+
+using DiscordRPC.Logging;
 using System;
 using System.Diagnostics;
+#if USE_RUNTIME_INFO
+using System.Runtime.InteropServices;
+#endif
 
 namespace DiscordRPC.Registry
 {
@@ -53,14 +60,28 @@ namespace DiscordRPC.Registry
                     break;
 
                 case PlatformID.Unix:
-                    _logger.Trace("Creating Unix Scheme Creator");
-                    creator = new UnixUriSchemeCreator(_logger);
+#if USE_RUNTIME_INFO
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        _logger.Trace("Creating MacOSX Scheme Creator");
+                        creator = new MacUriSchemeCreator(_logger);
+                    }
+                    else
+                    {
+#endif
+                        _logger.Trace("Creating Unix Scheme Creator");
+                        creator = new UnixUriSchemeCreator(_logger);
+#if USE_RUNTIME_INFO
+                    }
+#endif
                     break;
                 
+#if !USE_RUNTIME_INFO
                 case PlatformID.MacOSX:
                     _logger.Trace("Creating MacOSX Scheme Creator");
                     creator = new MacUriSchemeCreator(_logger);
                     break;
+#endif
 
                 default:
                     _logger.Error("Unkown Platform: {0}", Environment.OSVersion.Platform);
