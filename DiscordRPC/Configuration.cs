@@ -24,9 +24,9 @@ namespace DiscordRPC
 		public string CdnHost { get; set; }
 
 		/// <summary>
-		/// The type of enviroment the connection on. Usually Production. 
+		/// The type of environment the connection on. Usually Production. 
 		/// </summary>
-		[JsonProperty("enviroment")]
-		public string Enviroment { get; set; }
+		[JsonProperty("environment")]
+		public string Environment { get; set; }
 	}
 }

@@ -468,7 +468,7 @@ namespace DiscordRPC.IO
             => GetPipeName(pipe, "");
 
         /// <summary>
-        /// Gets the name of the possible sandbox enviroment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
+        /// Gets the name of the possible sandbox environment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
         /// </summary>
         /// <returns></returns>
         public static string GetPipeSandbox()
@@ -483,7 +483,7 @@ namespace DiscordRPC.IO
         }
 
         /// <summary>
-        /// Gets the temporary path for the current enviroment. Only applicable for UNIX based systems.
+        /// Gets the temporary path for the current environment. Only applicable for UNIX based systems.
         /// </summary>
         /// <returns></returns>
         private static string GetTemporaryDirectory()
