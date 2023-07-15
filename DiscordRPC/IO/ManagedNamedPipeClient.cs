@@ -143,7 +143,7 @@ namespace DiscordRPC.IO
 
                     // Intentionally use a timeout of 0 here to avoid spinlock overhead.
                     // We are already performing local retry logic, so this is not required.
-                    _stream.Connect(1000);
+                    _stream.Connect(0);
 
                     //Spin for a bit while we wait for it to finish connecting
                     Logger.Trace("Waiting for connection...");
