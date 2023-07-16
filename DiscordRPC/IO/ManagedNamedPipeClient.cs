@@ -140,7 +140,10 @@ namespace DiscordRPC.IO
                 {
                     Logger.Info("Attempting to connect to '{0}'", pipename);
                     _stream = new NamedPipeClientStream(".", pipename, PipeDirection.InOut, PipeOptions.Asynchronous);
-                    _stream.Connect(1000);
+
+                    // Intentionally use a timeout of 0 here to avoid spinlock overhead.
+                    // We are already performing local retry logic, so this is not required.
+                    _stream.Connect(0);
 
                     //Spin for a bit while we wait for it to finish connecting
                     Logger.Trace("Waiting for connection...");
@@ -378,7 +381,7 @@ namespace DiscordRPC.IO
                 return;
             }
 
-            //flush and dispose			
+            //flush and dispose
             try
             {
                 //Wait for the stream object to become available.
