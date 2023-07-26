@@ -3381,6 +3381,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.Discriminator
   nameWithType: User.Discriminator
+- uid: DiscordRPC.User.DisplayName
+  name: DisplayName
+  href: api/DiscordRPC.User.html#DiscordRPC_User_DisplayName
+  commentId: P:DiscordRPC.User.DisplayName
+  fullName: DiscordRPC.User.DisplayName
+  nameWithType: User.DisplayName
+- uid: DiscordRPC.User.DisplayName*
+  name: DisplayName
+  href: api/DiscordRPC.User.html#DiscordRPC_User_DisplayName_
+  commentId: Overload:DiscordRPC.User.DisplayName
+  isSpec: "True"
+  fullName: DiscordRPC.User.DisplayName
+  nameWithType: User.DisplayName
 - uid: DiscordRPC.User.Flag
   name: User.Flag
   href: api/DiscordRPC.User.Flag.html

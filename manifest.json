@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Assets.html",
-          "hash": "sh4AJuojaGfFYBOtfZ9q9BTPyhkHFd7a21bnFOeCNjU="
+          "hash": "Jo11V9xIGdMphk3kRhOxK9WfNXv4K6XbLGjbor9bxCA="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Button.html",
-          "hash": "TQq3r8GNrrjGohvs58Dh2+15KNQFZLOSoHAfuB1Qt3k="
+          "hash": "bqfQ70YnIO8UZGGzAKu8UiXD4ySvvXgMETn6UOAKPsg="
         }
       },
       "is_incremental": false,
@@ -657,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Party.PrivacySetting.html",
-          "hash": "Bsjdu+b7lu6vRTbx8c+GCgSiMphyAvTBdyrrSjqztYA="
+          "hash": "KVCSJGZ8BUK+0qEsQAKrbkFbL9kQ3cuOA9doi4JlnqU="
         }
       },
       "is_incremental": false,
@@ -669,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Party.html",
-          "hash": "qfF7U5TGd5llsEFDTpYX0Ud9EbQLxuNpQthHM6wU4to="
+          "hash": "IA6KrGBvOBUuL/mjskqFpqEN/7vocaYjNrVVReKTq9k="
         }
       },
       "is_incremental": false,
@@ -681,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.RichPresence.html",
-          "hash": "CFpKMhQe8vTfUBSOLbJ5P65MFN5aKMmQHLK2gIsflNw="
+          "hash": "Zc5MP8nXQeybeIVfmLkZJ2USkFMxLFzUvXtA1O11Y8M="
         }
       },
       "is_incremental": false,
@@ -705,7 +705,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Timestamps.html",
-          "hash": "KCi0VuVVZ8rpriGDSV4qC9lToQkDnqclGNFMwqdZLzM="
+          "hash": "U62O72dCDWBvI2JdnHg6HqE42MCNbpHmyGSnqKR7RdY="
         }
       },
       "is_incremental": false,
@@ -741,7 +741,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.User.Flag.html",
-          "hash": "/Kc9kKMUpfMdwjsFVgkMrHJ5d7a2Pjfwe7VQmUr2E1A="
+          "hash": "Dh9nAm2wxDRIODOYVcaKe5UwD8ZSl5tJubG8Dbn2t7A="
         }
       },
       "is_incremental": false,
@@ -753,7 +753,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.User.PremiumType.html",
-          "hash": "pKe4ZaqwUOoVamvHlrjNldknGBAeXPYRe6G841f2oMM="
+          "hash": "T//NRFnqHsQdk/iDFuU6gp6FuLpwNuxON4DQ1GEsLVo="
         }
       },
       "is_incremental": false,
@@ -765,7 +765,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.User.html",
-          "hash": "B7sMF4tAL2RSlWqdAsXVL5vx2viLDj4hhd93x8hgJLk="
+          "hash": "GxYjfHC1y3DG4gQH4Iq0HDxH8CIKI/KdJe9hegphoEU="
         }
       },
       "is_incremental": false,
