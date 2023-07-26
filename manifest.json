@@ -57,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.Configuration.html",
-          "hash": "TinKF4SswG2SJUcBncUTSHSJocjsWomreTLXUvdN5aI="
+          "hash": "J+nP2iMRriKfqb4S+YTuz+/RVqUiI72geAYMD2fxsQA="
         }
       },
       "is_incremental": false,
@@ -357,7 +357,7 @@
       "output": {
         ".html": {
           "relative_path": "api/DiscordRPC.IO.ManagedNamedPipeClient.html",
-          "hash": "EtB94tpw2JLeJLxW7pkqp8TqwvcG+ATQaksF4GJBpj0="
+          "hash": "/r49Y08v4bbmhDZoPs1hRF1MQweyVut/ucW3caOnv+8="
         }
       },
       "is_incremental": false,

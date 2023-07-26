@@ -377,6 +377,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.Configuration.Enviroment
   nameWithType: Configuration.Enviroment
+- uid: DiscordRPC.Configuration.Environment
+  name: Environment
+  href: api/DiscordRPC.Configuration.html#DiscordRPC_Configuration_Environment
+  commentId: P:DiscordRPC.Configuration.Environment
+  fullName: DiscordRPC.Configuration.Environment
+  nameWithType: Configuration.Environment
+- uid: DiscordRPC.Configuration.Environment*
+  name: Environment
+  href: api/DiscordRPC.Configuration.html#DiscordRPC_Configuration_Environment_
+  commentId: Overload:DiscordRPC.Configuration.Environment
+  isSpec: "True"
+  fullName: DiscordRPC.Configuration.Environment
+  nameWithType: Configuration.Environment
 - uid: DiscordRPC.DiscordRpcClient
   name: DiscordRpcClient
   href: api/DiscordRPC.DiscordRpcClient.html
