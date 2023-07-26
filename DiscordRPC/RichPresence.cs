@@ -393,6 +393,7 @@ namespace DiscordRPC
         /// Name of the uploaded image for the large profile artwork.
         /// <para>Max 256 Bytes.</para>
         /// </summary>
+        /// <remarks>Allows URL to directly link to images.</remarks>
         [JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
         public string LargeImageKey
         {
@@ -442,6 +443,7 @@ namespace DiscordRPC
         /// Name of the uploaded image for the small profile artwork.
         /// <para>Max 256 Bytes.</para>
         /// </summary>
+        /// <remarks>Allows URL to directly link to images.</remarks>
         [JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
         public string SmallImageKey
         {

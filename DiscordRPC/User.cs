@@ -79,9 +79,17 @@ namespace DiscordRPC
 		/// <summary>
 		/// The discriminator of the user.
 		/// </summary>
-		[JsonProperty("discriminator")]
+		/// <remarks>If the user has migrated to unique a <see cref="Username"/>, the discriminator will always be 0.</remarks>
+		[JsonProperty("discriminator"), Obsolete("Discord no longer uses discriminators.")]
 		public int Discriminator { get; private set; }
-        
+
+		/// <summary>
+		/// The display name of the user
+		/// </summary>
+		/// <remarks>This will be empty if the user has not set a global display name.</remarks>
+		[JsonProperty("global_name")]
+		public string DisplayName { get; private set; }
+
 		/// <summary>
 		/// The avatar hash of the user. Too get a URL for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
 		/// </summary>
@@ -208,9 +216,15 @@ namespace DiscordRPC
 				if (format != AvatarFormat.PNG)
 					throw new BadImageFormatException("The user has no avatar and the requested format " + format.ToString() + " is not supported. (Only supports PNG).");
 
-				//Get the endpoint
-				int descrim = Discriminator % 5;
-				endpoint = $"/embed/avatars/{descrim}";
+				// Get the default avatar for the user.
+				int index = (int)((ID >> 22) % 6);
+
+#pragma warning disable CS0618 // Disable the obsolete warning as we know the discriminator is obsolete and we are validating it here.
+                if (Discriminator > 0)
+				    index = Discriminator % 5;
+#pragma warning restore CS0618
+
+                endpoint = $"/embed/avatars/{index}";
 			}
 
 			//Finish of the endpoint
@@ -228,12 +242,21 @@ namespace DiscordRPC
 		}
 
 		/// <summary>
-		/// Formats the user into username#discriminator
+		/// Formats the user into a displayable format. If the user has a <see cref="DisplayName"/>, then this will be used.
+		/// <para>If the user still has a discriminator, then this will return the form of `Username#Discriminator`.</para>
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>String of the user that can be used for display.</returns>
 		public override string ToString()
 		{
-			return Username + "#" + Discriminator.ToString("D4");
+			if (!string.IsNullOrEmpty(DisplayName))
+				return DisplayName;
+
+#pragma warning disable CS0618 // Disable the obsolete warning as we know the discriminator is obsolete and we are validating it here.
+			if (Discriminator != 0)
+				return Username + "#" + Discriminator.ToString("D4");
+#pragma warning restore CS0618
+
+            return Username;
 		}
 	}
 }
