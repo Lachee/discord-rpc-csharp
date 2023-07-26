@@ -29,7 +29,7 @@ public class DiscordNativeInstall  {
             }
             else
             {
-                Debug.LogError("Discord RPC is unable to work in a .NET 2.0 SUBSET enviroment. Builds may not work and may hardcrash if not fixed. Please manually fix by changing player settings.");
+                Debug.LogError("Discord RPC is unable to work in a .NET 2.0 SUBSET environment. Builds may not work and may hardcrash if not fixed. Please manually fix by changing player settings.");
             }
         }
 

@@ -19,9 +19,9 @@
             The CDN endpoint
             </summary>
         </member>
-        <member name="P:DiscordRPC.Configuration.Enviroment">
+        <member name="P:DiscordRPC.Configuration.Environment">
             <summary>
-            The type of enviroment the connection on. Usually Production. 
+            The type of environment the connection on. Usually Production. 
             </summary>
         </member>
         <member name="T:DiscordRPC.Converters.EnumSnakeCaseConverter">

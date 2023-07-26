@@ -212,7 +212,7 @@ namespace DiscordRPC.Unity
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     Logger.Trace("PIPE UNIX / MACOSX");
-                    return Path.Combine(GetEnviromentTemp(), sandbox + string.Format(PIPE_NAME, pipe));
+                    return Path.Combine(GetEnvironmentTemp(), sandbox + string.Format(PIPE_NAME, pipe));
             }
         }
 
@@ -227,7 +227,7 @@ namespace DiscordRPC.Unity
             }
         }
 
-        private string GetEnviromentTemp()
+        private string GetEnvironmentTemp()
         {
             string temp = null;
             temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
