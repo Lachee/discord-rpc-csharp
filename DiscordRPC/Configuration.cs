@@ -28,12 +28,5 @@ namespace DiscordRPC
 		/// </summary>
 		[JsonProperty("environment")]
 		public string Environment { get; set; }
-
-		/// <summary>
-		/// Obsolete: Use "environment" instead. The type of environment the connection on. Usually Production. 
-		/// </summary>
-		[JsonProperty("enviroment")]
-		[Obsolete("This property is obsolete: use \"environment\" instead", false)]
-		public string Enviroment { get; set; }
 	}
 }
