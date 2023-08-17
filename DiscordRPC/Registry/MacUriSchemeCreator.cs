@@ -1,10 +1,5 @@
-﻿using DiscordRPC.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
+using DiscordRPC.Logging;
 
 namespace DiscordRPC.Registry
 {
@@ -27,7 +22,7 @@ namespace DiscordRPC.Registry
                 logger.Error("Failed to register because the application could not be located.");
                 return false;
             }
-            
+
             logger.Trace("Registering Steam Command");
 
             //Prepare the command
@@ -46,10 +41,9 @@ namespace DiscordRPC.Registry
 
             //Write the contents to file
             string applicationSchemeFilePath = $"{filepath}/{register.ApplicationID}.json";
-            File.WriteAllText(applicationSchemeFilePath, "{ \"command\": \""+ command + "\" }");
+            File.WriteAllText(applicationSchemeFilePath, "{ \"command\": \"" + command + "\" }");
             logger.Trace("Registered {0}, {1}", applicationSchemeFilePath, command);
             return true;
         }
-        
     }
 }

@@ -1,10 +1,7 @@
-﻿using DiscordRPC.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
+using DiscordRPC.Logging;
 
 namespace DiscordRPC.Registry
 {
@@ -45,9 +42,8 @@ namespace DiscordRPC.Registry
                 command = exe;
             }
 
-
             //Prepare the file
-            string desktopFileFormat = 
+            string desktopFileFormat =
 @"[Desktop Entry]
 Name=Game {0}
 Exec={1} %u
@@ -55,7 +51,7 @@ Type=Application
 NoDisplay=true
 Categories=Discord;Games;
 MimeType=x-scheme-handler/discord-{2}";
-            
+
             string file = string.Format(desktopFileFormat, register.ApplicationID, command, register.ApplicationID);
 
             //Prepare the path
@@ -91,7 +87,7 @@ MimeType=x-scheme-handler/discord-{2}";
             //Run the process and wait for response
             Process process = Process.Start("xdg-mime", arguments);
             process.WaitForExit();
-            
+
             //Return if succesful
             return process.ExitCode >= 0;
         }

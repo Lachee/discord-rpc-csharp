@@ -48,7 +48,6 @@ namespace DiscordRPC.Example
         /// </summary>
         private static StringBuilder word = new StringBuilder();
 
-
         //Main Loop
         static void Main(string[] args)
         {
@@ -280,7 +279,6 @@ namespace DiscordRPC.Example
 
             //It can be a good idea to send a inital presence update on this event too, just to setup the inital game state.
             Console.WriteLine("On Ready. RPC Version: {0}", args.Version);
-
         }
         private static void OnClose(object sender, CloseMessage args)
         {
@@ -396,7 +394,6 @@ namespace DiscordRPC.Example
         #endregion
 
         #endregion
-
 
         static int cursorIndex = 0;
         static string previousCommand = "";
@@ -554,8 +551,6 @@ namespace DiscordRPC.Example
                     Console.WriteLine("Unkown Command '{0}'. Try 'help' for a list of commands", command);
                     break;
             }
-
         }
-
     }
 }

@@ -1,12 +1,4 @@
-﻿using DiscordRPC.Exceptions;
-using DiscordRPC.RPC;
-using DiscordRPC.RPC.Commands;
-using DiscordRPC.RPC.Payload;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
-
+﻿
 #if INCLUDE_WEB_RPC
 namespace DiscordRPC.Web
 {
