@@ -1,5 +1,5 @@
-﻿using DiscordRPC.Converters;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using DiscordRPC.Converters;
 
 namespace DiscordRPC.RPC.Payload
 {
@@ -7,29 +7,28 @@ namespace DiscordRPC.RPC.Payload
     /// Base Payload that is received by both client and server
     /// </summary>
     internal abstract class IPayload
-	{
-		/// <summary>
-		/// The type of payload
-		/// </summary>
-		[JsonProperty("cmd"), JsonConverter(typeof(EnumSnakeCaseConverter))]
-		public Command Command { get; set; }
+    {
+        /// <summary>
+        /// The type of payload
+        /// </summary>
+        [JsonPropertyName("cmd"), JsonConverter(typeof(EnumSnakeCaseConverter))]
+        public Command Command { get; set; }
 
-		/// <summary>
-		/// A incremental value to help identify payloads
-		/// </summary>
-		[JsonProperty("nonce")]
-		public string Nonce { get; set; }
+        /// <summary>
+        /// A incremental value to help identify payloads
+        /// </summary>
+        [JsonPropertyName("nonce")]
+        public string Nonce { get; set; }
 
-		protected IPayload() { }
+        protected IPayload() { }
         protected IPayload(long nonce)
-		{
-			Nonce = nonce.ToString();
-		}
+        {
+            Nonce = nonce.ToString();
+        }
 
-		public override string ToString()
-		{
-			return $"Payload || Command: {Command}, Nonce: {Nonce}";
-		}
-	}
+        public override string ToString()
+        {
+            return $"Payload || Command: {Command}, Nonce: {Nonce}";
+        }
+    }
 }
-

@@ -1,8 +1,4 @@
 ﻿using DiscordRPC.Message;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Events
 {
@@ -69,7 +65,6 @@ namespace DiscordRPC.Events
     /// <param name="args">The arguments supplied with the event</param>
     public delegate void OnJoinRequestedEvent(object sender, JoinRequestMessage args);
 
-
     /// <summary>
     /// The connection to the discord client was succesfull. This is called before <see cref="OnReadyEvent"/>.
     /// </summary>
@@ -83,7 +78,6 @@ namespace DiscordRPC.Events
     /// <param name="sender">The Discord client handler that sent this event</param>
     /// <param name="args">The arguments supplied with the event</param>
     public delegate void OnConnectionFailedEvent(object sender, ConnectionFailedMessage args);
-
 
     /// <summary>
     /// A RPC Message is received.

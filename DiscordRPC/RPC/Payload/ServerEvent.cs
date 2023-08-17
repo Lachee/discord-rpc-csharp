@@ -1,6 +1,4 @@
 ﻿using DiscordRPC.Converters;
-using System;
-using System.Runtime.Serialization;
 
 namespace DiscordRPC.RPC.Payload
 {
@@ -8,37 +6,36 @@ namespace DiscordRPC.RPC.Payload
     /// See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-events for documentation
     /// </summary>
     internal enum ServerEvent
-	{
+    {
+        /// <summary>
+        /// Sent when the server is ready to accept messages
+        /// </summary>
+        [EnumValue("READY")]
+        Ready,
 
-		/// <summary>
-		/// Sent when the server is ready to accept messages
-		/// </summary>
-		[EnumValue("READY")]
-		Ready,
+        /// <summary>
+        /// Sent when something bad has happened
+        /// </summary>
+        [EnumValue("ERROR")]
+        Error,
 
-		/// <summary>
-		/// Sent when something bad has happened
-		/// </summary>
-		[EnumValue("ERROR")]
-		Error,
+        /// <summary>
+        /// Join Event
+        /// </summary>
+        [EnumValue("ACTIVITY_JOIN")]
+        ActivityJoin,
 
-		/// <summary>
-		/// Join Event 
-		/// </summary>
-		[EnumValue("ACTIVITY_JOIN")]
-		ActivityJoin,
+        /// <summary>
+        /// Spectate Event
+        /// </summary>
+        [EnumValue("ACTIVITY_SPECTATE")]
+        ActivitySpectate,
 
-		/// <summary>
-		/// Spectate Event
-		/// </summary>
-		[EnumValue("ACTIVITY_SPECTATE")]
-		ActivitySpectate,
-
-		/// <summary>
-		/// Request Event
-		/// </summary>
-		[EnumValue("ACTIVITY_JOIN_REQUEST")]
-		ActivityJoinRequest,
+        /// <summary>
+        /// Request Event
+        /// </summary>
+        [EnumValue("ACTIVITY_JOIN_REQUEST")]
+        ActivityJoinRequest,
 
 #if INCLUDE_FULL_RPC
         //Old things that are obsolete

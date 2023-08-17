@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DiscordRPC.Logging
+﻿namespace DiscordRPC.Logging
 {
-	/// <summary>
-	/// Level of logging to use.
-	/// </summary>
-	public enum LogLevel
-	{
+    /// <summary>
+    /// Level of logging to use.
+    /// </summary>
+    public enum LogLevel
+    {
         /// <summary>
         /// Trace, Info, Warning and Errors are logged
         /// </summary>
@@ -30,9 +25,9 @@ namespace DiscordRPC.Logging
         /// </summary>
         Error = 4,
 
-		/// <summary>
-		/// Nothing is logged
-		/// </summary>
-		None = 256
-	}
+        /// <summary>
+        /// Nothing is logged
+        /// </summary>
+        None = 256
+    }
 }

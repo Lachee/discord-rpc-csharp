@@ -1,4 +1,5 @@
-﻿using DiscordRPC.Events;
+﻿using System;
+using DiscordRPC.Events;
 using DiscordRPC.Exceptions;
 using DiscordRPC.IO;
 using DiscordRPC.Logging;
@@ -6,18 +7,15 @@ using DiscordRPC.Message;
 using DiscordRPC.Registry;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Commands;
-using System;
 
 namespace DiscordRPC
 {
-
     /// <summary>
     /// A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.
     /// </summary>
     public sealed class DiscordRpcClient : IDisposable
     {
         #region Properties
-
 
         /// <summary>
         /// Gets a value indicating if the client has registered a URI Scheme. If this is false, Join / Spectate events will fail.
@@ -41,7 +39,7 @@ namespace DiscordRPC
         public int ProcessID { get; private set; }
 
         /// <summary>
-        /// The maximum size of the message queue received from Discord. 
+        /// The maximum size of the message queue received from Discord.
         /// </summary>
         public int MaxQueueSize { get; private set; }
 
@@ -65,7 +63,7 @@ namespace DiscordRPC
         private ILogger _logger;
 
         /// <summary>
-        /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called. 
+        /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called.
         /// </summary>
         public bool AutoEvents { get; private set; }
 
@@ -333,14 +331,14 @@ namespace DiscordRPC
                         //Resend our presence and subscription
                         SynchronizeState();
                     }
-                   
-                    if (OnReady != null) 
+
+                    if (OnReady != null)
                         OnReady.Invoke(this, message as ReadyMessage);
-                 
+
                     break;
 
                 case MessageType.Close:
-                    if (OnClose != null) 
+                    if (OnClose != null)
                         OnClose.Invoke(this, message as CloseMessage);
                     break;
 
@@ -366,9 +364,9 @@ namespace DiscordRPC
                     {
                         var sub = message as SubscribeMessage;
                         Subscription |= sub.Event;
-                    }   
-                    
-                    if (OnSubscribe != null) 
+                    }
+
+                    if (OnSubscribe != null)
                         OnSubscribe.Invoke(this, message as SubscribeMessage);
 
                     break;
@@ -474,7 +472,7 @@ namespace DiscordRPC
             }
 
             //Update our local store
-            lock (_sync) 
+            lock (_sync)
             {
                 CurrentPresence = presence?.Clone();
             }
@@ -881,7 +879,7 @@ namespace DiscordRPC
         public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         [System.Obsolete("Replaced with Unsubscribe", true)]
@@ -1010,6 +1008,5 @@ namespace DiscordRPC
             if (IsInitialized) Deinitialize();
             IsDisposed = true;
         }
-
     }
 }

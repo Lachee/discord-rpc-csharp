@@ -2,9 +2,9 @@
 #define USE_RUNTIME_INFO
 #endif
 
-using DiscordRPC.Logging;
 using System;
 using System.Diagnostics;
+using DiscordRPC.Logging;
 #if USE_RUNTIME_INFO
 using System.Runtime.InteropServices;
 #endif
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 namespace DiscordRPC.Registry
 {
     internal class UriSchemeRegister
-	{
+    {
         /// <summary>
         /// The ID of the Discord App to register
         /// </summary>
@@ -49,7 +49,7 @@ namespace DiscordRPC.Registry
         {
             //Get the creator
             IUriSchemeCreator creator = null;
-            switch(Environment.OSVersion.Platform)
+            switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32Windows:
                 case PlatformID.Win32S:
@@ -69,13 +69,13 @@ namespace DiscordRPC.Registry
                     else
                     {
 #endif
-                        _logger.Trace("Creating Unix Scheme Creator");
-                        creator = new UnixUriSchemeCreator(_logger);
+                    _logger.Trace("Creating Unix Scheme Creator");
+                    creator = new UnixUriSchemeCreator(_logger);
 #if USE_RUNTIME_INFO
                     }
 #endif
                     break;
-                
+
 #if !USE_RUNTIME_INFO
                 case PlatformID.MacOSX:
                     _logger.Trace("Creating MacOSX Scheme Creator");
