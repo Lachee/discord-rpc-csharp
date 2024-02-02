@@ -146,3 +146,28 @@ dotnet build -c Release
 **Unity3D**
 
 If you wish to have barebones Unity3D implementation, you need to build the `DiscordRPC.dll`, the [Unity Named Pipes](https://github.com/Lachee/unity-named-pipes) Library and the [UnityNamedPipe.cs](https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs). Put these in your own Unity Project and the `.dll`s in a folder called `Plugins`. 
+
+**UWP / .NET MAUI / WIN UI 3**
+
+In order to make this library work with the UWP applications, you need to define `runFullTrust` Capability inside of `Package.appxmanifest`. It's done this way because library loads external .exe in order to make library work.
+
+Here is the example how to add `runFullTrust` to UWP application:
+
+`Package.appxmanifest`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+  ...
+    <Capabilities>
+	    <rescap:Capability Name="runFullTrust" />
+    </Capabilities>
+</Package>
+```
+
+If you use .NET MAUI or WIN UI 3, it is automaticly puts `runFullTrust` capability.
