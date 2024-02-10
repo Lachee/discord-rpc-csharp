@@ -149,9 +149,11 @@ If you wish to have barebones Unity3D implementation, you need to build the `Dis
 
 **UWP / .NET MAUI / WIN UI 3**
 
-In order to make this library work with the UWP applications, you need to define `runFullTrust` Capability inside of `Package.appxmanifest`. It's done this way because library loads external .exe in order to make library work.
+For now, the library doesn't work on UWP applications until we find the issue and fix it.
 
-Here is the example how to add `runFullTrust` to UWP application:
+In order to make this library work with the WIN UI 3 related applications such as .NET MAUI, you need to define `runFullTrust` Capability inside `Package.appxmanifest`.
+
+Here is an example of how to add `runFullTrust` to your WIN UI 3 application:
 
 `Package.appxmanifest`:
 
@@ -170,4 +172,4 @@ Here is the example how to add `runFullTrust` to UWP application:
 </Package>
 ```
 
-If you use .NET MAUI or WIN UI 3, it is automaticly puts `runFullTrust` capability.
+If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts `runFullTrust` capability.
