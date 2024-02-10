@@ -180,6 +180,24 @@ void Deinitialize()
 <pre><code>dotnet build -c Release
 </code></pre><p><strong>Unity3D</strong></p>
 <p>If you wish to have barebones Unity3D implementation, you need to build the <code>DiscordRPC.dll</code>, the <a href="https://github.com/Lachee/unity-named-pipes">Unity Named Pipes</a> Library and the <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Unity%20Example/Assets/Discord%20RPC/Scripts/Control/UnityNamedPipe.cs">UnityNamedPipe.cs</a>. Put these in your own Unity Project and the <code>.dll</code>s in a folder called <code>Plugins</code>. </p>
+<p><strong>UWP / .NET MAUI / WIN UI 3</strong></p>
+<p>For now, the library doesn&#39;t work on UWP applications until we find the issue and fix it.</p>
+<p>In order to make this library work with the WIN UI 3 related applications such as .NET MAUI, you need to define <code>runFullTrust</code> Capability inside <code>Package.appxmanifest</code>.</p>
+<p>Here is an example of how to add <code>runFullTrust</code> to your WIN UI 3 application:</p>
+<p><code>Package.appxmanifest</code>:</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+
+&lt;Package
+  xmlns=&quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10&quot;
+  xmlns:uap=&quot;http://schemas.microsoft.com/appx/manifest/uap/windows10&quot;
+  xmlns:rescap=&quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities&quot;
+  IgnorableNamespaces=&quot;uap rescap&quot;&gt;
+  ...
+    &lt;Capabilities&gt;
+        &lt;rescap:Capability Name=&quot;runFullTrust&quot; /&gt;
+    &lt;/Capabilities&gt;
+&lt;/Package&gt;
+</code></pre><p>If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts <code>runFullTrust</code> capability.</p>
 </article>
           </div>
           
