@@ -2,451 +2,451 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Assets.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.BaseRichPresence.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Button.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Configuration.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.DiscordRpcClient.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnCloseEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnConnectionEstablishedEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnConnectionFailedEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnErrorEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnJoinEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnJoinRequestedEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnPresenceUpdateEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnReadyEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnRpcMessageEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnSpectateEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnSubscribeEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.OnUnsubscribeEvent.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Events.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.EventType.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.BadPresenceException.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.InvalidConfigurationException.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.InvalidPipeException.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.StringOutOfRangeException.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.UninitializedException.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Exceptions.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Helper.StringTools.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Helper.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.IO.INamedPipeClient.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.IO.ManagedNamedPipeClient.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.IO.Opcode.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.IO.PipeFrame.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.IO.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.ConsoleLogger.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.FileLogger.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.ILogger.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.LogLevel.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.NullLogger.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Logging.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.CloseMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.ConnectionEstablishedMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.ConnectionFailedMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.ErrorCode.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.ErrorMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.IMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.JoinMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.JoinRequestMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.MessageType.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.PresenceMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.ReadyMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.SpectateMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.SubscribeMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.UnsubscribeMessage.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Message.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Party.PrivacySetting.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Party.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.RichPresence.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Secrets.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.Timestamps.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.User.AvatarFormat.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.User.AvatarSize.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.User.Flag.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.User.PremiumType.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.User.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/api/DiscordRPC.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/monogame.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/standard.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/unity3d.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/intro.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/intro.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/join.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/join_requests.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/spectate.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/rich_presence/guidelines.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/rich_presence/intro.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/index.html</loc>
-    <lastmod>2024-02-10T02:40:01+00:00</lastmod>
+    <lastmod>2024-03-25T08:04:50+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
