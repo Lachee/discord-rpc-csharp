@@ -127,6 +127,12 @@ namespace DiscordRPC
         #region Events
 
         /// <summary>
+        /// Called when the discord client has received an Authorize response.
+        /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
+        /// </summary>
+        public event OnAuthorizeEvent OnAuthorize;
+
+        /// <summary>
         /// Called when the discord client is ready to send and receive messages.
         /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
@@ -288,6 +294,11 @@ namespace DiscordRPC
             if (message == null) return;
             switch (message.Type)
             {
+                case MessageType.Authorize:
+                    if (OnAuthorize != null)
+                        OnAuthorize.Invoke(this, message as AuthorizeMessage);
+                    break;
+
                 //We got a update, so we will update our current presence
                 case MessageType.PresenceUpdate:
                     lock (_sync)
@@ -412,6 +423,25 @@ namespace DiscordRPC
             }
         }
         #endregion
+
+        /// <summary>
+        /// Used to authenticate a new client with your app. By default this pops up a modal in-app that asks the user to authorize access to your app.
+        /// </summary>
+        /// <param name="clientID">The OAuth2 application id.</param>
+        /// <param name="scopes">The scopes to authorize.</param>
+        public void Authorize(string clientID, params string[] scopes)
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException("Discord IPC Client");
+
+            if (connection == null)
+                throw new ObjectDisposedException("Connection", "Cannot initialize as the connection has been deinitialized");
+
+            if (!IsInitialized)
+                throw new UninitializedException();
+
+            connection.EnqueueCommand(new AuthorizeCommand() { clientID = clientID, scopes = scopes });
+        }
 
         /// <summary>
         /// Respond to a Join Request. All requests will timeout after 30 seconds.

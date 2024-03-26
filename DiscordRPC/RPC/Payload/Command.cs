@@ -47,11 +47,11 @@ namespace DiscordRPC.RPC.Payload
 		[EnumValue("CLOSE_ACTIVITY_JOIN_REQUEST")]
 		CloseActivityJoinRequest,
 
-		/// <summary>
-		/// used to authorize a new client with your app
-		/// </summary>
-		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
-		Authorize,
+        /// <summary>
+        /// used to authorize a new client with your app
+        /// </summary>
+        [EnumValue("AUTHORIZE")]
+        Authorize,
 
 		/// <summary>
 		/// used to authenticate an existing client with your app

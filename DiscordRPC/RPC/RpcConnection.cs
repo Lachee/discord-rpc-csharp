@@ -517,6 +517,11 @@ namespace DiscordRPC.RPC
 						ProcessDispatch(response);
 						break;
 
+                    case Command.Authorize:
+                        AuthorizeResponse auth = response.GetObject<AuthorizeResponse>();
+                        EnqueueMessage(new AuthorizeMessage(auth));
+                        break;
+
 					//We were sent a Activity Update, better enqueue it
 					case Command.SetActivity:
 						if (response.Data == null)

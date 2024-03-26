@@ -7,6 +7,13 @@ using System.Text;
 namespace DiscordRPC.Events
 {
     /// <summary>
+    /// Called when the Discord Client has received an Authorize Response.
+    /// </summary>
+    /// <param name="sender">The Discord client handler that sent this event</param>
+    /// <param name="args">The arguments supplied with the event</param>
+    public delegate void OnAuthorizeEvent(object sender, AuthorizeMessage args);
+
+    /// <summary>
     /// Called when the Discord Client is ready to send and receive messages.
     /// </summary>
     /// <param name="sender">The Discord client handler that sent this event</param>
