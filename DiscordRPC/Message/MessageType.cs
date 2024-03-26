@@ -21,10 +21,15 @@ namespace DiscordRPC.Message
 		/// </summary>
 		Error,
 
-		/// <summary>
-		/// The Discord Client has updated the presence.
+        /// <summary>
+		/// The Discord Client received an authorize response.
 		/// </summary>
-		PresenceUpdate,
+		Authorize,
+
+        /// <summary>
+        /// The Discord Client has updated the presence.
+        /// </summary>
+        PresenceUpdate,
 
 		/// <summary>
 		/// The Discord Client has subscribed to an event.
