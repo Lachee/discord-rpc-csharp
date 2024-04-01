@@ -52,10 +52,10 @@ namespace DiscordRPC.RPC
 		}
 		private ILogger _logger;
 
-        /// <summary>
-        /// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
-        /// </summary>
-        public event OnRpcMessageEvent OnRpcMessage;
+		/// <summary>
+		/// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
+		/// </summary>
+		public event OnRpcMessageEvent OnRpcMessage;
 
 		#region States
 
@@ -82,14 +82,14 @@ namespace DiscordRPC.RPC
 
 		private volatile bool aborting = false;
 		private volatile bool shutdown = false;
-		
+
 		/// <summary>
 		/// Indicates if the RPC connection is still running in the background
 		/// </summary>
 		public bool IsRunning { get { return thread != null; } }
 
 		/// <summary>
-		/// Forces the <see cref="Close"/> to call <see cref="Shutdown"/> instead, safely saying goodbye to Discord. 
+		/// Forces the <see cref="Close"/> to call <see cref="Shutdown"/> instead, safely saying goodbye to Discord.
 		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
 		/// </summary>
 		public bool ShutdownOnly { get; set; }
@@ -109,12 +109,12 @@ namespace DiscordRPC.RPC
 		private int targetPipe;							    //The pipe to taget. Leave as -1 for any available pipe.
 
 		private readonly object l_rtqueue = new object();	//Lock for the send queue
-        private readonly uint _maxRtQueueSize;
+		private readonly uint _maxRtQueueSize;
 		private Queue<ICommand> _rtqueue;				    //The send queue
 
 		private readonly object l_rxqueue = new object();	//Lock for the receive queue
-        private readonly uint _maxRxQueueSize;              //The max size of the RX queue
-        private Queue<IMessage> _rxqueue;                   //The receive queue
+		private readonly uint _maxRxQueueSize;              //The max size of the RX queue
+		private Queue<IMessage> _rxqueue;                   //The receive queue
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;                     //The backoff delay before reconnecting.
@@ -127,8 +127,8 @@ namespace DiscordRPC.RPC
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
-        /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
-        /// <param name="maxRtQueueSize">The maximum size of the in queue</param>
+		/// <param name="maxRxQueueSize">The maximum size of the out queue</param>
+		/// <param name="maxRtQueueSize">The maximum size of the in queue</param>
 		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
 		{
 			this.applicationID = applicationID;
@@ -141,16 +141,16 @@ namespace DiscordRPC.RPC
 			Logger = new ConsoleLogger();
 
 			delay = new BackoffDelay(500, 60 * 1000);
-            _maxRtQueueSize = maxRtQueueSize;
+			_maxRtQueueSize = maxRtQueueSize;
 			_rtqueue = new Queue<ICommand>((int)_maxRtQueueSize + 1);
 
-            _maxRxQueueSize = maxRxQueueSize;
-            _rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
-			
+			_maxRxQueueSize = maxRxQueueSize;
+			_rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
+
 			nonce = 0;
 		}
-		
-			
+
+
 		private long GetNextNonce()
 		{
 			nonce += 1;
@@ -163,25 +163,25 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		/// <param name="command">The command to enqueue</param>
 		internal void EnqueueCommand(ICommand command)
-        {
-            Logger.Trace("Enqueue Command: {0}", command.GetType().FullName);
+		{
+			Logger.Trace("Enqueue Command: {0}", command.GetType().FullName);
 
-            //We cannot add anything else if we are aborting or shutting down.
-            if (aborting || shutdown) return;
+			//We cannot add anything else if we are aborting or shutting down.
+			if (aborting || shutdown) return;
 
 			//Enqueue the set presence argument
 			lock (l_rtqueue)
-            {
-                //If we are too big drop the last element
-                if (_rtqueue.Count == _maxRtQueueSize)
-                {
-                    Logger.Error("Too many enqueued commands, dropping oldest one. Maybe you are pushing new presences to fast?");
-                    _rtqueue.Dequeue();
-                }
+			{
+				//If we are too big drop the last element
+				if (_rtqueue.Count == _maxRtQueueSize)
+				{
+					Logger.Error("Too many enqueued commands, dropping oldest one. Maybe you are pushing new presences to fast?");
+					_rtqueue.Dequeue();
+				}
 
-                //Enqueue the message
-                _rtqueue.Enqueue(command);
-            }
+				//Enqueue the message
+				_rtqueue.Enqueue(command);
+			}
 		}
 
 		/// <summary>
@@ -190,40 +190,40 @@ namespace DiscordRPC.RPC
 		/// <param name="message">The message to add</param>
 		private void EnqueueMessage(IMessage message)
 		{
-            //Invoke the message
-            try
-            {
-                if (OnRpcMessage != null)
-                    OnRpcMessage.Invoke(this, message);
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Unhandled Exception while processing event: {0}", e.GetType().FullName);
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
-            }
+			//Invoke the message
+			try
+			{
+				if (OnRpcMessage != null)
+					OnRpcMessage.Invoke(this, message);
+			}
+			catch (Exception e)
+			{
+				Logger.Error("Unhandled Exception while processing event: {0}", e.GetType().FullName);
+				Logger.Error(e.Message);
+				Logger.Error(e.StackTrace);
+			}
 
-            //Small queue sizes should just ignore messages
-            if (_maxRxQueueSize <= 0)
-            {
-                Logger.Trace("Enqueued Message, but queue size is 0.");
-                return;
-            }
+			//Small queue sizes should just ignore messages
+			if (_maxRxQueueSize <= 0)
+			{
+				Logger.Trace("Enqueued Message, but queue size is 0.");
+				return;
+			}
 
-            //Large queue sizes should keep the queue in check
-            Logger.Trace("Enqueue Message: {0}", message.Type);
-            lock (l_rxqueue)
-            {
-                //If we are too big drop the last element
-                if (_rxqueue.Count == _maxRxQueueSize)
-                {
-                    Logger.Warning("Too many enqueued messages, dropping oldest one.");
-                    _rxqueue.Dequeue();
-                }
+			//Large queue sizes should keep the queue in check
+			Logger.Trace("Enqueue Message: {0}", message.Type);
+			lock (l_rxqueue)
+			{
+				//If we are too big drop the last element
+				if (_rxqueue.Count == _maxRxQueueSize)
+				{
+					Logger.Warning("Too many enqueued messages, dropping oldest one.");
+					_rxqueue.Dequeue();
+				}
 
-                //Enqueue the message
-                _rxqueue.Enqueue(message);
-            }
+				//Enqueue the message
+				_rxqueue.Enqueue(message);
+			}
 		}
 
 		/// <summary>
@@ -231,9 +231,9 @@ namespace DiscordRPC.RPC
 		/// </summary>
 		/// <returns></returns>
 		internal IMessage DequeueMessage()
-        {
-            //Logger.Trace("Deque Message");
-            lock (l_rxqueue)
+		{
+			//Logger.Trace("Deque Message");
+			lock (l_rxqueue)
 			{
 				//We have nothing, so just return null.
 				if (_rxqueue.Count == 0) return null;
@@ -244,13 +244,13 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
-		/// Dequeues all messages from the event stack. 
+		/// Dequeues all messages from the event stack.
 		/// </summary>
 		/// <returns></returns>
 		internal IMessage[] DequeueMessages()
-        {
-            //Logger.Trace("Deque Multiple Messages");
-            lock (l_rxqueue)
+		{
+			//Logger.Trace("Deque Multiple Messages");
+			lock (l_rxqueue)
 			{
 				//Copy the messages into an array
 				IMessage[] messages = _rxqueue.ToArray();
@@ -263,31 +263,31 @@ namespace DiscordRPC.RPC
 			}
 		}
 		#endregion
-				
+
 		/// <summary>
 		/// Main thread loop
 		/// </summary>
 		private void MainLoop()
 		{
-            //initialize the pipe
-            Logger.Info("RPC Connection Started");
-            if (Logger.Level <= LogLevel.Trace)
-            {
-                Logger.Trace("============================");
-                Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
-                Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
-                Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
-                Logger.Trace("applicationID:        " + applicationID);
-                Logger.Trace("targetPipe:           " + targetPipe);
-                Logger.Trace("POLL_RATE:            " + POLL_RATE);
-                Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
-                Logger.Trace("_maxRxQueueSize:      " + _maxRxQueueSize);
-                Logger.Trace("============================");
-            }
+			//initialize the pipe
+			Logger.Info("RPC Connection Started");
+			if (Logger.Level <= LogLevel.Trace)
+			{
+				Logger.Trace("============================");
+				Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
+				Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
+				Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
+				Logger.Trace("applicationID:        " + applicationID);
+				Logger.Trace("targetPipe:           " + targetPipe);
+				Logger.Trace("POLL_RATE:            " + POLL_RATE);
+				Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
+				Logger.Trace("_maxRxQueueSize:      " + _maxRxQueueSize);
+				Logger.Trace("============================");
+			}
 
-            //Forever trying to connect unless the abort signal is sent
-            //Keep Alive Loop
-            while (!aborting && !shutdown)
+			//Forever trying to connect unless the abort signal is sent
+			//Keep Alive Loop
+			while (!aborting && !shutdown)
 			{
 				try
 				{
@@ -341,19 +341,19 @@ namespace DiscordRPC.RPC
 										break;
 
 									//We have pinged, so we will flip it and respond back with pong
-									case Opcode.Ping:					
+									case Opcode.Ping:
 										Logger.Trace("PING");
 										frame.Opcode = Opcode.Pong;
 										namedPipe.WriteFrame(frame);
 										break;
 
 									//We have ponged? I have no idea if Discord actually sends ping/pongs.
-									case Opcode.Pong:															
+									case Opcode.Pong:
 										Logger.Trace("PONG");
 										break;
 
 									//A frame has been sent, we should deal with that
-									case Opcode.Frame:					
+									case Opcode.Frame:
 										if (shutdown)
 										{
 											//We are shutting down, so skip it
@@ -378,13 +378,13 @@ namespace DiscordRPC.RPC
 
 
 										try { if (response != null) ProcessFrame(response); } catch(Exception e)
-                                        {
+										{
 											Logger.Error("Failed to process event! {0}", e.Message);
 											Logger.Error("Data: {0}", frame.Message);
 										}
 
 										break;
-										
+
 
 									default:
 									case Opcode.Handshake:
@@ -398,7 +398,7 @@ namespace DiscordRPC.RPC
 							}
 
 							if (!aborting && namedPipe.IsConnected)
-							{ 
+							{
 								//Process the entire command queue we have left
 								ProcessCommandQueue();
 
@@ -475,7 +475,7 @@ namespace DiscordRPC.RPC
 			{
 				//We have an error
 				Logger.Error("Error received from the RPC");
-				
+
 				//Create the event objetc and push it to the queue
 				ErrorMessage err = response.GetObject<ErrorMessage>();
 				Logger.Error("Server responded with an error message: ({0}) {1}", err.Code.ToString(), err.Message);
@@ -517,10 +517,10 @@ namespace DiscordRPC.RPC
 						ProcessDispatch(response);
 						break;
 
-                    case Command.Authorize:
-                        AuthorizeResponse auth = response.GetObject<AuthorizeResponse>();
-                        EnqueueMessage(new AuthorizeMessage(auth));
-                        break;
+					case Command.Authorize:
+						AuthorizeResponse auth = response.GetObject<AuthorizeResponse>();
+						EnqueueMessage(new AuthorizeMessage(auth));
+						break;
 
 					//We were sent a Activity Update, better enqueue it
 					case Command.SetActivity:
@@ -542,8 +542,8 @@ namespace DiscordRPC.RPC
 						JsonSerializer serializer = new JsonSerializer();
 						serializer.Converters.Add(new Converters.EnumSnakeCaseConverter());
 
-                        //Go through the data, looking for the evt property, casting it to a server event
-                        var evt = response.GetObject<EventPayload>().Event.Value;
+						//Go through the data, looking for the evt property, casting it to a server event
+						var evt = response.GetObject<EventPayload>().Event.Value;
 
 						//Enqueue the appropriate message.
 						if (response.Command == Command.Subscribe)
@@ -552,8 +552,8 @@ namespace DiscordRPC.RPC
 							EnqueueMessage(new UnsubscribeMessage(evt));
 
 						break;
-						
-					
+
+
 					case Command.SendActivityJoinInvite:
 						Logger.Trace("Got invite response ack.");
 						break;
@@ -561,7 +561,7 @@ namespace DiscordRPC.RPC
 					case Command.CloseActivityJoinRequest:
 						Logger.Trace("Got invite response reject ack.");
 						break;
-						
+
 					//we have no idea what we were sent
 					default:
 						Logger.Error("Unkown frame was received! {0}", response.Command);
@@ -570,7 +570,7 @@ namespace DiscordRPC.RPC
 				return;
 			}
 
-			Logger.Trace("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);			
+			Logger.Trace("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);
 		}
 
 		private void ProcessDispatch(EventPayload response)
@@ -602,11 +602,11 @@ namespace DiscordRPC.RPC
 					break;
 			}
 		}
-		
+
 		#endregion
 
 		#region Writting
-		
+
 		private void ProcessCommandQueue()
 		{
 			//Logger.Info("Checking command queue");
@@ -622,7 +622,7 @@ namespace DiscordRPC.RPC
 			//Prepare some variabels we will clone into with locks
 			bool needsWriting = true;
 			ICommand item = null;
-			
+
 			//Continue looping until we dont need anymore messages
 			while (needsWriting && namedPipe.IsConnected)
 			{
@@ -631,7 +631,7 @@ namespace DiscordRPC.RPC
 					//Pull the value and update our writing needs
 					// If we have nothing to write, exit the loop
 					needsWriting = _rtqueue.Count > 0;
-					if (!needsWriting) break;	
+					if (!needsWriting) break;
 
 					//Peek at the item
 					item = _rtqueue.Peek();
@@ -640,7 +640,7 @@ namespace DiscordRPC.RPC
 				//BReak out of the loop as soon as we send this item
 				if (shutdown || (!aborting && LOCK_STEP))
 					needsWriting = false;
-				
+
 				//Prepare the payload
 				IPayload payload = item.PreparePayload(GetNextNonce());
 				Logger.Trace("Attempting to send payload: {0}", payload.Command);
@@ -697,7 +697,7 @@ namespace DiscordRPC.RPC
 		#region Connection
 
 		/// <summary>
-		/// Establishes the handshake with the server. 
+		/// Establishes the handshake with the server.
 		/// </summary>
 		/// <returns></returns>
 		private void EstablishHandshake()
@@ -706,7 +706,7 @@ namespace DiscordRPC.RPC
 
 			//We are establishing a lock and not releasing it until we sent the handshake message.
 			// We need to set the key, and it would not be nice if someone did things between us setting the key.
-		
+
 			//Check its state
 			if (State != RpcState.Disconnected)
 			{
@@ -715,7 +715,7 @@ namespace DiscordRPC.RPC
 			}
 
 			//Send it off to the server
-			Logger.Trace("Sending Handshake...");				
+			Logger.Trace("Sending Handshake...");
 			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Handshake, new Handshake() { Version = VERSION, ClientID = applicationID })))
 			{
 				Logger.Error("Failed to write a handshake.");
@@ -732,14 +732,14 @@ namespace DiscordRPC.RPC
 		private void SendHandwave()
 		{
 			Logger.Info("Attempting to wave goodbye...");
-    
+
 			//Check its state
 			if (State == RpcState.Disconnected)
 			{
 				Logger.Error("State must NOT be disconnected in order to send a handwave!");
 				return;
 			}
-			
+
 			//Send the handwave
 			if (!namedPipe.WriteFrame(new PipeFrame(Opcode.Close, new Handshake() { Version = VERSION, ClientID = applicationID })))
 			{
@@ -747,7 +747,7 @@ namespace DiscordRPC.RPC
 				return;
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Attempts to connect to the pipe. Returns true on success
@@ -785,7 +785,7 @@ namespace DiscordRPC.RPC
 
 			return true;
 		}
-		
+
 		/// <summary>
 		/// Sets the current state of the pipe, locking the l_states object for thread saftey.
 		/// </summary>
@@ -800,7 +800,7 @@ namespace DiscordRPC.RPC
 		}
 
 		/// <summary>
-		/// Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye. 
+		/// Closes the connection and disposes of resources. This will not force termination, but instead allow Discord disconnect us after we say goodbye.
 		/// <para>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</para>
 		/// </summary>
 		public void Shutdown()
@@ -873,7 +873,7 @@ namespace DiscordRPC.RPC
 		/// Disconnected from the discord client
 		/// </summary>
 		Disconnected,
-		
+
 		/// <summary>
 		/// Connecting to the discord client. The handshake has been sent and we are awaiting the ready event
 		/// </summary>
