@@ -1,4 +1,5 @@
-﻿using DiscordRPC.Message;
+﻿using DiscordRPC.Events;
+using DiscordRPC.Message;
 using System;
 using System.Text;
 using System.Threading;
@@ -142,6 +143,8 @@ namespace DiscordRPC.Example
 
                 //Register to the events we care about. We are registering to everyone just to show off the events
 
+                client.OnAuthorize += OnAuthorize;
+
                 client.OnReady += OnReady;                                      //Called when the client is ready to send presences
                 client.OnClose += OnClose;                                      //Called when connection to discord is lost
                 client.OnError += OnError;                                      //Called when discord has a error
@@ -159,7 +162,7 @@ namespace DiscordRPC.Example
                 client.OnJoinRequested += OnJoinRequested;                      //Called when someone else has requested to join this client.
 
                 //Before we send a initial presence, we will generate a random "game ID" for this example.
-                // For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates. 
+                // For a real game, this "game ID" can be a unique ID that your Match Maker / Master Server generates.
                 // This is used for the Join / Specate feature. This can be ignored if you do not plan to implement that feature.
                 presence.Secrets = new Secrets()
                 {
@@ -192,7 +195,7 @@ namespace DiscordRPC.Example
                 client.SetSubscription(EventType.Join | EventType.Spectate | EventType.JoinRequest);        //This will alert us if discord wants to join a game
 
                 //Set some new presence to tell Discord we are in a game.
-                // If the connection is not yet available, this will be queued until a Ready event is called, 
+                // If the connection is not yet available, this will be queued until a Ready event is called,
                 // then it will be sent. All messages are queued until Discord is ready to receive them.
                 client.SetPresence(presence);
 
@@ -209,14 +212,14 @@ namespace DiscordRPC.Example
         {
             /*
 			 * Enter a infinite loop, polling the Discord Client for events.
-			 * In game termonology, this will be equivalent to our main game loop. 
+			 * In game termonology, this will be equivalent to our main game loop.
 			 * If you were making a GUI application without a infinite loop, you could implement
 			 * this with timers.
 			*/
             isRunning = true;
             while (client != null && isRunning)
             {
-                //We will invoke the client events. 
+                //We will invoke the client events.
                 // In a game situation, you would do this in the Update.
                 // Not required if AutoEvents is enabled.
                 //if (client != null && !client.AutoEvents)
@@ -270,9 +273,17 @@ namespace DiscordRPC.Example
         #region Events
 
         #region State Events
+        private static void OnAuthorize(object sender, AuthorizeMessage args)
+        {
+            //This is called after the user has authorized the application.
+
+            Console.WriteLine("On Authorize. Auth code: {0}", args.Code);
+
+        }
+
         private static void OnReady(object sender, ReadyMessage args)
         {
-            //This is called when we are all ready to start receiving and sending discord events. 
+            //This is called when we are all ready to start receiving and sending discord events.
             // It will give us some basic information about discord to use in the future.
 
             //DEBUG: Update the presence timestamp
@@ -304,7 +315,7 @@ namespace DiscordRPC.Example
         }
         private static void OnConnectionFailed(object sender, ConnectionFailedMessage args)
         {
-            //This is called when the client fails to establish a connection to discord. 
+            //This is called when the client fails to establish a connection to discord.
             // It can be assumed that Discord is unavailable on the supplied pipe.
             Console.WriteLine("Pipe Connection Failed. Could not connect to pipe #{0}", args.FailedPipe);
             isRunning = false;
@@ -337,11 +348,11 @@ namespace DiscordRPC.Example
             /*
 			 * This is called when the Discord Client wants to join a online game to play.
 			 * It can be triggered from a invite that your user has clicked on within discord or from an accepted invite.
-			 * 
+			 *
 			 * The secret should be some sort of encrypted data that will give your game the nessary information to connect.
 			 * For example, it could be the Game ID and the Game Password which will allow you to look up from the Master Server.
 			 * Please avoid using IP addresses within these fields, its not secure and defeats the Discord security measures.
-			 * 
+			 *
 			 * This feature requires the RegisterURI to be true on the client.
 			*/
             Console.WriteLine("Joining Game '{0}'", args.Secret);
@@ -351,11 +362,11 @@ namespace DiscordRPC.Example
         {   /*
 			 * This is called when the Discord Client wants to join a online game to watch and spectate.
 			 * It can be triggered from a invite that your user has clicked on within discord.
-			 * 
+			 *
 			 * The secret should be some sort of encrypted data that will give your game the nessary information to connect.
 			 * For example, it could be the Game ID and the Game Password which will allow you to look up from the Master Server.
 			 * Please avoid using IP addresses within these fields, its not secure and defeats the Discord security measures.
-			 * 
+			 *
 			 * This feature requires the RegisterURI to be true on the client.
 			*/
             Console.WriteLine("Spectating Game '{0}'", args.Secret);
@@ -368,10 +379,10 @@ namespace DiscordRPC.Example
 			 * You should trigger a UI prompt to your user sayings 'X wants to join your game' with a YES or NO button. You can also get
 			 *  other information about the user such as their avatar (which this library will provide a useful link) and their nickname to
 			 *  make it more personalised. You can combine this with more API if you wish. Check the Discord API documentation.
-			 *  
+			 *
 			 *  Once a user clicks on a response, call the Respond function, passing the message, to respond to the request.
 			 *  A example is provided below.
-			 *  
+			 *
 			 * This feature requires the RegisterURI to be true on the client.
 			*/
 

@@ -50,7 +50,7 @@ namespace DiscordRPC.RPC.Payload
 		/// <summary>
 		/// used to authorize a new client with your app
 		/// </summary>
-		[Obsolete("This value is appart of the RPC API and is not supported by this library.", true)]
+		[EnumValue("AUTHORIZE")]
 		Authorize,
 
 		/// <summary>

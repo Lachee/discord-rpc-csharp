@@ -22,6 +22,11 @@ namespace DiscordRPC.Message
 		Error,
 
 		/// <summary>
+		/// The Discord Client received an authorize response.
+		/// </summary>
+		Authorize,
+
+		/// <summary>
 		/// The Discord Client has updated the presence.
 		/// </summary>
 		PresenceUpdate,
@@ -35,14 +40,14 @@ namespace DiscordRPC.Message
 		/// The Discord Client has unsubscribed from an event.
 		/// </summary>
 		Unsubscribe,
-		
+
 		/// <summary>
 		/// The Discord Client wishes for this process to join a game.
 		/// </summary>
 		Join,
 
 		/// <summary>
-		/// The Discord Client wishes for this process to spectate a game. 
+		/// The Discord Client wishes for this process to spectate a game.
 		/// </summary>
 		Spectate,
 
