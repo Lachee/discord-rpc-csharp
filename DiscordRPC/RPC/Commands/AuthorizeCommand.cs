@@ -18,7 +18,7 @@ namespace DiscordRPC.RPC.Commands
 		/// scopes to authorize
 		/// </summary>
 		[JsonProperty("scopes")]
-		public string[] scopes = new string[1] { "identify" };
+		public string[] scopes = new string[] { "identify" };
 
 		/// <summary>
 		/// scopes to authorize
