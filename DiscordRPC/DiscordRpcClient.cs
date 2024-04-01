@@ -41,7 +41,7 @@ namespace DiscordRPC
         public int ProcessID { get; private set; }
 
         /// <summary>
-        /// The maximum size of the message queue received from Discord. 
+        /// The maximum size of the message queue received from Discord.
         /// </summary>
         public int MaxQueueSize { get; private set; }
 
@@ -65,7 +65,7 @@ namespace DiscordRPC
         private ILogger _logger;
 
         /// <summary>
-        /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called. 
+        /// Indicates if the client will automatically invoke the events without <see cref="Invoke"/> having to be called.
         /// </summary>
         public bool AutoEvents { get; private set; }
 
@@ -344,14 +344,14 @@ namespace DiscordRPC
                         //Resend our presence and subscription
                         SynchronizeState();
                     }
-                   
-                    if (OnReady != null) 
+
+                    if (OnReady != null)
                         OnReady.Invoke(this, message as ReadyMessage);
-                 
+
                     break;
 
                 case MessageType.Close:
-                    if (OnClose != null) 
+                    if (OnClose != null)
                         OnClose.Invoke(this, message as CloseMessage);
                     break;
 
@@ -377,9 +377,9 @@ namespace DiscordRPC
                     {
                         var sub = message as SubscribeMessage;
                         Subscription |= sub.Event;
-                    }   
-                    
-                    if (OnSubscribe != null) 
+                    }
+
+                    if (OnSubscribe != null)
                         OnSubscribe.Invoke(this, message as SubscribeMessage);
 
                     break;
@@ -440,7 +440,7 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            connection.EnqueueCommand(new AuthorizeCommand() { clientID = clientID, scopes = scopes });
+            connection.EnqueueCommand(new AuthorizeCommand { clientID = clientID, scopes = scopes });
         }
 
         /// <summary>
@@ -504,7 +504,7 @@ namespace DiscordRPC
             }
 
             //Update our local store
-            lock (_sync) 
+            lock (_sync)
             {
                 CurrentPresence = presence?.Clone();
             }
@@ -597,7 +597,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             presence.Details = details;
             SetPresence(presence);
             return presence;
@@ -620,7 +620,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             presence.State = state;
             SetPresence(presence);
             return presence;
@@ -643,7 +643,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             presence.Party = party;
             SetPresence(presence);
             return presence;
@@ -671,7 +671,7 @@ namespace DiscordRPC
             if (presence.Party == null)
                 throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-            //Update the value 
+            //Update the value
             presence.Party.Size = size;
             SetPresence(presence);
             return presence;
@@ -701,7 +701,7 @@ namespace DiscordRPC
             if (presence.Party == null)
                 throw new BadPresenceException("Cannot set the size of the party if the party does not exist");
 
-            //Update the value 
+            //Update the value
             presence.Party.Size = size;
             presence.Party.Max = max;
             SetPresence(presence);
@@ -726,7 +726,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             if (presence.Assets == null) presence.Assets = new Assets();
             presence.Assets.LargeImageKey = key ?? presence.Assets.LargeImageKey;
             presence.Assets.LargeImageText = tooltip ?? presence.Assets.LargeImageText;
@@ -752,7 +752,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             if (presence.Assets == null) presence.Assets = new Assets();
             presence.Assets.SmallImageKey = key ?? presence.Assets.SmallImageKey;
             presence.Assets.SmallImageText = tooltip ?? presence.Assets.SmallImageText;
@@ -778,7 +778,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             presence.Secrets = secrets;
             SetPresence(presence);
             return presence;
@@ -808,7 +808,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
             presence.Timestamps.Start = time;
             SetPresence(presence);
@@ -839,7 +839,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             if (presence.Timestamps == null) presence.Timestamps = new Timestamps();
             presence.Timestamps.End = time;
             SetPresence(presence);
@@ -863,7 +863,7 @@ namespace DiscordRPC
                 else { presence = CurrentPresence.Clone(); }
             }
 
-            //Update the value 
+            //Update the value
             presence.Timestamps = null;
             SetPresence(presence);
             return presence;
@@ -911,7 +911,7 @@ namespace DiscordRPC
         public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         [System.Obsolete("Replaced with Unsubscribe", true)]
@@ -955,7 +955,7 @@ namespace DiscordRPC
         /// <param name="isUnsubscribe">Represents if the unsubscribe payload should be sent instead.</param>
         private void SubscribeToTypes(EventType type, bool isUnsubscribe)
         {
-            //Because of SetSubscription, this can actually be none as there is no differences. 
+            //Because of SetSubscription, this can actually be none as there is no differences.
             //If that is the case, we should just stop here
             if (type == EventType.None) return;
 

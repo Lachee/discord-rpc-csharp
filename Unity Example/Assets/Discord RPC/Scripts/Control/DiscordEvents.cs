@@ -10,6 +10,9 @@ namespace DiscordRPC.Unity
     public class DiscordEvents
     {
         [Serializable]
+        public class AuthorizeMessageEvent : UnityEvent<AuthorizeMessage> { }
+
+        [Serializable]
         public class ReadyMessageEvent : UnityEvent<ReadyMessage> { }
 
         [Serializable]
@@ -42,6 +45,7 @@ namespace DiscordRPC.Unity
         [Serializable]
         public class ConnectionFailedMessageEvent : UnityEvent<ConnectionFailedMessage> { }
 
+        public AuthorizeMessageEvent OnAuthorize = new AuthorizeMessageEvent();
         public ReadyMessageEvent OnReady = new ReadyMessageEvent();
         public CloseMessageEvent OnClose = new CloseMessageEvent();
         public ErrorMessageEvent OnError = new ErrorMessageEvent();
@@ -56,6 +60,7 @@ namespace DiscordRPC.Unity
 
         public void RegisterEvents(DiscordRpcClient client)
         {
+            client.OnAuthorize += (s, args) => OnAuthorize.Invoke(args);
             client.OnReady += (s, args) => OnReady.Invoke(args);
             client.OnClose += (s, args) => OnClose.Invoke(args);
             client.OnError += (s, args) => OnError.Invoke(args);
