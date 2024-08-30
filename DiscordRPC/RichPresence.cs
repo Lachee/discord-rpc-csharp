@@ -75,6 +75,12 @@ namespace DiscordRPC
         public Secrets Secrets { get; set; }
 
         /// <summary>
+        /// The activity type
+        /// </summary>
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public ActivityType Type { get; set; }
+
+        /// <summary>
         /// Marks the <see cref="Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
         /// <para>
         /// "TLDR it marks the matchSecret field as an instance, that is to say a context in game that’s not like a lobby state/not in game state. It was gonna he used for notify me, but we scrapped that for ask to join. We may put it to another use in the future. For now, don’t worry about it" - Mason (Discord API Server 14 / 03 / 2018)
@@ -170,7 +176,7 @@ namespace DiscordRPC
             if (other == null)
                 return false;
 
-            if (State != other.State || Details != other.Details)
+            if (State != other.State || Details != other.Details || Type != other.Type)
                 return false;
 
             //Checks if the timestamps are different
@@ -687,7 +693,7 @@ namespace DiscordRPC
             Private = 0,
 
             /// <summary>
-            /// THe party is public, anyone can join.
+            /// The party is public, anyone can join.
             /// </summary>
             Public = 1
         }
@@ -785,6 +791,18 @@ namespace DiscordRPC
             }
         }
         private string _url;
+    }
+
+    /// <summary>
+    /// Rich Presence activity type
+    /// </summary>
+    public enum ActivityType
+    {
+        // Streaming (1) and Custom (4) are probably not supported via RPC?
+        Playing = 0,
+        Listening = 2,
+        Watching = 3,
+        Competing = 5
     }
 
     /// <summary>
@@ -891,7 +909,7 @@ namespace DiscordRPC
             {
                 State = this._state != null ? _state.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
-                
+
                 Buttons = !HasButtons() ? null : this.Buttons.Clone() as Button[],
                 Secrets = !HasSecrets() ? null : new Secrets
                 {
