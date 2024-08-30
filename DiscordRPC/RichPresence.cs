@@ -249,6 +249,7 @@ namespace DiscordRPC
             var presence = new RichPresence();
             presence.State = State;
             presence.Details = Details;
+            presence.Type = Type;
 
             presence.Party = !HasParty() ? Party : null;
             presence.Secrets = !HasSecrets() ? Secrets : null;
@@ -864,6 +865,17 @@ namespace DiscordRPC
         }
 
         /// <summary>
+        /// Sets the type of the Rich Presence. See also <seealso cref="ActivityType"/>.
+        /// </summary>
+        /// <param name="type">The status type</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithType(ActivityType type)
+        {
+            Type = type;
+            return this;
+        }
+
+        /// <summary>
         /// Sets the timestamp of the Rich Presence. See also <seealso cref="Timestamps"/>.
         /// </summary>
         /// <param name="timestamps">The time elapsed / remaining time data.</param>
@@ -964,6 +976,7 @@ namespace DiscordRPC
         {
             this._state = presence.State;
             this._details = presence.Details;
+            this.Type = presence.Type;
             this.Party = presence.Party;
             this.Timestamps = presence.Timestamps;
             this.Secrets = presence.Secrets;
