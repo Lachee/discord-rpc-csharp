@@ -798,10 +798,22 @@ namespace DiscordRPC
     /// </summary>
     public enum ActivityType
     {
-        // Streaming (1) and Custom (4) are probably not supported via RPC?
+        // Streaming (1) and Custom (4) are not supported via RPC
+        /// <summary>
+        /// Playing status type. Displays as "Playing ..."
+        /// </summary>
         Playing = 0,
+        /// <summary>
+        /// Listening status type. Displays as "Listening to ..."
+        /// </summary>
         Listening = 2,
+        /// <summary>
+        /// Watching status type. Displays as "Watching ..."
+        /// </summary>
         Watching = 3,
+        /// <summary>
+        /// Competing status type. Displays as "Competing in ..."
+        /// </summary>
         Competing = 5
     }
 
@@ -909,6 +921,7 @@ namespace DiscordRPC
             {
                 State = this._state != null ? _state.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
+                Type = this.Type,
 
                 Buttons = !HasButtons() ? null : this.Buttons.Clone() as Button[],
                 Secrets = !HasSecrets() ? null : new Secrets
@@ -939,7 +952,6 @@ namespace DiscordRPC
                     Max = this.Party.Max,
                     Privacy = this.Party.Privacy,
                 },
-
             };
         }
 
