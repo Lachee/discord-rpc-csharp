@@ -14,6 +14,24 @@ namespace DiscordRPC
     public class BaseRichPresence
     {
         /// <summary>
+        /// The user's current Rich Presence name. For example, "League of Legends".
+        /// <para>Max 128 bytes</para>
+        /// </summary>
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (!ValidateString(value, out _name, 128, Encoding.UTF8))
+                    throw new StringOutOfRangeException("Name", 0, 128);
+            }
+        }
+
+        /// <summary>Internal inner name string</summary>
+        protected internal string _name;
+        
+        /// <summary>
         /// The user's current <see cref="Party"/> status. For example, "Playing Solo" or "With Friends".
         /// <para>Max 128 bytes</para>
         /// </summary>
@@ -176,7 +194,7 @@ namespace DiscordRPC
             if (other == null)
                 return false;
 
-            if (State != other.State || Details != other.Details || Type != other.Type)
+            if (State != other.State || Details != other.Details || Type != other.Type || Name != other.Name)
                 return false;
 
             //Checks if the timestamps are different
@@ -934,6 +952,7 @@ namespace DiscordRPC
                 State = this._state != null ? _state.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
                 Type = this.Type,
+                Name = this.Name,
 
                 Buttons = !HasButtons() ? null : this.Buttons.Clone() as Button[],
                 Secrets = !HasSecrets() ? null : new Secrets
