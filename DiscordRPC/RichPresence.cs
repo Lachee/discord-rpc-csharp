@@ -883,6 +883,17 @@ namespace DiscordRPC
         }
 
         /// <summary>
+        /// Sets the name of the Rich Presence.
+        /// </summary>
+        /// <param name="name">The name of the Rich Presence application</param>
+        /// <returns>The modified rich presence</returns>
+        public RichPresence WithName(string name)
+        {
+            Name = name;
+            return this;
+        }
+        
+        /// <summary>
         /// Sets the type of the Rich Presence. See also <seealso cref="ActivityType"/>.
         /// </summary>
         /// <param name="type">The status type</param>
