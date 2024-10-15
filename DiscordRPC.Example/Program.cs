@@ -23,6 +23,7 @@ namespace DiscordRPC.Example
         /// </summary>
         private static RichPresence presence = new RichPresence()
         {
+            Name = "Example project",
             Details = "Example Project 🎁",
             State = "csharp example",
             Assets = new Assets()
@@ -104,6 +105,7 @@ namespace DiscordRPC.Example
             // == Set the presence
             client.SetPresence(new RichPresence()
             {
+                Name = "A Basic Example",
                 Details = "A Basic Example",
                 State = "In Game",
                 Timestamps = Timestamps.FromTimeSpan(10),
