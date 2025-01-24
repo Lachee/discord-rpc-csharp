@@ -46,8 +46,8 @@ namespace DiscordRPC.Message
 		NotImplemented = 10,
 
 		//Discord RPC error codes
-		///<summary>Unkown Discord error</summary>
-		UnkownError = 1000,
+		///<summary>Unknown Discord error</summary>
+		UnknownError = 1000,
 
 		///<summary>Invalid Payload received</summary>
 		InvalidPayload = 4000,

@@ -559,7 +559,7 @@ namespace DiscordRPC.RPC
 						
 					//we have no idea what we were sent
 					default:
-						Logger.Error("Unkown frame was received! {0}", response.Command);
+						Logger.Error("Unknown frame was received! {0}", response.Command);
 						return;
 				}
 				return;
@@ -591,7 +591,7 @@ namespace DiscordRPC.RPC
 					EnqueueMessage(request);
 					break;
 
-				//Unkown dispatch event received. We should just ignore it.
+				//Unknown dispatch event received. We should just ignore it.
 				default:
 					Logger.Warning("Ignoring {0}", response.Event.Value);
 					break;
