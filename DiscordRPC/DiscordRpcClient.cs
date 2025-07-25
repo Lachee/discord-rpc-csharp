@@ -214,7 +214,7 @@ namespace DiscordRPC
         /// <summary>
         /// Too many failed connection tries. You must reinitialize the client.
         /// </summary>
-        public event OnTooMannyConnectionTriesEvent OnTooMannyConnectionTries;
+        public event OnTooManyConnectionTriesEvent OnTooManyConnectionTries;
         #endregion
 
         #region Initialization
@@ -430,9 +430,9 @@ namespace DiscordRPC
                         OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
                     break;
                 
-                case MessageType.TooMannyConnectionTries:
-                    if (OnTooMannyConnectionTries != null)
-                        OnTooMannyConnectionTries.Invoke(this, message as TooManyConnectionTriesMessage);
+                case MessageType.TooManyConnectionTries:
+                    if (OnTooManyConnectionTries != null)
+                        OnTooManyConnectionTries.Invoke(this, message as TooManyConnectionTriesMessage);
 
                     Deinitialize();
                     break;

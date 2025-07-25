@@ -89,7 +89,7 @@ namespace DiscordRPC.Events
     /// </summary>
     /// <param name="sender">The Discord client handler that sent this event</param>
     /// <param name="args">The arguments supplied with the event</param>
-    public delegate void OnTooMannyConnectionTriesEvent(object sender, TooManyConnectionTriesMessage args);
+    public delegate void OnTooManyConnectionTriesEvent(object sender, TooManyConnectionTriesMessage args);
 
 
     /// <summary>

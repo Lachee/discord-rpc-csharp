@@ -63,6 +63,6 @@ namespace DiscordRPC.Message
 		/// <summary>
 		/// Too many failed connection tries. You must reinitialize the client.
 		/// </summary>
-		TooMannyConnectionTries
+		TooManyConnectionTries
 	}
 }
