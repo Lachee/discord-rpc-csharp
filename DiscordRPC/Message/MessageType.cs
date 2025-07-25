@@ -35,7 +35,7 @@ namespace DiscordRPC.Message
 		/// The Discord Client has unsubscribed from an event.
 		/// </summary>
 		Unsubscribe,
-		
+
 		/// <summary>
 		/// The Discord Client wishes for this process to join a game.
 		/// </summary>
@@ -59,6 +59,10 @@ namespace DiscordRPC.Message
 		/// <summary>
 		/// Failed to establish any connection with discord. Discord is potentially not running?
 		/// </summary>
-		ConnectionFailed
+		ConnectionFailed,
+		/// <summary>
+		/// Too many failed connection tries. You must reinitialize the client.
+		/// </summary>
+		TooMannyConnectionTries
 	}
 }
