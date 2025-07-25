@@ -79,6 +79,13 @@ namespace DiscordRPC
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public ActivityType Type { get; set; }
+        
+        /// <summary>
+        /// The display type for the status
+        /// </summary>
+        [JsonProperty("status_display_type", NullValueHandling = NullValueHandling.Ignore)]
+        public StatusDisplayType StatusDisplay { get; set; }
+        
 
         /// <summary>
         /// Marks the <see cref="Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
@@ -250,6 +257,7 @@ namespace DiscordRPC
             presence.State = State;
             presence.Details = Details;
             presence.Type = Type;
+            presence.StatusDisplay = StatusDisplay;
 
             presence.Party = !HasParty() ? Party : null;
             presence.Secrets = !HasSecrets() ? Secrets : null;
@@ -817,6 +825,25 @@ namespace DiscordRPC
         /// </summary>
         Competing = 5
     }
+    
+    /// <summary>
+    /// Rich Presence Display type
+    /// </summary>
+    public enum StatusDisplayType
+    {
+        /// <summary>
+        /// Displays the rich presence name "Listening to Spotify"
+        /// </summary>
+        Name = 0,
+        /// <summary>
+        /// Displays the rich presence state "Listening to Rick Astley"
+        /// </summary>
+        State = 1,
+        /// <summary>
+        /// Displays the rich presence details "Listening to Never Gonna Give You Up"
+        /// </summary>
+        Details = 2,
+    }
 
     /// <summary>
     /// The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.
@@ -872,6 +899,16 @@ namespace DiscordRPC
         public RichPresence WithType(ActivityType type)
         {
             Type = type;
+            return this;
+        }
+        /// <summary>
+        /// Sets the display type for the status. See also <seealso cref="StatusDisplayType"/>.
+        /// </summary>
+        /// <param name="statusDisplay"></param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithStatusDisplay(StatusDisplayType statusDisplay)
+        {
+            StatusDisplay = statusDisplay;
             return this;
         }
 
@@ -934,6 +971,7 @@ namespace DiscordRPC
                 State = this._state != null ? _state.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
                 Type = this.Type,
+                StatusDisplay = this.StatusDisplay,
 
                 Buttons = !HasButtons() ? null : this.Buttons.Clone() as Button[],
                 Secrets = !HasSecrets() ? null : new Secrets
@@ -977,6 +1015,7 @@ namespace DiscordRPC
             this._state = presence.State;
             this._details = presence.Details;
             this.Type = presence.Type;
+            this.StatusDisplay = presence.StatusDisplay;
             this.Party = presence.Party;
             this.Timestamps = presence.Timestamps;
             this.Secrets = presence.Secrets;
