@@ -84,7 +84,7 @@ namespace DiscordRPC.Registry
 #endif
 
                 default:
-                    _logger.Error("Unkown Platform: {0}", Environment.OSVersion.Platform);
+                    _logger.Error("Unknown Platform: {0}", Environment.OSVersion.Platform);
                     throw new PlatformNotSupportedException("Platform does not support registration.");
             }
 

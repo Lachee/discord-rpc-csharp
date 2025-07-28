@@ -1396,8 +1396,8 @@
         <member name="F:DiscordRPC.Message.ErrorCode.NotImplemented">
             <summary>The functionality was not yet implemented</summary>
         </member>
-        <member name="F:DiscordRPC.Message.ErrorCode.UnkownError">
-            <summary>Unkown Discord error</summary>
+        <member name="F:DiscordRPC.Message.ErrorCode.UnknownError">
+            <summary>Unknown Discord error</summary>
         </member>
         <member name="F:DiscordRPC.Message.ErrorCode.InvalidPayload">
             <summary>Invalid Payload received</summary>

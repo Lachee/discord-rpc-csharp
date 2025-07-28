@@ -551,7 +551,7 @@ namespace DiscordRPC.Example
                     break;
 
                 default:
-                    Console.WriteLine("Unkown Command '{0}'. Try 'help' for a list of commands", command);
+                    Console.WriteLine("Unknown Command '{0}'. Try 'help' for a list of commands", command);
                     break;
             }
 
