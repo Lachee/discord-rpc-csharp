@@ -511,6 +511,12 @@ namespace DiscordRPC
         /// <param name="type">The type of the Rich Presence</param>
         /// <returns>Updated Rich Presence</returns>
         public RichPresence UpdateType(ActivityType type) => Update(p => p.Type = type);
+        /// <summary>
+        /// Updates only the <see cref="BaseRichPresence.StatusDisplay"/> of the <see cref="CurrentPresence"/> and sends the updated presence to Discord. Returns the newly edited Rich Presence.
+        /// </summary>
+        /// <param name="type">The type to display on the status</param>
+        /// <returns>Updated Rich Presence</returns>
+        public RichPresence UpdateStatusDisplayType(StatusDisplayType type) => Update(p => p.StatusDisplay = type);
 
         /// <summary>
         /// Updates only the <see cref="RichPresence.Buttons"/> of the <see cref="CurrentPresence"/> and updates/removes the buttons. Returns the newly edited Rich Presence.
