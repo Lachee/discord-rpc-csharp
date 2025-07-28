@@ -66,8 +66,8 @@ namespace DiscordRPC.Example
             }
 
             //Seting a random details to test the update rate of the presence
-            //BasicExample();
-            ReadyTaskExample();
+            BasicExample();
+            //ReadyTaskExample();
             //FullClientExample();
             //Issue104();
             //IssueMultipleSets();
@@ -104,9 +104,13 @@ namespace DiscordRPC.Example
             // == Set the presence
             client.SetPresence(new RichPresence()
             {
+                Type = ActivityType.Playing,
                 Details = "A Basic Example",
                 State = "In Game",
-                Timestamps = Timestamps.FromTimeSpan(10),
+                //Timestamps = null,
+                //Timestamps = Timestamps.Now,
+                StatusDisplay = StatusDisplayType.State,
+                Timestamps = Timestamps.FromTimeSpan(TimeSpan.FromMinutes(2)),
                 Buttons = new Button[]
                 {
                     new Button() { Label = "Fish", Url = "https://lachee.dev/" }
