@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using DiscordRPC.Helper;
 using System.Text;
@@ -15,7 +15,7 @@ namespace DiscordRPC
     {
         /// <summary>
         /// The user's current <see cref="Party"/> status. For example, "Playing Solo" or "With Friends".
-        /// <para>Max 128 bytes</para>
+        /// <para>Max 128 characters</para>
         /// </summary>
         [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
         public string State
@@ -23,7 +23,7 @@ namespace DiscordRPC
             get { return _state; }
             set
             {
-                if (!ValidateString(value, out _state, 128, Encoding.UTF8))
+                if (!ValidateString(value, out _state, false, 128))
                     throw new StringOutOfRangeException("State", 0, 128);
             }
         }
@@ -33,7 +33,7 @@ namespace DiscordRPC
 
         /// <summary>
         /// What the user is currently doing. For example, "Competitive - Total Mayhem".
-        /// <para>Max 128 bytes</para>
+        /// <para>Max 128 characters</para>
         /// </summary>
         [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
         public string Details
@@ -41,7 +41,7 @@ namespace DiscordRPC
             get { return _details; }
             set
             {
-                if (!ValidateString(value, out _details, 128, Encoding.UTF8))
+                if (!ValidateString(value, out _details, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -142,10 +142,11 @@ namespace DiscordRPC
         /// </summary>
         /// <param name="str">The string to check</param>
         /// <param name="result">The formatted string result</param>
-        /// <param name="bytes">The maximum number of bytes the string can take up</param>
-        /// <param name="encoding">The encoding to count the bytes with</param>
+        /// <param name="useBytes">True if you need to validate the string by byte length</param>
+        /// <param name="length">The maximum number of bytes/characters the string can take up</param>
+        /// <param name="encoding">The encoding to count the bytes with, optional</param>
         /// <returns>True if the string fits within the number of bytes</returns>
-        internal static bool ValidateString(string str, out string result, int bytes, Encoding encoding)
+        internal static bool ValidateString(string str, out string result, bool useBytes, int length, Encoding encoding = null)
         {
             result = str;
             if (str == null)
@@ -155,7 +156,7 @@ namespace DiscordRPC
             var s = str.Trim();
 
             //Make sure it fits
-            if (!s.WithinLength(bytes, encoding))
+            if (useBytes && !s.WithinLength(length, encoding) || s.Length > length)
                 return false;
 
             //Make sure its not empty
@@ -166,10 +167,10 @@ namespace DiscordRPC
         /// <summary>
         /// Operator that converts a presence into a boolean for null checks.
         /// </summary>
-        /// <param name="presesnce"></param>
-        public static implicit operator bool(BaseRichPresence presesnce)
+        /// <param name="presence"></param>
+        public static implicit operator bool(BaseRichPresence presence)
         {
-            return presesnce != null;
+            return presence != null;
         }
 
         /// <summary>
@@ -297,7 +298,7 @@ namespace DiscordRPC
         /// <summary>
         /// The unique match code to distinguish different games/lobbies. Use <see cref="Secrets.CreateSecret(Random)"/> to get an appropriately sized secret. 
         /// <para>This cannot be null and must be supplied for the  Join / Spectate feature to work.</para>
-        /// <para>Max Length of 128 Bytes</para>
+        /// <para>Max Length of 128 characters</para>
         /// </summary>
         [Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.")]
         [JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
@@ -306,7 +307,7 @@ namespace DiscordRPC
             get { return _matchSecret; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _matchSecret, 128, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _matchSecret, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -317,7 +318,7 @@ namespace DiscordRPC
         /// <para>It is recommended to encrypt this information so its hard for people to replicate it. 
         /// Do <b>NOT</b> just use the IP address in this. That is a bad practice and can leave your players vulnerable!
         /// </para>
-        /// <para>Max Length of 128 Bytes</para>
+        /// <para>Max Length of 128 characters</para>
         /// </summary>
         [JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
         public string JoinSecret
@@ -325,7 +326,7 @@ namespace DiscordRPC
             get { return _joinSecret; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _joinSecret, 128, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _joinSecret, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -336,7 +337,7 @@ namespace DiscordRPC
         /// <para>It is recommended to encrypt this information so its hard for people to replicate it. 
         /// Do <b>NOT</b> just use the IP address in this. That is a bad practice and can leave your players vulnerable!
         /// </para>
-        /// <para>Max Length of 128 Bytes</para>
+        /// <para>Max Length of 128 characters</para>
         /// </summary>
         [JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
         public string SpectateSecret
@@ -344,7 +345,7 @@ namespace DiscordRPC
             get { return _spectateSecret; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _spectateSecret, 128, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _spectateSecret, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -406,7 +407,7 @@ namespace DiscordRPC
     {
         /// <summary>
         /// Name of the uploaded image for the large profile artwork.
-        /// <para>Max 256 Bytes.</para>
+        /// <para>Max 256 characters.</para>
         /// </summary>
         /// <remarks>Allows URL to directly link to images.</remarks>
         [JsonProperty("large_image", NullValueHandling = NullValueHandling.Ignore)]
@@ -415,7 +416,7 @@ namespace DiscordRPC
             get { return _largeimagekey; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _largeimagekey, 256, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _largeimagekey, false, 256))
                     throw new StringOutOfRangeException(256);
 
                 //Get if this is a external link
@@ -439,7 +440,7 @@ namespace DiscordRPC
 
         /// <summary>
         /// The tooltip for the large square image. For example, "Summoners Rift" or "Horizon Lunar Colony".
-        /// <para>Max 128 Bytes.</para>
+        /// <para>Max 128 characters.</para>
         /// </summary>
         [JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
         public string LargeImageText
@@ -447,7 +448,7 @@ namespace DiscordRPC
             get { return _largeimagetext; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _largeimagetext, 128, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _largeimagetext, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -456,7 +457,7 @@ namespace DiscordRPC
 
         /// <summary>
         /// Name of the uploaded image for the small profile artwork.
-        /// <para>Max 256 Bytes.</para>
+        /// <para>Max 256 characters.</para>
         /// </summary>
         /// <remarks>Allows URL to directly link to images.</remarks>
         [JsonProperty("small_image", NullValueHandling = NullValueHandling.Ignore)]
@@ -465,7 +466,7 @@ namespace DiscordRPC
             get { return _smallimagekey; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _smallimagekey, 256, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _smallimagekey, false, 256))
                     throw new StringOutOfRangeException(256);
 
                 //Get if this is a external link
@@ -486,10 +487,10 @@ namespace DiscordRPC
             get { return _issmallimagekeyexternal; }
         }
         private bool _issmallimagekeyexternal;
-        
+
         /// <summary>
         /// The tooltip for the small circle image. For example, "LvL 6" or "Ultimate 85%".
-        /// <para>Max 128 Bytes.</para>
+        /// <para>Max 128 characters.</para>
         /// </summary>
         [JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
         public string SmallImageText
@@ -497,7 +498,7 @@ namespace DiscordRPC
             get { return _smallimagetext; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _smallimagetext, 128, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _smallimagetext, false, 128))
                     throw new StringOutOfRangeException(128);
             }
         }
@@ -768,7 +769,7 @@ namespace DiscordRPC
     {
         /// <summary>
         /// Text shown on the button
-        /// <para>Max 32 bytes.</para>
+        /// <para>Max 31 bytes.</para>
         /// </summary>
         [JsonProperty("label")]
         public string Label
@@ -776,15 +777,15 @@ namespace DiscordRPC
             get { return _label; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _label, 32, Encoding.UTF8))
-                    throw new StringOutOfRangeException(32);
+                if (!BaseRichPresence.ValidateString(value, out _label, true, 31, Encoding.UTF8))
+                    throw new StringOutOfRangeException(31);
             }
         }
         private string _label;
 
         /// <summary>
         /// The URL opened when clicking the button.
-        /// <para>Max 512 bytes.</para>
+        /// <para>Max 512 characters.</para>
         /// </summary>
         [JsonProperty("url")]
         public string Url
@@ -792,7 +793,7 @@ namespace DiscordRPC
             get { return _url; }
             set
             {
-                if (!BaseRichPresence.ValidateString(value, out _url, 512, Encoding.UTF8))
+                if (!BaseRichPresence.ValidateString(value, out _url, false, 512))
                     throw new StringOutOfRangeException(512);
 
                 if (!Uri.TryCreate(_url, UriKind.Absolute, out var uriResult)) // || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
