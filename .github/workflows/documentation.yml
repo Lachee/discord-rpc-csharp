@@ -27,7 +27,7 @@ jobs:
       - name: Upload site artifact
         uses: actions/upload-artifact@v4
         with:
-          name: _site
+          name: Documentation
           path: _site # Must equals the 'build.dest' value on your docfx.json
 
   # Deploy the generated documentation to the gh-pages branch
@@ -42,7 +42,8 @@ jobs:
       - name: Download site artifact
         uses: actions/download-artifact@v4
         with:
-          name: _site
+          name: Documentation
+          path: $GITHUB_WORKSPACE/_site
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
