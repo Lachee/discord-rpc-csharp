@@ -52,10 +52,12 @@ namespace DiscordRPC.RPC
 		}
 		private ILogger _logger;
 
+		public int MaxConnectionTries { get; set; }
+
         /// <summary>
-        /// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
-        /// </summary>
-        public event OnRpcMessageEvent OnRpcMessage;
+		/// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
+		/// </summary>
+		public event OnRpcMessageEvent OnRpcMessage;
 
 		#region States
 
@@ -118,6 +120,7 @@ namespace DiscordRPC.RPC
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;                     //The backoff delay before reconnecting.
+		private int tries; 								//number of unsuccessful connections in row
 		#endregion
 
 		/// <summary>
@@ -127,26 +130,28 @@ namespace DiscordRPC.RPC
 		/// <param name="processID">The ID of the currently running process</param>
 		/// <param name="targetPipe">The target pipe to connect too</param>
 		/// <param name="client">The pipe client we shall use.</param>
-        /// <param name="maxRxQueueSize">The maximum size of the out queue</param>
-        /// <param name="maxRtQueueSize">The maximum size of the in queue</param>
-		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
+		/// <param name="maxRxQueueSize">The maximum size of the out queue</param>
+		/// <param name="maxRtQueueSize">The maximum size of the in queue</param>
+		/// <param name="maxConnectionTries">The maximum amount of tries taken before terminating</param>
+		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512, int maxConnectionTries = -1)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
 			this.targetPipe = targetPipe;
-			this.namedPipe = client;
-			this.ShutdownOnly = true;
+			namedPipe = client;
+			ShutdownOnly = true;
+			MaxConnectionTries = maxConnectionTries;
 
 			//Assign a default logger
 			Logger = new ConsoleLogger();
 
 			delay = new BackoffDelay(500, 60 * 1000);
-            _maxRtQueueSize = maxRtQueueSize;
+			_maxRtQueueSize = maxRtQueueSize;
 			_rtqueue = new Queue<ICommand>((int)_maxRtQueueSize + 1);
 
-            _maxRxQueueSize = maxRxQueueSize;
-            _rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
-			
+			_maxRxQueueSize = maxRxQueueSize;
+			_rxqueue = new Queue<IMessage>((int)_maxRxQueueSize + 1);
+
 			nonce = 0;
 		}
 		
@@ -263,31 +268,31 @@ namespace DiscordRPC.RPC
 			}
 		}
 		#endregion
-				
+
 		/// <summary>
 		/// Main thread loop
 		/// </summary>
 		private void MainLoop()
 		{
-            //initialize the pipe
-            Logger.Info("RPC Connection Started");
-            if (Logger.Level <= LogLevel.Trace)
-            {
-                Logger.Trace("============================");
-                Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
-                Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
-                Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
-                Logger.Trace("applicationID:        " + applicationID);
-                Logger.Trace("targetPipe:           " + targetPipe);
-                Logger.Trace("POLL_RATE:            " + POLL_RATE);
-                Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
-                Logger.Trace("_maxRxQueueSize:      " + _maxRxQueueSize);
-                Logger.Trace("============================");
-            }
+			//initialize the pipe
+			Logger.Info("RPC Connection Started");
+			if (Logger.Level <= LogLevel.Trace)
+			{
+				Logger.Trace("============================");
+				Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
+				Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
+				Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
+				Logger.Trace("applicationID:        " + applicationID);
+				Logger.Trace("targetPipe:           " + targetPipe);
+				Logger.Trace("POLL_RATE:            " + POLL_RATE);
+				Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
+				Logger.Trace("_maxRxQueueSize:      " + _maxRxQueueSize);
+				Logger.Trace("============================");
+			}
 
-            //Forever trying to connect unless the abort signal is sent
-            //Keep Alive Loop
-            while (!aborting && !shutdown)
+			//Forever trying to connect unless the abort signal is sent
+			//Keep Alive Loop
+			while (!aborting && !shutdown)
 			{
 				try
 				{
@@ -312,6 +317,7 @@ namespace DiscordRPC.RPC
 						//Attempt to establish a handshake
 						EstablishHandshake();
 						Logger.Trace("Connection Established. Starting reading loop...");
+						tries = 0;
 
 						//Continously iterate, waiting for the frame
 						//We want to only stop reading if the inside tells us (mainloop), if we are aborting (abort) or the pipe disconnects
@@ -341,19 +347,19 @@ namespace DiscordRPC.RPC
 										break;
 
 									//We have pinged, so we will flip it and respond back with pong
-									case Opcode.Ping:					
+									case Opcode.Ping:
 										Logger.Trace("PING");
 										frame.Opcode = Opcode.Pong;
 										namedPipe.WriteFrame(frame);
 										break;
 
 									//We have ponged? I have no idea if Discord actually sends ping/pongs.
-									case Opcode.Pong:															
+									case Opcode.Pong:
 										Logger.Trace("PONG");
 										break;
 
 									//A frame has been sent, we should deal with that
-									case Opcode.Frame:					
+									case Opcode.Frame:
 										if (shutdown)
 										{
 											//We are shutting down, so skip it
@@ -370,21 +376,23 @@ namespace DiscordRPC.RPC
 
 										//We have a frame, so we are going to process the payload and add it to the stack
 										EventPayload response = null;
-										try { response = frame.GetObject<EventPayload>(); } catch (Exception e)
+										try { response = frame.GetObject<EventPayload>(); }
+										catch (Exception e)
 										{
 											Logger.Error("Failed to parse event! {0}", e.Message);
 											Logger.Error("Data: {0}", frame.Message);
 										}
 
 
-										try { if (response != null) ProcessFrame(response); } catch(Exception e)
-                                        {
+										try { if (response != null) ProcessFrame(response); }
+										catch (Exception e)
+										{
 											Logger.Error("Failed to process event! {0}", e.Message);
 											Logger.Error("Data: {0}", frame.Message);
 										}
 
 										break;
-										
+
 
 									default:
 									case Opcode.Handshake:
@@ -398,7 +406,7 @@ namespace DiscordRPC.RPC
 							}
 
 							if (!aborting && namedPipe.IsConnected)
-							{ 
+							{
 								//Process the entire command queue we have left
 								ProcessCommandQueue();
 
@@ -425,8 +433,17 @@ namespace DiscordRPC.RPC
 						// so we are going to wait a bit before doing it again
 						long sleep = delay.NextDelay();
 
+						tries++;
+
 						Logger.Trace("Waiting {0}ms before attempting to connect again", sleep);
 						Thread.Sleep(delay.NextDelay());
+					}
+					if (tries >= MaxConnectionTries && MaxConnectionTries != -1)
+					{
+						Logger.Error("Terminating attempts to connect, exceeded amount of tries");
+
+						EnqueueMessage(new TooManyConnectionTriesMessage());
+						break;
 					}
 				}
 				//catch(InvalidPipeException e)
