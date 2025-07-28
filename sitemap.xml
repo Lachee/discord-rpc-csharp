@@ -2,67 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/monogame.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/standard.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/getting_started/unity3d.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/intro.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/intro.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/join.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/join_requests.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/join_spectate/spectate.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/rich_presence/guidelines.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/articles/rich_presence/intro.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://lachee.github.io/discord-rpc-csharp/index.html</loc>
-    <lastmod>2025-07-28T08:48:36+00:00</lastmod>
+    <lastmod>2025-07-28T09:28:12+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
