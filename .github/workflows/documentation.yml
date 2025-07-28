@@ -43,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Documentation
-          path: $GITHUB_WORKSPACE/_site
+          path: _site
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
