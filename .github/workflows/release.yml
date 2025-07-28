@@ -28,7 +28,7 @@ jobs:
     steps:
       # Check-out repository
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/setup-dotnet@v4
 
       # Version the repository
       - name: Update Versions
