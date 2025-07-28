@@ -10,11 +10,12 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: Klemensas/action-autotag@stable
+    - uses: actions/checkout@v4
+    - uses: butlerlogic/action-autotag@stable
       id: auto-tag
-      with:
+      env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      with:
         tag_prefix: "v"
     outputs:
       version: "${{steps.auto-tag.outputs.version}}.${{github.run_number}}"
@@ -26,7 +27,7 @@ jobs:
     needs: [ tag ]
     steps:
       # Check-out repository
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v2
 
       # Version the repository
@@ -41,7 +42,7 @@ jobs:
         run: dotnet build DiscordRPC -c Release
 
       - name: Upload Library
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: "netstandard2.0-dll"
           path: "DiscordRPC/bin/Release/netstandard2.0"
@@ -51,7 +52,7 @@ jobs:
         run: dotnet pack DiscordRPC -c Release
 
       - name: Upload Nuget
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: "netstandard2.0-nuget"
           path: "DiscordRPC/bin/Release/*.nupkg"
@@ -62,8 +63,8 @@ jobs:
     needs: [ tag, build ]
     if: ${{ startsWith(needs.tag.outputs.tag, 'v') }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           path: artifacts
       - uses: "marvinpinto/action-automatic-releases@latest"
