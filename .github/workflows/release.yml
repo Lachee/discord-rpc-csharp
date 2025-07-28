@@ -11,11 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: butlerlogic/action-autotag@stable
       id: auto-tag
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    - uses: Klemensas/action-autotag@stable
       with:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         tag_prefix: "v"
     outputs:
       version: "${{steps.auto-tag.outputs.version}}.${{github.run_number}}"
