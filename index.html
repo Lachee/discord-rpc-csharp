@@ -72,7 +72,7 @@
 <h1 id="discord-rich-presence">Discord Rich Presence</h1>
 
 <p><a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦"></a>
-<a href="https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> 
+<a href="https://app.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge"></a> <a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a> 
 <a href="https://github.com/Lachee/discord-rpc-csharp/tags"><img src="https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=master" alt="GitHub package.json version"></a></p>
 <p>This is a C# <em>implementation</em> of the <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a> library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.</p>
 <p>While the official C++ library has been deprecated, this library has continued support and development for all your Rich Presence need, without requiring the Game SDK.</p>
@@ -95,10 +95,13 @@
 <p><strong>Dependencies:</strong></p>
 <ul>
 <li>Newtonsoft.Json </li>
-<li>.NET Standard 2.0</li>
+<li>.NET Standard 2.0 runtime or .NET Framework 4.5: <ul>
+<li><code>fx 4.5</code>, <code>core 3.1</code>, <code>net 7.0</code>, <code>net 8.0</code>, <code>net 9.0</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="net-project"><strong>.NET Project</strong></h3>
-<p>For projects that target either .NET Core or .NETFX, you can get the package on <a href="https://www.nuget.org/packages/DiscordRichPresence/">nuget</a>:</p>
+<p>For projects that target either the .NET Standard or .NET Framework, you can get the package on <a href="https://www.nuget.org/packages/DiscordRichPresence/">nuget</a>:</p>
 <pre><code>PM&gt; Install-Package DiscordRichPresence
 </code></pre><p>You can also <a href="#building">Download or Build</a> your own version of the library if you have more specific requirements.</p>
 <h3 id="unity3d-game-engine"><strong>Unity3D Game Engine</strong></h3>
@@ -174,6 +177,9 @@ void Deinitialize()
 {
     client.Dispose();
 }
+</code></pre><h2 id="examples">Examples</h2>
+<p>To run the current example, either open the solution in Visual Studio and run the DiscordRPC.Example project or use Dotnet:</p>
+<pre><code>dotnet run --project DiscordRPC.Example
 </code></pre><h2 id="building">Building</h2>
 <p><a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦"></a> <a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml/badge.svg" alt="Documentation 📚"></a></p>
 <p><strong>DiscordRPC Library</strong></p>
@@ -198,6 +204,19 @@ void Deinitialize()
     &lt;/Capabilities&gt;
 &lt;/Package&gt;
 </code></pre><p>If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts <code>runFullTrust</code> capability.</p>
+<h2 id="tests">Tests</h2>
+<p>There are currently no tests available to validate the library. This is a active issue and need help with this.
+The test suite will likely need a way to mock the RPC client.</p>
+<h2 id="contribution">Contribution</h2>
+<p>All contributions are welcome and I am happy for any contribution. However, there are some things that will not be accepted:</p>
+<ul>
+<li>Spelling only fixes (rude to only contribute to something copilot could do)</li>
+<li>Complete or large rewrites (unwanted work load to review)</li>
+<li>Dependency substitutions / removals / additions (these require a issue and discussion first)</li>
+<li>Support for features only provided by custom Discord clients</li>
+<li>Obviously AI additions</li>
+</ul>
+<p>For more information, please read CONTRIBUTING.md</p>
 </article>
           </div>
           
