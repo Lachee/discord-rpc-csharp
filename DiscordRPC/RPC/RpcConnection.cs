@@ -275,9 +275,10 @@ namespace DiscordRPC.RPC
             {
                 Logger.Trace("============================");
                 Logger.Trace("Assembly:             " + System.Reflection.Assembly.GetAssembly(typeof(RichPresence)).FullName);
-                Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
+				Logger.Trace("Pipe:                 " + namedPipe.GetType().FullName);
                 Logger.Trace("Platform:             " + Environment.OSVersion.ToString());
-                Logger.Trace("applicationID:        " + applicationID);
+				Logger.Trace("DotNet:               " + Environment.Version.ToString());
+				Logger.Trace("applicationID:        " + applicationID);
                 Logger.Trace("targetPipe:           " + targetPipe);
                 Logger.Trace("POLL_RATE:            " + POLL_RATE);
                 Logger.Trace("_maxRtQueueSize:      " + _maxRtQueueSize);
