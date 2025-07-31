@@ -2,8 +2,7 @@
   "sitemap": {
     "baseUrl": "https://lachee.github.io/discord-rpc-csharp/"
   },
-  "homepages": [],
-  "source_base_path": "D:/a/discord-rpc-csharp/discord-rpc-csharp/Docfx",
+  "source_base_path": "/github/workspace/Docfx",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -12,19 +11,953 @@
         "resource": {
           "relative_path": "index.json"
         }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.ActivityType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.ActivityType.html"
+        }
       },
-      "is_incremental": false
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.ActivityType",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.ActivityType.yml\" sourcestartlinenumber=\"1\">Rich Presence activity type</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Assets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Assets.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Assets",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Assets.yml\" sourcestartlinenumber=\"1\">Information about the pictures used in the Rich Presence.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.BaseRichPresence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.BaseRichPresence.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.BaseRichPresence",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.BaseRichPresence.yml\" sourcestartlinenumber=\"1\">The base rich presence structure</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Button.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Button.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Button",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Button.yml\" sourcestartlinenumber=\"1\">A Rich Presence button.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Configuration.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Configuration",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Configuration.yml\" sourcestartlinenumber=\"1\">Configuration of the current RPC connection</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.DiscordRpcClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.DiscordRpcClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.DiscordRpcClient",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.DiscordRpcClient.yml\" sourcestartlinenumber=\"1\">A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.EventType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.EventType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.EventType",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.EventType.yml\" sourcestartlinenumber=\"1\">The type of event receieved by the RPC. A flag type that can be combined.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnCloseEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnCloseEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnCloseEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnCloseEvent.yml\" sourcestartlinenumber=\"1\">Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnConnectionEstablishedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnConnectionEstablishedEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnConnectionEstablishedEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnConnectionEstablishedEvent.yml\" sourcestartlinenumber=\"1\">The connection to the discord client was succesfull. This is called before <xref href=\"DiscordRPC.Events.OnReadyEvent\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnConnectionFailedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnConnectionFailedEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnConnectionFailedEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnConnectionFailedEvent.yml\" sourcestartlinenumber=\"1\">Failed to establish any connection with discord. Discord is potentially not running?</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnErrorEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnErrorEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnErrorEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnErrorEvent.yml\" sourcestartlinenumber=\"1\">Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnJoinEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnJoinEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnJoinEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnJoinEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client wishes for this process to join a game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnJoinRequestedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnJoinRequestedEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnJoinRequestedEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnJoinRequestedEvent.yml\" sourcestartlinenumber=\"1\">Called when another discord user requests permission to join this game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnPresenceUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnPresenceUpdateEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnPresenceUpdateEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnPresenceUpdateEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client has updated the presence.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnReadyEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnReadyEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnReadyEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnReadyEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client is ready to send and receive messages.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnRpcMessageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnRpcMessageEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnRpcMessageEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnRpcMessageEvent.yml\" sourcestartlinenumber=\"1\">A RPC Message is received.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnSpectateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnSpectateEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnSpectateEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnSpectateEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client wishes for this process to spectate a game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnSubscribeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnSubscribeEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnSubscribeEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnSubscribeEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client has subscribed to an event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.OnUnsubscribeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.OnUnsubscribeEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events.OnUnsubscribeEvent",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Events.OnUnsubscribeEvent.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client has unsubscribed from an event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Events.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Events",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.BadPresenceException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.BadPresenceException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions.BadPresenceException",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Exceptions.BadPresenceException.yml\" sourcestartlinenumber=\"1\">A BadPresenceException is thrown when invalid, incompatible or conflicting properties and is unable to be sent.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.InvalidConfigurationException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.InvalidConfigurationException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions.InvalidConfigurationException",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Exceptions.InvalidConfigurationException.yml\" sourcestartlinenumber=\"1\">A InvalidConfigurationException is thrown when trying to perform a action that conflicts with the current configuration.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.InvalidPipeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.InvalidPipeException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions.InvalidPipeException",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Exceptions.InvalidPipeException.yml\" sourcestartlinenumber=\"1\">The exception that is thrown when a error occurs while communicating with a pipe or when a connection attempt fails.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.StringOutOfRangeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.StringOutOfRangeException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions.StringOutOfRangeException",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Exceptions.StringOutOfRangeException.yml\" sourcestartlinenumber=\"1\">A StringOutOfRangeException is thrown when the length of a string exceeds the allowed limit.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.UninitializedException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.UninitializedException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions.UninitializedException",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Exceptions.UninitializedException.yml\" sourcestartlinenumber=\"1\">Thrown when an action is performed on a client that has not yet been initialized</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Exceptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Exceptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Helper.StringTools.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Helper.StringTools.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Helper.StringTools",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Helper.StringTools.yml\" sourcestartlinenumber=\"1\">Collectin of helpful string extensions</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Helper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Helper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Helper",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.INamedPipeClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.INamedPipeClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO.INamedPipeClient",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.IO.INamedPipeClient.yml\" sourcestartlinenumber=\"1\">Pipe Client used to communicate with Discord.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.ManagedNamedPipeClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.ManagedNamedPipeClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO.ManagedNamedPipeClient",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.IO.ManagedNamedPipeClient.yml\" sourcestartlinenumber=\"1\">A named pipe client using the .NET framework <xref href=\"System.IO.Pipes.NamedPipeClientStream\" data-throw-if-not-resolved=\"false\"></xref></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.Opcode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.Opcode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO.Opcode",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.IO.Opcode.yml\" sourcestartlinenumber=\"1\">The operation code that the <xref href=\"DiscordRPC.IO.PipeFrame\" data-throw-if-not-resolved=\"false\"></xref> was sent under. This defines the type of frame and the data to expect.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.PipeFrame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.PipeFrame.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO.PipeFrame",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.IO.PipeFrame.yml\" sourcestartlinenumber=\"1\">A frame received and sent to the Discord client for RPC communications.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.ConsoleLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.ConsoleLogger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging.ConsoleLogger",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Logging.ConsoleLogger.yml\" sourcestartlinenumber=\"1\">Logs the outputs to the console using <xref href=\"System.Console.WriteLine\" data-throw-if-not-resolved=\"false\"></xref></p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.FileLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.FileLogger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging.FileLogger",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Logging.FileLogger.yml\" sourcestartlinenumber=\"1\">Logs the outputs to a file</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.ILogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.ILogger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging.ILogger",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Logging.ILogger.yml\" sourcestartlinenumber=\"1\">Logging interface to log the internal states of the pipe. Logs are sent in a NON thread safe way. They can come from multiple threads and it is upto the ILogger to account for it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.LogLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.LogLevel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging.LogLevel",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Logging.LogLevel.yml\" sourcestartlinenumber=\"1\">Level of logging to use.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.NullLogger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.NullLogger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging.NullLogger",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Logging.NullLogger.yml\" sourcestartlinenumber=\"1\">Ignores all log events</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Logging.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Logging.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Logging",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.CloseMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.CloseMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.CloseMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.CloseMessage.yml\" sourcestartlinenumber=\"1\">Called when the IPC has closed.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ConnectionEstablishedMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ConnectionEstablishedMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.ConnectionEstablishedMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.ConnectionEstablishedMessage.yml\" sourcestartlinenumber=\"1\">The connection to the discord client was succesfull. This is called before <xref href=\"DiscordRPC.Message.MessageType.Ready\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ConnectionFailedMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ConnectionFailedMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.ConnectionFailedMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.ConnectionFailedMessage.yml\" sourcestartlinenumber=\"1\">Failed to establish any connection with discord. Discord is potentially not running?</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ErrorCode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ErrorCode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.ErrorCode",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.ErrorCode.yml\" sourcestartlinenumber=\"1\">The error message received by discord. See <a href=\"https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors\" sourcefile=\"api/DiscordRPC.Message.ErrorCode.yml\" sourcestartlinenumber=\"1\">https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors</a> for documentation</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ErrorMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ErrorMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.ErrorMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.ErrorMessage.yml\" sourcestartlinenumber=\"1\">Created when a error occurs within the ipc and it is sent to the client.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.IMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.IMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.IMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.IMessage.yml\" sourcestartlinenumber=\"1\">Messages received from discord.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.JoinMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.JoinMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.JoinMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.JoinMessage.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client wishes for this process to join a game. D -&gt; C.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.JoinRequestMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.JoinRequestMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.JoinRequestMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.JoinRequestMessage.yml\" sourcestartlinenumber=\"1\">Called when some other person has requested access to this game. C -&gt; D -&gt; C.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.MessageType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.MessageType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.MessageType",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.MessageType.yml\" sourcestartlinenumber=\"1\">Type of message.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.PresenceMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.PresenceMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.PresenceMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.PresenceMessage.yml\" sourcestartlinenumber=\"1\">Representation of the message received by discord when the presence has been updated.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.ReadyMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.ReadyMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.ReadyMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.ReadyMessage.yml\" sourcestartlinenumber=\"1\">Called when the ipc is ready to send arguments.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.SpectateMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.SpectateMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.SpectateMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.SpectateMessage.yml\" sourcestartlinenumber=\"1\">Called when the Discord Client wishes for this process to spectate a game. D -&gt; C.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.SubscribeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.SubscribeMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.SubscribeMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.SubscribeMessage.yml\" sourcestartlinenumber=\"1\">Called as validation of a subscribe</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.UnsubscribeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.UnsubscribeMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message.UnsubscribeMessage",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Message.UnsubscribeMessage.yml\" sourcestartlinenumber=\"1\">Called as validation of a subscribe</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Message.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Message.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Message",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Party.PrivacySetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Party.PrivacySetting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Party.PrivacySetting",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Party.PrivacySetting.yml\" sourcestartlinenumber=\"1\">Privacy of the party</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Party.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Party.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Party",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Party.yml\" sourcestartlinenumber=\"1\">Structure representing the part the player is in.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.RichPresence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.RichPresence.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.RichPresence",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.RichPresence.yml\" sourcestartlinenumber=\"1\">The Rich Presence structure that will be sent and received by Discord. Use this class to build your presence and update it appropriately.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Secrets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Secrets.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Secrets",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Secrets.yml\" sourcestartlinenumber=\"1\">The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.</p>\n<p>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</p>\n<p>You should send discord data that someone else's game client would need to join or spectate their friend. If you can't or don't want to support those actions, you don't need to send secrets.</p>\n<p>Visit the <a href=\"https://discordapp.com/developers/docs/rich-presence/how-to#secrets\">Rich Presence How-To</a> for more information.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.StatusDisplayType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.StatusDisplayType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.StatusDisplayType",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.StatusDisplayType.yml\" sourcestartlinenumber=\"1\">Rich Presence Display type</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Timestamps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Timestamps.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Timestamps",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Timestamps.yml\" sourcestartlinenumber=\"1\">Structure representing the start and endtimes of a match.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.AvatarFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.AvatarFormat.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User.AvatarFormat",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.AvatarFormat.yml\" sourcestartlinenumber=\"1\">Possible formats for avatars</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.AvatarSize.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.AvatarSize.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User.AvatarSize",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.AvatarSize.yml\" sourcestartlinenumber=\"1\">Possible square sizes of avatars.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.Flag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.Flag.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User.Flag",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.Flag.yml\" sourcestartlinenumber=\"1\">A flag on the user account</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.PremiumType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.PremiumType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User.PremiumType",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.PremiumType.yml\" sourcestartlinenumber=\"1\">Type of premium</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.yml\" sourcestartlinenumber=\"1\">Object representing a Discord user. This is used for join requests.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
     },
     {
       "type": "Conceptual",
       "source_relative_path": "articles/getting_started/monogame.md",
       "output": {
         ".html": {
-          "relative_path": "articles/getting_started/monogame.html",
-          "hash": "zI7IGbnWmvrT3JbbSPlsNbuSZvxWUHKRaBoMjhCkB5k="
+          "relative_path": "articles/getting_started/monogame.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -32,11 +965,9 @@
       "source_relative_path": "articles/getting_started/standard.md",
       "output": {
         ".html": {
-          "relative_path": "articles/getting_started/standard.html",
-          "hash": "AirvlRj+Uo7RmMKcb0sBfdZ4GqUFV5P1Iaad0qXQ2jM="
+          "relative_path": "articles/getting_started/standard.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -44,11 +975,9 @@
       "source_relative_path": "articles/getting_started/unity3d.md",
       "output": {
         ".html": {
-          "relative_path": "articles/getting_started/unity3d.html",
-          "hash": "5iMm4ltBv3f47FuCHjs4b/YbZLtfjxL1fMzxdmWJaf4="
+          "relative_path": "articles/getting_started/unity3d.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -56,11 +985,9 @@
       "source_relative_path": "articles/intro.md",
       "output": {
         ".html": {
-          "relative_path": "articles/intro.html",
-          "hash": "NiijksjQooJyCt/R3nkE2CqofSvZnUyGWccix3qcCwM="
+          "relative_path": "articles/intro.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -68,11 +995,9 @@
       "source_relative_path": "articles/join_spectate/intro.md",
       "output": {
         ".html": {
-          "relative_path": "articles/join_spectate/intro.html",
-          "hash": "cvW1AO30ztgMhR0hAkQDD4vlq2ge9lwcWt7tW+EuGcY="
+          "relative_path": "articles/join_spectate/intro.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -80,11 +1005,9 @@
       "source_relative_path": "articles/join_spectate/join.md",
       "output": {
         ".html": {
-          "relative_path": "articles/join_spectate/join.html",
-          "hash": "hYYYaMVG7fGamEPi3EDRyIHH3ABtIvztqVR5gzItMKI="
+          "relative_path": "articles/join_spectate/join.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -92,11 +1015,9 @@
       "source_relative_path": "articles/join_spectate/join_requests.md",
       "output": {
         ".html": {
-          "relative_path": "articles/join_spectate/join_requests.html",
-          "hash": "evxUw7lXq0en2cYWSn1nNRn+zERkczJhXIrSN73yVYI="
+          "relative_path": "articles/join_spectate/join_requests.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -104,11 +1025,9 @@
       "source_relative_path": "articles/join_spectate/spectate.md",
       "output": {
         ".html": {
-          "relative_path": "articles/join_spectate/spectate.html",
-          "hash": "1GBJEM/d6tAV5yESwoUhOZKOeCI3rWFVQWzI5iEdPX0="
+          "relative_path": "articles/join_spectate/spectate.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -116,11 +1035,9 @@
       "source_relative_path": "articles/rich_presence/guidelines.md",
       "output": {
         ".html": {
-          "relative_path": "articles/rich_presence/guidelines.html",
-          "hash": "OcAUXWq9UMGf9wJ2q44AbAx/fOENslqiHeil+OsU9ns="
+          "relative_path": "articles/rich_presence/guidelines.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -128,11 +1045,9 @@
       "source_relative_path": "articles/rich_presence/intro.md",
       "output": {
         ".html": {
-          "relative_path": "articles/rich_presence/intro.html",
-          "hash": "s7DXdxnuIpPcZcNpcSTQO5ih+LviZq2egjYEi8AigVw="
+          "relative_path": "articles/rich_presence/intro.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -140,11 +1055,12 @@
       "source_relative_path": "articles/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "articles/toc.html",
-          "hash": "EhrifH8paib6PzvkQbEoEyLd5KA8p9yj2E+1+OHqjCI="
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -152,11 +1068,9 @@
       "source_relative_path": "index.md",
       "output": {
         ".html": {
-          "relative_path": "index.html",
-          "hash": "mZv2K/SFPCxZkXWsLwD/qcczC1/BcAQBigSsEfzUQhg="
+          "relative_path": "index.html"
         }
       },
-      "is_incremental": false,
       "version": ""
     },
     {
@@ -164,52 +1078,15 @@
       "source_relative_path": "toc.yml",
       "output": {
         ".html": {
-          "relative_path": "toc.html",
-          "hash": "iiY4284/kFQi2jHgWev0TrFCJzkzpknmAJgOJhOdcOQ="
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
         }
       },
-      "is_incremental": false,
       "version": ""
     }
   ],
-  "incremental_info": [
-    {
-      "status": {
-        "can_incremental": false,
-        "details": "Cannot build incrementally because last build info is missing.",
-        "incrementalPhase": "build",
-        "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "NoAvailableBuildCache"
-      },
-      "processors": {
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 11,
-          "skipped_file_count": 0
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        }
-      }
-    },
-    {
-      "status": {
-        "can_incremental": false,
-        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
-        "incrementalPhase": "postProcessing",
-        "total_file_count": 0,
-        "skipped_file_count": 0
-      },
-      "processors": {}
-    }
-  ],
-  "version_info": {},
   "groups": [
     {
       "xrefmap": "xrefmap.yml"

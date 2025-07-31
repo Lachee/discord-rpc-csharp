@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DiscordRpcClient | Discord RPC C# </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DiscordRpcClient | Discord RPC C# ">
+    <meta name="generator" content="docfx ">
+  
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../">
+  
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="DiscordRPC.DiscordRpcClient">
+
+
+
+  <h1 id="DiscordRPC_DiscordRpcClient" data-uid="DiscordRPC.DiscordRpcClient" class="text-break">Class DiscordRpcClient</h1>
+  <div class="markdown level0 summary"><p>A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">DiscordRpcClient</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DiscordRPC.html">DiscordRPC</a></h6>
+  <h6><strong>Assembly</strong>: DiscordRPC.dll</h6>
+  <h5 id="DiscordRPC_DiscordRpcClient_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class DiscordRpcClient : IDisposable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient__ctor_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.%23ctor(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L207">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient__ctor_" data-uid="DiscordRPC.DiscordRpcClient.#ctor*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient__ctor_System_String_" data-uid="DiscordRPC.DiscordRpcClient.#ctor(System.String)">DiscordRpcClient(string)</h4>
+  <div class="markdown level1 summary"><p>Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordRpcClient(string applicationID)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">applicationID</span></td>
+        <td><p>The ID of the application created at discord's developers portal.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient__ctor_System_String_System_Int32_DiscordRPC_Logging_ILogger_System_Boolean_DiscordRPC_IO_INamedPipeClient_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.%23ctor(System.String%2CSystem.Int32%2CDiscordRPC.Logging.ILogger%2CSystem.Boolean%2CDiscordRPC.IO.INamedPipeClient)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L217">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient__ctor_" data-uid="DiscordRPC.DiscordRpcClient.#ctor*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient__ctor_System_String_System_Int32_DiscordRPC_Logging_ILogger_System_Boolean_DiscordRPC_IO_INamedPipeClient_" data-uid="DiscordRPC.DiscordRpcClient.#ctor(System.String,System.Int32,DiscordRPC.Logging.ILogger,System.Boolean,DiscordRPC.IO.INamedPipeClient)">DiscordRpcClient(string, int, ILogger, bool, INamedPipeClient)</h4>
+  <div class="markdown level1 summary"><p>Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events. This constructor exposes more advance features such as custom NamedPipeClients and Loggers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordRpcClient(string applicationID, int pipe = -1, ILogger logger = null, bool autoEvents = true, INamedPipeClient client = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">applicationID</span></td>
+        <td><p>The ID of the application created at discord's developers portal.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">pipe</span></td>
+        <td><p>The pipe to connect too. If -1, then the client will scan for the first available instance of Discord.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Logging.ILogger.html">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td><p>The logger used to report messages. If null, then a <a class="xref" href="DiscordRPC.Logging.NullLogger.html">NullLogger</a> will be created and logs will be ignored.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">autoEvents</span></td>
+        <td><p>Should events be automatically invoked from the RPC Thread as they arrive from discord?</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.IO.INamedPipeClient.html">INamedPipeClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p>The pipe client to use and communicate to discord through. If null, the default <a class="xref" href="DiscordRPC.IO.ManagedNamedPipeClient.html">ManagedNamedPipeClient</a> will be used.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_ApplicationID.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.ApplicationID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L31">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_ApplicationID_" data-uid="DiscordRPC.DiscordRpcClient.ApplicationID*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_ApplicationID" data-uid="DiscordRPC.DiscordRpcClient.ApplicationID">ApplicationID</h4>
+  <div class="markdown level1 summary"><p>Gets the Application ID of the RPC Client.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ApplicationID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_AutoEvents.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.AutoEvents%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L70">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_AutoEvents_" data-uid="DiscordRPC.DiscordRpcClient.AutoEvents*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_AutoEvents" data-uid="DiscordRPC.DiscordRpcClient.AutoEvents">AutoEvents</h4>
+  <div class="markdown level1 summary"><p>Indicates if the client will automatically invoke the events without <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> having to be called.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool AutoEvents { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Configuration.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Configuration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L104">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Configuration_" data-uid="DiscordRPC.DiscordRpcClient.Configuration*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Configuration" data-uid="DiscordRPC.DiscordRpcClient.Configuration">Configuration</h4>
+  <div class="markdown level1 summary"><p>The current configuration the connection is using. Only becomes available after a ready event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Configuration Configuration { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Configuration.html">Configuration</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_CurrentPresence.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.CurrentPresence%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L89">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_CurrentPresence_" data-uid="DiscordRPC.DiscordRpcClient.CurrentPresence*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_CurrentPresence" data-uid="DiscordRPC.DiscordRpcClient.CurrentPresence">CurrentPresence</h4>
+  <div class="markdown level1 summary"><p>The current presence that the client has. Gets set with <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_SetPresence_DiscordRPC_RichPresence_">SetPresence(RichPresence)</a> and updated on <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnPresenceUpdate">OnPresenceUpdate</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence CurrentPresence { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_CurrentUser.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.CurrentUser%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L99">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_CurrentUser_" data-uid="DiscordRPC.DiscordRpcClient.CurrentUser*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_CurrentUser" data-uid="DiscordRPC.DiscordRpcClient.CurrentUser">CurrentUser</h4>
+  <div class="markdown level1 summary"><p>The current discord user. This is updated with the ready event and will be null until the event is fired from the connection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public User CurrentUser { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.User.html">User</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_HasRegisteredUriScheme.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.HasRegisteredUriScheme%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L26">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_HasRegisteredUriScheme_" data-uid="DiscordRPC.DiscordRpcClient.HasRegisteredUriScheme*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_HasRegisteredUriScheme" data-uid="DiscordRPC.DiscordRpcClient.HasRegisteredUriScheme">HasRegisteredUriScheme</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating if the client has registered a URI Scheme. If this is false, Join / Spectate events will fail.</p>
+<p>To register a URI Scheme, call <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_RegisterUriScheme_System_String_System_String_">RegisterUriScheme(string, string)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasRegisteredUriScheme { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_IsDisposed.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.IsDisposed%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L51">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_IsDisposed_" data-uid="DiscordRPC.DiscordRpcClient.IsDisposed*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_IsDisposed" data-uid="DiscordRPC.DiscordRpcClient.IsDisposed">IsDisposed</h4>
+  <div class="markdown level1 summary"><p>The dispose state of the client object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsDisposed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_IsInitialized.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.IsInitialized%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L109">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_IsInitialized_" data-uid="DiscordRPC.DiscordRpcClient.IsInitialized*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_IsInitialized" data-uid="DiscordRPC.DiscordRpcClient.IsInitialized">IsInitialized</h4>
+  <div class="markdown level1 summary"><p>Represents if the client has been <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Initialize">Initialize()</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsInitialized { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Logger.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Logger%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L56">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Logger_" data-uid="DiscordRPC.DiscordRpcClient.Logger*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Logger" data-uid="DiscordRPC.DiscordRpcClient.Logger">Logger</h4>
+  <div class="markdown level1 summary"><p>The logger used this client and its associated components. <a class="xref" href="DiscordRPC.Logging.ILogger.html">ILogger</a> are not called safely and can come from any thread. It is upto the <a class="xref" href="DiscordRPC.Logging.ILogger.html">ILogger</a> to account for this and apply appropriate thread safe methods.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ILogger Logger { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Logging.ILogger.html">ILogger</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_MaxQueueSize.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.MaxQueueSize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L46">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_MaxQueueSize_" data-uid="DiscordRPC.DiscordRpcClient.MaxQueueSize*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_MaxQueueSize" data-uid="DiscordRPC.DiscordRpcClient.MaxQueueSize">MaxQueueSize</h4>
+  <div class="markdown level1 summary"><p>The maximum size of the message queue received from Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxQueueSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_ProcessID.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.ProcessID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L41">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_ProcessID_" data-uid="DiscordRPC.DiscordRpcClient.ProcessID*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_ProcessID" data-uid="DiscordRPC.DiscordRpcClient.ProcessID">ProcessID</h4>
+  <div class="markdown level1 summary"><p>Gets the ID of the process used to run the RPC Client. Discord tracks this process ID and waits for its termination. Defaults to the current application process ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ProcessID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_ShutdownOnly.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.ShutdownOnly%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L115">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_ShutdownOnly_" data-uid="DiscordRPC.DiscordRpcClient.ShutdownOnly*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_ShutdownOnly" data-uid="DiscordRPC.DiscordRpcClient.ShutdownOnly">ShutdownOnly</h4>
+  <div class="markdown level1 summary"><p>Forces the connection to shutdown gracefully instead of just aborting the connection.</p>
+<p>This option helps prevents ghosting in applications where the Process ID is a host and the game is executed within the host (ie: the Unity3D editor). This will tell Discord that we have no presence and we are closing the connection manually, instead of waiting for the process to terminate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ShutdownOnly { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SkipIdenticalPresence.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SkipIdenticalPresence%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L75">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SkipIdenticalPresence_" data-uid="DiscordRPC.DiscordRpcClient.SkipIdenticalPresence*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SkipIdenticalPresence" data-uid="DiscordRPC.DiscordRpcClient.SkipIdenticalPresence">SkipIdenticalPresence</h4>
+  <div class="markdown level1 summary"><p>Skips sending presences that are identical to the current one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SkipIdenticalPresence { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SteamID.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SteamID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L36">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SteamID_" data-uid="DiscordRPC.DiscordRpcClient.SteamID*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SteamID" data-uid="DiscordRPC.DiscordRpcClient.SteamID">SteamID</h4>
+  <div class="markdown level1 summary"><p>Gets the Steam ID of the RPC Client. This value can be null if none was supplied.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string SteamID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Subscription.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Subscription%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L94">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Subscription_" data-uid="DiscordRPC.DiscordRpcClient.Subscription*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Subscription" data-uid="DiscordRPC.DiscordRpcClient.Subscription">Subscription</h4>
+  <div class="markdown level1 summary"><p>Current subscription to events. Gets set with <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Subscribe_DiscordRPC_EventType_">Subscribe(EventType)</a>, <a class="xref" href="DiscordRPC.Message.UnsubscribeMessage.html">UnsubscribeMessage</a> and updated on <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnSubscribe">OnSubscribe</a>, <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnUnsubscribe">OnUnsubscribe</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EventType Subscription { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.EventType.html">EventType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_TargetPipe.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.TargetPipe%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L82">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_TargetPipe_" data-uid="DiscordRPC.DiscordRpcClient.TargetPipe*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_TargetPipe" data-uid="DiscordRPC.DiscordRpcClient.TargetPipe">TargetPipe</h4>
+  <div class="markdown level1 summary"><p>The pipe the discord client is on, ranging from 0 to 9. Use -1 to scan through all pipes.</p>
+<p>This property can be used for testing multiple clients. For example, if a Discord Client was on pipe 0, the Discord Canary is most likely on pipe 1.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int TargetPipe { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_ClearPresence.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.ClearPresence%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L676">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_ClearPresence_" data-uid="DiscordRPC.DiscordRpcClient.ClearPresence*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_ClearPresence" data-uid="DiscordRPC.DiscordRpcClient.ClearPresence">ClearPresence()</h4>
+  <div class="markdown level1 summary"><p>Clears the Rich Presence. Use this just before disposal to prevent ghosting.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ClearPresence()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Deinitialize.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Deinitialize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L825">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Deinitialize_" data-uid="DiscordRPC.DiscordRpcClient.Deinitialize*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Deinitialize" data-uid="DiscordRPC.DiscordRpcClient.Deinitialize">Deinitialize()</h4>
+  <div class="markdown level1 summary"><p>Attempts to disconnect and deinitialize the IPC connection while retaining the settings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Deinitialize()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Dispose.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Dispose%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L837">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Dispose_" data-uid="DiscordRPC.DiscordRpcClient.Dispose*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Dispose" data-uid="DiscordRPC.DiscordRpcClient.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Terminates the connection to Discord and disposes of the object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Initialize.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Initialize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L808">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Initialize_" data-uid="DiscordRPC.DiscordRpcClient.Initialize*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Initialize" data-uid="DiscordRPC.DiscordRpcClient.Initialize">Initialize()</h4>
+  <div class="markdown level1 summary"><p>Attempts to initalize a connection to the Discord IPC.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Initialize()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Invoke.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Invoke%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L260">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Invoke_" data-uid="DiscordRPC.DiscordRpcClient.Invoke*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Invoke" data-uid="DiscordRPC.DiscordRpcClient.Invoke">Invoke()</h4>
+  <div class="markdown level1 summary"><p>Dequeues all the messages from Discord, processes them and then invoke appropriate event handlers. This will process the message and update the internal state before invoking the events. Returns the messages that were invoked in the order they were invoked.</p>
+<p>This method cannot be used if <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IMessage[] Invoke()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Message.IMessage.html">IMessage</a>[]</td>
+        <td><p>Returns the messages that were invoked and in the order they were invoked.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_RegisterUriScheme_System_String_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.RegisterUriScheme(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L700">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_RegisterUriScheme_" data-uid="DiscordRPC.DiscordRpcClient.RegisterUriScheme*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_RegisterUriScheme_System_String_System_String_" data-uid="DiscordRPC.DiscordRpcClient.RegisterUriScheme(System.String,System.String)">RegisterUriScheme(string, string)</h4>
+  <div class="markdown level1 summary"><p>Registers the application executable to a custom URI Scheme.</p>
+<p>This is required for the Join and Spectate features. Discord will run this custom URI Scheme to launch your application when a user presses either of the buttons.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool RegisterUriScheme(string steamAppID = null, string executable = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">steamAppID</span></td>
+        <td><p>Optional Steam ID. If supplied, Discord will launch the game through steam instead of directly calling it.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">executable</span></td>
+        <td><p>The path to the executable. If null, the path to the current executable will be used instead.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Respond_DiscordRPC_Message_JoinRequestMessage_System_Boolean_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.Message.JoinRequestMessage%2CSystem.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L422">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Respond_" data-uid="DiscordRPC.DiscordRpcClient.Respond*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Respond_DiscordRPC_Message_JoinRequestMessage_System_Boolean_" data-uid="DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.Message.JoinRequestMessage,System.Boolean)">Respond(JoinRequestMessage, bool)</h4>
+  <div class="markdown level1 summary"><p>Respond to a Join Request. All requests will timeout after 30 seconds.</p>
+<p>Because of the 30 second timeout, it is recommended to call <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> faster than every 15 seconds to give your users adequate time to respond to the request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Respond(JoinRequestMessage request, bool acceptRequest)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Message.JoinRequestMessage.html">JoinRequestMessage</a></td>
+        <td><span class="parametername">request</span></td>
+        <td><p>The request that is being responded too.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><span class="parametername">acceptRequest</span></td>
+        <td><p>Accept the join request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SetButton_DiscordRPC_Button_System_Int32_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SetButton(DiscordRPC.Button%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L534">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SetButton_" data-uid="DiscordRPC.DiscordRpcClient.SetButton*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SetButton_DiscordRPC_Button_System_Int32_" data-uid="DiscordRPC.DiscordRpcClient.SetButton(DiscordRPC.Button,System.Int32)">SetButton(Button, int)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_Buttons">Buttons</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and updates the button with the given index. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence SetButton(Button button, int index = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Button.html">Button</a></td>
+        <td><span class="parametername">button</span></td>
+        <td><p>The buttons of the Rich Presence</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The number of the button</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SetPresence_DiscordRPC_RichPresence_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SetPresence(DiscordRPC.RichPresence)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L440">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SetPresence_" data-uid="DiscordRPC.DiscordRpcClient.SetPresence*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SetPresence_DiscordRPC_RichPresence_" data-uid="DiscordRPC.DiscordRpcClient.SetPresence(DiscordRPC.RichPresence)">SetPresence(RichPresence)</h4>
+  <div class="markdown level1 summary"><p>Sets the Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetPresence(RichPresence presence)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><span class="parametername">presence</span></td>
+        <td><p>The Rich Presence to set on the current Discord user.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SetSubscription_DiscordRPC_EventType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SetSubscription(DiscordRPC.EventType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L732">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SetSubscription_" data-uid="DiscordRPC.DiscordRpcClient.SetSubscription*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SetSubscription_DiscordRPC_EventType_" data-uid="DiscordRPC.DiscordRpcClient.SetSubscription(DiscordRPC.EventType)">SetSubscription(EventType)</h4>
+  <div class="markdown level1 summary"><p>Sets the subscription to the events sent from Discord.</p>
+<p>Requires the UriScheme to be registered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSubscription(EventType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.EventType.html">EventType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The new subscription as a flag. Events selected in the flag will be subscribed too and the other events will be unsubscribed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Subscribe_DiscordRPC_EventType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L711">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Subscribe_" data-uid="DiscordRPC.DiscordRpcClient.Subscribe*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Subscribe_DiscordRPC_EventType_" data-uid="DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)">Subscribe(EventType)</h4>
+  <div class="markdown level1 summary"><p>Subscribes to an event sent from discord. Used for Join / Spectate feature.</p>
+<p>Requires the UriScheme to be registered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Subscribe(EventType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.EventType.html">EventType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The event type to subscribe to</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_SynchronizeState.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.SynchronizeState%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L792">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_SynchronizeState_" data-uid="DiscordRPC.DiscordRpcClient.SynchronizeState*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_SynchronizeState" data-uid="DiscordRPC.DiscordRpcClient.SynchronizeState">SynchronizeState()</h4>
+  <div class="markdown level1 summary"><p>Resends the current presence and subscription. This is used when Ready is called to keep the current state within discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SynchronizeState()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Unsubscribe_DiscordRPC_EventType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Unsubscribe(DiscordRPC.EventType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L725">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Unsubscribe_" data-uid="DiscordRPC.DiscordRpcClient.Unsubscribe*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Unsubscribe_DiscordRPC_EventType_" data-uid="DiscordRPC.DiscordRpcClient.Unsubscribe(DiscordRPC.EventType)">Unsubscribe(EventType)</h4>
+  <div class="markdown level1 summary"><p>Unsubscribe from the event sent by discord. Used for Join / Spectate feature.</p>
+<p>Requires the UriScheme to be registered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Unsubscribe(EventType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.EventType.html">EventType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The event type to unsubscribe from</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Unubscribe_DiscordRPC_EventType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L717">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Unubscribe_" data-uid="DiscordRPC.DiscordRpcClient.Unubscribe*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Unubscribe_DiscordRPC_EventType_" data-uid="DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)">Unubscribe(EventType)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Replaced with Unsubscribe&quot;, true)]
+public void Unubscribe(EventType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.EventType.html">EventType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_Update_System_Action_DiscordRPC_RichPresence__.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.Update(System.Action%7BDiscordRPC.RichPresence%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L490">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_Update_" data-uid="DiscordRPC.DiscordRpcClient.Update*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_Update_System_Action_DiscordRPC_RichPresence__" data-uid="DiscordRPC.DiscordRpcClient.Update(System.Action{DiscordRPC.RichPresence})">Update(Action&lt;RichPresence&gt;)</h4>
+  <div class="markdown level1 summary"><p>Updates the values assigned in the delegate passed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence Update(Action&lt;RichPresence&gt; func)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a>&gt;</td>
+        <td><span class="parametername">func</span></td>
+        <td><p>Delegate used to update the rich presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateButtons_DiscordRPC_Button___.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateButtons(DiscordRPC.Button%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L526">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateButtons_" data-uid="DiscordRPC.DiscordRpcClient.UpdateButtons*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateButtons_DiscordRPC_Button___" data-uid="DiscordRPC.DiscordRpcClient.UpdateButtons(DiscordRPC.Button[])">UpdateButtons(Button[])</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_Buttons">Buttons</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and updates/removes the buttons. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateButtons(Button[] buttons = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Button.html">Button</a>[]</td>
+        <td><span class="parametername">buttons</span></td>
+        <td><p>The buttons of the Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateClearTime.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateClearTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L669">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateClearTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateClearTime*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateClearTime" data-uid="DiscordRPC.DiscordRpcClient.UpdateClearTime">UpdateClearTime()</h4>
+  <div class="markdown level1 summary"><p>Sets the start and end time of <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> to null and sends it to Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateClearTime()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateDetails_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateDetails(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L541">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateDetails_" data-uid="DiscordRPC.DiscordRpcClient.UpdateDetails*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateDetails_System_String_" data-uid="DiscordRPC.DiscordRpcClient.UpdateDetails(System.String)">UpdateDetails(string)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Details">Details</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateDetails(string details)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">details</span></td>
+        <td><p>The details of the Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateEndTime.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateEndTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L650">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateEndTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateEndTime*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateEndTime" data-uid="DiscordRPC.DiscordRpcClient.UpdateEndTime">UpdateEndTime()</h4>
+  <div class="markdown level1 summary"><p>Sets the end time of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> to now and sends the updated presence to Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateEndTime()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateEndTime_System_DateTime_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateEndTime(System.DateTime)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L657">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateEndTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateEndTime*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateEndTime_System_DateTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateEndTime(System.DateTime)">UpdateEndTime(DateTime)</h4>
+  <div class="markdown level1 summary"><p>Sets the end time of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateEndTime(DateTime time)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></td>
+        <td><span class="parametername">time</span></td>
+        <td><p>The new time for the end</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateLargeAsset_System_String_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateLargeAsset(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L596">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateLargeAsset_" data-uid="DiscordRPC.DiscordRpcClient.UpdateLargeAsset*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateLargeAsset_System_String_System_String_" data-uid="DiscordRPC.DiscordRpcClient.UpdateLargeAsset(System.String,System.String)">UpdateLargeAsset(string, string)</h4>
+  <div class="markdown level1 summary"><p>Updates the large <a class="xref" href="DiscordRPC.Assets.html">Assets</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Both <code class="paramref">key</code> and <code class="paramref">tooltip</code> are optional and will be ignored it null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateLargeAsset(string key = null, string tooltip = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Optional: The new key to set the asset too</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">tooltip</span></td>
+        <td><p>Optional: The new tooltip to display on the asset</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateParty_DiscordRPC_Party_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateParty(DiscordRPC.Party)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L555">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateParty_" data-uid="DiscordRPC.DiscordRpcClient.UpdateParty*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateParty_DiscordRPC_Party_" data-uid="DiscordRPC.DiscordRpcClient.UpdateParty(DiscordRPC.Party)">UpdateParty(Party)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Party">Party</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateParty(Party party)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Party.html">Party</a></td>
+        <td><span class="parametername">party</span></td>
+        <td><p>The party of the Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdatePartySize_System_Int32_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L563">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdatePartySize_" data-uid="DiscordRPC.DiscordRpcClient.UpdatePartySize*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdatePartySize_System_Int32_" data-uid="DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32)">UpdatePartySize(int)</h4>
+  <div class="markdown level1 summary"><p>Updates the <a class="xref" href="DiscordRPC.Party.html#DiscordRPC_Party_Size">Size</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the update presence to Discord. Returns the newly edited Rich Presence.</p>
+<p>Will return null if no presence exists and will throw a new <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a> if the Party does not exist.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdatePartySize(int size)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>The new size of the party. It cannot be greater than <a class="xref" href="DiscordRPC.Party.html#DiscordRPC_Party_Max">Max</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdatePartySize_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L580">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdatePartySize_" data-uid="DiscordRPC.DiscordRpcClient.UpdatePartySize*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdatePartySize_System_Int32_System_Int32_" data-uid="DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32,System.Int32)">UpdatePartySize(int, int)</h4>
+  <div class="markdown level1 summary"><p>Updates the <a class="xref" href="DiscordRPC.Party.html#DiscordRPC_Party_Size">Size</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the update presence to Discord. Returns the newly edited Rich Presence.</p>
+<p>Will return null if no presence exists and will throw a new <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a> if the Party does not exist.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdatePartySize(int size, int max)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>The new size of the party. It cannot be greater than <a class="xref" href="DiscordRPC.Party.html#DiscordRPC_Party_Max">Max</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The new size of the party. It cannot be smaller than <a class="xref" href="DiscordRPC.Party.html#DiscordRPC_Party_Size">Size</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateSecrets_DiscordRPC_Secrets_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateSecrets(DiscordRPC.Secrets)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L625">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateSecrets_" data-uid="DiscordRPC.DiscordRpcClient.UpdateSecrets*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateSecrets_DiscordRPC_Secrets_" data-uid="DiscordRPC.DiscordRpcClient.UpdateSecrets(DiscordRPC.Secrets)">UpdateSecrets(Secrets)</h4>
+  <div class="markdown level1 summary"><p>Updates the <a class="xref" href="DiscordRPC.Secrets.html">Secrets</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Will override previous secret entirely.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateSecrets(Secrets secrets)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Secrets.html">Secrets</a></td>
+        <td><span class="parametername">secrets</span></td>
+        <td><p>The new secret to send to discord.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateSmallAsset_System_String_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateSmallAsset(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L611">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateSmallAsset_" data-uid="DiscordRPC.DiscordRpcClient.UpdateSmallAsset*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateSmallAsset_System_String_System_String_" data-uid="DiscordRPC.DiscordRpcClient.UpdateSmallAsset(System.String,System.String)">UpdateSmallAsset(string, string)</h4>
+  <div class="markdown level1 summary"><p>Updates the small <a class="xref" href="DiscordRPC.Assets.html">Assets</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Both <code class="paramref">key</code> and <code class="paramref">tooltip</code> are optional and will be ignored it null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateSmallAsset(string key = null, string tooltip = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Optional: The new key to set the asset too</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">tooltip</span></td>
+        <td><p>Optional: The new tooltip to display on the asset</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateStartTime.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateStartTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L631">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateStartTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateStartTime*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateStartTime" data-uid="DiscordRPC.DiscordRpcClient.UpdateStartTime">UpdateStartTime()</h4>
+  <div class="markdown level1 summary"><p>Sets the start time of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> to now and sends the updated presence to Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateStartTime()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateStartTime_System_DateTime_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateStartTime(System.DateTime)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L638">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateStartTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateStartTime*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateStartTime_System_DateTime_" data-uid="DiscordRPC.DiscordRpcClient.UpdateStartTime(System.DateTime)">UpdateStartTime(DateTime)</h4>
+  <div class="markdown level1 summary"><p>Sets the start time of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateStartTime(DateTime time)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></td>
+        <td><span class="parametername">time</span></td>
+        <td><p>The new time for the start</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateState_System_String_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateState(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L548">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateState_" data-uid="DiscordRPC.DiscordRpcClient.UpdateState*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateState_System_String_" data-uid="DiscordRPC.DiscordRpcClient.UpdateState(System.String)">UpdateState(string)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_State">State</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateState(string state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>The state of the Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateStatusDisplayType_DiscordRPC_StatusDisplayType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateStatusDisplayType(DiscordRPC.StatusDisplayType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L519">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateStatusDisplayType_" data-uid="DiscordRPC.DiscordRpcClient.UpdateStatusDisplayType*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateStatusDisplayType_DiscordRPC_StatusDisplayType_" data-uid="DiscordRPC.DiscordRpcClient.UpdateStatusDisplayType(DiscordRPC.StatusDisplayType)">UpdateStatusDisplayType(StatusDisplayType)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StatusDisplay">StatusDisplay</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateStatusDisplayType(StatusDisplayType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.StatusDisplayType.html">StatusDisplayType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type to display on the status</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_UpdateType_DiscordRPC_ActivityType_.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.UpdateType(DiscordRPC.ActivityType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L513">View Source</a>
+  </span>
+  <a id="DiscordRPC_DiscordRpcClient_UpdateType_" data-uid="DiscordRPC.DiscordRpcClient.UpdateType*"></a>
+  <h4 id="DiscordRPC_DiscordRpcClient_UpdateType_DiscordRPC_ActivityType_" data-uid="DiscordRPC.DiscordRpcClient.UpdateType(DiscordRPC.ActivityType)">UpdateType(ActivityType)</h4>
+  <div class="markdown level1 summary"><p>Updates only the <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Type">Type</a> of the <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentPresence">CurrentPresence</a> and sends the updated presence to Discord. Returns the newly edited Rich Presence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence UpdateType(ActivityType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.ActivityType.html">ActivityType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The type of the Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></td>
+        <td><p>Updated Rich Presence</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnClose.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnClose%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L139">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnClose" data-uid="DiscordRPC.DiscordRpcClient.OnClose">OnClose</h4>
+  <div class="markdown level1 summary"><p>Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnCloseEvent OnClose</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnCloseEvent.html">OnCloseEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnConnectionEstablished.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnConnectionEstablished%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L187">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnConnectionEstablished" data-uid="DiscordRPC.DiscordRpcClient.OnConnectionEstablished">OnConnectionEstablished</h4>
+  <div class="markdown level1 summary"><p>The connection to the discord client was succesfull. This is called before <a class="xref" href="DiscordRPC.Message.MessageType.html#DiscordRPC_Message_MessageType_Ready">Ready</a>.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnConnectionEstablishedEvent OnConnectionEstablished</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnConnectionEstablishedEvent.html">OnConnectionEstablishedEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnConnectionFailed.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnConnectionFailed%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L193">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnConnectionFailed" data-uid="DiscordRPC.DiscordRpcClient.OnConnectionFailed">OnConnectionFailed</h4>
+  <div class="markdown level1 summary"><p>Failed to establish any connection with discord. Discord is potentially not running?</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnConnectionFailedEvent OnConnectionFailed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnConnectionFailedEvent.html">OnConnectionFailedEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnError.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L145">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnError" data-uid="DiscordRPC.DiscordRpcClient.OnError">OnError</h4>
+  <div class="markdown level1 summary"><p>Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnErrorEvent OnError</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnErrorEvent.html">OnErrorEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnJoin.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnJoin%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L169">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnJoin" data-uid="DiscordRPC.DiscordRpcClient.OnJoin">OnJoin</h4>
+  <div class="markdown level1 summary"><p>Called when the Discord Client wishes for this process to join a game.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnJoinEvent OnJoin</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnJoinEvent.html">OnJoinEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnJoinRequested.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnJoinRequested%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L181">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnJoinRequested" data-uid="DiscordRPC.DiscordRpcClient.OnJoinRequested">OnJoinRequested</h4>
+  <div class="markdown level1 summary"><p>Called when another discord user requests permission to join this game.</p>
+<p>This event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> is executed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnJoinRequestedEvent OnJoinRequested</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnJoinRequestedEvent.html">OnJoinRequestedEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnPresenceUpdate.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnPresenceUpdate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L151">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnPresenceUpdate" data-uid="DiscordRPC.DiscordRpcClient.OnPresenceUpdate">OnPresenceUpdate</h4>
+  <div class="markdown level1 summary"><p>Called when the Discord Client has updated the presence.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnPresenceUpdateEvent OnPresenceUpdate</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnPresenceUpdateEvent.html">OnPresenceUpdateEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnReady.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnReady%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L133">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnReady" data-uid="DiscordRPC.DiscordRpcClient.OnReady">OnReady</h4>
+  <div class="markdown level1 summary"><p>Called when the discord client is ready to send and receive messages.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnReadyEvent OnReady</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnReadyEvent.html">OnReadyEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnRpcMessage.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnRpcMessage%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L198">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnRpcMessage" data-uid="DiscordRPC.DiscordRpcClient.OnRpcMessage">OnRpcMessage</h4>
+  <div class="markdown level1 summary"><p>The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnRpcMessageEvent OnRpcMessage</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnRpcMessageEvent.html">OnRpcMessageEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnSpectate.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnSpectate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L175">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnSpectate" data-uid="DiscordRPC.DiscordRpcClient.OnSpectate">OnSpectate</h4>
+  <div class="markdown level1 summary"><p>Called when the Discord Client wishes for this process to spectate a game.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnSpectateEvent OnSpectate</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnSpectateEvent.html">OnSpectateEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnSubscribe.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnSubscribe%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L157">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnSubscribe" data-uid="DiscordRPC.DiscordRpcClient.OnSubscribe">OnSubscribe</h4>
+  <div class="markdown level1 summary"><p>Called when the Discord Client has subscribed to an event.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnSubscribeEvent OnSubscribe</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnSubscribeEvent.html">OnSubscribeEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient_OnUnsubscribe.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient.OnUnsubscribe%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L163">View Source</a>
+  </span>
+  <h4 id="DiscordRPC_DiscordRpcClient_OnUnsubscribe" data-uid="DiscordRPC.DiscordRpcClient.OnUnsubscribe">OnUnsubscribe</h4>
+  <div class="markdown level1 summary"><p>Called when the Discord Client has unsubscribed from an event.</p>
+<p>If <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_AutoEvents">AutoEvents</a> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <a class="xref" href="DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">Invoke()</a> and will be on the calling thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnUnsubscribeEvent OnUnsubscribe</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DiscordRPC.Events.OnUnsubscribeEvent.html">OnUnsubscribeEvent</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a>
+  </div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Lachee/discord-rpc-csharp/new/master/apiSpec/new?filename=DiscordRPC_DiscordRpcClient.md&amp;value=---%0Auid%3A%20DiscordRPC.DiscordRpcClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/DiscordRpcClient.cs/#L17" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="toggle-mode">
+                <div class="icon">
+                  <i aria-hidden="true">☀</i>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="switch-style">
+                  <span class="slider round"></span>
+                </label>
+                <div class="icon">
+                  <i aria-hidden="true">☾</i>
+                </div>
+              </div>
+
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <h5>In this article</h5>
+              <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <div class="pull-left">
+        <a href="https://github.com/Lachee/discord-rpc-csharp">Contribute</a> on GitHub
+        
+            </div>
+            <div class="toggle-mode pull-right visible-sm visible-xs">
+              <div class="icon">
+                <i aria-hidden="true">☀</i>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="switch-style-m">
+                <span class="slider round"></span>
+              </label>
+              <div class="icon">
+                <i aria-hidden="true">☾</i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="../styles/toggle-theme.js"></script>
+      </footer>    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
