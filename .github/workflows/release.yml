@@ -28,6 +28,10 @@ jobs:
       # Check-out repository
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+
 
       # Version the repository
       - name: Update Versions
