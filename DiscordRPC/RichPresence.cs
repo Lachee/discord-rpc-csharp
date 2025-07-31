@@ -235,8 +235,10 @@ namespace DiscordRPC
                 if (other.Assets == null ||
                     other.Assets.LargeImageKey != Assets.LargeImageKey ||
                     other.Assets.LargeImageText != Assets.LargeImageText ||
+                    other.Assets.LargeImageUrl != Assets.LargeImageUrl ||
                     other.Assets.SmallImageKey != Assets.SmallImageKey ||
-                    other.Assets.SmallImageText != Assets.SmallImageText)
+                    other.Assets.SmallImageText != Assets.SmallImageText ||
+                    other.Assets.SmallImageUrl != Assets.SmallImageUrl)
                     return false;
             }
             else if (other.Assets != null)
@@ -269,9 +271,11 @@ namespace DiscordRPC
                 {
                     SmallImageKey = Assets.SmallImageKey,
                     SmallImageText = Assets.SmallImageText,
+                    SmallImageUrl = Assets.SmallImageUrl,
 
                     LargeImageKey = Assets.LargeImageKey,
-                    LargeImageText = Assets.LargeImageText
+                    LargeImageText = Assets.LargeImageText,
+                    LargeImageUrl = Assets.LargeImageUrl
                 };
             }
 
@@ -453,7 +457,25 @@ namespace DiscordRPC
             }
         }
         private string _largeimagetext;
-
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the large image in the activity card.
+        /// <para>Max 256 characters.</para>
+        /// </summary>
+        [JsonProperty("large_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string LargeImageUrl
+        {
+            get { return _largeimageurl; }
+            set
+            {
+                if (!BaseRichPresence.ValidateString(value, out _largeimageurl, false, 256))
+                    throw new StringOutOfRangeException(256);
+                
+                if (!Uri.TryCreate(_largeimageurl, UriKind.Absolute, out _))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        private string _largeimageurl;
 
         /// <summary>
         /// Name of the uploaded image for the small profile artwork.
@@ -503,6 +525,25 @@ namespace DiscordRPC
             }
         }
         private string _smallimagetext;
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the small image in the activity card.
+        /// <para>Max 256 characters.</para>
+        /// </summary>
+        [JsonProperty("small_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string SmallImageUrl
+        {
+            get { return _smallimageurl; }
+            set
+            {
+                if (!BaseRichPresence.ValidateString(value, out _smallimageurl, false, 256))
+                    throw new StringOutOfRangeException(256);
+                
+                if (!Uri.TryCreate(_largeimageurl, UriKind.Absolute, out _))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        private string _smallimageurl;
 
         /// <summary>
         /// The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="LargeImageKey"/> is changed.
@@ -526,7 +567,9 @@ namespace DiscordRPC
         {
             //Copy over the names
             _smallimagetext = other._smallimagetext;
+            _smallimageurl = other._smallimageurl;
             _largeimagetext = other._largeimagetext;
+            _largeimageurl = other._largeimageurl;
 
             //Convert large ID
             ulong largeID;
@@ -796,7 +839,7 @@ namespace DiscordRPC
                 if (!BaseRichPresence.ValidateString(value, out _url, false, 512))
                     throw new StringOutOfRangeException(512);
 
-                if (!Uri.TryCreate(_url, UriKind.Absolute, out var uriResult)) // || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                if (!Uri.TryCreate(_url, UriKind.Absolute, out _)) // || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                     throw new ArgumentException("Url must be a valid URI");
             }
         }
@@ -992,8 +1035,10 @@ namespace DiscordRPC
                 {
                     LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string : null,
                     LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
+                    LargeImageUrl = this.Assets.LargeImageUrl != null ? this.Assets.LargeImageUrl.Clone() as string : null,
                     SmallImageKey = this.Assets.SmallImageKey != null ? this.Assets.SmallImageKey.Clone() as string : null,
-                    SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
+                    SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null,
+                    SmallImageUrl = this.Assets.SmallImageUrl != null ? this.Assets.SmallImageUrl.Clone() as string : null,
                 },
 
                 Party = !HasParty() ? null : new Party
