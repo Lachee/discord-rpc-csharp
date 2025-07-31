@@ -952,6 +952,26 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/activity_types.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/activity_types.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/features/timestamps.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/timestamps.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/getting_started/monogame.md",
       "output": {
         ".html": {
