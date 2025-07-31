@@ -107,7 +107,7 @@ article h4 {
   color: var(--color-foreground);
   background-color: var(--color-background-dark);
   border-bottom: 3px solid var(--color-foreground);
-  transition: background-color ease 0.25s;
+  transition: all ease 0.25s;
 }
 
 .navbar-form .form-control {
