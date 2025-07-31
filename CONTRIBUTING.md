@@ -35,4 +35,4 @@ All contributions are welcome and I am happy for any contribution. However, ther
 See the README for more about building and testing your version. 
 
 ## 😴 Licensing
-By submitting a PR, you are agreeing that your code is licensed under the same as defined in the accompying license file of the project. You waive all rights to the code and transfer them to Lachee.
+By submitting a PR, you are agreeing that your code is licensed under the same as defined in the accompying license file of the project. You transfer all rights to the code to the project and its community in perpetuity and retain authorship credit to the code.
