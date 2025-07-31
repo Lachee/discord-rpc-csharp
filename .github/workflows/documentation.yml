@@ -43,11 +43,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Documentation
-          path: _site
+          path: docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: _site
+          publish_dir: docs
