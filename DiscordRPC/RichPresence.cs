@@ -32,7 +32,7 @@ namespace DiscordRPC
         protected internal string _state;
         
         /// <summary>
-        /// URL that is linked to when clicking on the details text in the activity card
+        /// URL that is linked to when clicking on the details text in the activity card.
         /// <para>Max 256 characters</para>
         /// </summary>
         [JsonProperty("state_url", NullValueHandling = NullValueHandling.Ignore)]
