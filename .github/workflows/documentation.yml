@@ -11,24 +11,20 @@ jobs:
     runs-on: windows-latest # Required by DocFX
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install DocFX
-        run: | 
-          choco install -y docfx
-          docfx --version
-          
+      
       - name: Use README.md as index.md
         run: cp README.md Docfx/index.md
 
-      - name: Build Site
-        run: docfx Docfx/docfx.json
-
-      # Upload the generated documentation
+      - uses: nunit/docfx-action@v2.4.0
+        name: Build Documentation
+        with:
+          args: Docfx/docfx.json
+          
       - name: Upload site artifact
         uses: actions/upload-artifact@v4
         with:
           name: Documentation
-          path: _site # Must equals the 'build.dest' value on your docfx.json
+          path: _site
 
   # Deploy the generated documentation to the gh-pages branch
   deploy:
