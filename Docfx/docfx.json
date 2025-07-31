@@ -37,7 +37,7 @@
     "sitemap": {
       "baseUrl": "https://lachee.github.io/discord-rpc-csharp/"
     },
-    "template": ["default", "templates/darkfx"],
+    "template": ["default", "modern"],
     "xref": [ "https://normanderwan.github.io/UnityXrefMaps/xrefmap.yml" ],
     "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
     "dest": "../_site"
