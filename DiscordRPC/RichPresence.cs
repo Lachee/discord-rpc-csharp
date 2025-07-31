@@ -956,6 +956,30 @@ namespace DiscordRPC
             Secrets = secrets;
             return this;
         }
+
+		/// <summary>
+		/// Sets the Rich Presence's buttons.
+		/// </summary>
+		/// <param name="topButton">The top button to display</param>
+		/// <param name="bottomButton">The optional bottom button to display</param>
+		/// <returns>The modified Rich Presence.</returns>
+		public RichPresence WithButtons(Button topButton, Button bottomButton = null) 
+        {
+            if (topButton != null && bottomButton != null)
+            {
+                Buttons = new Button[] { topButton, bottomButton };
+            }
+            else if (topButton == null && bottomButton == null)
+            {
+                Buttons = default;
+            } 
+            else 
+            { 
+                Buttons = new Button[] { topButton ?? bottomButton };
+            }
+
+            return this;
+        }
         #endregion
 
 
