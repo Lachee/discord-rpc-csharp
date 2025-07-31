@@ -27,11 +27,12 @@ All the documentation can be found [lachee.github.io/discord-rpc-csharp/docs/](h
 
 **Dependencies:**
  - Newtonsoft.Json 
- - .NET Standard 2.0
+ - .NET Standard 2.0 runtime or .NET Framework 4.5: 
+	- `fx 4.5`, `core 3.1`, `net 7.0`, `net 8.0`, `net 9.0`
  
 ### **.NET Project**
 
-For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
+For projects that target either the .NET Standard or .NET Framework, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
 PM> Install-Package DiscordRichPresence
 ```
@@ -133,6 +134,14 @@ void Deinitialize()
 }
 ```
 
+## Examples
+To run the current example, either open the solution in Visual Studio and run the DiscordRPC.Example project or use Dotnet:
+
+```
+dotnet run --project DiscordRPC.Example
+```
+
+
 ## Building
 
 [![Release 📦](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml) [![Documentation 📚](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml)
@@ -173,3 +182,17 @@ Here is an example of how to add `runFullTrust` to your WIN UI 3 application:
 ```
 
 If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts `runFullTrust` capability.
+
+## Tests
+There are currently no tests available to validate the library. This is a active issue and need help with this.
+The test suite will likely need a way to mock the RPC client.
+
+## Contribution
+All contributions are welcome and I am happy for any contribution. However, there are some things that will not be accepted:
+- Spelling only fixes (rude to only contribute to something copilot could do)
+- Complete or large rewrites (unwanted work load to review)
+- Dependency substitutions / removals / additions (these require a issue and discussion first)
+- Support for features only provided by custom Discord clients
+- Obviously AI additions
+
+For more information, please read CONTRIBUTING.md
