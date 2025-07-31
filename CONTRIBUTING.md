@@ -22,6 +22,13 @@ All contributions are welcome and I am happy for any contribution. However, ther
     - Language features are capped to `C# 7.3` to support Unity
 - Any changes must work for Linux, MacOS, and Windows. 
 - If contributing Linux fixes, specify the setup in the PR and why its needed.
+- Follow existing styling in the project.
+    - 1 Tab Indentation ( yes, im disgusted too, but at the time this was the VS default )
+    - Brackets on new lines
+    - Bracketless IFS are allowed.
+    - Use the gaurd paradigm
+    - Getters with `=>` are allowed and so are string interpolation with `$"{value}"`
+        - Planned to update the rest of the codebase with them.
 
 ## 🫡 Getting Started
 1. Make sure .NET is installed
