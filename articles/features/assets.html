@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Timestamps | Discord RPC C# </title>
+      <title>Assets | Discord RPC C# </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Timestamps | Discord RPC C# ">
+      <meta name="title" content="Assets | Discord RPC C# ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/timestamps.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/assets.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -85,72 +85,71 @@
         </div>
 
         <article data-uid="">
-<h1 id="timestamps">Timestamps</h1>
+<h1 id="assets">Assets</h1>
 
-<p>You can display timers and progress in your activity. However, Discord likes to change their mind on how these are displayed. Below is a matrix of all the variety of timers you can set and what they will do.</p>
-<table>
-<thead>
-<tr>
-<th>Activity Type / Timestamps</th>
-<th><code>null</code></th>
-<th><code>Timestamps.Now</code></th>
-<th><code>Timestamps.FromTimespan</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Playing</td>
-<td><img src="https://i.lu.je/2025/Discord_IAvcJCJ0N6.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_tdvadyQGNf.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_obmYyhKhfN.png" alt=""></td>
-</tr>
-<tr>
-<td>Listening</td>
-<td><img src="https://i.lu.je/2025/Discord_jTfyj05Npz.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_0kqFsY7DUo.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_nFVsnVgPm5.png" alt=""></td>
-</tr>
-<tr>
-<td>Watching</td>
-<td><img src="https://i.lu.je/2025/Discord_P81U0PWtc9.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_P81U0PWtc9.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_5SPwBlHK2Q.png" alt=""></td>
-</tr>
-<tr>
-<td>Competing</td>
-<td><img src="https://i.lu.je/2025/Discord_ZGju3yetFZ.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_7AcYhUz3hp.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_XTNQLFWbsE.png" alt=""></td>
-</tr>
-</tbody>
-</table>
-<p>Your control over what is displayed is limited. You use to be able to set a count down timer in a Playing activity, but Discord has since removed that. Now the only purpose of setting a timestamp is for Listening and Watching activities.</p>
-<p>As an example, the following snippet of code will make it as if you are playing a Video.</p>
-<table>
-    <tr>
-        <td><img src="https://i.lu.je/2025/Discord_GzHlOd9WUE.png" alt="Users activity saying 'Watching Skibidi Toilet'"></td>
-        <td><img src="https://i.lu.je/2025/Discord_oiR7lMxial.png" alt="Users rich presence saying 'Watching Discord IPC.NET' and a timeline"></td>
-    </tr>
-</table>
+<p><img src="https://i.lu.je/2025/firefox_IoIC79H7Zh.png" alt="List of assets"></p>
+<p>Your Rich Presence can have a small and a large image displayed instead of its default icon called Assets.</p>
+<p>These assets are ideal for representing maps, characters, loadouts, or other situational information about your game.</p>
+<h2 id="static-assets">Static Assets</h2>
+<p>You can upload new assets and given them a <code>key</code> in the <a href="https://discord.com/developers/applications">Discord Application</a> → App → Rich Presence → Art Assets.
+This is the prefered way as they are easily referenced by a key and doesn't require an external web server.</p>
+<p>Once uploaded, you can assign them to your Activity like so:</p>
 <pre><code class="lang-cs">client.SetPresence(new RichPresence()
 {
-    Type = ActivityType.Watching,
-    StatusDisplay = StatusDisplayType.Details,
-    Details = &quot;Skibidi Toilet - Season 1&quot;,
-    State = &quot;DaFuq!?Boom!&quot;,
-    Timestamps = Timestamps.FromTimeSpan(66),
+    Type = ActivityType.Playing,
+    Details = &quot;A Basic Example&quot;,
+    State = &quot;In Game&quot;,
+    Assets = new Assets()
+    {
+        LargeImageKey = &quot;image_large&quot;,
+        LargeImageText = &quot;Lachee's Discord IPC Library&quot;,
+        SmallImageKey = &quot;koala&quot;
+    },
 });
 </code></pre>
+<p>Which results in the image:</p>
+<p><img src="https://i.lu.je/2025/Discord_MJrdavsJvd.png" alt="Example of the images" title="Example of the images">
+<img src="https://i.lu.je/2025/Discord_osR1l6A6V6.png" alt=""></p>
 <div class="TIP">
 <h5>Tip</h5>
-<p>This library provides a variety of ways to set the time.
-The <a href="xref:api/DiscordRPC.Timestamps">Timestamps.FromTimeSpan</a> will allow you to use seconds, or a <code>System.DateTime.TimeSpan</code>.</p>
+<p>By providing <code>LargeImageText</code> or <code>SmallImageText</code>, you create a tooltip over the icon. Use this to provide additional information.</p>
+</div>
+<h2 id="dynamic-assets">Dynamic Assets</h2>
+<p>Discord has relaxed on its limitation with these assets and you are now able to use Dynamic Assets. These allow you to provide a link that match the requirements and Discord will use the image at that url.</p>
+<p>For best and consistent results, it is easier to use the upload/key solution previously discussed. However, there are situations where you might want to use this such as for Album Art or user-generated content (although you should restrict this to avoid NSFW items).</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Discord will make a request on behalf of the user. Some services will have hot-link protection and block Discord from using their images.
+You should use your own service to serve these images.</p>
+</div>
+<p>As an example, suppose I wish to display the album cover for Duran Druan's &quot;Future Past&quot;, found on the <a href="https://musicbrainz.org/doc/Cover_Art_Archive/API">Music Brainz API</a>:</p>
+<pre><code class="lang-cs">// omitted: 
+//   HTTP GET https://coverartarchive.org/release/6bf261f9-f18b-4ba8-92be-7afc36575f2d
+client.SetPresence(new RichPresence()
+{
+    Type = ActivityType.Listening,
+    Details = &quot;Invisible&quot;,
+    State = &quot;Duran Duran&quot;,
+    Timestamps = Timestamps.FromTimeSpan(191),
+	Assets = new Assets()
+    {
+        LargeImageKey = &quot;https://coverartarchive.org/release/6bf261f9-f18b-4ba8-92be-7afc36575f2d/33192928727-500.jpg&quot;, // from the API request
+        LargeImageText = &quot;Future Past&quot;,
+    },
+});
+</code></pre>
+<p>This will load the image dynamically and display:</p>
+<p><img src="https://i.lu.je/2025/Discord_GOnaDQnm3J.png" alt="Result"></p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>The maximum length of the LargeImageKey field is 256 characters <strong>regardless</strong> if you are using a URL of a Key.
+Make sure the URL you provide is within this limit. You may need to provide a URL shortener/proxy for your application.</p>
 </div>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/timestamps.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/assets.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
