@@ -30,6 +30,26 @@ namespace DiscordRPC
 
         /// <summary>Inernal inner state string</summary>
         protected internal string _state;
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the details text in the activity card.
+        /// <para>Max 256 characters</para>
+        /// </summary>
+        [JsonProperty("state_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string StateUrl
+        {
+            get { return _stateUrl; }
+            set
+            {
+                if (!ValidateString(value, out _stateUrl, false, 256))
+                    throw new StringOutOfRangeException(256);
+
+                if (!ValidateUrl(_stateUrl))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        /// <summary>Inernal inner state URL string</summary>
+        protected internal string _stateUrl;
 
         /// <summary>
         /// What the user is currently doing. For example, "Competitive - Total Mayhem".
@@ -47,6 +67,26 @@ namespace DiscordRPC
         }
         /// <summary>Inernal inner detail string</summary>
         protected internal string _details;
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the details text in the activity card.
+        /// <para>Max 256 characters</para>
+        /// </summary>
+        [JsonProperty("details_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string DetailsUrl
+        {
+            get { return _detailsUrl; }
+            set
+            {
+                if (!ValidateString(value, out _detailsUrl, false, 256))
+                    throw new StringOutOfRangeException(256);
+
+                if (!ValidateUrl(_detailsUrl))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        /// <summary>Inernal inner detail URL string</summary>
+        protected internal string _detailsUrl;
 
         /// <summary>
         /// The time elapsed / remaining time data.
@@ -163,6 +203,23 @@ namespace DiscordRPC
             result = s.GetNullOrString();
             return true;
         }
+        
+        /// <summary>
+        /// Validates URLs.
+        /// </summary>
+        /// <param name="url">The URL to check</param>
+        /// <returns>True if the URL is valid</returns>
+        internal static bool ValidateUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return true;
+
+            //Check if the URL is valid
+            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+                return false;
+
+            return true;
+        }
 
         /// <summary>
         /// Operator that converts a presence into a boolean for null checks.
@@ -184,7 +241,11 @@ namespace DiscordRPC
             if (other == null)
                 return false;
 
-            if (State != other.State || Details != other.Details || Type != other.Type)
+            if (State != other.State ||
+                StateUrl != other.StateUrl ||
+                Details != other.Details ||
+                DetailsUrl != other.DetailsUrl ||
+                Type != other.Type)
                 return false;
 
             //Checks if the timestamps are different
@@ -235,8 +296,10 @@ namespace DiscordRPC
                 if (other.Assets == null ||
                     other.Assets.LargeImageKey != Assets.LargeImageKey ||
                     other.Assets.LargeImageText != Assets.LargeImageText ||
+                    other.Assets.LargeImageUrl != Assets.LargeImageUrl ||
                     other.Assets.SmallImageKey != Assets.SmallImageKey ||
-                    other.Assets.SmallImageText != Assets.SmallImageText)
+                    other.Assets.SmallImageText != Assets.SmallImageText ||
+                    other.Assets.SmallImageUrl != Assets.SmallImageUrl)
                     return false;
             }
             else if (other.Assets != null)
@@ -256,7 +319,9 @@ namespace DiscordRPC
         {
             var presence = new RichPresence();
             presence.State = State;
+            presence.StateUrl = StateUrl;
             presence.Details = Details;
+            presence.DetailsUrl = DetailsUrl;
             presence.Type = Type;
             presence.StatusDisplay = StatusDisplay;
 
@@ -269,9 +334,11 @@ namespace DiscordRPC
                 {
                     SmallImageKey = Assets.SmallImageKey,
                     SmallImageText = Assets.SmallImageText,
+                    SmallImageUrl = Assets.SmallImageUrl,
 
                     LargeImageKey = Assets.LargeImageKey,
-                    LargeImageText = Assets.LargeImageText
+                    LargeImageText = Assets.LargeImageText,
+                    LargeImageUrl = Assets.LargeImageUrl
                 };
             }
 
@@ -453,7 +520,25 @@ namespace DiscordRPC
             }
         }
         private string _largeimagetext;
-
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the large image in the activity card.
+        /// <para>Max 256 characters.</para>
+        /// </summary>
+        [JsonProperty("large_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string LargeImageUrl
+        {
+            get { return _largeimageurl; }
+            set
+            {
+                if (!BaseRichPresence.ValidateString(value, out _largeimageurl, false, 256))
+                    throw new StringOutOfRangeException(256);
+                
+                if (!BaseRichPresence.ValidateUrl(_largeimageurl))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        private string _largeimageurl;
 
         /// <summary>
         /// Name of the uploaded image for the small profile artwork.
@@ -503,6 +588,25 @@ namespace DiscordRPC
             }
         }
         private string _smallimagetext;
+        
+        /// <summary>
+        /// URL that is linked to when clicking on the small image in the activity card.
+        /// <para>Max 256 characters.</para>
+        /// </summary>
+        [JsonProperty("small_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string SmallImageUrl
+        {
+            get { return _smallimageurl; }
+            set
+            {
+                if (!BaseRichPresence.ValidateString(value, out _smallimageurl, false, 256))
+                    throw new StringOutOfRangeException(256);
+                
+                if (!BaseRichPresence.ValidateUrl(_smallimageurl))
+                    throw new ArgumentException("Url must be a valid URI");
+            }
+        }
+        private string _smallimageurl;
 
         /// <summary>
         /// The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="LargeImageKey"/> is changed.
@@ -526,7 +630,9 @@ namespace DiscordRPC
         {
             //Copy over the names
             _smallimagetext = other._smallimagetext;
+            _smallimageurl = other._smallimageurl;
             _largeimagetext = other._largeimagetext;
+            _largeimageurl = other._largeimageurl;
 
             //Convert large ID
             ulong largeID;
@@ -796,7 +902,7 @@ namespace DiscordRPC
                 if (!BaseRichPresence.ValidateString(value, out _url, false, 512))
                     throw new StringOutOfRangeException(512);
 
-                if (!Uri.TryCreate(_url, UriKind.Absolute, out var uriResult)) // || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                if (!BaseRichPresence.ValidateUrl(_url))
                     throw new ArgumentException("Url must be a valid URI");
             }
         }
@@ -880,6 +986,17 @@ namespace DiscordRPC
             State = state;
             return this;
         }
+        
+        /// <summary>
+        /// Sets the state URL of the Rich Presence. See also <seealso cref="BaseRichPresence.StateUrl"/>.
+        /// </summary>
+        /// <param name="stateUrl">State URL when clicking on the state text.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithStateUrl(string stateUrl)
+        {
+            StateUrl = stateUrl;
+            return this;
+        }
 
         /// <summary>
         /// Sets the details of the Rich Presence. See also <seealso cref="BaseRichPresence.Details"/>.
@@ -889,6 +1006,17 @@ namespace DiscordRPC
         public RichPresence WithDetails(string details)
         {
             Details = details;
+            return this;
+        }
+        
+        /// <summary>
+        /// Sets the details URL of the Rich Presence. See also <seealso cref="BaseRichPresence.DetailsUrl"/>.
+        /// </summary>
+        /// <param name="detailsUrl">Details URL when clicking on the details text.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithDetailsUrl(string detailsUrl)
+        {
+            DetailsUrl = detailsUrl;
             return this;
         }
 
@@ -970,7 +1098,9 @@ namespace DiscordRPC
             return new RichPresence
             {
                 State = this._state != null ? _state.Clone() as string : null,
+                StateUrl = this._stateUrl != null ? _stateUrl.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
+                DetailsUrl = this._detailsUrl != null ? _detailsUrl.Clone() as string : null,
                 Type = this.Type,
                 StatusDisplay = this.StatusDisplay,
 
@@ -992,8 +1122,10 @@ namespace DiscordRPC
                 {
                     LargeImageKey = this.Assets.LargeImageKey != null ? this.Assets.LargeImageKey.Clone() as string : null,
                     LargeImageText = this.Assets.LargeImageText != null ? this.Assets.LargeImageText.Clone() as string : null,
+                    LargeImageUrl = this.Assets.LargeImageUrl != null ? this.Assets.LargeImageUrl.Clone() as string : null,
                     SmallImageKey = this.Assets.SmallImageKey != null ? this.Assets.SmallImageKey.Clone() as string : null,
-                    SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null
+                    SmallImageText = this.Assets.SmallImageText != null ? this.Assets.SmallImageText.Clone() as string : null,
+                    SmallImageUrl = this.Assets.SmallImageUrl != null ? this.Assets.SmallImageUrl.Clone() as string : null,
                 },
 
                 Party = !HasParty() ? null : new Party
@@ -1014,7 +1146,9 @@ namespace DiscordRPC
         internal RichPresence Merge(BaseRichPresence presence)
         {
             this._state = presence.State;
+            this._stateUrl = presence.StateUrl;
             this._details = presence.Details;
+            this._detailsUrl = presence.DetailsUrl;
             this.Type = presence.Type;
             this.StatusDisplay = presence.StatusDisplay;
             this.Party = presence.Party;
