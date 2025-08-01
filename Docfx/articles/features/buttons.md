@@ -8,7 +8,7 @@ Everyone's favourite, buttons! Buttons allow you to display clickable links insi
 > [!WARNING]
 > You are unable to view buttons or click on them for your own activity. Only other users can see and click on the buttons.
 
-<img src="https://i.lu.je/2025/Discord_QSPFYPuoHT.png" style="width: 52%; float: left">
+<img src="https://i.lu.je/2025/Discord_QSPFYPuoHT.png" style="width: 35%; float: left">
 
 ```cs
 client.SetPresence(new RichPresence()

@@ -14,8 +14,8 @@ As an example, the following snippet of code will make it as if you are playing 
 
 <table>
     <tr>
-        <td> ![Users activity saying "Watching Skibidi Toilet"](https://i.lu.je/2025/Discord_GzHlOd9WUE.png) </td>
-        <td> ![Users rich presence saying "Watching Discord IPC.NET" and a timeline](https://i.lu.je/2025/Discord_oiR7lMxial.png) </td>
+        <td><img src="https://i.lu.je/2025/Discord_GzHlOd9WUE.png" alt="Users activity saying 'Watching Skibidi Toilet'"></td>
+        <td><img src="https://i.lu.je/2025/Discord_oiR7lMxial.png" alt="Users rich presence saying 'Watching Discord IPC.NET' and a timeline"></td>
     </tr>
 </table>
 
@@ -33,4 +33,4 @@ client.SetPresence(new RichPresence()
 
 > [!TIP]
 > This library provides a variety of ways to set the time. 
-> The [Timestamps.FromTimeSpan](xref:DiscordRPC.Timestamps.FromTimeSpan(double)) will allow you to use seconds, or a `System.DateTime.TimeSpan`.
+> The [Timestamps.FromTimeSpan](xref:api/DiscordRPC.Timestamps) will allow you to use seconds, or a `System.DateTime.TimeSpan`.
