@@ -55,7 +55,8 @@ client.SetPresence(new RichPresence()
     Timestamps = Timestamps.FromTimeSpan(191),
 	Assets = new Assets()
     {
-        LargeImageKey = "https://coverartarchive.org/release/6bf261f9-f18b-4ba8-92be-7afc36575f2d/33192928727-500.jpg", // from the API request
+        LargeImageKey = "https://coverartarchive.org/release/6bf261f9-f18b-4ba8-92be-7afc36575f2d/33192928727-500.jpg", // Links to the image
+        LargeImageUrl = "https://music.youtube.com/watch?v=SMCd5zrsFpE" // Links to the song when clicked
         LargeImageText = "Future Past",
     },
 });
@@ -66,6 +67,6 @@ This will load the image dynamically and display:
 ![Result](https://i.lu.je/2025/Discord_GOnaDQnm3J.png)
 
 > [!WARNING]
-> The maximum length of the LargeImageKey field is 256 characters __regardless__ if you are using a URL of a Key.
+> The maximum length of the Key field is 256 characters __regardless__ if you are using a URL of a Key.
 > Make sure the URL you provide is within this limit. You may need to provide a URL shortener/proxy for your application.
 
