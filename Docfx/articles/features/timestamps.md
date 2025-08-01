@@ -11,7 +11,15 @@ You can display timers and progress in your activity. However, Discord likes to 
 Your control over what is displayed is limited. You use to be able to set a count down timer in a Playing activity, but Discord has since removed that. Now the only purpose of setting a timestamp is for Listening and Watching activities.
 
 As an example, the following snippet of code will make it as if you are playing a Video.
-![](https://i.lu.je/2025/Discord_GzHlOd9WUE.png) | ![](https://i.lu.je/2025/Discord_oiR7lMxial.png)
+
+<table>
+    <tr>
+        <td> ![Users activity saying "Watching Skibidi Toilet"](https://i.lu.je/2025/Discord_GzHlOd9WUE.png) </td>
+        <td> ![Users rich presence saying "Watching Discord IPC.NET" and a timeline](https://i.lu.je/2025/Discord_oiR7lMxial.png) </td>
+    </tr>
+</table>
+
+
 ```cs
 client.SetPresence(new RichPresence()
 {
