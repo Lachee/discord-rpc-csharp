@@ -962,6 +962,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/buttons.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/buttons.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/features/timestamps.md",
       "output": {
         ".html": {

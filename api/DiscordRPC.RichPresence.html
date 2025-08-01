@@ -238,7 +238,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_Clone" data-uid="DiscordRPC.RichPresence.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1096"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.</p>
@@ -317,6 +317,48 @@ public Button[] Buttons { get; set; }</code></pre>
   <dl class="parameters">
     <dt><code>assets</code> <a class="xref" href="DiscordRPC.Assets.html">Assets</a></dt>
     <dd><p>The names of the images to use and the tooltips to give those images.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></dt>
+    <dd><p>The modified Rich Presence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="DiscordRPC_RichPresence_WithButtons_" data-uid="DiscordRPC.RichPresence.WithButtons*"></a>
+
+  <h3 id="DiscordRPC_RichPresence_WithButtons_DiscordRPC_Button_DiscordRPC_Button_" data-uid="DiscordRPC.RichPresence.WithButtons(DiscordRPC.Button,DiscordRPC.Button)">
+  WithButtons(Button, Button)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1094"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets the Rich Presence's buttons.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence WithButtons(Button topButton, Button bottomButton = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>topButton</code> <a class="xref" href="DiscordRPC.Button.html">Button</a></dt>
+    <dd><p>The top button to display</p>
+</dd>
+    <dt><code>bottomButton</code> <a class="xref" href="DiscordRPC.Button.html">Button</a></dt>
+    <dd><p>The optional bottom button to display</p>
 </dd>
   </dl>
 
@@ -695,7 +737,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_op_Implicit_DiscordRPC_RichPresence__System_Boolean" data-uid="DiscordRPC.RichPresence.op_Implicit(DiscordRPC.RichPresence)~System.Boolean">
   implicit operator bool(RichPresence)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1209"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1233"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Operator that converts a presence into a boolean for null checks.</p>

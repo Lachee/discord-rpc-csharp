@@ -3206,6 +3206,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.RichPresence.WithAssets
   nameWithType: RichPresence.WithAssets
+- uid: DiscordRPC.RichPresence.WithButtons(DiscordRPC.Button,DiscordRPC.Button)
+  name: WithButtons(Button, Button)
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithButtons_DiscordRPC_Button_DiscordRPC_Button_
+  commentId: M:DiscordRPC.RichPresence.WithButtons(DiscordRPC.Button,DiscordRPC.Button)
+  fullName: DiscordRPC.RichPresence.WithButtons(DiscordRPC.Button, DiscordRPC.Button)
+  nameWithType: RichPresence.WithButtons(Button, Button)
+- uid: DiscordRPC.RichPresence.WithButtons*
+  name: WithButtons
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithButtons_
+  commentId: Overload:DiscordRPC.RichPresence.WithButtons
+  isSpec: "True"
+  fullName: DiscordRPC.RichPresence.WithButtons
+  nameWithType: RichPresence.WithButtons
 - uid: DiscordRPC.RichPresence.WithDetails(System.String)
   name: WithDetails(string)
   href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithDetails_System_String_

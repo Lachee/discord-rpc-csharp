@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Timestamps | Discord RPC C# </title>
+      <title>Buttons | Discord RPC C# </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Timestamps | Discord RPC C# ">
+      <meta name="title" content="Buttons | Discord RPC C# ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/timestamps.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/buttons.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -85,72 +85,34 @@
         </div>
 
         <article data-uid="">
-<h1 id="timestamps">Timestamps</h1>
+<h1 id="buttons">Buttons</h1>
 
-<p>You can display timers and progress in your activity. However, Discord likes to change their mind on how these are displayed. Below is a matrix of all the variety of timers you can set and what they will do.</p>
-<table>
-<thead>
-<tr>
-<th>Activity Type / Timestamps</th>
-<th><code>null</code></th>
-<th><code>Timestamps.Now</code></th>
-<th><code>Timestamps.FromTimespan</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Playing</td>
-<td><img src="https://i.lu.je/2025/Discord_IAvcJCJ0N6.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_tdvadyQGNf.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_obmYyhKhfN.png" alt=""></td>
-</tr>
-<tr>
-<td>Listening</td>
-<td><img src="https://i.lu.je/2025/Discord_jTfyj05Npz.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_0kqFsY7DUo.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_nFVsnVgPm5.png" alt=""></td>
-</tr>
-<tr>
-<td>Watching</td>
-<td><img src="https://i.lu.je/2025/Discord_P81U0PWtc9.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_P81U0PWtc9.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_5SPwBlHK2Q.png" alt=""></td>
-</tr>
-<tr>
-<td>Competing</td>
-<td><img src="https://i.lu.je/2025/Discord_ZGju3yetFZ.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_7AcYhUz3hp.png" alt=""></td>
-<td><img src="https://i.lu.je/2025/Discord_XTNQLFWbsE.png" alt=""></td>
-</tr>
-</tbody>
-</table>
-<p>Your control over what is displayed is limited. You use to be able to set a count down timer in a Playing activity, but Discord has since removed that. Now the only purpose of setting a timestamp is for Listening and Watching activities.</p>
-<p>As an example, the following snippet of code will make it as if you are playing a Video.</p>
-<table>
-    <tr>
-        <td> ![Users activity saying "Watching Skibidi Toilet"](https://i.lu.je/2025/Discord_GzHlOd9WUE.png) </td>
-        <td> ![Users rich presence saying "Watching Discord IPC.NET" and a timeline](https://i.lu.je/2025/Discord_oiR7lMxial.png) </td>
-    </tr>
-</table>
+<p>Everyone's favourite, buttons! Buttons allow you to display clickable links inside your presence. They take an external URL and will redirect the user to it on visit.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>You are able to display <strong>2</strong> buttons at once as part of your presence.</p>
+</div>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>You are unable to view buttons or click on them for your own activity. Only other users can see and click on the buttons.</p>
+</div>
+<img src="https://i.lu.je/2025/Discord_QSPFYPuoHT.png" style="width: 52%; float: left">
 <pre><code class="lang-cs">client.SetPresence(new RichPresence()
 {
-    Type = ActivityType.Watching,
-    StatusDisplay = StatusDisplayType.Details,
-    Details = &quot;Skibidi Toilet - Season 1&quot;,
-    State = &quot;DaFuq!?Boom!&quot;,
-    Timestamps = Timestamps.FromTimeSpan(66),
+    Details = &quot;A Basic Example&quot;,
+    State = &quot;In Game&quot;,
+    Buttons = new Button[]
+    {
+        new Button() { Label = &quot;Fish&quot;, Url = &quot;https://lachee.dev/&quot; },
+        new Button() { Label = &quot;Sticks&quot;, Url = &quot;https://en.wikipedia.org/wiki/Stick&quot; }
+	}
 });
 </code></pre>
-<div class="TIP">
-<h5>Tip</h5>
-<p>This library provides a variety of ways to set the time.
-The <a href="xref:DiscordRPC.Timestamps.FromTimeSpan(double)">Timestamps.FromTimeSpan</a> will allow you to use seconds, or a <code>System.DateTime.TimeSpan</code>.</p>
-</div>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/timestamps.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/buttons.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
