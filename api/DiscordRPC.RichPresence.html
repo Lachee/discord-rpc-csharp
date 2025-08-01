@@ -89,7 +89,7 @@
 
 
   <h1 id="DiscordRPC_RichPresence" data-uid="DiscordRPC.RichPresence" class="text-break">
-Class RichPresence  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L853"><i class="bi bi-code-slash"></i></a>
+Class RichPresence  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L959"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -126,7 +126,13 @@ Class RichPresence  <a class="header-action link-secondary" title="View source" 
       <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_State">BaseRichPresence.State</a>
     </div>
     <div>
+      <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StateUrl">BaseRichPresence.StateUrl</a>
+    </div>
+    <div>
       <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Details">BaseRichPresence.Details</a>
+    </div>
+    <div>
+      <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_DetailsUrl">BaseRichPresence.DetailsUrl</a>
     </div>
     <div>
       <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Timestamps">BaseRichPresence.Timestamps</a>
@@ -194,7 +200,7 @@ Class RichPresence  <a class="header-action link-secondary" title="View source" 
 
   <h3 id="DiscordRPC_RichPresence_Buttons" data-uid="DiscordRPC.RichPresence.Buttons">
   Buttons
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L859"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L965"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The buttons to display in the presence.</p>
@@ -232,7 +238,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_Clone" data-uid="DiscordRPC.RichPresence.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L968"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1096"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clones the presence into a new instance. Used for thread safe writing and reading. This function will ignore properties if they are in a invalid state.</p>
@@ -264,7 +270,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_HasButtons" data-uid="DiscordRPC.RichPresence.HasButtons">
   HasButtons()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L866"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L972"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Does the Rich Presence have any buttons?</p>
@@ -296,7 +302,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithAssets_DiscordRPC_Assets_" data-uid="DiscordRPC.RichPresence.WithAssets(DiscordRPC.Assets)">
   WithAssets(Assets)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L932"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1060"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the assets of the Rich Presence. See also <a class="xref" href="DiscordRPC.Assets.html">Assets</a>.</p>
@@ -335,7 +341,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithDetails_System_String_" data-uid="DiscordRPC.RichPresence.WithDetails(System.String)">
   WithDetails(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L889"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1006"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the details of the Rich Presence. See also <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Details">Details</a>.</p>
@@ -370,11 +376,50 @@ public Button[] Buttons { get; set; }</code></pre>
 
 
 
+  <a id="DiscordRPC_RichPresence_WithDetailsUrl_" data-uid="DiscordRPC.RichPresence.WithDetailsUrl*"></a>
+
+  <h3 id="DiscordRPC_RichPresence_WithDetailsUrl_System_String_" data-uid="DiscordRPC.RichPresence.WithDetailsUrl(System.String)">
+  WithDetailsUrl(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1017"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets the details URL of the Rich Presence. See also <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_DetailsUrl">DetailsUrl</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence WithDetailsUrl(string detailsUrl)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>detailsUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Details URL when clicking on the details text.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></dt>
+    <dd><p>The modified Rich Presence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="DiscordRPC_RichPresence_WithParty_" data-uid="DiscordRPC.RichPresence.WithParty*"></a>
 
   <h3 id="DiscordRPC_RichPresence_WithParty_DiscordRPC_Party_" data-uid="DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)">
   WithParty(Party)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L943"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1071"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the Rich Presence's party. See also <a class="xref" href="DiscordRPC.Party.html">Party</a>.</p>
@@ -413,7 +458,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithSecrets_DiscordRPC_Secrets_" data-uid="DiscordRPC.RichPresence.WithSecrets(DiscordRPC.Secrets)">
   WithSecrets(Secrets)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L954"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1082"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the Rich Presence's secrets. See also <a class="xref" href="DiscordRPC.Secrets.html">Secrets</a>.</p>
@@ -452,7 +497,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithState_System_String_" data-uid="DiscordRPC.RichPresence.WithState(System.String)">
   WithState(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L878"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L984"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the state of the Rich Presence. See also <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_State">State</a>.</p>
@@ -487,11 +532,50 @@ public Button[] Buttons { get; set; }</code></pre>
 
 
 
+  <a id="DiscordRPC_RichPresence_WithStateUrl_" data-uid="DiscordRPC.RichPresence.WithStateUrl*"></a>
+
+  <h3 id="DiscordRPC_RichPresence_WithStateUrl_System_String_" data-uid="DiscordRPC.RichPresence.WithStateUrl(System.String)">
+  WithStateUrl(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L995"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets the state URL of the Rich Presence. See also <a class="xref" href="DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StateUrl">StateUrl</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RichPresence WithStateUrl(string stateUrl)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>stateUrl</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>State URL when clicking on the state text.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="DiscordRPC.RichPresence.html">RichPresence</a></dt>
+    <dd><p>The modified Rich Presence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="DiscordRPC_RichPresence_WithStatusDisplay_" data-uid="DiscordRPC.RichPresence.WithStatusDisplay*"></a>
 
   <h3 id="DiscordRPC_RichPresence_WithStatusDisplay_DiscordRPC_StatusDisplayType_" data-uid="DiscordRPC.RichPresence.WithStatusDisplay(DiscordRPC.StatusDisplayType)">
   WithStatusDisplay(StatusDisplayType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L910"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1038"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the display type for the status. See also <a class="xref" href="DiscordRPC.StatusDisplayType.html">StatusDisplayType</a>.</p>
@@ -529,7 +613,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithTimestamps_DiscordRPC_Timestamps_" data-uid="DiscordRPC.RichPresence.WithTimestamps(DiscordRPC.Timestamps)">
   WithTimestamps(Timestamps)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L921"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1049"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the timestamp of the Rich Presence. See also <a class="xref" href="DiscordRPC.Timestamps.html">Timestamps</a>.</p>
@@ -568,7 +652,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_WithType_DiscordRPC_ActivityType_" data-uid="DiscordRPC.RichPresence.WithType(DiscordRPC.ActivityType)">
   WithType(ActivityType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L900"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1028"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the type of the Rich Presence. See also <a class="xref" href="DiscordRPC.ActivityType.html">ActivityType</a>.</p>
@@ -611,7 +695,7 @@ public Button[] Buttons { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_RichPresence_op_Implicit_DiscordRPC_RichPresence__System_Boolean" data-uid="DiscordRPC.RichPresence.op_Implicit(DiscordRPC.RichPresence)~System.Boolean">
   implicit operator bool(RichPresence)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1075"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L1209"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Operator that converts a presence into a boolean for null checks.</p>
@@ -648,7 +732,7 @@ public Button[] Buttons { get; set; }</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L853" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/RichPresence.cs/#L959" class="edit-link">Edit this page</a>
         </div>
 
 

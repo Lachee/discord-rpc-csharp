@@ -111,6 +111,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.Assets.LargeImageText
   nameWithType: Assets.LargeImageText
+- uid: DiscordRPC.Assets.LargeImageUrl
+  name: LargeImageUrl
+  href: api/DiscordRPC.Assets.html#DiscordRPC_Assets_LargeImageUrl
+  commentId: P:DiscordRPC.Assets.LargeImageUrl
+  fullName: DiscordRPC.Assets.LargeImageUrl
+  nameWithType: Assets.LargeImageUrl
+- uid: DiscordRPC.Assets.LargeImageUrl*
+  name: LargeImageUrl
+  href: api/DiscordRPC.Assets.html#DiscordRPC_Assets_LargeImageUrl_
+  commentId: Overload:DiscordRPC.Assets.LargeImageUrl
+  isSpec: "True"
+  fullName: DiscordRPC.Assets.LargeImageUrl
+  nameWithType: Assets.LargeImageUrl
 - uid: DiscordRPC.Assets.SmallImageID
   name: SmallImageID
   href: api/DiscordRPC.Assets.html#DiscordRPC_Assets_SmallImageID
@@ -150,6 +163,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.Assets.SmallImageText
   nameWithType: Assets.SmallImageText
+- uid: DiscordRPC.Assets.SmallImageUrl
+  name: SmallImageUrl
+  href: api/DiscordRPC.Assets.html#DiscordRPC_Assets_SmallImageUrl
+  commentId: P:DiscordRPC.Assets.SmallImageUrl
+  fullName: DiscordRPC.Assets.SmallImageUrl
+  nameWithType: Assets.SmallImageUrl
+- uid: DiscordRPC.Assets.SmallImageUrl*
+  name: SmallImageUrl
+  href: api/DiscordRPC.Assets.html#DiscordRPC_Assets_SmallImageUrl_
+  commentId: Overload:DiscordRPC.Assets.SmallImageUrl
+  isSpec: "True"
+  fullName: DiscordRPC.Assets.SmallImageUrl
+  nameWithType: Assets.SmallImageUrl
 - uid: DiscordRPC.BaseRichPresence
   name: BaseRichPresence
   href: api/DiscordRPC.BaseRichPresence.html
@@ -182,6 +208,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.BaseRichPresence.Details
   nameWithType: BaseRichPresence.Details
+- uid: DiscordRPC.BaseRichPresence.DetailsUrl
+  name: DetailsUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_DetailsUrl
+  commentId: P:DiscordRPC.BaseRichPresence.DetailsUrl
+  fullName: DiscordRPC.BaseRichPresence.DetailsUrl
+  nameWithType: BaseRichPresence.DetailsUrl
+- uid: DiscordRPC.BaseRichPresence.DetailsUrl*
+  name: DetailsUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_DetailsUrl_
+  commentId: Overload:DiscordRPC.BaseRichPresence.DetailsUrl
+  isSpec: "True"
+  fullName: DiscordRPC.BaseRichPresence.DetailsUrl
+  nameWithType: BaseRichPresence.DetailsUrl
 - uid: DiscordRPC.BaseRichPresence.HasAssets
   name: HasAssets()
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_HasAssets
@@ -273,6 +312,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.BaseRichPresence.State
   nameWithType: BaseRichPresence.State
+- uid: DiscordRPC.BaseRichPresence.StateUrl
+  name: StateUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StateUrl
+  commentId: P:DiscordRPC.BaseRichPresence.StateUrl
+  fullName: DiscordRPC.BaseRichPresence.StateUrl
+  nameWithType: BaseRichPresence.StateUrl
+- uid: DiscordRPC.BaseRichPresence.StateUrl*
+  name: StateUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StateUrl_
+  commentId: Overload:DiscordRPC.BaseRichPresence.StateUrl
+  isSpec: "True"
+  fullName: DiscordRPC.BaseRichPresence.StateUrl
+  nameWithType: BaseRichPresence.StateUrl
 - uid: DiscordRPC.BaseRichPresence.StatusDisplay
   name: StatusDisplay
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_StatusDisplay
@@ -331,12 +383,24 @@ references:
   commentId: F:DiscordRPC.BaseRichPresence._details
   fullName: DiscordRPC.BaseRichPresence._details
   nameWithType: BaseRichPresence._details
+- uid: DiscordRPC.BaseRichPresence._detailsUrl
+  name: _detailsUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence__detailsUrl
+  commentId: F:DiscordRPC.BaseRichPresence._detailsUrl
+  fullName: DiscordRPC.BaseRichPresence._detailsUrl
+  nameWithType: BaseRichPresence._detailsUrl
 - uid: DiscordRPC.BaseRichPresence._state
   name: _state
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence__state
   commentId: F:DiscordRPC.BaseRichPresence._state
   fullName: DiscordRPC.BaseRichPresence._state
   nameWithType: BaseRichPresence._state
+- uid: DiscordRPC.BaseRichPresence._stateUrl
+  name: _stateUrl
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence__stateUrl
+  commentId: F:DiscordRPC.BaseRichPresence._stateUrl
+  fullName: DiscordRPC.BaseRichPresence._stateUrl
+  nameWithType: BaseRichPresence._stateUrl
 - uid: DiscordRPC.BaseRichPresence.op_Implicit(DiscordRPC.BaseRichPresence)~System.Boolean
   name: implicit operator bool(BaseRichPresence)
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_op_Implicit_DiscordRPC_BaseRichPresence__System_Boolean
@@ -3158,6 +3222,22 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.RichPresence.WithDetails
   nameWithType: RichPresence.WithDetails
+- uid: DiscordRPC.RichPresence.WithDetailsUrl(System.String)
+  name: WithDetailsUrl(string)
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithDetailsUrl_System_String_
+  commentId: M:DiscordRPC.RichPresence.WithDetailsUrl(System.String)
+  name.vb: WithDetailsUrl(String)
+  fullName: DiscordRPC.RichPresence.WithDetailsUrl(string)
+  fullName.vb: DiscordRPC.RichPresence.WithDetailsUrl(String)
+  nameWithType: RichPresence.WithDetailsUrl(string)
+  nameWithType.vb: RichPresence.WithDetailsUrl(String)
+- uid: DiscordRPC.RichPresence.WithDetailsUrl*
+  name: WithDetailsUrl
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithDetailsUrl_
+  commentId: Overload:DiscordRPC.RichPresence.WithDetailsUrl
+  isSpec: "True"
+  fullName: DiscordRPC.RichPresence.WithDetailsUrl
+  nameWithType: RichPresence.WithDetailsUrl
 - uid: DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)
   name: WithParty(Party)
   href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithParty_DiscordRPC_Party_
@@ -3200,6 +3280,22 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.RichPresence.WithState
   nameWithType: RichPresence.WithState
+- uid: DiscordRPC.RichPresence.WithStateUrl(System.String)
+  name: WithStateUrl(string)
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithStateUrl_System_String_
+  commentId: M:DiscordRPC.RichPresence.WithStateUrl(System.String)
+  name.vb: WithStateUrl(String)
+  fullName: DiscordRPC.RichPresence.WithStateUrl(string)
+  fullName.vb: DiscordRPC.RichPresence.WithStateUrl(String)
+  nameWithType: RichPresence.WithStateUrl(string)
+  nameWithType.vb: RichPresence.WithStateUrl(String)
+- uid: DiscordRPC.RichPresence.WithStateUrl*
+  name: WithStateUrl
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithStateUrl_
+  commentId: Overload:DiscordRPC.RichPresence.WithStateUrl
+  isSpec: "True"
+  fullName: DiscordRPC.RichPresence.WithStateUrl
+  nameWithType: RichPresence.WithStateUrl
 - uid: DiscordRPC.RichPresence.WithStatusDisplay(DiscordRPC.StatusDisplayType)
   name: WithStatusDisplay(StatusDisplayType)
   href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithStatusDisplay_DiscordRPC_StatusDisplayType_
