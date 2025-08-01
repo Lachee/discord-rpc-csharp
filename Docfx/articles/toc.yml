@@ -10,8 +10,12 @@
   - name: Mono Game Project
     href: getting_started/monogame.md
 
+
 - name: Activity Types
   href: features/activity_types.md
+
+- name: Assets
+  href: features/assets.md
 
 - name: Buttons
   href: features/buttons.md
