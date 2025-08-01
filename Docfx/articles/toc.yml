@@ -13,6 +13,9 @@
 - name: Activity Types
   href: features/activity_types.md
 
+- name: Buttons
+  href: features/buttons.md
+
 - name: Timestamps
   href: features/timestamps.md
 
