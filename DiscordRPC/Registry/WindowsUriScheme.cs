@@ -27,6 +27,7 @@ namespace DiscordRPC.Registry
                 throw new PlatformNotSupportedException("URI schemes can only be registered on Windows");
             }
 
+#if NETFRAMEWORK || WINDOWS
             //Prepare our location
             string location = info.ExecutablePath;
             if (location == null)
@@ -53,8 +54,10 @@ namespace DiscordRPC.Registry
 
             //Okay, now actually register it
             CreateUriScheme(schemePath, friendlyName, defaultIcon, command);
+#endif
             return true;
         }
+#if NETFRAMEWORK || WINDOWS
 
         /// <summary>
         /// Creates the actual scheme
@@ -92,5 +95,6 @@ namespace DiscordRPC.Registry
                 return key.GetValue("SteamExe") as string;
             }
         }
+#endif
     }
 }
