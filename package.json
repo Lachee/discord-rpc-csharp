@@ -1,5 +1,5 @@
 {
-    "version": "1.5.0",
+    "version": "1.5.1",
     "scripts": {
         "docs:watch": "npm-watch docs:build",
         "docs:build": "docfx build Docfx/docfx.json"
