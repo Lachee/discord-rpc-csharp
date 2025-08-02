@@ -34,12 +34,12 @@ namespace DiscordRPC
 			/// </summary>
 			WebP,
 
-            /// <summary>
-            /// Graphics Interchange Format (.gif)
-            /// <para>Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif.</para>
-            /// </summary>
-            GIF                 //Gif, as in gift. 
-        }
+			/// <summary>
+			/// Graphics Interchange Format (.gif)
+			/// <para>Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif.</para>
+			/// </summary>
+			GIF                 //Gif, as in gift. 
+		}
 
 		/// <summary>
 		/// Possible square sizes of avatars.
@@ -64,12 +64,21 @@ namespace DiscordRPC
 			x2048 = 2048
 		}
 
+		/// <summary>
+		/// Data for the avatar decoration which can be layered on top of the avatar.
+		/// </summary>
 		public struct AvatarDecorationData
 		{
+			/// <summary>
+			/// The hash of the asset used for the decoration.
+			/// </summary>
 			[JsonProperty("asset")]
 			public string Asset { get; private set; }
+			/// <summary>
+			/// The SKU of the decoration.
+			/// </summary>
 			[JsonProperty("skuId")]
-			public string SKU {  get; private set; }
+			public string SKU { get; private set; }
 		}
 
 		/// <summary>
@@ -106,7 +115,7 @@ namespace DiscordRPC
 		/// If the user has a default Discord avatar, this value will be <c>null</c>. <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will still return the correct default avatar.
 		/// </remarks>
 		[JsonProperty("avatar")]
-		public string Avatar  { get; private set; }
+		public string Avatar { get; private set; }
 
 		/// <summary>
 		/// The avatar is animated
@@ -126,20 +135,20 @@ namespace DiscordRPC
 		[JsonProperty("bot")]
 		public bool Bot { get; private set; }
 
-        /// <summary>
-        /// The flags on a users account, often represented as a badge.
-        /// </summary>
-        [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-        public Flag Flags { get; private set; }
+		/// <summary>
+		/// The flags on a users account, often represented as a badge.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public Flag Flags { get; private set; }
 
-        /// <summary>
-        /// A flag on the user account
-        /// </summary>
-        [Flags]
-        public enum Flag
-        {
-            /// <summary>No flag</summary>
-            None = 0,
+		/// <summary>
+		/// A flag on the user account
+		/// </summary>
+		[Flags]
+		public enum Flag
+		{
+			/// <summary>No flag</summary>
+			None = 0,
 
 			/// <summary>Discord Employee</summary>
 			Employee = 1 << 0,
@@ -207,38 +216,38 @@ namespace DiscordRPC
 		/// The premium type of the user.
 		/// </summary>
 		[JsonProperty("premium_type", NullValueHandling = NullValueHandling.Ignore)]
-        public PremiumType Premium { get; private set; }
+		public PremiumType Premium { get; private set; }
 
-        /// <summary>
-        /// Type of premium
-        /// </summary>
-        public enum PremiumType
-        {
-            /// <summary>No subscription</summary>
-            None = 0,
+		/// <summary>
+		/// Type of premium
+		/// </summary>
+		public enum PremiumType
+		{
+			/// <summary>No subscription</summary>
+			None = 0,
 
-            /// <summary>Nitro Classic. The precursor to the <see cref="NitroBasic"/></summary>
-            NitroClassic = 1,
+			/// <summary>Nitro Classic. The precursor to the <see cref="NitroBasic"/></summary>
+			NitroClassic = 1,
 
 			/// <summary>Nitro. Access to all premium features</summary>
 			Nitro = 2,
 
 			/// <summary>Nitro Basic. Access to mostpremium features</summary>
 			NitroBasic = 3
-        }
+		}
 
 		/// <summary>
 		/// The endpoint for the CDN. Normally cdn.discordapp.com.
 		/// </summary>
 		public string CdnEndpoint { get; private set; }
 
-        /// <summary>
-        /// Creates a new User instance.
-        /// </summary>
-        internal User()
-        {
-            CdnEndpoint = "cdn.discordapp.com";
-        }
+		/// <summary>
+		/// Creates a new User instance.
+		/// </summary>
+		internal User()
+		{
+			CdnEndpoint = "cdn.discordapp.com";
+		}
 
 		/// <summary>
 		/// Updates the URL paths to the appropriate configuration
@@ -299,11 +308,11 @@ namespace DiscordRPC
 				// Get the default avatar for the user.
 				int index = (int)((ID >> 22) % 6);
 #pragma warning disable CS0618 // Disable the obsolete warning as we know the discriminator is obsolete and we are validating it here.
-                if (Discriminator > 0)
-				    index = Discriminator % 5;
+				if (Discriminator > 0)
+					index = Discriminator % 5;
 #pragma warning restore CS0618
 
-                endpoint = $"/embed/avatars/{index}";
+				endpoint = $"/embed/avatars/{index}";
 			}
 
 			//Finish of the endpoint
@@ -368,7 +377,7 @@ namespace DiscordRPC
 				return Username + "#" + Discriminator.ToString("D4");
 #pragma warning restore CS0618
 
-            return Username;
+			return Username;
 		}
 	}
 }
