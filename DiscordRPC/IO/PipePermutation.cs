@@ -22,14 +22,26 @@ namespace DiscordRPC.IO
 
 		private static IEnumerable<string> GetUnixPipes(int index) 
 		{
-			foreach(var tempDir in TemporaryDirectories()) {
-					yield return Path.Combine(tempDir, string.Format(PIPE_NAME, index));
+			foreach (var tempDir in TemporaryDirectories())
+			{
+				// Package Managers
+				foreach (var pmDir in PackageManagerDirectories())
+					yield return Path.Combine(tempDir, pmDir, string.Format(PIPE_NAME, index));
+				
+				// No Package Manager
+				yield return Path.Combine(tempDir, string.Format(PIPE_NAME, index));
 			}
 		}
 
 		private static IEnumerable<string> GetWindowsPipes(int index) 
 		{
 			yield return string.Format(PIPE_NAME, index);	
+		}
+
+		private static IEnumerable<string> PackageManagerDirectories()
+		{
+			yield return "app/com.discordapp.Discord/"; // FlatPak
+			yield return "snap.discord/"; 				// Snap 
 		}
 
 		private static IEnumerable<string> TemporaryDirectories() {
