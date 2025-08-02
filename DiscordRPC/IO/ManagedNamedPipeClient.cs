@@ -15,11 +15,6 @@ namespace DiscordRPC.IO
     public sealed class ManagedNamedPipeClient : INamedPipeClient
     {
         /// <summary>
-        /// Name format of the pipe
-        /// </summary>
-		const string PIPE_NAME = @"discord-ipc-{0}";
-
-        /// <summary>
         /// The logger for the Pipe client to use
         /// </summary>
         public ILogger Logger { get; set; }
@@ -44,9 +39,9 @@ namespace DiscordRPC.IO
         /// <summary>
         /// The pipe we are currently connected too.
         /// </summary>
-        public int ConnectedPipe { get { return _connectedPipe; } }
+        public int ConnectedPipe { get; private set; }
 
-        private int _connectedPipe;
+        private string _connectedPipeName;
         private NamedPipeClientStream _stream;
 
         private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
@@ -84,22 +79,19 @@ namespace DiscordRPC.IO
             if (pipe > 9)
                 throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
 
-            if (pipe < 0)
+
+            int startPipe = 0;
+            int endPipe = 10;
+
+            if (pipe >= 0) 
             {
-                //Iterate until we connect to a pipe
-                for (int i = 0; i < 10; i++)
-                {
-                    if (AttemptConnection(i) || AttemptConnection(i, true))
-                    {
-                        BeginReadStream();
-                        return true;
-                    }
-                }
+                startPipe = pipe;
+                endPipe = pipe;
             }
-            else
-            {
-                //Attempt to connect to a specific pipe
-                if (AttemptConnection(pipe) || AttemptConnection(pipe, true))
+          
+
+            foreach(var pipename in PipePermutation.GetPipes(startPipe, endPipe)) {
+                if (AttemptConnection(pipename))
                 {
                     BeginReadStream();
                     return true;
@@ -116,22 +108,10 @@ namespace DiscordRPC.IO
         /// <param name="pipe">The pipe number to connect too.</param>
         /// <param name="isSandbox">Should the connection to a sandbox be attempted?</param>
         /// <returns></returns>
-        private bool AttemptConnection(int pipe, bool isSandbox = false)
+        private bool AttemptConnection(string pipename)
         {
             if (_isDisposed)
                 throw new ObjectDisposedException("_stream");
-
-            //If we are sandbox but we dont support sandbox, then skip
-            string sandbox = isSandbox ? GetPipeSandbox() : "";
-            if (isSandbox && sandbox == null)
-            {
-                Logger.Trace("Skipping sandbox connection.");
-                return false;
-            }
-
-            //Prepare the pipename
-            Logger.Trace("Connection Attempt {0} ({1})", pipe, sandbox);
-            string pipename = GetPipeName(pipe, sandbox);
 
             try
             {
@@ -152,8 +132,9 @@ namespace DiscordRPC.IO
 
                 //Store the value
                 Logger.Info("Connected to '{0}'", pipename);
-                _connectedPipe = pipe;
-                _isClosed = false;
+                _connectedPipeName = pipename;
+                ConnectedPipe = int.Parse(pipename.Substring(pipename.LastIndexOf('-')));
+				_isClosed = false;
             }
             catch (Exception e)
             {
@@ -421,7 +402,7 @@ namespace DiscordRPC.IO
             {
                 //For good measures, we will mark the pipe as closed anyways
                 _isClosed = true;
-                _connectedPipe = -1;
+				_connectedPipeName = null;
             }
         }
 
@@ -450,67 +431,22 @@ namespace DiscordRPC.IO
             _isDisposed = true;
         }
 
-        /// <summary>
-        /// Returns a platform specific path that Discord is hosting the IPC on.
-        /// </summary>
-        /// <param name="pipe">The pipe number.</param>
-        /// <param name="sandbox">The sandbox environment the pipe is in</param>
-        /// <returns></returns>
-        public static string GetPipeName(int pipe, string sandbox)
-        {
-            if (!IsUnix()) return sandbox + string.Format(PIPE_NAME, pipe);
-            return Path.Combine(GetTemporaryDirectory(), sandbox + string.Format(PIPE_NAME, pipe));
-        }
-
-        /// <summary>
-        /// returns a platform specific path that Discord is hosting the IPC on.
-        /// </summary>
-        /// <param name="pipe">The pipe number</param>
-        /// <returns></returns>
-        public static string GetPipeName(int pipe)
-            => GetPipeName(pipe, "");
-
-        /// <summary>
-        /// Gets the name of the possible sandbox environment the pipe might be located within. If the platform doesn't support sandboxed Discord, then it will return null.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetPipeSandbox()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                default:
-                    return null;
-                case PlatformID.Unix:
-                    return "snap.discord/";
-            }
-        }
-
-        /// <summary>
-        /// Gets the temporary path for the current environment. Only applicable for UNIX based systems.
-        /// </summary>
-        /// <returns></returns>
-        private static string GetTemporaryDirectory()
-        {
-            string temp = null;
-            temp = temp ?? Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
-            temp = temp ?? Environment.GetEnvironmentVariable("TMPDIR");
-            temp = temp ?? Environment.GetEnvironmentVariable("TMP");
-            temp = temp ?? Environment.GetEnvironmentVariable("TEMP");
-            temp = temp ?? "/tmp";
-            return temp;
-        }
-
-        /// <summary>
-        /// Returns true if the current OS platform is Unix based (Unix or MacOSX).
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsUnix()
+        [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
+        public static string GetPipeName(int pipe) 
+            => string.Empty;
+        [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
+		public static string GetPipeName(int pipe, string sandbox) 
+            => string.Empty;
+		[System.Obsolete("Use PipePermutation.GetPipes instead", true)]
+		public static string GetPipeSandbox()
+            => string.Empty;
+		[System.Obsolete("Use PipePermutation.GetPipes instead")]
+		public static bool IsUnix()
         {
             switch (Environment.OSVersion.Platform)
             {
                 default:
                     return false;
-
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     return true;
