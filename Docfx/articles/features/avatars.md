@@ -112,5 +112,5 @@ If the user does not have an avatar yet (or it was otherwise deleted), they will
 
 However, Discord will only support PNG for these. To prevent frustration and unexpected 404's, this library will throw a `BadImageFormatException` when the user is using a default avatar and you request a non-png image.
 
-This guard pattern is not ideal, so it is best to check if `Avatar != null` manually before trying to get animated or compressed avatars.
+This guard pattern is not ideal and might be changed in the future. It is best to check if `Avatar != null` manually before trying to get animated or compressed avatars.
 
