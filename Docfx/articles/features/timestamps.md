@@ -1,5 +1,9 @@
+---
+uid: timestamps
+---
+
 # Timestamps
-You can display timers and progress in your activity. However, Discord likes to change their mind on how these are displayed. Below is a matrix of all the variety of timers you can set and what they will do.
+You can display timers and progress in your activity. However, Discord likes to change their mind on how these are displayed. Below is a matrix of all the variety of timers you can set and what they will do for each @activity_types:
 
 | Activity Type / Timestamps | `null` | `Timestamps.Now` | `Timestamps.FromTimespan` |
 |---------------|------------------|------------|--------------|
@@ -33,4 +37,4 @@ client.SetPresence(new RichPresence()
 
 > [!TIP]
 > This library provides a variety of ways to set the time. 
-> The [Timestamps.FromTimeSpan](xref:api/DiscordRPC.Timestamps) will allow you to use seconds, or a `System.DateTime.TimeSpan`.
+> The @DiscordRPC.Timestamps will allow you to use seconds, or a `System.DateTime.TimeSpan`.

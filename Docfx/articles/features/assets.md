@@ -1,3 +1,7 @@
+---
+uid: assets
+---
+
 # Assets
 ![List of assets](https://i.lu.je/2025/firefox_IoIC79H7Zh.png)
 

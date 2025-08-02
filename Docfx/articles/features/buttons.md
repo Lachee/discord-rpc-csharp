@@ -1,3 +1,7 @@
+---
+uid: buttons
+---
+
 # Buttons
 
 Everyone's favourite, buttons! Buttons allow you to display clickable links inside your presence. They take an external URL and will redirect the user to it on visit.
