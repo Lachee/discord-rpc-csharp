@@ -175,7 +175,7 @@ if (decorationUrl != null) {
 <h2 id="default-avatars">Default Avatars</h2>
 <p>If the user does not have an avatar yet (or it was otherwise deleted), they will be assigned a Default Discord avatar. These avatars are automatically calculated by the user's ID (<em>or Discriminator if they have not yet moved to a global name</em>).</p>
 <p>However, Discord will only support PNG for these. To prevent frustration and unexpected 404's, this library will throw a <code>BadImageFormatException</code> when the user is using a default avatar and you request a non-png image.</p>
-<p>This guard pattern is not ideal, so it is best to check if <code>Avatar != null</code> manually before trying to get animated or compressed avatars.</p>
+<p>This guard pattern is not ideal and might be changed in the future. It is best to check if <code>Avatar != null</code> manually before trying to get animated or compressed avatars.</p>
 
 </article>
 
