@@ -41,7 +41,6 @@ namespace DiscordRPC.IO
         /// </summary>
         public int ConnectedPipe { get; private set; }
 
-        private string _connectedPipeName;
         private NamedPipeClientStream _stream;
 
         private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
@@ -81,16 +80,11 @@ namespace DiscordRPC.IO
 
 
             int startPipe = 0;
-            int endPipe = 10;
-
-            if (pipe >= 0) 
-            {
+            if (pipe >= 0)
                 startPipe = pipe;
-                endPipe = pipe;
-            }
-          
 
-            foreach(var pipename in PipePermutation.GetPipes(startPipe, endPipe)) {
+            foreach (var pipename in PipeLocation.GetPipes(startPipe))
+            {
                 if (AttemptConnection(pipename))
                 {
                     BeginReadStream();
@@ -98,15 +92,12 @@ namespace DiscordRPC.IO
                 }
             }
 
-            //We failed to connect
             return false;
         }
 
         /// <summary>
         /// Attempts a new connection
         /// </summary>
-        /// <param name="pipe">The pipe number to connect too.</param>
-        /// <param name="isSandbox">Should the connection to a sandbox be attempted?</param>
         /// <returns></returns>
         private bool AttemptConnection(string pipename)
         {
@@ -132,9 +123,8 @@ namespace DiscordRPC.IO
 
                 //Store the value
                 Logger.Info("Connected to '{0}'", pipename);
-                _connectedPipeName = pipename;
-                ConnectedPipe = int.Parse(pipename.Substring(pipename.LastIndexOf('-')));
-				_isClosed = false;
+                ConnectedPipe = int.Parse(pipename.Substring(pipename.LastIndexOf('-'))); // TODO: Deprecate this
+                _isClosed = false;
             }
             catch (Exception e)
             {
@@ -263,16 +253,8 @@ namespace DiscordRPC.IO
             else
             {
                 //If we read 0 bytes, its probably a broken pipe. However, I have only confirmed this is the case for MacOSX.
-                // I have added this check here just so the Windows builds are not effected and continue to work as expected.
-                if (IsUnix())
-                {
-                    Logger.Error("Empty frame was read on {0}, aborting.", Environment.OSVersion);
-                    Close();
-                }
-                else
-                {
-                    Logger.Warning("Empty frame was read. Please send report to Lachee.");
-                }
+                Logger.Error("Empty frame was read on {0}, aborting.", Environment.OSVersion);
+                Close();
             }
 
             //We are still connected, so continue to read
@@ -402,7 +384,6 @@ namespace DiscordRPC.IO
             {
                 //For good measures, we will mark the pipe as closed anyways
                 _isClosed = true;
-				_connectedPipeName = null;
             }
         }
 
@@ -432,25 +413,16 @@ namespace DiscordRPC.IO
         }
 
         [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
-        public static string GetPipeName(int pipe) 
+        public static string GetPipeName(int pipe)
             => string.Empty;
         [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
-		public static string GetPipeName(int pipe, string sandbox) 
+        public static string GetPipeName(int pipe, string sandbox)
             => string.Empty;
-		[System.Obsolete("Use PipePermutation.GetPipes instead", true)]
-		public static string GetPipeSandbox()
+        [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
+        public static string GetPipeSandbox()
             => string.Empty;
-		[System.Obsolete("Use PipePermutation.GetPipes instead")]
-		public static bool IsUnix()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                default:
-                    return false;
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    return true;
-            }
-        }
+        [System.Obsolete("Use PipePermutation.GetPipes instead", true)]
+        public static bool IsUnix()
+            => true;
     }
 }
