@@ -3669,6 +3669,51 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.Avatar
   nameWithType: User.Avatar
+- uid: DiscordRPC.User.AvatarDecoration
+  name: AvatarDecoration
+  href: api/DiscordRPC.User.html#DiscordRPC_User_AvatarDecoration
+  commentId: P:DiscordRPC.User.AvatarDecoration
+  fullName: DiscordRPC.User.AvatarDecoration
+  nameWithType: User.AvatarDecoration
+- uid: DiscordRPC.User.AvatarDecoration*
+  name: AvatarDecoration
+  href: api/DiscordRPC.User.html#DiscordRPC_User_AvatarDecoration_
+  commentId: Overload:DiscordRPC.User.AvatarDecoration
+  isSpec: "True"
+  fullName: DiscordRPC.User.AvatarDecoration
+  nameWithType: User.AvatarDecoration
+- uid: DiscordRPC.User.AvatarDecorationData
+  name: User.AvatarDecorationData
+  href: api/DiscordRPC.User.AvatarDecorationData.html
+  commentId: T:DiscordRPC.User.AvatarDecorationData
+  fullName: DiscordRPC.User.AvatarDecorationData
+  nameWithType: User.AvatarDecorationData
+- uid: DiscordRPC.User.AvatarDecorationData.Asset
+  name: Asset
+  href: api/DiscordRPC.User.AvatarDecorationData.html#DiscordRPC_User_AvatarDecorationData_Asset
+  commentId: P:DiscordRPC.User.AvatarDecorationData.Asset
+  fullName: DiscordRPC.User.AvatarDecorationData.Asset
+  nameWithType: User.AvatarDecorationData.Asset
+- uid: DiscordRPC.User.AvatarDecorationData.Asset*
+  name: Asset
+  href: api/DiscordRPC.User.AvatarDecorationData.html#DiscordRPC_User_AvatarDecorationData_Asset_
+  commentId: Overload:DiscordRPC.User.AvatarDecorationData.Asset
+  isSpec: "True"
+  fullName: DiscordRPC.User.AvatarDecorationData.Asset
+  nameWithType: User.AvatarDecorationData.Asset
+- uid: DiscordRPC.User.AvatarDecorationData.SKU
+  name: SKU
+  href: api/DiscordRPC.User.AvatarDecorationData.html#DiscordRPC_User_AvatarDecorationData_SKU
+  commentId: P:DiscordRPC.User.AvatarDecorationData.SKU
+  fullName: DiscordRPC.User.AvatarDecorationData.SKU
+  nameWithType: User.AvatarDecorationData.SKU
+- uid: DiscordRPC.User.AvatarDecorationData.SKU*
+  name: SKU
+  href: api/DiscordRPC.User.AvatarDecorationData.html#DiscordRPC_User_AvatarDecorationData_SKU_
+  commentId: Overload:DiscordRPC.User.AvatarDecorationData.SKU
+  isSpec: "True"
+  fullName: DiscordRPC.User.AvatarDecorationData.SKU
+  nameWithType: User.AvatarDecorationData.SKU
 - uid: DiscordRPC.User.AvatarFormat
   name: User.AvatarFormat
   href: api/DiscordRPC.User.AvatarFormat.html
@@ -3753,6 +3798,19 @@ references:
   commentId: F:DiscordRPC.User.AvatarSize.x64
   fullName: DiscordRPC.User.AvatarSize.x64
   nameWithType: User.AvatarSize.x64
+- uid: DiscordRPC.User.Bot
+  name: Bot
+  href: api/DiscordRPC.User.html#DiscordRPC_User_Bot
+  commentId: P:DiscordRPC.User.Bot
+  fullName: DiscordRPC.User.Bot
+  nameWithType: User.Bot
+- uid: DiscordRPC.User.Bot*
+  name: Bot
+  href: api/DiscordRPC.User.html#DiscordRPC_User_Bot_
+  commentId: Overload:DiscordRPC.User.Bot
+  isSpec: "True"
+  fullName: DiscordRPC.User.Bot
+  nameWithType: User.Bot
 - uid: DiscordRPC.User.CdnEndpoint
   name: CdnEndpoint
   href: api/DiscordRPC.User.html#DiscordRPC_User_CdnEndpoint
@@ -3798,12 +3856,36 @@ references:
   commentId: T:DiscordRPC.User.Flag
   fullName: DiscordRPC.User.Flag
   nameWithType: User.Flag
+- uid: DiscordRPC.User.Flag.ActiveDeveloper
+  name: ActiveDeveloper
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_ActiveDeveloper
+  commentId: F:DiscordRPC.User.Flag.ActiveDeveloper
+  fullName: DiscordRPC.User.Flag.ActiveDeveloper
+  nameWithType: User.Flag.ActiveDeveloper
+- uid: DiscordRPC.User.Flag.BotHttpInteractions
+  name: BotHttpInteractions
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_BotHttpInteractions
+  commentId: F:DiscordRPC.User.Flag.BotHttpInteractions
+  fullName: DiscordRPC.User.Flag.BotHttpInteractions
+  nameWithType: User.Flag.BotHttpInteractions
 - uid: DiscordRPC.User.Flag.BugHunter
   name: BugHunter
   href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_BugHunter
   commentId: F:DiscordRPC.User.Flag.BugHunter
   fullName: DiscordRPC.User.Flag.BugHunter
   nameWithType: User.Flag.BugHunter
+- uid: DiscordRPC.User.Flag.BugHunterLevel2
+  name: BugHunterLevel2
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_BugHunterLevel2
+  commentId: F:DiscordRPC.User.Flag.BugHunterLevel2
+  fullName: DiscordRPC.User.Flag.BugHunterLevel2
+  nameWithType: User.Flag.BugHunterLevel2
+- uid: DiscordRPC.User.Flag.CertifiedModerator
+  name: CertifiedModerator
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_CertifiedModerator
+  commentId: F:DiscordRPC.User.Flag.CertifiedModerator
+  fullName: DiscordRPC.User.Flag.CertifiedModerator
+  nameWithType: User.Flag.CertifiedModerator
 - uid: DiscordRPC.User.Flag.EarlySupporter
   name: EarlySupporter
   href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_EarlySupporter
@@ -3858,6 +3940,18 @@ references:
   commentId: F:DiscordRPC.User.Flag.TeamUser
   fullName: DiscordRPC.User.Flag.TeamUser
   nameWithType: User.Flag.TeamUser
+- uid: DiscordRPC.User.Flag.VerifiedBot
+  name: VerifiedBot
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_VerifiedBot
+  commentId: F:DiscordRPC.User.Flag.VerifiedBot
+  fullName: DiscordRPC.User.Flag.VerifiedBot
+  nameWithType: User.Flag.VerifiedBot
+- uid: DiscordRPC.User.Flag.VerifiedDeveloper
+  name: VerifiedDeveloper
+  href: api/DiscordRPC.User.Flag.html#DiscordRPC_User_Flag_VerifiedDeveloper
+  commentId: F:DiscordRPC.User.Flag.VerifiedDeveloper
+  fullName: DiscordRPC.User.Flag.VerifiedDeveloper
+  nameWithType: User.Flag.VerifiedDeveloper
 - uid: DiscordRPC.User.Flags
   name: Flags
   href: api/DiscordRPC.User.html#DiscordRPC_User_Flags
@@ -3871,6 +3965,25 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.Flags
   nameWithType: User.Flags
+- uid: DiscordRPC.User.GetAvatarDecorationURL
+  name: GetAvatarDecorationURL()
+  href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarDecorationURL
+  commentId: M:DiscordRPC.User.GetAvatarDecorationURL
+  fullName: DiscordRPC.User.GetAvatarDecorationURL()
+  nameWithType: User.GetAvatarDecorationURL()
+- uid: DiscordRPC.User.GetAvatarDecorationURL(DiscordRPC.User.AvatarFormat)
+  name: GetAvatarDecorationURL(AvatarFormat)
+  href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarDecorationURL_DiscordRPC_User_AvatarFormat_
+  commentId: M:DiscordRPC.User.GetAvatarDecorationURL(DiscordRPC.User.AvatarFormat)
+  fullName: DiscordRPC.User.GetAvatarDecorationURL(DiscordRPC.User.AvatarFormat)
+  nameWithType: User.GetAvatarDecorationURL(User.AvatarFormat)
+- uid: DiscordRPC.User.GetAvatarDecorationURL*
+  name: GetAvatarDecorationURL
+  href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarDecorationURL_
+  commentId: Overload:DiscordRPC.User.GetAvatarDecorationURL
+  isSpec: "True"
+  fullName: DiscordRPC.User.GetAvatarDecorationURL
+  nameWithType: User.GetAvatarDecorationURL
 - uid: DiscordRPC.User.GetAvatarExtension(DiscordRPC.User.AvatarFormat)
   name: GetAvatarExtension(AvatarFormat)
   href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarExtension_DiscordRPC_User_AvatarFormat_
@@ -3884,6 +3997,12 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.GetAvatarExtension
   nameWithType: User.GetAvatarExtension
+- uid: DiscordRPC.User.GetAvatarURL
+  name: GetAvatarURL()
+  href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL
+  commentId: M:DiscordRPC.User.GetAvatarURL
+  fullName: DiscordRPC.User.GetAvatarURL()
+  nameWithType: User.GetAvatarURL()
 - uid: DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat)
   name: GetAvatarURL(AvatarFormat)
   href: api/DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_
@@ -3916,6 +4035,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.ID
   nameWithType: User.ID
+- uid: DiscordRPC.User.IsAvatarAnimated
+  name: IsAvatarAnimated
+  href: api/DiscordRPC.User.html#DiscordRPC_User_IsAvatarAnimated
+  commentId: P:DiscordRPC.User.IsAvatarAnimated
+  fullName: DiscordRPC.User.IsAvatarAnimated
+  nameWithType: User.IsAvatarAnimated
+- uid: DiscordRPC.User.IsAvatarAnimated*
+  name: IsAvatarAnimated
+  href: api/DiscordRPC.User.html#DiscordRPC_User_IsAvatarAnimated_
+  commentId: Overload:DiscordRPC.User.IsAvatarAnimated
+  isSpec: "True"
+  fullName: DiscordRPC.User.IsAvatarAnimated
+  nameWithType: User.IsAvatarAnimated
 - uid: DiscordRPC.User.Premium
   name: Premium
   href: api/DiscordRPC.User.html#DiscordRPC_User_Premium
@@ -3941,6 +4073,12 @@ references:
   commentId: F:DiscordRPC.User.PremiumType.Nitro
   fullName: DiscordRPC.User.PremiumType.Nitro
   nameWithType: User.PremiumType.Nitro
+- uid: DiscordRPC.User.PremiumType.NitroBasic
+  name: NitroBasic
+  href: api/DiscordRPC.User.PremiumType.html#DiscordRPC_User_PremiumType_NitroBasic
+  commentId: F:DiscordRPC.User.PremiumType.NitroBasic
+  fullName: DiscordRPC.User.PremiumType.NitroBasic
+  nameWithType: User.PremiumType.NitroBasic
 - uid: DiscordRPC.User.PremiumType.NitroClassic
   name: NitroClassic
   href: api/DiscordRPC.User.PremiumType.html#DiscordRPC_User_PremiumType_NitroClassic

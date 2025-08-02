@@ -855,6 +855,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.User.AvatarDecorationData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.User.AvatarDecorationData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.User.AvatarDecorationData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DiscordRPC.User.AvatarFormat.yml",
       "output": {
         ".html": {

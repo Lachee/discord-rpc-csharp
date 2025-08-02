@@ -154,10 +154,11 @@ Class User  <a class="header-action link-secondary" title="View source" href="ht
 
   <h3 id="DiscordRPC_User_Avatar" data-uid="DiscordRPC.User.Avatar">
   Avatar
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The avatar hash of the user. Too get a URL for the avatar, use the <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize_">GetAvatarURL(AvatarFormat, AvatarSize)</a>. This can be null if the user has no avatar. The <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize_">GetAvatarURL(AvatarFormat, AvatarSize)</a> will account for this and return the discord default.</p>
+  <div class="markdown level1 summary"><p>The hash of the user's avatar.
+To get a URL for the avatar, use the <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize_">GetAvatarURL(AvatarFormat, AvatarSize)</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -179,6 +180,76 @@ public string Avatar { get; }</code></pre>
 
 
 
+  <h4 class="section" id="DiscordRPC_User_Avatar_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>If the user has a default Discord avatar, this value will be <code>null</code>. <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize_">GetAvatarURL(AvatarFormat, AvatarSize)</a> will still return the correct default avatar.</p>
+</div>
+
+
+
+
+  <a id="DiscordRPC_User_AvatarDecoration_" data-uid="DiscordRPC.User.AvatarDecoration*"></a>
+
+  <h3 id="DiscordRPC_User_AvatarDecoration" data-uid="DiscordRPC.User.AvatarDecoration">
+  AvatarDecoration
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The SKU and hash of the users avatar decoration.
+To get a URL for the decoration, use the <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_GetAvatarDecorationURL">GetAvatarDecorationURL()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;avatar_decoration_data&quot;)]
+public User.AvatarDecorationData? AvatarDecoration { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="DiscordRPC.User.html">User</a>.<a class="xref" href="DiscordRPC.User.AvatarDecorationData.html">AvatarDecorationData</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="DiscordRPC_User_Bot_" data-uid="DiscordRPC.User.Bot*"></a>
+
+  <h3 id="DiscordRPC_User_Bot" data-uid="DiscordRPC.User.Bot">
+  Bot
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the user belongs to an OAuth2 application.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;bot&quot;)]
+public bool Bot { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
 
 
 
@@ -187,7 +258,7 @@ public string Avatar { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_CdnEndpoint" data-uid="DiscordRPC.User.CdnEndpoint">
   CdnEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L233"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The endpoint for the CDN. Normally cdn.discordapp.com.</p>
@@ -219,7 +290,7 @@ public string Avatar { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_Discriminator" data-uid="DiscordRPC.User.Discriminator">
   Discriminator
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The discriminator of the user.</p>
@@ -256,7 +327,7 @@ public int Discriminator { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_DisplayName" data-uid="DiscordRPC.User.DisplayName">
   DisplayName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The display name of the user</p>
@@ -292,7 +363,7 @@ public string DisplayName { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_Flags" data-uid="DiscordRPC.User.Flags">
   Flags
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The flags on a users account, often represented as a badge.</p>
@@ -325,7 +396,7 @@ public User.Flag Flags { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_ID" data-uid="DiscordRPC.User.ID">
   ID
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L78"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The snowflake ID of the user.</p>
@@ -354,11 +425,43 @@ public ulong ID { get; }</code></pre>
 
 
 
+  <a id="DiscordRPC_User_IsAvatarAnimated_" data-uid="DiscordRPC.User.IsAvatarAnimated*"></a>
+
+  <h3 id="DiscordRPC_User_IsAvatarAnimated" data-uid="DiscordRPC.User.IsAvatarAnimated">
+  IsAvatarAnimated
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The avatar is animated</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsAvatarAnimated { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="DiscordRPC_User_Premium_" data-uid="DiscordRPC.User.Premium*"></a>
 
   <h3 id="DiscordRPC_User_Premium" data-uid="DiscordRPC.User.Premium">
   Premium
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L209"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The premium type of the user.</p>
@@ -391,7 +494,7 @@ public User.PremiumType Premium { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_Username" data-uid="DiscordRPC.User.Username">
   Username
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The username of the player.</p>
@@ -424,11 +527,91 @@ public string Username { get; }</code></pre>
 </h2>
 
 
+  <a id="DiscordRPC_User_GetAvatarDecorationURL_" data-uid="DiscordRPC.User.GetAvatarDecorationURL*"></a>
+
+  <h3 id="DiscordRPC_User_GetAvatarDecorationURL" data-uid="DiscordRPC.User.GetAvatarDecorationURL">
+  GetAvatarDecorationURL()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a URL to the user's avatar decoration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetAvatarDecorationURL()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL to the discord CDN for the current avatar decoration, otherwise <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="DiscordRPC_User_GetAvatarDecorationURL_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The Image will be a Animated PNG.</p>
+</div>
+
+
+
+
+  <a id="DiscordRPC_User_GetAvatarDecorationURL_" data-uid="DiscordRPC.User.GetAvatarDecorationURL*"></a>
+
+  <h3 id="DiscordRPC_User_GetAvatarDecorationURL_DiscordRPC_User_AvatarFormat_" data-uid="DiscordRPC.User.GetAvatarDecorationURL(DiscordRPC.User.AvatarFormat)">
+  GetAvatarDecorationURL(AvatarFormat)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L337"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a URL to the user's avatar decoration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetAvatarDecorationURL(User.AvatarFormat format)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="DiscordRPC.User.html">User</a>.<a class="xref" href="DiscordRPC.User.AvatarFormat.html">AvatarFormat</a></dt>
+    <dd><p>The format of the decoration</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL to the discord CDN for the current avatar decoration, otherwise <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="DiscordRPC_User_GetAvatarDecorationURL_DiscordRPC_User_AvatarFormat__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The avatar formats do not behave like User Avatars:</p>
+<ul><li><a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_PNG">PNG</a> are Animated PNG</li><li><a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_GIF">GIF</a> will respond with <code>415 Unsupported Media Type</code></li><li><a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_WebP">WebP</a> are not animated</li><li><a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_JPEG">JPEG</a> do not have transparency</li></ul>
+<p>Additionally, size is not support and makes no difference to the resulting image.</p>
+</div>
+
+
+
+
   <a id="DiscordRPC_User_GetAvatarExtension_" data-uid="DiscordRPC.User.GetAvatarExtension*"></a>
 
   <h3 id="DiscordRPC_User_GetAvatarExtension_DiscordRPC_User_AvatarFormat_" data-uid="DiscordRPC.User.GetAvatarExtension(DiscordRPC.User.AvatarFormat)">
   GetAvatarExtension(AvatarFormat)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L239"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L351"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the file extension of the specified format.</p>
@@ -465,12 +648,50 @@ public string Username { get; }</code></pre>
 
   <a id="DiscordRPC_User_GetAvatarURL_" data-uid="DiscordRPC.User.GetAvatarURL*"></a>
 
-  <h3 id="DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_" data-uid="DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat)">
-  GetAvatarURL(AvatarFormat)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L198"><i class="bi bi-code-slash"></i></a>
+  <h3 id="DiscordRPC_User_GetAvatarURL" data-uid="DiscordRPC.User.GetAvatarURL">
+  GetAvatarURL()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L260"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_PNG">PNG</a> format.</p>
+  <div class="markdown level1 summary"><p>Gets a URL to the user's avatar PNG.</p>
+<p>If the user does not have an avatar, a URL to a default avatar is returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetAvatarURL()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL to the discord CDN for the particular avatar</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="DiscordRPC_User_GetAvatarURL_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The file returned will be <code>128x128px</code>.</p>
+</div>
+
+
+
+
+  <a id="DiscordRPC_User_GetAvatarURL_" data-uid="DiscordRPC.User.GetAvatarURL*"></a>
+
+  <h3 id="DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_" data-uid="DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat)">
+  GetAvatarURL(AvatarFormat)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L274"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a URL to the user's avatar with the specified format.</p>
+<p>If the user does not have an avatar, a URL to a default avatar is returned.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -499,9 +720,16 @@ public string Username { get; }</code></pre>
 
 
   <h4 class="section" id="DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The file returned will be 128px x 128px</p>
+  <div class="markdown level1 remarks"><p>The file returned will be <code>128x128px</code>.</p>
+<p>The default avatar only supports the <a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_PNG">PNG</a> format.</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.badimageformatexception">BadImageFormatException</a></dt>
+    <dd><p>The user has a default avatar but a format other than PNG is requested.</p>
+</dd>
+  </dl>
 
 
 
@@ -509,10 +737,11 @@ public string Username { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize_" data-uid="DiscordRPC.User.GetAvatarURL(DiscordRPC.User.AvatarFormat,DiscordRPC.User.AvatarSize)">
   GetAvatarURL(AvatarFormat, AvatarSize)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L207"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L288"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_PNG">PNG</a> format.</p>
+  <div class="markdown level1 summary"><p>Gets a URL to the user's avatar with the specified format and size.</p>
+<p>If the user does not have an avatar, a URL to a default avatar is returned.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -543,7 +772,16 @@ public string Username { get; }</code></pre>
 
 
 
+  <h4 class="section" id="DiscordRPC_User_GetAvatarURL_DiscordRPC_User_AvatarFormat_DiscordRPC_User_AvatarSize__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The default avatar only supports the <a class="xref" href="DiscordRPC.User.AvatarFormat.html#DiscordRPC_User_AvatarFormat_PNG">PNG</a> format.</p>
+</div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.badimageformatexception">BadImageFormatException</a></dt>
+    <dd><p>The user has a default avatar but a format other than PNG is requested.</p>
+</dd>
+  </dl>
 
 
 
@@ -551,7 +789,7 @@ public string Username { get; }</code></pre>
 
   <h3 id="DiscordRPC_User_ToString" data-uid="DiscordRPC.User.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L249"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/User.cs/#L361"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Formats the user into a displayable format. If the user has a <a class="xref" href="DiscordRPC.User.html#DiscordRPC_User_DisplayName">DisplayName</a>, then this will be used.</p>
