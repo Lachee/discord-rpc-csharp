@@ -849,6 +849,104 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.IRegisterUriScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.IRegisterUriScheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.IRegisterUriScheme",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.IRegisterUriScheme.yml\" sourcestartlinenumber=\"1\">Interface for registering a URI scheme.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.MacUriScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.MacUriScheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.MacUriScheme",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.MacUriScheme.yml\" sourcestartlinenumber=\"1\">Registers a URI scheme on MacOS.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.SchemeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.SchemeInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.SchemeInfo",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.SchemeInfo.yml\" sourcestartlinenumber=\"1\">URI Scheme information to register to the system.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.UnixUriScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.UnixUriScheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.UnixUriScheme",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.UnixUriScheme.yml\" sourcestartlinenumber=\"1\">Registers a URI scheme on Unix-like systems using the xdg-open command.\nThe scheme is saved as a .desktop file in the user's local applications directory.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.UriScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.UriScheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.UriScheme",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.UriScheme.yml\" sourcestartlinenumber=\"1\">Registers a URI Scheme for the current platform.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.WindowsUriScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.WindowsUriScheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry.WindowsUriScheme",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Registry.WindowsUriScheme.yml\" sourcestartlinenumber=\"1\">Registers a URI scheme on Windows.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Registry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Registry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Registry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DiscordRPC.RichPresence.yml",
       "output": {
         ".html": {

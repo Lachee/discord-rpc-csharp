@@ -279,6 +279,41 @@
     "title": "Class Party | Discord RPC C#",
     "summary": "Class Party Namespace DiscordRPC Assembly DiscordRPC.dll Structure representing the part the player is in. [Serializable] public class Party Inheritance object Party Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Properties ID A unique ID for the player's current party / lobby / group. If this is not supplied, they player will not be in a party and the rest of the information will not be sent. Max 128 Bytes [JsonProperty(\"id\", NullValueHandling = NullValueHandling.Ignore)] public string ID { get; set; } Property Value string Max The maxium size of the party / lobby / group. This is required to be larger than Size. If it is smaller than the current party size, it will automatically be set too Size when the presence is sent. [JsonIgnore] public int Max { get; set; } Property Value int Privacy The privacy of the party [JsonProperty(\"privacy\", NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)] public Party.PrivacySetting Privacy { get; set; } Property Value Party.PrivacySetting Size The current size of the players party / lobby / group. [JsonIgnore] public int Size { get; set; } Property Value int"
   },
+  "api/DiscordRPC.Registry.IRegisterUriScheme.html": {
+    "href": "api/DiscordRPC.Registry.IRegisterUriScheme.html",
+    "title": "Interface IRegisterUriScheme | Discord RPC C#",
+    "summary": "Interface IRegisterUriScheme Namespace DiscordRPC.Registry Assembly DiscordRPC.dll Interface for registering a URI scheme. public interface IRegisterUriScheme Methods Register(SchemeInfo) Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly. Additional arguments can be supplied if required. bool Register(SchemeInfo info) Parameters info SchemeInfo The register context. Returns bool"
+  },
+  "api/DiscordRPC.Registry.MacUriScheme.html": {
+    "href": "api/DiscordRPC.Registry.MacUriScheme.html",
+    "title": "Class MacUriScheme | Discord RPC C#",
+    "summary": "Class MacUriScheme Namespace DiscordRPC.Registry Assembly DiscordRPC.dll Registers a URI scheme on MacOS. public sealed class MacUriScheme : IRegisterUriScheme Inheritance object MacUriScheme Implements IRegisterUriScheme Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.ReferenceEquals(object, object) object.ToString() Constructors MacUriScheme(ILogger) Initializes a new instance of the MacUriScheme class. public MacUriScheme(ILogger logger) Parameters logger ILogger Methods Register(SchemeInfo) Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly. Additional arguments can be supplied if required. public bool Register(SchemeInfo info) Parameters info SchemeInfo The register context. Returns bool"
+  },
+  "api/DiscordRPC.Registry.SchemeInfo.html": {
+    "href": "api/DiscordRPC.Registry.SchemeInfo.html",
+    "title": "Struct SchemeInfo | Discord RPC C#",
+    "summary": "Struct SchemeInfo Namespace DiscordRPC.Registry Assembly DiscordRPC.dll URI Scheme information to register to the system. public struct SchemeInfo Inherited Members ValueType.Equals(object) ValueType.GetHashCode() ValueType.ToString() object.Equals(object, object) object.GetType() object.ReferenceEquals(object, object) Properties ApplicationID The Discord application ID for the game or application. public string ApplicationID { readonly get; set; } Property Value string ExecutablePath The path to the executable that will be launched when the URI scheme is invoked. public string ExecutablePath { readonly get; set; } Property Value string SteamAppID The Steam application ID if the game is registered through Steam. When set, the application will be launched through Steam instead of directly. Can be null if the game is not registered through Steam. public string SteamAppID { readonly get; set; } Property Value string UsingSteamApp Indicates whether the scheme is using a Steam application ID. public bool UsingSteamApp { get; } Property Value bool"
+  },
+  "api/DiscordRPC.Registry.UnixUriScheme.html": {
+    "href": "api/DiscordRPC.Registry.UnixUriScheme.html",
+    "title": "Class UnixUriScheme | Discord RPC C#",
+    "summary": "Class UnixUriScheme Namespace DiscordRPC.Registry Assembly DiscordRPC.dll Registers a URI scheme on Unix-like systems using the xdg-open command. The scheme is saved as a .desktop file in the user's local applications directory. public sealed class UnixUriScheme : IRegisterUriScheme Inheritance object UnixUriScheme Implements IRegisterUriScheme Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.ReferenceEquals(object, object) object.ToString() Constructors UnixUriScheme(ILogger) Initializes a new instance of the UnixUriScheme class. public UnixUriScheme(ILogger logger) Parameters logger ILogger Methods Register(SchemeInfo) Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly. Additional arguments can be supplied if required. public bool Register(SchemeInfo info) Parameters info SchemeInfo The register context. Returns bool"
+  },
+  "api/DiscordRPC.Registry.UriScheme.html": {
+    "href": "api/DiscordRPC.Registry.UriScheme.html",
+    "title": "Class UriScheme | Discord RPC C#",
+    "summary": "Class UriScheme Namespace DiscordRPC.Registry Assembly DiscordRPC.dll Registers a URI Scheme for the current platform. public static class UriScheme Inheritance object UriScheme Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods Register(SchemeInfo, ILogger) Registers the URI Scheme for the current platform. public static bool Register(SchemeInfo info, ILogger logger = null) Parameters info SchemeInfo logger ILogger Returns bool"
+  },
+  "api/DiscordRPC.Registry.WindowsUriScheme.html": {
+    "href": "api/DiscordRPC.Registry.WindowsUriScheme.html",
+    "title": "Class WindowsUriScheme | Discord RPC C#",
+    "summary": "Class WindowsUriScheme Namespace DiscordRPC.Registry Assembly DiscordRPC.dll Registers a URI scheme on Windows. public sealed class WindowsUriScheme : IRegisterUriScheme Inheritance object WindowsUriScheme Implements IRegisterUriScheme Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.ReferenceEquals(object, object) object.ToString() Constructors WindowsUriScheme(ILogger) Initializes a new instance of the WindowsUriScheme class. public WindowsUriScheme(ILogger logger) Parameters logger ILogger Methods GetSteamLocation() Gets the current location of the steam client public string GetSteamLocation() Returns string Register(SchemeInfo) Registers the URI scheme. If Steam ID is passed, the application will be launched through steam instead of directly. Additional arguments can be supplied if required. public bool Register(SchemeInfo info) Parameters info SchemeInfo The register context. Returns bool"
+  },
+  "api/DiscordRPC.Registry.html": {
+    "href": "api/DiscordRPC.Registry.html",
+    "title": "Namespace DiscordRPC.Registry | Discord RPC C#",
+    "summary": "Namespace DiscordRPC.Registry Classes MacUriScheme Registers a URI scheme on MacOS. UnixUriScheme Registers a URI scheme on Unix-like systems using the xdg-open command. The scheme is saved as a .desktop file in the user's local applications directory. UriScheme Registers a URI Scheme for the current platform. WindowsUriScheme Registers a URI scheme on Windows. Structs SchemeInfo URI Scheme information to register to the system. Interfaces IRegisterUriScheme Interface for registering a URI scheme."
+  },
   "api/DiscordRPC.RichPresence.html": {
     "href": "api/DiscordRPC.RichPresence.html",
     "title": "Class RichPresence | Discord RPC C#",
