@@ -25,10 +25,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "Resources/_ Rich Presence Legend.png",
+      "source_relative_path": "Resources/Legend.png",
       "output": {
         "resource": {
-          "relative_path": "Resources/_ Rich Presence Legend.png"
+          "relative_path": "Resources/Legend.png"
         }
       },
       "version": ""
