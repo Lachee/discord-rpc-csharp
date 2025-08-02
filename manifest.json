@@ -14,6 +14,46 @@
       }
     },
     {
+      "type": "Resource",
+      "source_relative_path": "Resources/Example Client.txt",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Example Client.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/_ Rich Presence Legend.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/_ Rich Presence Legend.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/logo.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/DiscordRPC.ActivityType.yml",
       "output": {
