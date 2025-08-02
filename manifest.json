@@ -35,6 +35,16 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "Resources/logo-small.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/logo-small.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "Resources/logo.png",
       "output": {
         "resource": {
