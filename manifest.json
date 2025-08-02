@@ -986,6 +986,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/avatars.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/avatars.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/features/buttons.md",
       "output": {
         ".html": {

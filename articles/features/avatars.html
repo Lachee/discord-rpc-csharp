@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Avatars | Discord RPC C# </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Avatars | Discord RPC C# ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/avatars.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="avatars">
+<h1 id="avatars">Avatars</h1>
+
+<p>When the RPC Client connects to Discord it will be given a User Object representing the active user on that client. It is possible to grab the avatar of the user and Display it within your application.</p>
+<p>This is useful for scoreboards, invite links, and other personalisation features.</p>
+<p><img src="https://i.lu.je/2025/avatars.png" alt="diagram of images"></p>
+<h2 id="onready-event">OnReady Event</h2>
+<p>The user's information is not immediately available. You must wait for the <code>OnReady</code> event emitted by the client.
+This event will contain the current user information, and the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_CurrentUser">DiscordRpcClient.CurrentUser</a> is not valid until it has invoked.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>As described in the <a href="../getting_started/standard.html#events">Getting Started</a>, events are executed in another thread.</p>
+<p>If you are using a Game Engine, you need to manually use <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Invoke">DiscordRpcClient.Invoke</a> on your main thread or otherwise handle the cross-thread data transfer.</p>
+</div>
+<h2 id="getting-the-avatar">Getting the Avatar</h2>
+<p>The <a class="xref" href="../../api/DiscordRPC.User.html#DiscordRPC_User_Avatar">User.Avatar</a> is the current avatar hash, and isn't the picture. Use the helper functions to get an avatar with the correct format and sizing:</p>
+<pre><code class="lang-cs">client.OnReady += (sender, msg) =&gt;
+{
+    //Create some events so we know things are happening
+    Console.WriteLine(&quot;Connected to discord with user {0}&quot;, msg.User.Username);
+    Console.WriteLine(&quot;Avatar URL: {0}&quot;, msg.User.GetAvatarURL(User.AvatarFormat.PNG, User.AvatarSize.x128));
+};
+</code></pre>
+<p>Once you have the Avatar URL, you can download it using your favourite HTTP Client:</p>
+<pre><code class="lang-cs">string url = client.CurrentUser.GetAvatarURL(User.AvatarFormat.PNG, User.AvatarSize.x128);
+using (var client = new System.Net.WebClient())
+{
+    client.DownloadFile(url, &quot;avatar.png&quot;);
+}
+
+// Or using HttpClient (recommended for modern applications)
+using (var client = new HttpClient())
+{
+    byte[] imageBytes = await client.GetByteArrayAsync(url);
+    await File.WriteAllBytesAsync(&quot;avatar.png&quot;, imageBytes);
+}
+
+// Or if you are using Unity3D
+IEnumerator LoadAvatar()
+{
+    string url = client.CurrentUser.GetAvatarURL(User.AvatarFormat.PNG, User.AvatarSize.x128);
+    UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+    yield return request.SendWebRequest();
+
+    if (request.result == UnityWebRequest.Result.Success)
+    {
+        Texture2D texture = DownloadHandlerTexture.GetContent(request);
+        // Use the texture (e.g., assign to a material or UI image)
+    }
+}
+</code></pre>
+<div class="TIP">
+<h5>Tip</h5>
+<p>You can use Async/Await in Unity3D!</p>
+<p>You will have much higher code readability and less frustrations when using asnchronous functions rather than coroutine hack Unity came up with.
+Use a library like <a href="https://github.com/Cysharp/UniTask">Cysharp/UniTask</a> for extended functionality, support, and performance.</p>
+</div>
+<h3 id="animations">Animations</h3>
+<p>If the avatar has a animation ( its hash begins with <code>a_</code> ), then you can get a link to the animated variant by using either a <code>GIF</code> or <code>WebP</code>:</p>
+<pre><code class="lang-cs">string url;
+if (client.CurrentUser.IsAvatarAnimated) 
+{
+    url = client.CurrentUser.GetAvatarURL(User.AvatarFormat.GIF, User.AvatarSize.x64);
+} 
+else 
+{
+    url = client.CurrentUser.GetAvatarURL(User.AvatarFormat.PNG, User.AvatarSize.x64);
+}
+</code></pre>
+<p>Depending on your platform, you will need to decode and animate these files yourself.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>If the user has a Default avatar, using anything other than PNG will throw an exception.</p>
+<p>Check <code>Avatar != null</code> before getting urls.</p>
+</div>
+<h2 id="getting-the-avatar-decoration">Getting the Avatar Decoration</h2>
+<p>Avatar Decorations are provided by a struct on <a class="xref" href="../../api/DiscordRPC.User.html#DiscordRPC_User_AvatarDecoration">User.AvatarDecoration</a>. These images are a set size and allows you to layer decoration on top of your users.</p>
+<p>These decorations include both a SKU and Hash, however like with avatars there are helper functions to get the correct URL to download them from.</p>
+<pre><code class="lang-cs">string decorationUrl = client.CurrentUser.GetAvatarDecorationURL();
+if (decorationUrl != null) {
+    DownloadDecoration(decorationUrl);
+}
+</code></pre>
+<p>This will return <code>null</code> if the user does not have a decoration available.</p>
+<h3 id="animations-1">Animations</h3>
+<p>Avatar Decorations are almost always animated. However, unlike Avatars, they are animated using <a href="https://en.wikipedia.org/wiki/APNG">Animated PNG</a> (APNG).</p>
+<p>The <code>GIF</code> variant does not exist, <code>JPEG</code> will lose the needed transparency, and <code>WebP</code> are not animated. This is a Discord limitation.</p>
+<p>Because of this, your program must be able to parse and use <code>APNG</code> if you wish to add decorations on top of the user's avatar.</p>
+<h2 id="default-avatars">Default Avatars</h2>
+<p>If the user does not have an avatar yet (or it was otherwise deleted), they will be assigned a Default Discord avatar. These avatars are automatically calculated by the user's ID (<em>or Discriminator if they have not yet moved to a global name</em>).</p>
+<p>However, Discord will only support PNG for these. To prevent frustration and unexpected 404's, this library will throw a <code>BadImageFormatException</code> when the user is using a default avatar and you request a non-png image.</p>
+<p>This guard pattern is not ideal, so it is best to check if <code>Avatar != null</code> manually before trying to get animated or compressed avatars.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/avatars.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <a href="https://github.com/Lachee/discord-rpc-csharp">Contribute</a> on GitHub
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -4117,3 +4117,18 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.User.Username
   nameWithType: User.Username
+- uid: activity_types
+  name: Activity Types
+  href: articles/features/activity_types.html
+- uid: assets
+  name: Assets
+  href: articles/features/assets.html
+- uid: avatars
+  name: Avatars
+  href: articles/features/avatars.html
+- uid: buttons
+  name: Buttons
+  href: articles/features/buttons.html
+- uid: timestamps
+  name: Timestamps
+  href: articles/features/timestamps.html
