@@ -2,7 +2,7 @@
   "api/DiscordRPC.ActivityType.html": {
     "href": "api/DiscordRPC.ActivityType.html",
     "title": "Enum ActivityType | Discord RPC C#",
-    "summary": "Enum ActivityType Namespace DiscordRPC Assembly DiscordRPC.dll Rich Presence activity type public enum ActivityType Fields Competing = 5 Competing status type. Displays as \"Competing in ...\" Listening = 2 Listening status type. Displays as \"Listening to ...\" Playing = 0 Playing status type. Displays as \"Playing ...\" Watching = 3 Watching status type. Displays as \"Watching ...\""
+    "summary": "Enum ActivityType Namespace DiscordRPC Assembly DiscordRPC.dll Rich Presence activity type public enum ActivityType Fields Playing = 0 Playing status type. Displays as \"Playing ...\" Listening = 2 Listening status type. Displays as \"Listening to ...\" Watching = 3 Watching status type. Displays as \"Watching ...\" Competing = 5 Competing status type. Displays as \"Competing in ...\""
   },
   "api/DiscordRPC.Assets.html": {
     "href": "api/DiscordRPC.Assets.html",
@@ -32,7 +32,7 @@
   "api/DiscordRPC.EventType.html": {
     "href": "api/DiscordRPC.EventType.html",
     "title": "Enum EventType | Discord RPC C#",
-    "summary": "Enum EventType Namespace DiscordRPC Assembly DiscordRPC.dll The type of event receieved by the RPC. A flag type that can be combined. [Flags] public enum EventType Fields Join = 2 Called when the Discord Client wishes to enter a game to play. JoinRequest = 4 Called when another Discord Client has requested permission to join this game. None = 0 No event Spectate = 1 Called when the Discord Client wishes to enter a game to spectate"
+    "summary": "Enum EventType Namespace DiscordRPC Assembly DiscordRPC.dll The type of event receieved by the RPC. A flag type that can be combined. [Flags] public enum EventType Fields None = 0 No event Spectate = 1 Called when the Discord Client wishes to enter a game to spectate Join = 2 Called when the Discord Client wishes to enter a game to play. JoinRequest = 4 Called when another Discord Client has requested permission to join this game."
   },
   "api/DiscordRPC.Events.OnCloseEvent.html": {
     "href": "api/DiscordRPC.Events.OnCloseEvent.html",
@@ -152,7 +152,7 @@
   "api/DiscordRPC.IO.Opcode.html": {
     "href": "api/DiscordRPC.IO.Opcode.html",
     "title": "Enum Opcode | Discord RPC C#",
-    "summary": "Enum Opcode Namespace DiscordRPC.IO Assembly DiscordRPC.dll The operation code that the PipeFrame was sent under. This defines the type of frame and the data to expect. public enum Opcode : uint Fields Close = 2 Discord has closed the connection Frame = 1 Generic message frame Handshake = 0 Initial handshake frame Ping = 3 Ping frame (not used?) Pong = 4 Pong frame (not used?)"
+    "summary": "Enum Opcode Namespace DiscordRPC.IO Assembly DiscordRPC.dll The operation code that the PipeFrame was sent under. This defines the type of frame and the data to expect. public enum Opcode : uint Fields Handshake = 0 Initial handshake frame Frame = 1 Generic message frame Close = 2 Discord has closed the connection Ping = 3 Ping frame (not used?) Pong = 4 Pong frame (not used?)"
   },
   "api/DiscordRPC.IO.PipeFrame.html": {
     "href": "api/DiscordRPC.IO.PipeFrame.html",
@@ -182,7 +182,7 @@
   "api/DiscordRPC.Logging.LogLevel.html": {
     "href": "api/DiscordRPC.Logging.LogLevel.html",
     "title": "Enum LogLevel | Discord RPC C#",
-    "summary": "Enum LogLevel Namespace DiscordRPC.Logging Assembly DiscordRPC.dll Level of logging to use. public enum LogLevel Fields Error = 4 Only Errors are logged Info = 2 Info, Warning and Errors are logged None = 256 Nothing is logged Trace = 1 Trace, Info, Warning and Errors are logged Warning = 3 Warning and Errors are logged"
+    "summary": "Enum LogLevel Namespace DiscordRPC.Logging Assembly DiscordRPC.dll Level of logging to use. public enum LogLevel Fields Trace = 1 Trace, Info, Warning and Errors are logged Info = 2 Info, Warning and Errors are logged Warning = 3 Warning and Errors are logged Error = 4 Only Errors are logged None = 256 Nothing is logged"
   },
   "api/DiscordRPC.Logging.NullLogger.html": {
     "href": "api/DiscordRPC.Logging.NullLogger.html",
@@ -212,7 +212,7 @@
   "api/DiscordRPC.Message.ErrorCode.html": {
     "href": "api/DiscordRPC.Message.ErrorCode.html",
     "title": "Enum ErrorCode | Discord RPC C#",
-    "summary": "Enum ErrorCode Namespace DiscordRPC.Message Assembly DiscordRPC.dll The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation public enum ErrorCode Fields InvalidCommand = 4002 Invalid command was sent InvalidEvent = 4004 Invalid event was sent InvalidPayload = 4000 Invalid Payload received NotImplemented = 10 The functionality was not yet implemented PipeException = 1 The pipe had an exception ReadCorrupt = 2 The pipe received corrupted data Success = 0 Pipe was Successful UnknownError = 1000 Unknown Discord error"
+    "summary": "Enum ErrorCode Namespace DiscordRPC.Message Assembly DiscordRPC.dll The error message received by discord. See https://discordapp.com/developers/docs/topics/rpc#rpc-server-payloads-rpc-errors for documentation public enum ErrorCode Fields Success = 0 Pipe was Successful PipeException = 1 The pipe had an exception ReadCorrupt = 2 The pipe received corrupted data NotImplemented = 10 The functionality was not yet implemented UnknownError = 1000 Unknown Discord error InvalidPayload = 4000 Invalid Payload received InvalidCommand = 4002 Invalid command was sent InvalidEvent = 4004 Invalid event was sent"
   },
   "api/DiscordRPC.Message.ErrorMessage.html": {
     "href": "api/DiscordRPC.Message.ErrorMessage.html",
@@ -237,7 +237,7 @@
   "api/DiscordRPC.Message.MessageType.html": {
     "href": "api/DiscordRPC.Message.MessageType.html",
     "title": "Enum MessageType | Discord RPC C#",
-    "summary": "Enum MessageType Namespace DiscordRPC.Message Assembly DiscordRPC.dll Type of message. public enum MessageType Fields Close = 1 The connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again. ConnectionEstablished = 9 The connection to the discord client was succesfull. This is called before Ready. ConnectionFailed = 10 Failed to establish any connection with discord. Discord is potentially not running? Error = 2 A error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong. Join = 6 The Discord Client wishes for this process to join a game. JoinRequest = 8 Another discord user requests permission to join this game. PresenceUpdate = 3 The Discord Client has updated the presence. Ready = 0 The Discord Client is ready to send and receive messages. Spectate = 7 The Discord Client wishes for this process to spectate a game. Subscribe = 4 The Discord Client has subscribed to an event. Unsubscribe = 5 The Discord Client has unsubscribed from an event."
+    "summary": "Enum MessageType Namespace DiscordRPC.Message Assembly DiscordRPC.dll Type of message. public enum MessageType Fields Ready = 0 The Discord Client is ready to send and receive messages. Close = 1 The connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again. Error = 2 A error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong. PresenceUpdate = 3 The Discord Client has updated the presence. Subscribe = 4 The Discord Client has subscribed to an event. Unsubscribe = 5 The Discord Client has unsubscribed from an event. Join = 6 The Discord Client wishes for this process to join a game. Spectate = 7 The Discord Client wishes for this process to spectate a game. JoinRequest = 8 Another discord user requests permission to join this game. ConnectionEstablished = 9 The connection to the discord client was succesfull. This is called before Ready. ConnectionFailed = 10 Failed to establish any connection with discord. Discord is potentially not running?"
   },
   "api/DiscordRPC.Message.PresenceMessage.html": {
     "href": "api/DiscordRPC.Message.PresenceMessage.html",
@@ -292,7 +292,7 @@
   "api/DiscordRPC.StatusDisplayType.html": {
     "href": "api/DiscordRPC.StatusDisplayType.html",
     "title": "Enum StatusDisplayType | Discord RPC C#",
-    "summary": "Enum StatusDisplayType Namespace DiscordRPC Assembly DiscordRPC.dll Rich Presence Display type public enum StatusDisplayType Fields Details = 2 Displays the rich presence details \"Listening to Never Gonna Give You Up\" Name = 0 Displays the rich presence name \"Listening to Spotify\" State = 1 Displays the rich presence state \"Listening to Rick Astley\""
+    "summary": "Enum StatusDisplayType Namespace DiscordRPC Assembly DiscordRPC.dll Rich Presence Display type public enum StatusDisplayType Fields Name = 0 Displays the rich presence name \"Listening to Spotify\" State = 1 Displays the rich presence state \"Listening to Rick Astley\" Details = 2 Displays the rich presence details \"Listening to Never Gonna Give You Up\""
   },
   "api/DiscordRPC.Timestamps.html": {
     "href": "api/DiscordRPC.Timestamps.html",
@@ -307,22 +307,22 @@
   "api/DiscordRPC.User.AvatarFormat.html": {
     "href": "api/DiscordRPC.User.AvatarFormat.html",
     "title": "Enum User.AvatarFormat | Discord RPC C#",
-    "summary": "Enum User.AvatarFormat Namespace DiscordRPC Assembly DiscordRPC.dll Possible formats for avatars public enum User.AvatarFormat Fields GIF = 3 Graphics Interchange Format (.gif) Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif. JPEG = 1 Joint Photographic Experts Group format (.jpeg) The format most cameras use. Lossy and does not support transparent avatars. PNG = 0 Portable Network Graphics format (.png) Losses format that supports transparent avatars. Most recommended for stationary formats with wide support from many libraries. WebP = 2 WebP format (.webp) Picture only version of WebM. Pronounced \"weeb p\"."
+    "summary": "Enum User.AvatarFormat Namespace DiscordRPC Assembly DiscordRPC.dll Possible formats for avatars public enum User.AvatarFormat Fields PNG = 0 Portable Network Graphics format (.png) Losses format that supports transparent avatars. Most recommended for stationary formats with wide support from many libraries. JPEG = 1 Joint Photographic Experts Group format (.jpeg) The format most cameras use. Lossy and does not support transparent avatars. WebP = 2 WebP format (.webp) Picture only version of WebM. Pronounced \"weeb p\". GIF = 3 Graphics Interchange Format (.gif) Animated avatars that Discord Nitro users are able to use. If the user doesn't have an animated avatar, then it will just be a single frame gif."
   },
   "api/DiscordRPC.User.AvatarSize.html": {
     "href": "api/DiscordRPC.User.AvatarSize.html",
     "title": "Enum User.AvatarSize | Discord RPC C#",
-    "summary": "Enum User.AvatarSize Namespace DiscordRPC Assembly DiscordRPC.dll Possible square sizes of avatars. public enum User.AvatarSize Fields x1024 = 1024 1024 x 1024 pixels. x128 = 128 128 x 128 pixels. x16 = 16 16 x 16 pixels. x2048 = 2048 2048 x 2048 pixels. x256 = 256 256 x 256 pixels. x32 = 32 32 x 32 pixels. x512 = 512 512 x 512 pixels. x64 = 64 64 x 64 pixels."
+    "summary": "Enum User.AvatarSize Namespace DiscordRPC Assembly DiscordRPC.dll Possible square sizes of avatars. public enum User.AvatarSize Fields x16 = 16 16 x 16 pixels. x32 = 32 32 x 32 pixels. x64 = 64 64 x 64 pixels. x128 = 128 128 x 128 pixels. x256 = 256 256 x 256 pixels. x512 = 512 512 x 512 pixels. x1024 = 1024 1024 x 1024 pixels. x2048 = 2048 2048 x 2048 pixels."
   },
   "api/DiscordRPC.User.Flag.html": {
     "href": "api/DiscordRPC.User.Flag.html",
     "title": "Enum User.Flag | Discord RPC C#",
-    "summary": "Enum User.Flag Namespace DiscordRPC Assembly DiscordRPC.dll A flag on the user account [Flags] public enum User.Flag Fields ActiveDeveloper = 4194304 User is an Active Developer BotHttpInteractions = 524288 Bot uses only HTTP interactions and is shown in the online member list BugHunter = 8 Bug Hunter Level 1 BugHunterLevel2 = 16384 Bug Hunter Level 2 CertifiedModerator = 262144 Moderator Programs Alumni EarlySupporter = 512 Early Nitro Supporter Employee = 1 Discord Employee HouseBalance = 256 House Balance Member HouseBravery = 64 House Bravery Member HouseBrilliance = 128 House Brilliance Member HypeSquad = 4 HypeSquad Events Member None = 0 No flag Partner = 2 Partnered Server Owner TeamUser = 1024 User is a team VerifiedBot = 65536 Verified Bot VerifiedDeveloper = 131072 Early Verified Bot Developer"
+    "summary": "Enum User.Flag Namespace DiscordRPC Assembly DiscordRPC.dll A flag on the user account [Flags] public enum User.Flag Fields None = 0 No flag Employee = 1 Discord Employee Partner = 2 Partnered Server Owner HypeSquad = 4 HypeSquad Events Member BugHunter = 8 Bug Hunter Level 1 HouseBravery = 64 House Bravery Member HouseBrilliance = 128 House Brilliance Member HouseBalance = 256 House Balance Member EarlySupporter = 512 Early Nitro Supporter TeamUser = 1024 User is a team BugHunterLevel2 = 16384 Bug Hunter Level 2 VerifiedBot = 65536 Verified Bot VerifiedDeveloper = 131072 Early Verified Bot Developer CertifiedModerator = 262144 Moderator Programs Alumni BotHttpInteractions = 524288 Bot uses only HTTP interactions and is shown in the online member list ActiveDeveloper = 4194304 User is an Active Developer"
   },
   "api/DiscordRPC.User.PremiumType.html": {
     "href": "api/DiscordRPC.User.PremiumType.html",
     "title": "Enum User.PremiumType | Discord RPC C#",
-    "summary": "Enum User.PremiumType Namespace DiscordRPC Assembly DiscordRPC.dll Type of premium public enum User.PremiumType Fields Nitro = 2 Nitro. Access to all premium features NitroBasic = 3 Nitro Basic. Access to mostpremium features NitroClassic = 1 Nitro Classic. The precursor to the NitroBasic None = 0 No subscription"
+    "summary": "Enum User.PremiumType Namespace DiscordRPC Assembly DiscordRPC.dll Type of premium public enum User.PremiumType Fields None = 0 No subscription NitroClassic = 1 Nitro Classic. The precursor to the NitroBasic Nitro = 2 Nitro. Access to all premium features NitroBasic = 3 Nitro Basic. Access to mostpremium features"
   },
   "api/DiscordRPC.User.html": {
     "href": "api/DiscordRPC.User.html",

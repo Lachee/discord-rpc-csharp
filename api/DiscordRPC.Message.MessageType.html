@@ -117,41 +117,21 @@ Enum MessageType  <a class="header-action link-secondary" title="View source" hr
   <h2 id="fields">Fields
 </h2>
   <dl class="parameters">
+    <dt id="DiscordRPC_Message_MessageType_Ready"><code>Ready = 0</code></dt>
+  
+  <dd><p>The Discord Client is ready to send and receive messages.</p>
+</dd>
     <dt id="DiscordRPC_Message_MessageType_Close"><code>Close = 1</code></dt>
   
   <dd><p>The connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.</p>
-</dd>
-    <dt id="DiscordRPC_Message_MessageType_ConnectionEstablished"><code>ConnectionEstablished = 9</code></dt>
-  
-  <dd><p>The connection to the discord client was succesfull. This is called before <a class="xref" href="DiscordRPC.Message.MessageType.html#DiscordRPC_Message_MessageType_Ready">Ready</a>.</p>
-</dd>
-    <dt id="DiscordRPC_Message_MessageType_ConnectionFailed"><code>ConnectionFailed = 10</code></dt>
-  
-  <dd><p>Failed to establish any connection with discord. Discord is potentially not running?</p>
 </dd>
     <dt id="DiscordRPC_Message_MessageType_Error"><code>Error = 2</code></dt>
   
   <dd><p>A error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong.</p>
 </dd>
-    <dt id="DiscordRPC_Message_MessageType_Join"><code>Join = 6</code></dt>
-  
-  <dd><p>The Discord Client wishes for this process to join a game.</p>
-</dd>
-    <dt id="DiscordRPC_Message_MessageType_JoinRequest"><code>JoinRequest = 8</code></dt>
-  
-  <dd><p>Another discord user requests permission to join this game.</p>
-</dd>
     <dt id="DiscordRPC_Message_MessageType_PresenceUpdate"><code>PresenceUpdate = 3</code></dt>
   
   <dd><p>The Discord Client has updated the presence.</p>
-</dd>
-    <dt id="DiscordRPC_Message_MessageType_Ready"><code>Ready = 0</code></dt>
-  
-  <dd><p>The Discord Client is ready to send and receive messages.</p>
-</dd>
-    <dt id="DiscordRPC_Message_MessageType_Spectate"><code>Spectate = 7</code></dt>
-  
-  <dd><p>The Discord Client wishes for this process to spectate a game.</p>
 </dd>
     <dt id="DiscordRPC_Message_MessageType_Subscribe"><code>Subscribe = 4</code></dt>
   
@@ -160,6 +140,26 @@ Enum MessageType  <a class="header-action link-secondary" title="View source" hr
     <dt id="DiscordRPC_Message_MessageType_Unsubscribe"><code>Unsubscribe = 5</code></dt>
   
   <dd><p>The Discord Client has unsubscribed from an event.</p>
+</dd>
+    <dt id="DiscordRPC_Message_MessageType_Join"><code>Join = 6</code></dt>
+  
+  <dd><p>The Discord Client wishes for this process to join a game.</p>
+</dd>
+    <dt id="DiscordRPC_Message_MessageType_Spectate"><code>Spectate = 7</code></dt>
+  
+  <dd><p>The Discord Client wishes for this process to spectate a game.</p>
+</dd>
+    <dt id="DiscordRPC_Message_MessageType_JoinRequest"><code>JoinRequest = 8</code></dt>
+  
+  <dd><p>Another discord user requests permission to join this game.</p>
+</dd>
+    <dt id="DiscordRPC_Message_MessageType_ConnectionEstablished"><code>ConnectionEstablished = 9</code></dt>
+  
+  <dd><p>The connection to the discord client was succesfull. This is called before <a class="xref" href="DiscordRPC.Message.MessageType.html#DiscordRPC_Message_MessageType_Ready">Ready</a>.</p>
+</dd>
+    <dt id="DiscordRPC_Message_MessageType_ConnectionFailed"><code>ConnectionFailed = 10</code></dt>
+  
+  <dd><p>Failed to establish any connection with discord. Discord is potentially not running?</p>
 </dd>
   </dl>
 
