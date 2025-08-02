@@ -1,4 +1,8 @@
-﻿using DiscordRPC.Logging;
+﻿#if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
+#define HAS_RUNTIME_INFORMATION
+#endif
+
+using DiscordRPC.Logging;
 using System;
 
 namespace DiscordRPC.Registry
@@ -22,12 +26,6 @@ namespace DiscordRPC.Registry
         /// <inheritdoc/>
         public bool Register(SchemeInfo info)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
-            {
-                throw new PlatformNotSupportedException("URI schemes can only be registered on Windows");
-            }
-
-#if NETFRAMEWORK || WINDOWS
             //Prepare our location
             string location = info.ExecutablePath;
             if (location == null)
@@ -54,10 +52,8 @@ namespace DiscordRPC.Registry
 
             //Okay, now actually register it
             CreateUriScheme(schemePath, friendlyName, defaultIcon, command);
-#endif
             return true;
         }
-#if NETFRAMEWORK || WINDOWS
 
         /// <summary>
         /// Creates the actual scheme
@@ -68,6 +64,11 @@ namespace DiscordRPC.Registry
         /// <param name="command"></param>
         private void CreateUriScheme(string scheme, string friendlyName, string defaultIcon, string command)
         {
+#if HAS_RUNTIME_INFORMATION
+            if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                throw new PlatformNotSupportedException("Requires Windows to use the Registry");
+#endif
+
             using (var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey($"SOFTWARE\\Classes\\{scheme}"))
             {
                 key.SetValue("", $"URL:{friendlyName}");
@@ -89,12 +90,16 @@ namespace DiscordRPC.Registry
         /// <returns></returns>
         public string GetSteamLocation()
         {
+#if HAS_RUNTIME_INFORMATION
+            if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                throw new PlatformNotSupportedException("Requires Windows to use the Registry");
+#endif
+
             using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam"))
             {
                 if (key == null) return null;
                 return key.GetValue("SteamExe") as string;
             }
         }
-#endif
     }
 }
