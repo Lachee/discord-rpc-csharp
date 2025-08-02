@@ -17,6 +17,9 @@
 - name: Assets
   href: features/assets.md
 
+- name: Avatars
+  href: features/avatars.md
+
 - name: Buttons
   href: features/buttons.md
 
