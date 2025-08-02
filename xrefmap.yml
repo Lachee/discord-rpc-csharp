@@ -3351,19 +3351,6 @@ references:
   fullName.vb: DiscordRPC.Registry.WindowsUriScheme.New
   nameWithType: WindowsUriScheme.WindowsUriScheme
   nameWithType.vb: WindowsUriScheme.New
-- uid: DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation
-  name: GetSteamLocation()
-  href: api/DiscordRPC.Registry.WindowsUriScheme.html#DiscordRPC_Registry_WindowsUriScheme_GetSteamLocation
-  commentId: M:DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation
-  fullName: DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation()
-  nameWithType: WindowsUriScheme.GetSteamLocation()
-- uid: DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation*
-  name: GetSteamLocation
-  href: api/DiscordRPC.Registry.WindowsUriScheme.html#DiscordRPC_Registry_WindowsUriScheme_GetSteamLocation_
-  commentId: Overload:DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation
-  isSpec: "True"
-  fullName: DiscordRPC.Registry.WindowsUriScheme.GetSteamLocation
-  nameWithType: WindowsUriScheme.GetSteamLocation
 - uid: DiscordRPC.Registry.WindowsUriScheme.Register(DiscordRPC.Registry.SchemeInfo)
   name: Register(SchemeInfo)
   href: api/DiscordRPC.Registry.WindowsUriScheme.html#DiscordRPC_Registry_WindowsUriScheme_Register_DiscordRPC_Registry_SchemeInfo_

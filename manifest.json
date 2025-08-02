@@ -1013,7 +1013,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "DiscordRPC.User.AvatarDecorationData",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/DiscordRPC.User.AvatarDecorationData.yml\" sourcestartlinenumber=\"1\">Data for the avatar decoration which can be layered on top of the avatar.</p>\n"
     },
     {
       "type": "ManagedReference",
