@@ -90,7 +90,9 @@ namespace DiscordRPC.Example
             {
                 //Create some events so we know things are happening
                 Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
-            };
+                Console.WriteLine("Avatar: {0}", msg.User.GetAvatarURL(User.AvatarFormat.WebP));
+                Console.WriteLine("Decoration: {0}", msg.User.GetAvatarDecorationURL());
+			};
 
             client.OnPresenceUpdate += (sender, msg) =>
             {

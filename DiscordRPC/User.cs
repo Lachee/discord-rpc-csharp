@@ -64,6 +64,14 @@ namespace DiscordRPC
 			x2048 = 2048
 		}
 
+		public struct AvatarDecorationData
+		{
+			[JsonProperty("asset")]
+			public string Asset { get; private set; }
+			[JsonProperty("skuId")]
+			public string SKU {  get; private set; }
+		}
+
 		/// <summary>
 		/// The snowflake ID of the user. 
 		/// </summary>
@@ -91,10 +99,32 @@ namespace DiscordRPC
 		public string DisplayName { get; private set; }
 
 		/// <summary>
-		/// The avatar hash of the user. Too get a URL for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. This can be null if the user has no avatar. The <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will account for this and return the discord default.
+		/// The hash of the user's avatar.
+		/// To get a URL for the avatar, use the <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/>. 
 		/// </summary>
+		/// <remarks>
+		/// If the user has a default Discord avatar, this value will be <c>null</c>. <see cref="GetAvatarURL(AvatarFormat, AvatarSize)"/> will still return the correct default avatar.
+		/// </remarks>
 		[JsonProperty("avatar")]
-		public string Avatar { get; private set; }
+		public string Avatar  { get; private set; }
+
+		/// <summary>
+		/// The avatar is animated
+		/// </summary>
+		public bool IsAvatarAnimated => Avatar != null && Avatar.StartsWith("a_");
+
+		/// <summary>
+		/// The SKU and hash of the users avatar decoration. 
+		/// To get a URL for the decoration, use the <see cref="GetAvatarDecorationURL()"/>.
+		/// </summary>
+		[JsonProperty("avatar_decoration_data")]
+		public AvatarDecorationData? AvatarDecoration { get; private set; }
+
+		/// <summary>
+		/// Whether the user belongs to an OAuth2 application.
+		/// </summary>
+		[JsonProperty("bot")]
+		public bool Bot { get; private set; }
 
         /// <summary>
         /// The flags on a users account, often represented as a badge.
@@ -219,22 +249,42 @@ namespace DiscordRPC
 			this.CdnEndpoint = configuration.CdnHost;
 		}
 
+		/// <summary>
+		/// Gets a URL to the user's avatar PNG.
+		/// <para>If the user does not have an avatar, a URL to a default avatar is returned.</para>
+		/// </summary>
+		/// <remarks>
+		/// The file returned will be <c>128x128px</c>.
+		/// </remarks>
+		/// <returns>URL to the discord CDN for the particular avatar</returns>
+		public string GetAvatarURL()
+			=> GetAvatarURL(AvatarFormat.PNG, AvatarSize.x128);
 
 		/// <summary>
-		/// Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
+		/// Gets a URL to the user's avatar with the specified format.
+		/// <para>If the user does not have an avatar, a URL to a default avatar is returned.</para>
 		/// </summary>
-		/// <remarks>The file returned will be 128px x 128px</remarks>
+		/// <remarks>
+		/// <para>The file returned will be <c>128x128px</c>.</para>
+		/// <para>The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.</para>
+		/// </remarks>
 		/// <param name="format">The format of the target avatar</param>
 		/// <returns>URL to the discord CDN for the particular avatar</returns>
+		/// <exception cref="BadImageFormatException">The user has a default avatar but a format other than PNG is requested.</exception>
 		public string GetAvatarURL(AvatarFormat format)
 			=> GetAvatarURL(format, AvatarSize.x128);
 
 		/// <summary>
-		/// Gets a URL that can be used to download the user's avatar. If the user has not yet set their avatar, it will return the default one that discord is using. The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
+		/// Gets a URL to the user's avatar with the specified format and size.
+		/// <para>If the user does not have an avatar, a URL to a default avatar is returned.</para>
 		/// </summary>
+		/// <remarks>
+		/// The default avatar only supports the <see cref="AvatarFormat.PNG"/> format.
+		/// </remarks>
 		/// <param name="format">The format of the target avatar</param>
 		/// <param name="size">The optional size of the avatar you wish for.</param>
 		/// <returns>URL to the discord CDN for the particular avatar</returns>
+		/// <exception cref="BadImageFormatException">The user has a default avatar but a format other than PNG is requested.</exception>
 		public string GetAvatarURL(AvatarFormat format, AvatarSize size)
 		{
 			//Prepare the endpoint
@@ -243,13 +293,11 @@ namespace DiscordRPC
 			//The user has no avatar, so we better replace it with the default
 			if (string.IsNullOrEmpty(Avatar))
 			{
-				//Make sure we are only using PNG
 				if (format != AvatarFormat.PNG)
 					throw new BadImageFormatException("The user has no avatar and the requested format " + format.ToString() + " is not supported. (Only supports PNG).");
 
 				// Get the default avatar for the user.
 				int index = (int)((ID >> 22) % 6);
-
 #pragma warning disable CS0618 // Disable the obsolete warning as we know the discriminator is obsolete and we are validating it here.
                 if (Discriminator > 0)
 				    index = Discriminator % 5;
@@ -259,7 +307,40 @@ namespace DiscordRPC
 			}
 
 			//Finish of the endpoint
-			return string.Format("https://{0}{1}{2}?size={3}", this.CdnEndpoint, endpoint, GetAvatarExtension(format), (int)size);
+			return string.Format("https://{0}{1}{2}?size={3}&animated=true", this.CdnEndpoint, endpoint, GetAvatarExtension(format), (int)size);
+		}
+
+		/// <summary>
+		/// Gets a URL to the user's avatar decoration.
+		/// </summary>
+		/// <remarks>The Image will be a Animated PNG.</remarks>
+		/// <returns>URL to the discord CDN for the current avatar decoration, otherwise <c>null</c>.</returns>
+		public string GetAvatarDecorationURL()
+			=> GetAvatarDecorationURL(AvatarFormat.PNG);
+
+		/// <summary>		
+		/// Gets a URL to the user's avatar decoration.
+		/// </summary>
+		/// <remarks>
+		/// The avatar formats do not behave like User Avatars:
+		/// <list type="bullet">
+		/// <item><see cref="AvatarFormat.PNG"/> are Animated PNG</item>
+		/// <item><see cref="AvatarFormat.GIF"/> will respond with <c>415 Unsupported Media Type</c></item>
+		/// <item><see cref="AvatarFormat.WebP"/> are not animated</item>
+		/// <item><see cref="AvatarFormat.JPEG"/> do not have transparency</item>
+		/// </list>
+		/// 
+		/// Additionally, size is not support and makes no difference to the resulting image.
+		/// </remarks>
+		/// <param name="format">The format of the decoration</param>
+		/// <returns>URL to the discord CDN for the current avatar decoration, otherwise <c>null</c>.</returns>
+		public string GetAvatarDecorationURL(AvatarFormat format)
+		{
+			if (AvatarDecoration == null)
+				return null;
+
+			string endpoint = $"/avatar-decoration-presets/{AvatarDecoration.Value.Asset}";
+			return string.Format("https://{0}{1}{2}", this.CdnEndpoint, endpoint, GetAvatarExtension(format));
 		}
 
 		/// <summary>
