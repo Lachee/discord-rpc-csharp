@@ -15,6 +15,7 @@
     "globalMetadata": {
       "_appTitle": "Discord RPC C#",
       "_appLogoPath": "Resources/logo.svg",
+      "_appFaviconPath": "Resources/logo.svg",
       "_appFooter": "<a href=\"https://github.com/Lachee/discord-rpc-csharp\">Contribute</a> on GitHub",
       "_enableSearch": true
     },
@@ -38,7 +39,7 @@
     "sitemap": {
       "baseUrl": "https://lachee.github.io/discord-rpc-csharp/"
     },
-    "template": ["default", "modern"],
+    "template": ["default", "modern", "tweaks"],
     "xref": [ "https://normanderwan.github.io/UnityXrefMaps/xrefmap.yml" ],
     "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
     "dest": "../_site"
