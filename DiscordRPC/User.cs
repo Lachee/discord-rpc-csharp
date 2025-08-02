@@ -111,44 +111,72 @@ namespace DiscordRPC
             /// <summary>No flag</summary>
             None = 0,
 
-            /// <summary>Staff of Discord.</summary>
-            Employee = 1 << 0,
+			/// <summary>Discord Employee</summary>
+			Employee = 1 << 0,
 
-            /// <summary>Partners of Discord.</summary>
-            Partner = 1 << 1,
+			/// <summary>Partnered Server Owner</summary>
+			Partner = 1 << 1,
 
-            /// <summary>Original HypeSquad which organise events.</summary>
-            HypeSquad = 1 << 2,
+			/// <summary>HypeSquad Events Member</summary>
+			HypeSquad = 1 << 2,
 
-            /// <summary>Bug Hunters that found and reported bugs in Discord.</summary>
-            BugHunter = 1 << 3,
+			/// <summary>Bug Hunter Level 1</summary>
+			BugHunter = 1 << 3,
 
-            //These 2 are mistery types
-            //A = 1 << 4,
-            //B = 1 << 5,
+			// Unknown Flags:
+			// 1 << 4,
+			// 1 << 5,
 
-            /// <summary>The HypeSquad House of Bravery.</summary>
-            HouseBravery = 1 << 6,
+			/// <summary>House Bravery Member</summary>
+			HouseBravery = 1 << 6,
 
-            /// <summary>The HypeSquad House of Brilliance.</summary>
-            HouseBrilliance = 1 << 7,
+			/// <summary>House Brilliance Member</summary>
+			HouseBrilliance = 1 << 7,
 
-            /// <summary>The HypeSquad House of Balance (the best one).</summary>
-            HouseBalance = 1 << 8,
+			/// <summary>House Balance Member</summary>
+			HouseBalance = 1 << 8,
 
-            /// <summary>Early Supporter of Discord and had Nitro before the store was released.</summary>
-            EarlySupporter = 1 << 9,
+			/// <summary>Early Nitro Supporter</summary>
+			EarlySupporter = 1 << 9,
 
-            /// <summary>Apart of a team.
-            /// <para>Unclear if it is reserved for members that share a team with the current application.</para>
-            /// </summary>
-            TeamUser = 1 << 10
-        }
+			/// <summary>User is a team</summary>
+			TeamUser = 1 << 10,
 
-        /// <summary>
-        /// The premium type of the user.
-        /// </summary>
-        [JsonProperty("premium_type", NullValueHandling = NullValueHandling.Ignore)]
+			// Unknown Flags:
+			// 1 << 11
+			// 1 << 12
+			// 1 << 13
+
+			/// <summary>Bug Hunter Level 2</summary>
+			BugHunterLevel2 = 1 << 14,
+
+			// Unknown Flag:
+			// 1 << 15
+
+			/// <summary>Verified Bot</summary>
+			VerifiedBot = 1 << 16,
+
+			/// <summary>Early Verified Bot Developer</summary>
+			VerifiedDeveloper = 1 << 17,
+
+			/// <summary>Moderator Programs Alumni</summary>
+			CertifiedModerator = 1 << 18,
+
+			/// <summary>Bot uses only HTTP interactions and is shown in the online member list</summary>
+			BotHttpInteractions = 1 << 19,
+
+			// Unknown Flags:
+			// 1 << 20
+			// 1 << 21
+
+			/// <summary>User is an Active Developer</summary>
+			ActiveDeveloper = 1 << 22
+		}
+
+		/// <summary>
+		/// The premium type of the user.
+		/// </summary>
+		[JsonProperty("premium_type", NullValueHandling = NullValueHandling.Ignore)]
         public PremiumType Premium { get; private set; }
 
         /// <summary>
@@ -156,14 +184,17 @@ namespace DiscordRPC
         /// </summary>
         public enum PremiumType
         {
-            /// <summary>No subscription to any forms of Nitro.</summary>
+            /// <summary>No subscription</summary>
             None = 0,
 
-            /// <summary>Nitro Classic subscription. Has chat perks and animated avatars.</summary>
+            /// <summary>Nitro Classic. The precursor to the <see cref="NitroBasic"/></summary>
             NitroClassic = 1,
 
-            /// <summary>Nitro subscription. Has chat perks, animated avatars, server boosting, and access to free Nitro Games.</summary>
-            Nitro = 2
+			/// <summary>Nitro. Access to all premium features</summary>
+			Nitro = 2,
+
+			/// <summary>Nitro Basic. Access to mostpremium features</summary>
+			NitroBasic = 3
         }
 
 		/// <summary>
