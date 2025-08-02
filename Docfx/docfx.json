@@ -4,9 +4,12 @@
       "src": [
         {
           "src": "..",
-          "files": [ "**.csproj" ]
+          "files": [
+            "**.csproj"
+          ]
         }
       ],
+      "enumSortOrder": "declaringOrder",
       "globalNamespaceId": "Global",
       "dest": "api"
     }
@@ -22,25 +25,40 @@
     },
     "content": [
       {
-        "files": [ "api/*.yml" ]
+        "files": [
+          "api/*.yml"
+        ]
       },
       {
-        "files": [  "articles/toc.yml", "articles/**.md" ]
+        "files": [
+          "articles/toc.yml",
+          "articles/**.md"
+        ]
       },
       {
-        "files": [ "toc.yml", "index.md" ]
+        "files": [
+          "toc.yml",
+          "index.md"
+        ]
       }
     ],
     "resource": [
       {
-        "files": [ "Resources/**"]
+        "files": [
+          "Resources/**"
+        ]
       }
     ],
     "sitemap": {
       "baseUrl": "https://lachee.github.io/discord-rpc-csharp/"
     },
-    "template": ["default", "modern"],
-    "postProcessors": [ "ExtractSearchIndex" ],
+    "template": [
+      "default",
+      "modern"
+    ],
+    "postProcessors": [
+      "ExtractSearchIndex"
+    ],
     "dest": "../_site"
   }
 }
