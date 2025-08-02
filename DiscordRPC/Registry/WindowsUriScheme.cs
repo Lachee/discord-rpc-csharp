@@ -3,15 +3,24 @@ using System;
 
 namespace DiscordRPC.Registry
 {
-    internal class WindowsUriSchemeCreator : IUriSchemeCreator
+    /// <summary>
+    /// Registers a URI scheme on Windows.
+    /// </summary>
+    public sealed class WindowsUriScheme : IRegisterUriScheme
     {
         private ILogger logger;
-        public WindowsUriSchemeCreator(ILogger logger)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowsUriScheme"/> class.
+        /// </summary>
+        /// <param name="logger"></param>
+        public WindowsUriScheme(ILogger logger)
         {
             this.logger = logger;
         }
 
-        public bool RegisterUriScheme(UriSchemeRegister register)
+        /// <inheritdoc/>
+        public bool Register(SchemeInfo info)
         {
             if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
@@ -19,7 +28,7 @@ namespace DiscordRPC.Registry
             }
 
             //Prepare our location
-            string location = register.ExecutablePath;
+            string location = info.ExecutablePath;
             if (location == null)
             {
                 logger.Error("Failed to register application because the location was null.");
@@ -27,23 +36,23 @@ namespace DiscordRPC.Registry
             }
 
             //Prepare the Scheme, Friendly name, default icon and default command
-            string scheme = $"discord-{register.ApplicationID}";
-            string friendlyName = $"Run game {register.ApplicationID} protocol";
+            string schemePath = $"discord-{info.ApplicationID}";
+            string friendlyName = $"Run game {info.ApplicationID} protocol";
             string defaultIcon = location;
             string command = location;
 
             //We have a steam ID, so attempt to replce the command with a steam command
-            if (register.UsingSteamApp)
+            if (info.UsingSteamApp)
             {
                 //Try to get the steam location. If found, set the command to a run steam instead.
                 string steam = GetSteamLocation();
                 if (steam != null)
-                    command = string.Format("\"{0}\" steam://rungameid/{1}", steam, register.SteamAppID);
+                    command = string.Format("\"{0}\" steam://rungameid/{1}", steam, info.SteamAppID);
 
             }
 
             //Okay, now actually register it
-            CreateUriScheme(scheme, friendlyName, defaultIcon, command);
+            CreateUriScheme(schemePath, friendlyName, defaultIcon, command);
             return true;
         }
 

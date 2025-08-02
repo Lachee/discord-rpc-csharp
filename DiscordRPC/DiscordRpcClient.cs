@@ -334,13 +334,13 @@ namespace DiscordRPC
                         SynchronizeState();
                     }
 
-                    if (OnReady != null) 
+                    if (OnReady != null)
                         OnReady.Invoke(this, message as ReadyMessage);
 
                     break;
 
                 case MessageType.Close:
-                    if (OnClose != null) 
+                    if (OnClose != null)
                         OnClose.Invoke(this, message as CloseMessage);
                     break;
 
@@ -368,7 +368,7 @@ namespace DiscordRPC
                         Subscription |= sub.Event;
                     }
 
-                    if (OnSubscribe != null) 
+                    if (OnSubscribe != null)
                         OnSubscribe.Invoke(this, message as SubscribeMessage);
 
                     break;
@@ -474,7 +474,7 @@ namespace DiscordRPC
             }
 
             //Update our local store
-            lock (_sync) 
+            lock (_sync)
             {
                 CurrentPresence = presence?.Clone();
             }
@@ -699,8 +699,14 @@ namespace DiscordRPC
         /// <returns></returns>
         public bool RegisterUriScheme(string steamAppID = null, string executable = null)
         {
-            var urischeme = new UriSchemeRegister(_logger, ApplicationID, steamAppID, executable);
-            return HasRegisteredUriScheme = urischeme.RegisterUriScheme();
+            var info = new SchemeInfo()
+            {
+                ApplicationID = ApplicationID,
+                SteamAppID = steamAppID,
+                ExecutablePath = executable ?? System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+            };
+
+            return HasRegisteredUriScheme = UriScheme.Register(info, _logger);
         }
 
         /// <summary>

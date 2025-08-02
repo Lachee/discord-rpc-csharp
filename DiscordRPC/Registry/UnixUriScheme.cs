@@ -1,22 +1,29 @@
 ﻿using DiscordRPC.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Registry
 {
-    internal class UnixUriSchemeCreator : IUriSchemeCreator
+    /// <summary>
+    /// Registers a URI scheme on Unix-like systems using the xdg-open command. 
+    /// The scheme is saved as a .desktop file in the user's local applications directory.
+    /// </summary>
+    public sealed class UnixUriScheme : IRegisterUriScheme
     {
         private ILogger logger;
-        public UnixUriSchemeCreator(ILogger logger)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnixUriScheme"/> class.
+        /// </summary>
+        /// <param name="logger"></param>
+        public UnixUriScheme(ILogger logger)
         {
             this.logger = logger;
         }
 
-        public bool RegisterUriScheme(UriSchemeRegister register)
+        /// <inheritdoc/>
+        public bool Register(SchemeInfo info)
         {
             var home = Environment.GetEnvironmentVariable("HOME");
             if (string.IsNullOrEmpty(home))
@@ -25,7 +32,7 @@ namespace DiscordRPC.Registry
                 return false;
             }
 
-            string exe = register.ExecutablePath;
+            string exe = info.ExecutablePath;
             if (string.IsNullOrEmpty(exe))
             {
                 logger.Error("Failed to register because the application was not located.");
@@ -34,10 +41,10 @@ namespace DiscordRPC.Registry
 
             //Prepare the command
             string command = null;
-            if (register.UsingSteamApp)
+            if (info.UsingSteamApp)
             {
                 //A steam command isntead
-                command = $"xdg-open steam://rungameid/{register.SteamAppID}";
+                command = $"xdg-open steam://rungameid/{info.SteamAppID}";
             }
             else
             {
@@ -47,7 +54,7 @@ namespace DiscordRPC.Registry
 
 
             //Prepare the file
-            string desktopFileFormat = 
+            string desktopFileFormat =
 @"[Desktop Entry]
 Name=Game {0}
 Exec={1} %u
@@ -55,11 +62,11 @@ Type=Application
 NoDisplay=true
 Categories=Discord;Games;
 MimeType=x-scheme-handler/discord-{2}";
-            
-            string file = string.Format(desktopFileFormat, register.ApplicationID, command, register.ApplicationID);
+
+            string file = string.Format(desktopFileFormat, info.ApplicationID, command, info.ApplicationID);
 
             //Prepare the path
-            string filename = $"/discord-{register.ApplicationID}.desktop";
+            string filename = $"/discord-{info.ApplicationID}.desktop";
             string filepath = home + "/.local/share/applications";
             var directory = Directory.CreateDirectory(filepath);
             if (!directory.Exists)
@@ -72,7 +79,7 @@ MimeType=x-scheme-handler/discord-{2}";
             File.WriteAllText(filepath + filename, file);
 
             //Register the Mime type
-            if (!RegisterMime(register.ApplicationID))
+            if (!RegisterMime(info.ApplicationID))
             {
                 logger.Error("Failed to register because the Mime failed.");
                 return false;
@@ -91,7 +98,7 @@ MimeType=x-scheme-handler/discord-{2}";
             //Run the process and wait for response
             Process process = Process.Start("xdg-mime", arguments);
             process.WaitForExit();
-            
+
             //Return if succesful
             return process.ExitCode >= 0;
         }

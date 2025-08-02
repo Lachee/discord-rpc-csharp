@@ -1,110 +1,84 @@
-﻿#if NETSTANDARD1_1_OR_GREATER
-#define USE_RUNTIME_INFO
-#endif
-
-using DiscordRPC.Logging;
+﻿using DiscordRPC.Logging;
 using System;
-using System.Diagnostics;
-#if USE_RUNTIME_INFO
-using System.Runtime.InteropServices;
-#endif
 
 namespace DiscordRPC.Registry
 {
-    internal class UriSchemeRegister
-	{
+    /// <summary>
+    /// URI Scheme information to register to the system.
+    /// </summary>
+    public struct SchemeInfo
+    {
         /// <summary>
-        /// The ID of the Discord App to register
+        /// The Discord application ID for the game or application.
         /// </summary>
         public string ApplicationID { get; set; }
 
         /// <summary>
-        /// Optional Steam App ID to register. If given a value, then the game will launch through steam instead of Discord.
+        /// The Steam application ID if the game is registered through Steam. When set, the application will be launched through Steam instead of directly.
+        /// <para>Can be null if the game is not registered through Steam.</para>
         /// </summary>
         public string SteamAppID { get; set; }
 
         /// <summary>
-        /// Is this register using steam?
-        /// </summary>
-        public bool UsingSteamApp { get { return !string.IsNullOrEmpty(SteamAppID) && SteamAppID != ""; } }
-
-        /// <summary>
-        /// The full executable path of the application.
+        /// The path to the executable that will be launched when the URI scheme is invoked.
         /// </summary>
         public string ExecutablePath { get; set; }
 
-        private ILogger _logger;
-        public UriSchemeRegister(ILogger logger, string applicationID, string steamAppID = null, string executable = null)
-        {
-            _logger = logger;
-            ApplicationID = applicationID.Trim();
-            SteamAppID = steamAppID != null ? steamAppID.Trim() : null;
-            ExecutablePath = executable ?? GetApplicationLocation();
-        }
-
         /// <summary>
-        /// Registers the URI scheme, using the correct creator for the correct platform
+        /// Indicates whether the scheme is using a Steam application ID.
         /// </summary>
-        public bool RegisterUriScheme()
+        public bool UsingSteamApp => !string.IsNullOrEmpty(SteamAppID);
+    }
+
+    /// <summary>
+    /// Registers a URI Scheme for the current platform.
+    /// </summary>
+    public static class UriScheme
+    {
+        /// <summary>
+        /// Registers the URI Scheme for the current platform.
+        /// </summary>
+        public static bool Register(SchemeInfo info, ILogger logger = null)
         {
-            //Get the creator
-            IUriSchemeCreator creator = null;
-            switch(Environment.OSVersion.Platform)
+#if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
+            // .NET >4.7.1 adds support for RuntimeInformation
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                return new WindowsUriScheme(logger).Register(info);
+            }
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+            {
+                return new UnixUriScheme(logger).Register(info);
+            }
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+            {
+                return new MacUriScheme(logger).Register(info);
+            }
+            else
+            {
+                logger?.Error("Unknown Platform: {0}", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+                throw new PlatformNotSupportedException("Platform does not support registration.");
+            }
+#else
+            switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32Windows:
                 case PlatformID.Win32S:
                 case PlatformID.Win32NT:
                 case PlatformID.WinCE:
-                    _logger.Trace("Creating Windows Scheme Creator");
-                    creator = new WindowsUriSchemeCreator(_logger);
-                    break;
+                    return new WindowsUriScheme(logger).Register(info);
 
                 case PlatformID.Unix:
-#if USE_RUNTIME_INFO
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        _logger.Trace("Creating MacOSX Scheme Creator");
-                        creator = new MacUriSchemeCreator(_logger);
-                    }
-                    else
-                    {
-#endif
-                        _logger.Trace("Creating Unix Scheme Creator");
-                        creator = new UnixUriSchemeCreator(_logger);
-#if USE_RUNTIME_INFO
-                    }
-#endif
-                    break;
-                
-#if !USE_RUNTIME_INFO
+                    return new UnixUriScheme(logger).Register(info);
+
                 case PlatformID.MacOSX:
-                    _logger.Trace("Creating MacOSX Scheme Creator");
-                    creator = new MacUriSchemeCreator(_logger);
-                    break;
-#endif
+                    return new MacUriScheme(logger).Register(info);
 
                 default:
-                    _logger.Error("Unknown Platform: {0}", Environment.OSVersion.Platform);
+                    logger?.Error("Unknown Platform: {0}", Environment.OSVersion.Platform);
                     throw new PlatformNotSupportedException("Platform does not support registration.");
             }
-
-            //Regiser the app
-            if (creator.RegisterUriScheme(this))
-            {
-                _logger.Info("URI scheme registered.");
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the FileName for the currently executing application
-        /// </summary>
-        /// <returns></returns>
-        public static string GetApplicationLocation()
-        {
-            return Process.GetCurrentProcess().MainModule.FileName;
+#endif
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DiscordRPC.Message;
 using System;
+using System.ComponentModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -92,7 +93,7 @@ namespace DiscordRPC.Example
                 Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
                 Console.WriteLine("Avatar: {0}", msg.User.GetAvatarURL(User.AvatarFormat.WebP));
                 Console.WriteLine("Decoration: {0}", msg.User.GetAvatarDecorationURL());
-			};
+            };
 
             client.OnPresenceUpdate += (sender, msg) =>
             {
@@ -111,6 +112,19 @@ namespace DiscordRPC.Example
                 State = "In Game",
                 //Timestamps = null,
                 //Timestamps = Timestamps.Now,
+                Party = new Party()
+                {
+                    ID = Secrets.CreateFriendlySecret(new Random()),
+                    Size = 1,
+                    Max = 4,
+                    Privacy = Party.PrivacySetting.Public
+                },
+                Assets = new Assets()
+                {
+                    LargeImageKey = "image_large",
+                    LargeImageText = "Lachee's Discord IPC Library",
+                    SmallImageKey = "image_small"
+                },
                 StatusDisplay = StatusDisplayType.State,
                 Timestamps = Timestamps.FromTimeSpan(TimeSpan.FromMinutes(2)),
                 Buttons = new Button[]
@@ -119,10 +133,14 @@ namespace DiscordRPC.Example
                 }
             });
 
-            // == Do the rest of your program.
-            //Simulated by a Console.ReadKey
-            // etc...
-            Console.ReadKey();
+            while (true)
+            {
+                // == Do the rest of your program.
+                //Simulated by a Console.ReadKey
+                // etc...
+                Thread.Sleep(10_000);
+                client.UpdatePartySize(Random.Shared.Next(1, 16), 16);
+            }
 
             // == At the very end we need to dispose of it
             client.Dispose();
