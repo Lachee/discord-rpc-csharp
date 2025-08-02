@@ -291,10 +291,6 @@ __pycache__/
 *.key
 
 * Ignore the resources except for .png
-[Rr]esources/*
-![Rr]esources/*.png
-![Rr]esources/*.md
-![Rr]esources/*.txt
 
 # Cake - Uncomment if you are using it
 tools/

@@ -14,6 +14,7 @@
   "build": {
     "globalMetadata": {
       "_appTitle": "Discord RPC C#",
+      "_appLogoPath": "Resources/logo.svg",
       "_appFooter": "<a href=\"https://github.com/Lachee/discord-rpc-csharp\">Contribute</a> on GitHub",
       "_enableSearch": true
     },

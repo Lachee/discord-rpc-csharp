@@ -12,8 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Use README.md as index.md
-        run: cp README.md Docfx/index.md
+      - name: Copy Files
+        run: |
+          cp README.md Docfx/index.md
+          cp -r Resources Docfx/Resources
 
       - uses: nunit/docfx-action@v4.1.0
         name: Build Documentation
