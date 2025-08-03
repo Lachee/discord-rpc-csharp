@@ -1,12 +1,14 @@
 {
-    "version": "1.5.1",
+    "version": "1.6.0",
     "scripts": {
         "docs:watch": "npm-watch docs:build",
         "docs:build": "docfx build Docfx/docfx.json"
     },
     "watch": {
         "docs:build": {
-            "patterns": [ "Docfx/**/*" ],
+            "patterns": [
+                "Docfx/**/*"
+            ],
             "extensions": "md,yml",
             "quiet": false
         }
