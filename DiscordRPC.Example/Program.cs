@@ -324,7 +324,7 @@ namespace DiscordRPC.Example
         private static void OnConnectionEstablished(object sender, ConnectionEstablishedMessage args)
         {
             //This is called when a pipe connection is established. The connection is not ready yet, but we have at least found a valid pipe.
-            Console.WriteLine("Pipe Connection Established. Valid on pipe #{0}", args.ConnectedPipe);
+            Console.WriteLine("Pipe Connection Established.");
         }
         private static void OnConnectionFailed(object sender, ConnectionFailedMessage args)
         {
