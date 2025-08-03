@@ -51,12 +51,13 @@ namespace DiscordRPC.IO
 		{
 			foreach (var tempDir in TemporaryDirectories())
 			{
+				// No Package Manager. First because its common for MacOS. 
+				// Linux users tend to either just use a browser or a package manager.
+				yield return Path.Combine(tempDir, $"{DiscordPipePrefix}{index}");
+
 				// Package Managers
 				foreach (var pmDir in LinuxPackageManagers)
 					yield return Path.Combine(tempDir, pmDir, $"{DiscordPipePrefix}{index}");
-
-				// No Package Manager
-				yield return Path.Combine(tempDir, $"{DiscordPipePrefix}{index}");
 			}
 		}
 
