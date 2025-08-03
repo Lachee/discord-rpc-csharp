@@ -1994,6 +1994,28 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.IO.PipeFrame.WriteStream
   nameWithType: PipeFrame.WriteStream
+- uid: DiscordRPC.IO.PipeLocation
+  name: PipeLocation
+  href: api/DiscordRPC.IO.PipeLocation.html
+  commentId: T:DiscordRPC.IO.PipeLocation
+  fullName: DiscordRPC.IO.PipeLocation
+  nameWithType: PipeLocation
+- uid: DiscordRPC.IO.PipeLocation.GetPipes(System.Int32)
+  name: GetPipes(int)
+  href: api/DiscordRPC.IO.PipeLocation.html#DiscordRPC_IO_PipeLocation_GetPipes_System_Int32_
+  commentId: M:DiscordRPC.IO.PipeLocation.GetPipes(System.Int32)
+  name.vb: GetPipes(Integer)
+  fullName: DiscordRPC.IO.PipeLocation.GetPipes(int)
+  fullName.vb: DiscordRPC.IO.PipeLocation.GetPipes(Integer)
+  nameWithType: PipeLocation.GetPipes(int)
+  nameWithType.vb: PipeLocation.GetPipes(Integer)
+- uid: DiscordRPC.IO.PipeLocation.GetPipes*
+  name: GetPipes
+  href: api/DiscordRPC.IO.PipeLocation.html#DiscordRPC_IO_PipeLocation_GetPipes_
+  commentId: Overload:DiscordRPC.IO.PipeLocation.GetPipes
+  isSpec: "True"
+  fullName: DiscordRPC.IO.PipeLocation.GetPipes
+  nameWithType: PipeLocation.GetPipes
 - uid: DiscordRPC.Logging
   name: DiscordRPC.Logging
   href: api/DiscordRPC.Logging.html

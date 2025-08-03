@@ -513,6 +513,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.IO.PipeLocation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.IO.PipeLocation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.IO.PipeLocation",
+      "Summary": "<p sourcefile=\"api/DiscordRPC.IO.PipeLocation.yml\" sourcestartlinenumber=\"1\">Provides the location of the Discord IPC pipes for the current operating system.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/DiscordRPC.IO.yml",
       "output": {
         ".html": {

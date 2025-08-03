@@ -140,7 +140,8 @@ Interface INamedPipeClient  <a class="header-action link-secondary" title="View 
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">int ConnectedPipe { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;The connected pipe is not neccessary information.&quot;)]
+int ConnectedPipe { get; }</code></pre>
   </div>
 
 
@@ -232,7 +233,7 @@ Interface INamedPipeClient  <a class="header-action link-secondary" title="View 
 
   <h3 id="DiscordRPC_IO_INamedPipeClient_Close" data-uid="DiscordRPC.IO.INamedPipeClient.Close">
   Close()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Closes the connection</p>
@@ -259,7 +260,7 @@ Interface INamedPipeClient  <a class="header-action link-secondary" title="View 
 
   <h3 id="DiscordRPC_IO_INamedPipeClient_Connect_System_Int32_" data-uid="DiscordRPC.IO.INamedPipeClient.Connect(System.Int32)">
   Connect(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempts to connect to the pipe. If 0-9 is passed to pipe, it should try to only connect to the specified pipe. If -1 is passed, the pipe will find the first available pipe.</p>
@@ -297,7 +298,7 @@ Interface INamedPipeClient  <a class="header-action link-secondary" title="View 
 
   <h3 id="DiscordRPC_IO_INamedPipeClient_ReadFrame_DiscordRPC_IO_PipeFrame__" data-uid="DiscordRPC.IO.INamedPipeClient.ReadFrame(DiscordRPC.IO.PipeFrame@)">
   ReadFrame(out PipeFrame)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reads a frame if there is one available. Returns false if there is none. This should be non blocking (aka use a Peek first).</p>
@@ -336,7 +337,7 @@ Interface INamedPipeClient  <a class="header-action link-secondary" title="View 
 
   <h3 id="DiscordRPC_IO_INamedPipeClient_WriteFrame_DiscordRPC_IO_PipeFrame_" data-uid="DiscordRPC.IO.INamedPipeClient.WriteFrame(DiscordRPC.IO.PipeFrame)">
   WriteFrame(PipeFrame)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/IO/INamedPipeClient.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Writes the frame to the pipe. Returns false if any errors occur.</p>
