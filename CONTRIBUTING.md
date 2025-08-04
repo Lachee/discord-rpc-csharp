@@ -30,6 +30,14 @@ All contributions are welcome and I am happy for any contribution. However, ther
     - Getters with `=>` are allowed and so are string interpolation with `$"{value}"`
         - Planned to update the rest of the codebase with them.
 
+## The Entities/ folder
+I plan to move all objects into their own namespace called `DiscordRPC.Entity`, however this is a major breaking change and will likely be a `v2.0.0` release.
+For now, to ease in maintainability, entities are within the `Entity/` folder but **do not have the correct namespace**. This is intentional.
+
+> [!NOTE]
+> Plans to also update the root namespace to either `Lachee.DiscordRPC`, `Lachee.DiscordIPC`, or simply `Lachee.Discord.RPC`. 
+> A discussion is needed for the merit of a change like this.
+
 ## 🫡 Getting Started
 1. Make sure .NET is installed
 2. Install Visual Studio or Visual Studio Code
