@@ -989,19 +989,6 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.DiscordRpcClient.Unsubscribe
   nameWithType: DiscordRpcClient.Unsubscribe
-- uid: DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)
-  name: Unubscribe(EventType)
-  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Unubscribe_DiscordRPC_EventType_
-  commentId: M:DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)
-  fullName: DiscordRPC.DiscordRpcClient.Unubscribe(DiscordRPC.EventType)
-  nameWithType: DiscordRpcClient.Unubscribe(EventType)
-- uid: DiscordRPC.DiscordRpcClient.Unubscribe*
-  name: Unubscribe
-  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Unubscribe_
-  commentId: Overload:DiscordRPC.DiscordRpcClient.Unubscribe
-  isSpec: "True"
-  fullName: DiscordRPC.DiscordRpcClient.Unubscribe
-  nameWithType: DiscordRpcClient.Unubscribe
 - uid: DiscordRPC.DiscordRpcClient.Update(System.Action{DiscordRPC.RichPresence})
   name: Update(Action<RichPresence>)
   href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Update_System_Action_DiscordRPC_RichPresence__
@@ -3679,14 +3666,7 @@ references:
 - uid: DiscordRPC.Secrets.MatchSecret
   name: MatchSecret
   href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_MatchSecret
-  commentId: P:DiscordRPC.Secrets.MatchSecret
-  fullName: DiscordRPC.Secrets.MatchSecret
-  nameWithType: Secrets.MatchSecret
-- uid: DiscordRPC.Secrets.MatchSecret*
-  name: MatchSecret
-  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_MatchSecret_
-  commentId: Overload:DiscordRPC.Secrets.MatchSecret
-  isSpec: "True"
+  commentId: F:DiscordRPC.Secrets.MatchSecret
   fullName: DiscordRPC.Secrets.MatchSecret
   nameWithType: Secrets.MatchSecret
 - uid: DiscordRPC.Secrets.SecretLength
