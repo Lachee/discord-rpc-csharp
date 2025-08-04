@@ -126,16 +126,6 @@ namespace DiscordRPC
         [JsonProperty("status_display_type", NullValueHandling = NullValueHandling.Ignore)]
         public StatusDisplayType StatusDisplay { get; set; }
 
-
-        /// <summary>
-        /// Marks the <see cref="Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
-        /// <para>
-        /// "TLDR it marks the matchSecret field as an instance, that is to say a context in game that’s not like a lobby state/not in game state. It was gonna he used for notify me, but we scrapped that for ask to join. We may put it to another use in the future. For now, don’t worry about it" - Mason (Discord API Server 14 / 03 / 2018)
-        ///    </para>
-        /// </summary>
-        [Obsolete("This was going to be used, but was replaced by JoinSecret instead", true)]
-        private bool Instance;
-
         #region Has Checks
         /// <summary>
         /// Does the Rich Presence have valid timestamps?
@@ -174,7 +164,6 @@ namespace DiscordRPC
         }
 
         #endregion
-
 
         /// <summary>
         /// Attempts to call <see cref="StringTools.GetNullOrString(string)"/> on the string and return the result, if its within a valid length.

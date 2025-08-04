@@ -1,0 +1,7 @@
+[*.{cs,vb}]
+dotnet_diagnostic.IDE0130.severity = none
+tab_width = 4
+indent_style = space
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+[*.cs]
+csharp_space_around_binary_operators = before_and_after
