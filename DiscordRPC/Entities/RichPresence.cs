@@ -125,7 +125,7 @@ namespace DiscordRPC
         /// </summary>
         [JsonProperty("status_display_type", NullValueHandling = NullValueHandling.Ignore)]
         public StatusDisplayType StatusDisplay { get; set; }
-        
+
 
         /// <summary>
         /// Marks the <see cref="Secrets.MatchSecret"/> as a game session with a specific beginning and end. It was going to be used as a form of notification, but was replaced with the join feature. It may potentially have use in the future, but it currently has no use.
@@ -133,9 +133,8 @@ namespace DiscordRPC
         /// "TLDR it marks the matchSecret field as an instance, that is to say a context in game that’s not like a lobby state/not in game state. It was gonna he used for notify me, but we scrapped that for ask to join. We may put it to another use in the future. For now, don’t worry about it" - Mason (Discord API Server 14 / 03 / 2018)
         ///    </para>
         /// </summary>
-        [JsonProperty("instance", NullValueHandling = NullValueHandling.Ignore)]
-        [Obsolete("This was going to be used, but was replaced by JoinSecret instead")]
-        private bool Instance { get; set; }
+        [Obsolete("This was going to be used, but was replaced by JoinSecret instead", true)]
+        private bool Instance;
 
         #region Has Checks
         /// <summary>
@@ -237,7 +236,6 @@ namespace DiscordRPC
         /// <returns></returns>
         internal virtual bool Matches(RichPresence other)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             if (other == null)
                 return false;
 
@@ -266,7 +264,6 @@ namespace DiscordRPC
             {
                 if (other.Secrets == null ||
                     other.Secrets.JoinSecret != Secrets.JoinSecret ||
-                    other.Secrets.MatchSecret != Secrets.MatchSecret ||
                     other.Secrets.SpectateSecret != Secrets.SpectateSecret)
                     return false;
             }
@@ -307,8 +304,7 @@ namespace DiscordRPC
                 return false;
             }
 
-            return Instance == other.Instance;
-#pragma warning restore CS0618 // Type or member is obsolete
+            return true;
         }
 
         /// <summary>

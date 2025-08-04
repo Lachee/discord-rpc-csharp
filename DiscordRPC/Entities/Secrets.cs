@@ -19,18 +19,8 @@ namespace DiscordRPC
 		/// <para>This cannot be null and must be supplied for the  Join / Spectate feature to work.</para>
 		/// <para>Max Length of 128 characters</para>
 		/// </summary>
-		[Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.")]
-		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-		public string MatchSecret
-		{
-			get { return _matchSecret; }
-			set
-			{
-				if (!BaseRichPresence.ValidateString(value, out _matchSecret, false, 128))
-					throw new StringOutOfRangeException(128);
-			}
-		}
-		private string _matchSecret;
+		[Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.", true)]
+		public string MatchSecret;
 
 		/// <summary>
 		/// The secret data that will tell the client how to connect to the game to play. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.

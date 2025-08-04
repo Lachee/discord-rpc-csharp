@@ -717,13 +717,6 @@ namespace DiscordRPC
         public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        [System.Obsolete("Replaced with Unsubscribe", true)]
-        public void Unubscribe(EventType type) { SetSubscription(Subscription & ~type); }
-
-        /// <summary>
         /// Unsubscribe from the event sent by discord. Used for Join / Spectate feature.
         /// <para>Requires the UriScheme to be registered.</para>
         /// </summary>
