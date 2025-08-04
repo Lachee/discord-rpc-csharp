@@ -11,6 +11,9 @@ namespace DiscordRPC
 	[Serializable]
 	public class Assets
 	{
+		private const string EXTERNAL_KEY_PREFIX = "mp:external";
+
+		#region Large Image
 		/// <summary>
 		/// Name of the uploaded image for the large profile artwork.
 		/// <para>Max 256 characters.</para>
@@ -25,24 +28,11 @@ namespace DiscordRPC
 				if (!BaseRichPresence.ValidateString(value, out _largeimagekey, false, 256))
 					throw new StringOutOfRangeException(256);
 
-				//Get if this is a external link
-				_islargeimagekeyexternal = _largeimagekey?.StartsWith("mp:external/") ?? false;
-
 				//Reset the large image ID
-				_largeimageID = null;
+				LargeImageID = null;
 			}
 		}
 		private string _largeimagekey;
-
-		/// <summary>
-		/// Gets if the large square image is from an external link
-		/// </summary>
-		[JsonIgnore]
-		public bool IsLargeImageKeyExternal
-		{
-			get { return _islargeimagekeyexternal; }
-		}
-		private bool _islargeimagekeyexternal;
 
 		/// <summary>
 		/// The tooltip for the large square image. For example, "Summoners Rift" or "Horizon Lunar Colony".
@@ -80,6 +70,20 @@ namespace DiscordRPC
 		private string _largeimageurl;
 
 		/// <summary>
+		/// The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="LargeImageKey"/> is changed.
+		/// </summary>
+		[JsonIgnore]
+		public string LargeImageID { get; private set; }
+
+		/// <summary>
+		/// Gets if the large square image is from an external link
+		/// </summary>
+		[JsonIgnore]
+		public bool IsLargeImageKeyExternal { get; private set; }
+		#endregion
+
+		#region Small Image
+		/// <summary>
 		/// Name of the uploaded image for the small profile artwork.
 		/// <para>Max 256 characters.</para>
 		/// </summary>
@@ -93,24 +97,11 @@ namespace DiscordRPC
 				if (!BaseRichPresence.ValidateString(value, out _smallimagekey, false, 256))
 					throw new StringOutOfRangeException(256);
 
-				//Get if this is a external link
-				_issmallimagekeyexternal = _smallimagekey?.StartsWith("mp:external/") ?? false;
-
 				//Reset the small image id
-				_smallimageID = null;
+				SmallImageID = null;
 			}
 		}
 		private string _smallimagekey;
-
-		/// <summary>
-		/// Gets if the small profile artwork is from an external link
-		/// </summary>
-		[JsonIgnore]
-		public bool IsSmallImageKeyExternal
-		{
-			get { return _issmallimagekeyexternal; }
-		}
-		private bool _issmallimagekeyexternal;
 
 		/// <summary>
 		/// The tooltip for the small circle image. For example, "LvL 6" or "Ultimate 85%".
@@ -148,18 +139,18 @@ namespace DiscordRPC
 		private string _smallimageurl;
 
 		/// <summary>
-		/// The ID of the large image. This is only set after Update Presence and will automatically become null when <see cref="LargeImageKey"/> is changed.
-		/// </summary>
-		[JsonIgnore]
-		public ulong? LargeImageID { get { return _largeimageID; } }
-		private ulong? _largeimageID;
-
-		/// <summary>
 		/// The ID of the small image. This is only set after Update Presence and will automatically become null when <see cref="SmallImageKey"/> is changed.
 		/// </summary>
 		[JsonIgnore]
-		public ulong? SmallImageID { get { return _smallimageID; } }
-		private ulong? _smallimageID;
+		public string SmallImageID { get; private set; }
+
+		/// <summary>
+		/// Gets if the small profile artwork is from an external link
+		/// </summary>
+		[JsonIgnore]
+		public bool IsSmallImageKeyExternal { get; private set; }
+		#endregion
+
 
 		/// <summary>
 		/// Merges this asset with the other, taking into account for ID's instead of keys.
@@ -173,30 +164,42 @@ namespace DiscordRPC
 			_largeimagetext = other._largeimagetext;
 			_largeimageurl = other._largeimageurl;
 
-			//Convert large ID
-			ulong largeID;
-			if (ulong.TryParse(other._largeimagekey, out largeID))
+			//Convert the Large Key
+			if (other._largeimagekey.StartsWith(EXTERNAL_KEY_PREFIX))
 			{
-				_largeimageID = largeID;
+				IsLargeImageKeyExternal = true;
+				LargeImageID = other._largeimagekey;
+			}
+			else if (ulong.TryParse(other._largeimagekey, out _))
+			{
+				IsLargeImageKeyExternal = false;
+				LargeImageID = other._largeimagekey;
 			}
 			else
 			{
+				IsLargeImageKeyExternal = false;
+				LargeImageID = null;
 				_largeimagekey = other._largeimagekey;
-				_largeimageID = null;
 			}
 
-			//Convert the small ID
-			ulong smallID;
-			if (ulong.TryParse(other._smallimagekey, out smallID))
+			//Convert the Small Key
+			//  TODO: Make this a function
+			if (other._smallimagekey.StartsWith(EXTERNAL_KEY_PREFIX))
 			{
-				_smallimageID = smallID;
+				IsSmallImageKeyExternal = true;
+				SmallImageID = other._smallimagekey;
+			}
+			else if (ulong.TryParse(other._smallimagekey, out _))
+			{
+				IsSmallImageKeyExternal = false;
+				SmallImageID = other._smallimagekey;
 			}
 			else
 			{
+				IsSmallImageKeyExternal = false;
+				SmallImageID = null;
 				_smallimagekey = other._smallimagekey;
-				_smallimageID = null;
 			}
 		}
 	}
-
 }
