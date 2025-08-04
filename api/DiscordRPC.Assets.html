@@ -158,7 +158,7 @@ public class Assets</code></pre>
 
   <h3 id="DiscordRPC_Assets_IsLargeImageKeyExternal" data-uid="DiscordRPC.Assets.IsLargeImageKeyExternal">
   IsLargeImageKeyExternal
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets if the large square image is from an external link</p>
@@ -191,7 +191,7 @@ public bool IsLargeImageKeyExternal { get; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_IsSmallImageKeyExternal" data-uid="DiscordRPC.Assets.IsSmallImageKeyExternal">
   IsSmallImageKeyExternal
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets if the small profile artwork is from an external link</p>
@@ -224,7 +224,7 @@ public bool IsSmallImageKeyExternal { get; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_LargeImageID" data-uid="DiscordRPC.Assets.LargeImageID">
   LargeImageID
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L153"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The ID of the large image. This is only set after Update Presence and will automatically become null when <a class="xref" href="DiscordRPC.Assets.html#DiscordRPC_Assets_LargeImageKey">LargeImageKey</a> is changed.</p>
@@ -233,7 +233,7 @@ public bool IsSmallImageKeyExternal { get; }</code></pre>
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonIgnore]
-public ulong? LargeImageID { get; }</code></pre>
+public string LargeImageID { get; }</code></pre>
   </div>
 
 
@@ -242,7 +242,7 @@ public ulong? LargeImageID { get; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -257,7 +257,7 @@ public ulong? LargeImageID { get; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_LargeImageKey" data-uid="DiscordRPC.Assets.LargeImageKey">
   LargeImageKey
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Name of the uploaded image for the large profile artwork.</p>
@@ -294,7 +294,7 @@ public string LargeImageKey { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_LargeImageText" data-uid="DiscordRPC.Assets.LargeImageText">
   LargeImageText
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The tooltip for the large square image. For example, &quot;Summoners Rift&quot; or &quot;Horizon Lunar Colony&quot;.</p>
@@ -328,7 +328,7 @@ public string LargeImageText { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_LargeImageUrl" data-uid="DiscordRPC.Assets.LargeImageUrl">
   LargeImageUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L67"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>URL that is linked to when clicking on the large image in the activity card.</p>
@@ -362,7 +362,7 @@ public string LargeImageUrl { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_SmallImageID" data-uid="DiscordRPC.Assets.SmallImageID">
   SmallImageID
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The ID of the small image. This is only set after Update Presence and will automatically become null when <a class="xref" href="DiscordRPC.Assets.html#DiscordRPC_Assets_SmallImageKey">SmallImageKey</a> is changed.</p>
@@ -371,7 +371,7 @@ public string LargeImageUrl { get; set; }</code></pre>
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonIgnore]
-public ulong? SmallImageID { get; }</code></pre>
+public string SmallImageID { get; }</code></pre>
   </div>
 
 
@@ -380,7 +380,7 @@ public ulong? SmallImageID { get; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -395,7 +395,7 @@ public ulong? SmallImageID { get; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_SmallImageKey" data-uid="DiscordRPC.Assets.SmallImageKey">
   SmallImageKey
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Name of the uploaded image for the small profile artwork.</p>
@@ -432,7 +432,7 @@ public string SmallImageKey { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_SmallImageText" data-uid="DiscordRPC.Assets.SmallImageText">
   SmallImageText
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The tooltip for the small circle image. For example, &quot;LvL 6&quot; or &quot;Ultimate 85%&quot;.</p>
@@ -466,7 +466,7 @@ public string SmallImageText { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_Assets_SmallImageUrl" data-uid="DiscordRPC.Assets.SmallImageUrl">
   SmallImageUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/Assets.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>URL that is linked to when clicking on the small image in the activity card.</p>
