@@ -81,10 +81,26 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - uses: "marvinpinto/action-automatic-releases@latest"
+
+      - name: Package Artifacts
+        run: |
+          mkdir -p release
+
+          # Copy Zip
+          for d in artifacts/*-dll/ ; do
+              folder="${d%/}"
+              zipname="${folder}.zip"
+              (cd "$folder" && zip -r "../../release/$(basename "$zipname")" .)
+          done
+
+          # Copy Nuget
+          cp artifacts/**/*.nupkg release/.
+            
+      - name: Create GitHub Release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ needs.tag.outputs.tag }}
           prerelease: true
           title: Release ${{ needs.tag.outputs.tag }}
-          files: artifacts/**/*
+          files: release/**/*

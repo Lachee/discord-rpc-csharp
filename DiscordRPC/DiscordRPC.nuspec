@@ -37,7 +37,7 @@ This is an unoffical, non-discord supported library.
     </dependencies>
   </metadata>
   <files>
-    <file src="../README.md" target="docs\" />
+    <file src="../README.md" target="/" />
     <!-- .NET 9 (modern) -->
     <file src="./bin/Release/net9.0/DiscordRPC.dll" target="lib\net9.0" />
     <file src="./bin/Release/net9.0/DiscordRPC.pdb" target="lib\net9.0" />
