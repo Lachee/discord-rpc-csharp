@@ -15,10 +15,180 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "Resources/Example Client.txt",
+      "source_relative_path": "Resources/Discord App Images/README.md",
       "output": {
         "resource": {
-          "relative_path": "Resources/Example Client.txt"
+          "relative_path": "Resources/Discord App Images/README.md"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/godot.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/godot.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/icon.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/icon.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/image_large.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/image_large.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/image_small.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/image_small.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/koala.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/koala.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/monogame.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/monogame.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_0.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_0.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_1.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_1.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_2.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_2.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_3.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_3.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_4.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_4.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_5.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_5.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_6.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_6.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_7.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_7.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_8.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_8.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/no_9.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/no_9.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Resources/Discord App Images/unity.png",
+      "output": {
+        "resource": {
+          "relative_path": "Resources/Discord App Images/unity.png"
         }
       },
       "version": ""
