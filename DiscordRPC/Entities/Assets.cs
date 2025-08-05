@@ -164,41 +164,43 @@ namespace DiscordRPC
 			_largeimagetext = other._largeimagetext;
 			_largeimageurl = other._largeimageurl;
 
-			//Convert the Large Key
-			if (other._largeimagekey.StartsWith(EXTERNAL_KEY_PREFIX))
+            //Convert the Large Key
+            string largeKey = other._largeimagekey ?? "";
+			if (largeKey.StartsWith(EXTERNAL_KEY_PREFIX))
 			{
 				IsLargeImageKeyExternal = true;
-				LargeImageID = other._largeimagekey;
+				LargeImageID = largeKey;
 			}
-			else if (ulong.TryParse(other._largeimagekey, out _))
+			else if (ulong.TryParse(largeKey, out _))
 			{
 				IsLargeImageKeyExternal = false;
-				LargeImageID = other._largeimagekey;
+				LargeImageID = largeKey;
 			}
 			else
 			{
 				IsLargeImageKeyExternal = false;
 				LargeImageID = null;
-				_largeimagekey = other._largeimagekey;
+				_largeimagekey = largeKey;
 			}
 
-			//Convert the Small Key
-			//  TODO: Make this a function
-			if (other._smallimagekey.StartsWith(EXTERNAL_KEY_PREFIX))
+            //Convert the Small Key
+            //  TODO: Make this a function
+            string smallKey = other._smallimagekey ?? "";
+            if (smallKey.StartsWith(EXTERNAL_KEY_PREFIX))
 			{
 				IsSmallImageKeyExternal = true;
-				SmallImageID = other._smallimagekey;
+				SmallImageID = smallKey;
 			}
-			else if (ulong.TryParse(other._smallimagekey, out _))
+			else if (ulong.TryParse(smallKey, out _))
 			{
 				IsSmallImageKeyExternal = false;
-				SmallImageID = other._smallimagekey;
+				SmallImageID = smallKey;
 			}
 			else
 			{
 				IsSmallImageKeyExternal = false;
 				SmallImageID = null;
-				_smallimagekey = other._smallimagekey;
+				_smallimagekey = smallKey;
 			}
 		}
 	}
