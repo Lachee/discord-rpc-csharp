@@ -3,11 +3,14 @@ uid: assets
 ---
 
 # Assets
-![List of assets](https://i.lu.je/2025/firefox_IoIC79H7Zh.png)
+![List of assets](https://i.lu.je/2025/firefox_nta5I3VkPp.png)
 
 Your Rich Presence can have a small and a large image displayed instead of its default icon called Assets.
 
 These assets are ideal for representing maps, characters, loadouts, or other situational information about your game.
+
+> [!TIP]
+> The demo application used throughout the library has a set of testing static assets you can try out. They can be found in the [Resources](https://github.com/Lachee/discord-rpc-csharp/tree/master/Resources/Discord App Images/) folder
 
 ## Static Assets
 You can upload new assets and given them a `key` in the [Discord Application](https://discord.com/developers/applications) → App → Rich Presence → Art Assets.
