@@ -430,7 +430,7 @@ public Party Party { get; set; }</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/RichPresence.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.</p>
+  <div class="markdown level1 summary"><p>The secrets used for Joining. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.</p>
 <p>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</p>
 <p>Visit the <a href="https://discordapp.com/developers/docs/rich-presence/how-to#secrets">Rich Presence How-To</a> for more information.</p>
 </div>
@@ -761,7 +761,7 @@ public ActivityType Type { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_BaseRichPresence_ToRichPresence" data-uid="DiscordRPC.BaseRichPresence.ToRichPresence">
   ToRichPresence()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/RichPresence.cs/#L303"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/RichPresence.cs/#L307"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts this BaseRichPresence to RichPresence</p>
@@ -797,7 +797,7 @@ public ActivityType Type { get; set; }</code></pre>
 
   <h3 id="DiscordRPC_BaseRichPresence_op_Implicit_DiscordRPC_BaseRichPresence__System_Boolean" data-uid="DiscordRPC.BaseRichPresence.op_Implicit(DiscordRPC.BaseRichPresence)~System.Boolean">
   implicit operator bool(BaseRichPresence)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/RichPresence.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC/Entities/RichPresence.cs/#L218"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Operator that converts a presence into a boolean for null checks.</p>

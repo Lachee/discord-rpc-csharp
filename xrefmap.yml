@@ -836,6 +836,24 @@ references:
   fullName.vb: DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.Message.JoinRequestMessage, Boolean)
   nameWithType: DiscordRpcClient.Respond(JoinRequestMessage, bool)
   nameWithType.vb: DiscordRpcClient.Respond(JoinRequestMessage, Boolean)
+- uid: DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User,System.Boolean)
+  name: Respond(User, bool)
+  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Respond_DiscordRPC_User_System_Boolean_
+  commentId: M:DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User,System.Boolean)
+  name.vb: Respond(User, Boolean)
+  fullName: DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User, bool)
+  fullName.vb: DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User, Boolean)
+  nameWithType: DiscordRpcClient.Respond(User, bool)
+  nameWithType.vb: DiscordRpcClient.Respond(User, Boolean)
+- uid: DiscordRPC.DiscordRpcClient.Respond(System.UInt64,System.Boolean)
+  name: Respond(ulong, bool)
+  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Respond_System_UInt64_System_Boolean_
+  commentId: M:DiscordRPC.DiscordRpcClient.Respond(System.UInt64,System.Boolean)
+  name.vb: Respond(ULong, Boolean)
+  fullName: DiscordRPC.DiscordRpcClient.Respond(ulong, bool)
+  fullName.vb: DiscordRPC.DiscordRpcClient.Respond(ULong, Boolean)
+  nameWithType: DiscordRpcClient.Respond(ulong, bool)
+  nameWithType.vb: DiscordRpcClient.Respond(ULong, Boolean)
 - uid: DiscordRPC.DiscordRpcClient.Respond*
   name: Respond
   href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Respond_
@@ -1327,6 +1345,102 @@ references:
   commentId: T:DiscordRPC.Events.OnUnsubscribeEvent
   fullName: DiscordRPC.Events.OnUnsubscribeEvent
   nameWithType: OnUnsubscribeEvent
+- uid: DiscordRPC.Example
+  name: DiscordRPC.Example
+  href: api/DiscordRPC.Example.html
+  commentId: N:DiscordRPC.Example
+  fullName: DiscordRPC.Example
+  nameWithType: DiscordRPC.Example
+- uid: DiscordRPC.Example.Basic
+  name: Basic
+  href: api/DiscordRPC.Example.Basic.html
+  commentId: T:DiscordRPC.Example.Basic
+  fullName: DiscordRPC.Example.Basic
+  nameWithType: Basic
+- uid: DiscordRPC.Example.Basic.Run
+  name: Run()
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Run
+  commentId: M:DiscordRPC.Example.Basic.Run
+  fullName: DiscordRPC.Example.Basic.Run()
+  nameWithType: Basic.Run()
+- uid: DiscordRPC.Example.Basic.Run*
+  name: Run
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Run_
+  commentId: Overload:DiscordRPC.Example.Basic.Run
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Basic.Run
+  nameWithType: Basic.Run
+- uid: DiscordRPC.Example.Basic.Setup
+  name: Setup()
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Setup
+  commentId: M:DiscordRPC.Example.Basic.Setup
+  fullName: DiscordRPC.Example.Basic.Setup()
+  nameWithType: Basic.Setup()
+- uid: DiscordRPC.Example.Basic.Setup*
+  name: Setup
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Setup_
+  commentId: Overload:DiscordRPC.Example.Basic.Setup
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Basic.Setup
+  nameWithType: Basic.Setup
+- uid: DiscordRPC.Example.Basic.Teardown
+  name: Teardown()
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Teardown
+  commentId: M:DiscordRPC.Example.Basic.Teardown
+  fullName: DiscordRPC.Example.Basic.Teardown()
+  nameWithType: Basic.Teardown()
+- uid: DiscordRPC.Example.Basic.Teardown*
+  name: Teardown
+  href: api/DiscordRPC.Example.Basic.html#DiscordRPC_Example_Basic_Teardown_
+  commentId: Overload:DiscordRPC.Example.Basic.Teardown
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Basic.Teardown
+  nameWithType: Basic.Teardown
+- uid: DiscordRPC.Example.Joining
+  name: Joining
+  href: api/DiscordRPC.Example.Joining.html
+  commentId: T:DiscordRPC.Example.Joining
+  fullName: DiscordRPC.Example.Joining
+  nameWithType: Joining
+- uid: DiscordRPC.Example.Joining.Run
+  name: Run()
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Run
+  commentId: M:DiscordRPC.Example.Joining.Run
+  fullName: DiscordRPC.Example.Joining.Run()
+  nameWithType: Joining.Run()
+- uid: DiscordRPC.Example.Joining.Run*
+  name: Run
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Run_
+  commentId: Overload:DiscordRPC.Example.Joining.Run
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Joining.Run
+  nameWithType: Joining.Run
+- uid: DiscordRPC.Example.Joining.Setup
+  name: Setup()
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Setup
+  commentId: M:DiscordRPC.Example.Joining.Setup
+  fullName: DiscordRPC.Example.Joining.Setup()
+  nameWithType: Joining.Setup()
+- uid: DiscordRPC.Example.Joining.Setup*
+  name: Setup
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Setup_
+  commentId: Overload:DiscordRPC.Example.Joining.Setup
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Joining.Setup
+  nameWithType: Joining.Setup
+- uid: DiscordRPC.Example.Joining.Teardown
+  name: Teardown()
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Teardown
+  commentId: M:DiscordRPC.Example.Joining.Teardown
+  fullName: DiscordRPC.Example.Joining.Teardown()
+  nameWithType: Joining.Teardown()
+- uid: DiscordRPC.Example.Joining.Teardown*
+  name: Teardown
+  href: api/DiscordRPC.Example.Joining.html#DiscordRPC_Example_Joining_Teardown_
+  commentId: Overload:DiscordRPC.Example.Joining.Teardown
+  isSpec: "True"
+  fullName: DiscordRPC.Example.Joining.Teardown
+  nameWithType: Joining.Teardown
 - uid: DiscordRPC.Exceptions
   name: DiscordRPC.Exceptions
   href: api/DiscordRPC.Exceptions.html
@@ -3611,12 +3725,15 @@ references:
   commentId: T:DiscordRPC.Secrets
   fullName: DiscordRPC.Secrets
   nameWithType: Secrets
-- uid: DiscordRPC.Secrets.CreateFriendlySecret(System.Random)
-  name: CreateFriendlySecret(Random)
-  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateFriendlySecret_System_Random_
-  commentId: M:DiscordRPC.Secrets.CreateFriendlySecret(System.Random)
-  fullName: DiscordRPC.Secrets.CreateFriendlySecret(System.Random)
-  nameWithType: Secrets.CreateFriendlySecret(Random)
+- uid: DiscordRPC.Secrets.CreateFriendlySecret(System.Random,System.Int32)
+  name: CreateFriendlySecret(Random, int)
+  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateFriendlySecret_System_Random_System_Int32_
+  commentId: M:DiscordRPC.Secrets.CreateFriendlySecret(System.Random,System.Int32)
+  name.vb: CreateFriendlySecret(Random, Integer)
+  fullName: DiscordRPC.Secrets.CreateFriendlySecret(System.Random, int)
+  fullName.vb: DiscordRPC.Secrets.CreateFriendlySecret(System.Random, Integer)
+  nameWithType: Secrets.CreateFriendlySecret(Random, int)
+  nameWithType.vb: Secrets.CreateFriendlySecret(Random, Integer)
 - uid: DiscordRPC.Secrets.CreateFriendlySecret*
   name: CreateFriendlySecret
   href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateFriendlySecret_
@@ -3624,12 +3741,15 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.Secrets.CreateFriendlySecret
   nameWithType: Secrets.CreateFriendlySecret
-- uid: DiscordRPC.Secrets.CreateSecret(System.Random)
-  name: CreateSecret(Random)
-  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateSecret_System_Random_
-  commentId: M:DiscordRPC.Secrets.CreateSecret(System.Random)
-  fullName: DiscordRPC.Secrets.CreateSecret(System.Random)
-  nameWithType: Secrets.CreateSecret(Random)
+- uid: DiscordRPC.Secrets.CreateSecret(System.Random,System.Int32)
+  name: CreateSecret(Random, int)
+  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateSecret_System_Random_System_Int32_
+  commentId: M:DiscordRPC.Secrets.CreateSecret(System.Random,System.Int32)
+  name.vb: CreateSecret(Random, Integer)
+  fullName: DiscordRPC.Secrets.CreateSecret(System.Random, int)
+  fullName.vb: DiscordRPC.Secrets.CreateSecret(System.Random, Integer)
+  nameWithType: Secrets.CreateSecret(Random, int)
+  nameWithType.vb: Secrets.CreateSecret(Random, Integer)
 - uid: DiscordRPC.Secrets.CreateSecret*
   name: CreateSecret
   href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_CreateSecret_
@@ -3650,6 +3770,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.Secrets.Encoding
   nameWithType: Secrets.Encoding
+- uid: DiscordRPC.Secrets.Join
+  name: Join
+  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_Join
+  commentId: P:DiscordRPC.Secrets.Join
+  fullName: DiscordRPC.Secrets.Join
+  nameWithType: Secrets.Join
+- uid: DiscordRPC.Secrets.Join*
+  name: Join
+  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_Join_
+  commentId: Overload:DiscordRPC.Secrets.Join
+  isSpec: "True"
+  fullName: DiscordRPC.Secrets.Join
+  nameWithType: Secrets.Join
 - uid: DiscordRPC.Secrets.JoinSecret
   name: JoinSecret
   href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_JoinSecret
@@ -3672,14 +3805,7 @@ references:
 - uid: DiscordRPC.Secrets.SecretLength
   name: SecretLength
   href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_SecretLength
-  commentId: P:DiscordRPC.Secrets.SecretLength
-  fullName: DiscordRPC.Secrets.SecretLength
-  nameWithType: Secrets.SecretLength
-- uid: DiscordRPC.Secrets.SecretLength*
-  name: SecretLength
-  href: api/DiscordRPC.Secrets.html#DiscordRPC_Secrets_SecretLength_
-  commentId: Overload:DiscordRPC.Secrets.SecretLength
-  isSpec: "True"
+  commentId: F:DiscordRPC.Secrets.SecretLength
   fullName: DiscordRPC.Secrets.SecretLength
   nameWithType: Secrets.SecretLength
 - uid: DiscordRPC.Secrets.SpectateSecret

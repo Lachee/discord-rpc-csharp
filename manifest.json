@@ -315,7 +315,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "DiscordRPC.DiscordRpcClient",
-      "Summary": "<p sourcefile=\"api/DiscordRPC.DiscordRpcClient.yml\" sourcestartlinenumber=\"1\">A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.</p>\n"
+      "Summary": "<p sourcefile=\"api/DiscordRPC.DiscordRpcClient.yml\" sourcestartlinenumber=\"1\">A Discord RPC Client which is used to send Rich Presence updates and receive Join events.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -511,6 +511,48 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "DiscordRPC.Events",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Example.Basic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Example.Basic.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Example.Basic",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Example.Joining.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Example.Joining.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Example.Joining",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/DiscordRPC.Example.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/DiscordRPC.Example.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "DiscordRPC.Example",
       "Summary": null
     },
     {
@@ -1155,7 +1197,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "DiscordRPC.Secrets",
-      "Summary": "<p sourcefile=\"api/DiscordRPC.Secrets.yml\" sourcestartlinenumber=\"1\">The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.</p>\n<p>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</p>\n<p>You should send discord data that someone else's game client would need to join or spectate their friend. If you can't or don't want to support those actions, you don't need to send secrets.</p>\n<p>Visit the <a href=\"https://discordapp.com/developers/docs/rich-presence/how-to#secrets\">Rich Presence How-To</a> for more information.</p>\n"
+      "Summary": "<p sourcefile=\"api/DiscordRPC.Secrets.yml\" sourcestartlinenumber=\"1\">The secrets used for Joining. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.</p>\n<p>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</p>\n<p>You should send discord data that someone else's game client would need to join their friend. If you can't or don't want to support those actions, you don't need to send secrets.</p>\n<p>Visit the <a href=\"https://discordapp.com/developers/docs/rich-presence/how-to#secrets\">Rich Presence How-To</a> for more information.</p>\n"
     },
     {
       "type": "ManagedReference",
