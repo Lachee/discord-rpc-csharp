@@ -30,9 +30,9 @@ namespace DiscordRPC
 		/// <para>Max Length of 128 characters</para>
 		/// </summary>
 		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
-		public string JoinSecret
+		public string Join
 		{
-			get { return _joinSecret; }
+			get => _joinSecret;
 			set
 			{
 				if (!BaseRichPresence.ValidateString(value, out _joinSecret, false, 128))
@@ -40,6 +40,15 @@ namespace DiscordRPC
 			}
 		}
 		private string _joinSecret;
+
+		/// <summary>Alias of Join</summary>
+		/// <remarks>This was made obsolete as the property name contains redundant information.</remarks>
+		[System.Obsolete("Property name is redundant and replaced with Join.")]
+		public string JoinSecret
+		{
+			get => Join;
+			set => Join = value;
+		}
 
 		/// <summary>
 		/// The secret data that will tell the client how to connect to the game to spectate. This could be a unique identifier for a fancy match maker or player id, lobby id, etc.
@@ -49,9 +58,9 @@ namespace DiscordRPC
 		/// <para>Max Length of 128 characters</para>
 		/// </summary>
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		public string SpectateSecret
+		public string Spectate
 		{
-			get { return _spectateSecret; }
+			get => _spectateSecret;
 			set
 			{
 				if (!BaseRichPresence.ValidateString(value, out _spectateSecret, false, 128))
@@ -61,17 +70,26 @@ namespace DiscordRPC
 		private string _spectateSecret;
 
 
+		/// <summary>Alias of Spectate</summary>
+		/// <remarks>This was made obsolete as the property name contains redundant information.</remarks>
+		[System.Obsolete("Property name is redundant and replaced with Spectate.")]
+		public string SpectateSecret
+		{
+			get => Spectate;
+			set => Spectate = value;
+		}
+
 		#region Statics
 
 		/// <summary>
 		/// The encoding the secret generator is using
 		/// </summary>
-		public static Encoding Encoding { get { return Encoding.UTF8; } }
+		public static Encoding Encoding => Encoding.UTF8;
 
 		/// <summary>
 		/// The length of a secret in bytes.
 		/// </summary>
-		public static int SecretLength { get { return 128; } }
+		public static int SecretLength => 128;
 
 		/// <summary>
 		/// Creates a new secret. This is NOT a cryptographic function and should NOT be used for sensitive information. This is mainly provided as a way to generate quick IDs.
