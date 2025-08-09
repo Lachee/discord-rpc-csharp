@@ -12,7 +12,7 @@ namespace DiscordRPC
 {
 
     /// <summary>
-    /// A Discord RPC Client which is used to send Rich Presence updates and receive Join / Spectate events.
+    /// A Discord RPC Client which is used to send Rich Presence updates and receive Join events.
     /// </summary>
     public sealed class DiscordRpcClient : IDisposable
     {
@@ -20,7 +20,7 @@ namespace DiscordRPC
 
 
         /// <summary>
-        /// Gets a value indicating if the client has registered a URI Scheme. If this is false, Join / Spectate events will fail.
+        /// Gets a value indicating if the client has registered a URI Scheme. If this is false, Join events will fail.
         /// <para>To register a URI Scheme, call <see cref="RegisterUriScheme(string, string)"/>.</para>
         /// </summary>
         public bool HasRegisteredUriScheme { get; private set; }
@@ -172,6 +172,7 @@ namespace DiscordRPC
         /// Called when the Discord Client wishes for this process to spectate a game.
         /// <para>If <see cref="AutoEvents"/> is true then this event will execute on a different thread. If it is not true however, then this event is not invoked untill <see cref="Invoke"/> and will be on the calling thread.</para>
         /// </summary>
+        [System.Obsolete("Spectating is no longer supported by Discord.")]
         public event OnSpectateEvent OnSpectate;
 
         /// <summary>
@@ -201,13 +202,13 @@ namespace DiscordRPC
         #region Initialization
 
         /// <summary>
-        /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events.
+        /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join events.
         /// </summary>
         /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
         public DiscordRpcClient(string applicationID) : this(applicationID, -1) { }
 
         /// <summary>
-        /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events. This constructor exposes more advance features such as custom NamedPipeClients and Loggers.
+        /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join events. This constructor exposes more advance features such as custom NamedPipeClients and Loggers.
         /// </summary>
         /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
         /// <param name="pipe">The pipe to connect too. If -1, then the client will scan for the first available instance of Discord.</param>
@@ -420,6 +421,24 @@ namespace DiscordRPC
         /// <param name="request">The request that is being responded too.</param>
         /// <param name="acceptRequest">Accept the join request.</param>
         public void Respond(JoinRequestMessage request, bool acceptRequest)
+            => Respond(request.User.ID, acceptRequest);
+
+        /// <summary>
+        /// Respond to a Join Request. All requests will timeout after 30 seconds.
+        /// <para>Because of the 30 second timeout, it is recommended to call <seealso cref="Invoke"/> faster than every 15 seconds to give your users adequate time to respond to the request.</para>
+        /// </summary>
+        /// <param name="user">The user to respond to.</param>
+        /// <param name="acceptRequest">Accept the join request.</param>
+        public void Respond(User user, bool acceptRequest)
+            => Respond(user.ID, acceptRequest);
+
+        /// <summary>
+        /// Respond to a Join Request. All requests will timeout after 30 seconds.
+        /// <para>Because of the 30 second timeout, it is recommended to call <seealso cref="Invoke"/> faster than every 15 seconds to give your users adequate time to respond to the request.</para>
+        /// </summary>
+        /// <param name="userID">The ID of the user to respond to.</param>
+        /// <param name="acceptRequest">Accept the join request.</param>
+        public void Respond(ulong userID, bool acceptRequest)
         {
             if (IsDisposed)
                 throw new ObjectDisposedException("Discord IPC Client");
@@ -430,7 +449,11 @@ namespace DiscordRPC
             if (!IsInitialized)
                 throw new UninitializedException();
 
-            connection.EnqueueCommand(new RespondCommand() { Accept = acceptRequest, UserID = request.User.ID.ToString() });
+            connection.EnqueueCommand(new RespondCommand()
+            {
+                Accept = acceptRequest,
+                UserID = userID.ToString()
+            });
         }
 
         /// <summary>
@@ -692,7 +715,7 @@ namespace DiscordRPC
 
         /// <summary>
         /// Registers the application executable to a custom URI Scheme.
-        /// <para>This is required for the Join and Spectate features. Discord will run this custom URI Scheme to launch your application when a user presses either of the buttons.</para>
+        /// <para>This is required for the Join feature. Discord will run this custom URI Scheme to launch your application when a user presses either of the buttons.</para>
         /// </summary>
         /// <param name="steamAppID">Optional Steam ID. If supplied, Discord will launch the game through steam instead of directly calling it.</param>
         /// <param name="executable">The path to the executable. If null, the path to the current executable will be used instead.</param>
@@ -710,14 +733,14 @@ namespace DiscordRPC
         }
 
         /// <summary>
-        /// Subscribes to an event sent from discord. Used for Join / Spectate feature.
+        /// Subscribes to an event sent from discord. Used for Join feature.
         /// <para>Requires the UriScheme to be registered.</para>
         /// </summary>
         /// <param name="type">The event type to subscribe to</param>
         public void Subscribe(EventType type) { SetSubscription(Subscription | type); }
 
         /// <summary>
-        /// Unsubscribe from the event sent by discord. Used for Join / Spectate feature.
+        /// Unsubscribe from the event sent by discord. Used for Join feature.
         /// <para>Requires the UriScheme to be registered.</para>
         /// </summary>
         /// <param name="type">The event type to unsubscribe from</param>
@@ -773,8 +796,10 @@ namespace DiscordRPC
                 throw new InvalidConfigurationException("Cannot subscribe/unsubscribe to an event as this application has not registered a URI Scheme. Call RegisterUriScheme().");
 
             //Add the subscribe command to be sent when the connection is able too
+#pragma warning disable CS0618 // Type or member is obsolete
             if ((type & EventType.Spectate) == EventType.Spectate)
                 connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivitySpectate, IsUnsubscribe = isUnsubscribe });
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if ((type & EventType.Join) == EventType.Join)
                 connection.EnqueueCommand(new SubscribeCommand() { Event = RPC.Payload.ServerEvent.ActivityJoin, IsUnsubscribe = isUnsubscribe });

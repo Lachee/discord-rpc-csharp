@@ -6,9 +6,9 @@ using System.Text;
 namespace DiscordRPC
 {
 	/// <summary>
-	/// The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.
+	/// The secrets used for Joining. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc.
 	/// <para>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</para>
-	/// <para>You should send discord data that someone else's game client would need to join or spectate their friend. If you can't or don't want to support those actions, you don't need to send secrets.</para>
+	/// <para>You should send discord data that someone else's game client would need to join their friend. If you can't or don't want to support those actions, you don't need to send secrets.</para>
 	/// <para>Visit the <see href="https://discordapp.com/developers/docs/rich-presence/how-to#secrets">Rich Presence How-To</see> for more information.</para>
 	/// </summary>
 	[Serializable]
@@ -20,6 +20,7 @@ namespace DiscordRPC
 		/// <para>Max Length of 128 characters</para>
 		/// </summary>
 		[Obsolete("This feature has been deprecated my Mason in issue #152 on the offical library. Was originally used as a Notify Me feature, it has been replaced with Join / Spectate.", true)]
+		[JsonIgnore]
 		public string MatchSecret;
 
 		/// <summary>
@@ -44,6 +45,7 @@ namespace DiscordRPC
 		/// <summary>Alias of Join</summary>
 		/// <remarks>This was made obsolete as the property name contains redundant information.</remarks>
 		[System.Obsolete("Property name is redundant and replaced with Join.")]
+		[JsonIgnore]
 		public string JoinSecret
 		{
 			get => Join;
@@ -57,28 +59,9 @@ namespace DiscordRPC
 		/// </para>
 		/// <para>Max Length of 128 characters</para>
 		/// </summary>
-		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		public string Spectate
-		{
-			get => _spectateSecret;
-			set
-			{
-				if (!BaseRichPresence.ValidateString(value, out _spectateSecret, false, 128))
-					throw new StringOutOfRangeException(128);
-			}
-		}
-		private string _spectateSecret;
-
-
-		/// <summary>Alias of Spectate</summary>
-		/// <remarks>This was made obsolete as the property name contains redundant information.</remarks>
-		[System.Obsolete("Property name is redundant and replaced with Spectate.")]
-		public string SpectateSecret
-		{
-			get => Spectate;
-			set => Spectate = value;
-		}
-
+		[System.Obsolete("Spectating is no longer supported by Discord.")]
+		[JsonIgnore]
+		public string SpectateSecret { get; set; }
 		#region Statics
 
 		/// <summary>
@@ -89,18 +72,22 @@ namespace DiscordRPC
 		/// <summary>
 		/// The length of a secret in bytes.
 		/// </summary>
-		public static int SecretLength => 128;
+		public const int SecretLength = 128;
 
 		/// <summary>
 		/// Creates a new secret. This is NOT a cryptographic function and should NOT be used for sensitive information. This is mainly provided as a way to generate quick IDs.
 		/// </summary>
 		/// <param name="random">The random to use</param>
-		/// <returns>Returns a <see cref="SecretLength"/> sized string with random characters from <see cref="Encoding"/></returns>
-		public static string CreateSecret(Random random)
+		/// <param name="length">The length of the secret to generate. Defaults to <see cref="SecretLength"/>.</param>
+		/// <returns>Returns a string with random characters from <see cref="Encoding"/></returns>
+		public static string CreateSecret(Random random, int length = SecretLength)
 		{
+			if (length < 1 || length > SecretLength)
+				throw new ArgumentOutOfRangeException(nameof(length), "Secret length must be between 1 and 128 characters.");
+
 			//Prepare an array and fill it with random bytes
 			// THIS IS NOT SECURE! DO NOT USE THIS FOR PASSWORDS!
-			byte[] bytes = new byte[SecretLength];
+			byte[] bytes = new byte[length];
 			random.NextBytes(bytes);
 
 			//Return the encoding. Probably should remove invalid characters but cannot be fucked.
@@ -112,13 +99,18 @@ namespace DiscordRPC
 		/// Creates a secret word using more readable friendly characters. Useful for debugging purposes. This is not a cryptographic function and should NOT be used for sensitive information.
 		/// </summary>
 		/// <param name="random">The random used to generate the characters</param>
-		/// <returns></returns>
-		public static string CreateFriendlySecret(Random random)
+		/// <param name="length">The length of the secret to generate. Defaults to <see cref="SecretLength"/>.</param>
+		/// <returns>Returns a string with random alphanumeric characters</returns>
+		public static string CreateFriendlySecret(Random random, int length = SecretLength)
 		{
+			if (length < 1 || length > SecretLength)
+				throw new ArgumentOutOfRangeException(nameof(length), "Secret length must be between 1 and 128 characters.");
+
+			//Characters to use in the secret
 			string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 			StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < SecretLength; i++)
+			for (int i = 0; i < length; i++)
 				builder.Append(charset[random.Next(charset.Length)]);
 
 			return builder.ToString();

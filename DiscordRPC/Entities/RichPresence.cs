@@ -30,7 +30,7 @@ namespace DiscordRPC
 
         /// <summary>Inernal inner state string</summary>
         protected internal string _state;
-        
+
         /// <summary>
         /// URL that is linked to when clicking on the details text in the activity card.
         /// <para>Max 256 characters</para>
@@ -67,7 +67,7 @@ namespace DiscordRPC
         }
         /// <summary>Inernal inner detail string</summary>
         protected internal string _details;
-        
+
         /// <summary>
         /// URL that is linked to when clicking on the details text in the activity card.
         /// <para>Max 256 characters</para>
@@ -107,7 +107,7 @@ namespace DiscordRPC
         public Party Party { get; set; }
 
         /// <summary>
-        /// The secrets used for Join / Spectate. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.
+        /// The secrets used for Joining. Secrets are obfuscated data of your choosing. They could be match ids, player ids, lobby ids, etc. Make this object null if you do not wish too / unable too implement the Join / Request feature.
         /// <para>To keep security on the up and up, Discord requires that you properly hash/encode/encrypt/put-a-padlock-on-and-swallow-the-key-but-wait-then-how-would-you-open-it your secrets.</para>
         /// <para>Visit the <see href="https://discordapp.com/developers/docs/rich-presence/how-to#secrets">Rich Presence How-To</see> for more information.</para>
         /// </summary>
@@ -119,7 +119,7 @@ namespace DiscordRPC
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public ActivityType Type { get; set; }
-        
+
         /// <summary>
         /// The display type for the status
         /// </summary>
@@ -160,7 +160,9 @@ namespace DiscordRPC
         /// <returns></returns>
         public bool HasSecrets()
         {
-            return Secrets != null && (Secrets.JoinSecret != null || Secrets.SpectateSecret != null);
+#pragma warning disable CS0618 // Type or member is obsolete
+            return Secrets != null && (Secrets.Join != null || Secrets.SpectateSecret != null);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         #endregion
@@ -191,7 +193,7 @@ namespace DiscordRPC
             result = s.GetNullOrString();
             return true;
         }
-        
+
         /// <summary>
         /// Validates URLs.
         /// </summary>
@@ -251,10 +253,12 @@ namespace DiscordRPC
             //Checks if the secrets are different
             if (Secrets != null)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 if (other.Secrets == null ||
-                    other.Secrets.JoinSecret != Secrets.JoinSecret ||
+                    other.Secrets.Join != Secrets.Join ||
                     other.Secrets.SpectateSecret != Secrets.SpectateSecret)
                     return false;
+#pragma warning restore CS0618 // Type or member is obsolete
             }
             else if (other.Secrets != null)
             {
@@ -372,7 +376,7 @@ namespace DiscordRPC
             State = state;
             return this;
         }
-        
+
         /// <summary>
         /// Sets the state URL of the Rich Presence. See also <seealso cref="BaseRichPresence.StateUrl"/>.
         /// </summary>
@@ -394,7 +398,7 @@ namespace DiscordRPC
             Details = details;
             return this;
         }
-        
+
         /// <summary>
         /// Sets the details URL of the Rich Presence. See also <seealso cref="BaseRichPresence.DetailsUrl"/>.
         /// </summary>
@@ -463,7 +467,7 @@ namespace DiscordRPC
         /// <summary>
         /// Sets the Rich Presence's secrets. See also <seealso cref="Secrets"/>.
         /// </summary>
-        /// <param name="secrets">The secrets used for Join / Spectate.</param>
+        /// <param name="secrets">The secrets used for Joining.</param>
         /// <returns>The modified Rich Presence.</returns>
         public RichPresence WithSecrets(Secrets secrets)
         {
@@ -471,13 +475,13 @@ namespace DiscordRPC
             return this;
         }
 
-		/// <summary>
-		/// Sets the Rich Presence's buttons.
-		/// </summary>
-		/// <param name="topButton">The top button to display</param>
-		/// <param name="bottomButton">The optional bottom button to display</param>
-		/// <returns>The modified Rich Presence.</returns>
-		public RichPresence WithButtons(Button topButton, Button bottomButton = null) 
+        /// <summary>
+        /// Sets the Rich Presence's buttons.
+        /// </summary>
+        /// <param name="topButton">The top button to display</param>
+        /// <param name="bottomButton">The optional bottom button to display</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithButtons(Button topButton, Button bottomButton = null)
         {
             if (topButton != null && bottomButton != null)
             {
@@ -486,9 +490,9 @@ namespace DiscordRPC
             else if (topButton == null && bottomButton == null)
             {
                 Buttons = default;
-            } 
-            else 
-            { 
+            }
+            else
+            {
                 Buttons = new Button[] { topButton ?? bottomButton };
             }
 
@@ -513,14 +517,16 @@ namespace DiscordRPC
                 DetailsUrl = this._detailsUrl != null ? _detailsUrl.Clone() as string : null,
                 Type = this.Type,
                 StatusDisplay = this.StatusDisplay,
-
                 Buttons = !HasButtons() ? null : this.Buttons.Clone() as Button[],
+
+#pragma warning disable CS0618 // Type or member is obsolete
                 Secrets = !HasSecrets() ? null : new Secrets
                 {
                     //MatchSecret = this.Secrets.MatchSecret?.Clone() as string,
-                    JoinSecret = this.Secrets.JoinSecret != null ? this.Secrets.JoinSecret.Clone() as string : null,
+                    Join = this.Secrets.Join != null ? this.Secrets.Join.Clone() as string : null,
                     SpectateSecret = this.Secrets.SpectateSecret != null ? this.Secrets.SpectateSecret.Clone() as string : null
                 },
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 Timestamps = !HasTimestamps() ? null : new Timestamps
                 {

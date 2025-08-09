@@ -1,4 +1,5 @@
 ﻿using DiscordRPC.Logging;
+using System;
 using System.IO;
 
 namespace DiscordRPC.Registry
@@ -9,6 +10,13 @@ namespace DiscordRPC.Registry
     public sealed class MacUriScheme : IRegisterUriScheme
     {
         private ILogger logger;
+
+        private static readonly string[] DiscordClientFolders = new string[]
+        {
+            "discord",
+            "discordptb",
+            "discordcanary",
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MacUriScheme"/> class.
@@ -37,20 +45,37 @@ namespace DiscordRPC.Registry
             else logger.Warning("This library does not fully support MacOS URI Scheme Registration.");
 
             //get the folder ready
-            string filepath = "~/Library/Application Support/discord/games";
-            var directory = Directory.CreateDirectory(filepath);
-            if (!directory.Exists)
+            foreach (var folder in DiscordClientFolders)
             {
-                logger.Error("Failed to register because {0} does not exist", filepath);
-                return false;
+                string discordDirectory = Path.Combine(
+                    Environment.GetEnvironmentVariable("HOME"),
+                    "Library/Application Support/",
+                    folder
+                );
+
+                if (Directory.Exists(discordDirectory))
+                {
+                    logger.Trace("Discord client folder exists: {0}", discordDirectory);
+                    RegisterSchemeForClient(discordDirectory, info.ApplicationID, command);
+                }
+                else
+                {
+                    logger.Trace("Discord client folder does not exist: {0}", discordDirectory);
+                }
             }
 
-            //Write the contents to file
-            string applicationSchemeFilePath = $"{filepath}/{info.ApplicationID}.json";
-            File.WriteAllText(applicationSchemeFilePath, "{ \"command\": \"" + command + "\" }");
-            logger.Trace("Registered {0}, {1}", applicationSchemeFilePath, command);
             return true;
         }
 
+        private void RegisterSchemeForClient(string discordDirectory, string appId, string command)
+        {
+            string filepath = Path.Combine(discordDirectory, "games", $"{appId}.json");
+            if (!Directory.Exists(Path.GetDirectoryName(filepath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+
+            //Write the contents to file
+            string applicationSchemeFilePath = filepath;
+            File.WriteAllText(applicationSchemeFilePath, $"{{ \"command\": \"{command}\" }}");
+        }
     }
 }

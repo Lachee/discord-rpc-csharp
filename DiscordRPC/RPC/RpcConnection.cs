@@ -676,6 +676,9 @@ namespace DiscordRPC.RPC
 
 						//Write it and if it wrote perfectly fine, we will dequeue it
 						Logger.Trace("Sending payload: {0}", payload.Command);
+#if DEBUG
+						Logger.Trace("\t- Frame: {0}", frame.Message);
+#endif
 						if (namedPipe.WriteFrame(frame))
 						{
 							//We sent it, so now dequeue it

@@ -16,7 +16,7 @@ namespace DiscordRPC.Message
 		/// The event that was subscribed too.
 		/// </summary>
 		public EventType Event { get; internal set; }
-		
+
 		internal SubscribeMessage(ServerEvent evt)
 		{
 			switch (evt)
@@ -29,11 +29,6 @@ namespace DiscordRPC.Message
 				case ServerEvent.ActivityJoinRequest:
 					Event = EventType.JoinRequest;
 					break;
-
-				case ServerEvent.ActivitySpectate:
-					Event = EventType.Spectate;
-					break;
-
 			}
 		}
 	}
