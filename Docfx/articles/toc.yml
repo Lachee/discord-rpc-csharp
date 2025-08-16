@@ -1,5 +1,6 @@
 - name: Introduction
   href: intro.md
+
 - name: Getting started
   items:
   - name: Standard Project
@@ -8,6 +9,23 @@
     href: getting_started/unity3d.md
   - name: Mono Game Project
     href: getting_started/monogame.md
+
+
+- name: Activity Types
+  href: features/activity_types.md
+
+- name: Assets
+  href: features/assets.md
+
+- name: Avatars
+  href: features/avatars.md
+
+- name: Buttons
+  href: features/buttons.md
+
+- name: Timestamps
+  href: features/timestamps.md
+
 - name: Join / Spectate
   items:
   - name: Introduction

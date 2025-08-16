@@ -10,7 +10,7 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: Klemensas/action-autotag@stable
       id: auto-tag
       with:
@@ -26,8 +26,12 @@ jobs:
     needs: [ tag ]
     steps:
       # Check-out repository
-      - uses: actions/checkout@v3
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+
 
       # Version the repository
       - name: Update Versions
@@ -40,21 +44,32 @@ jobs:
       - name: Build Library
         run: dotnet build DiscordRPC -c Release
 
-      - name: Upload Library
-        uses: actions/upload-artifact@v3.0.0
-        with:
-          name: "netstandard2.0-dll"
-          path: "DiscordRPC/bin/Release/netstandard2.0"
-
       # Nuget Builds
       - name: Build Nuget
         run: dotnet pack DiscordRPC -c Release
 
-      - name: Upload Nuget
-        uses: actions/upload-artifact@v3.0.0
+      # Upload Artifacts
+      - name: Upload Package
+        uses: actions/upload-artifact@v4
         with:
-          name: "netstandard2.0-nuget"
+          name: "nuget-pkg"
           path: "DiscordRPC/bin/Release/*.nupkg"
+      - name: Upload .NET Standard 2.0
+        uses: actions/upload-artifact@v4
+        with:
+          name: "netstandard2.0-dll"
+          path: "DiscordRPC/bin/Release/netstandard2.0"      
+      - name: Upload .NET 9.0
+        uses: actions/upload-artifact@v4
+        with:
+          name: "net9.0-dll"
+          path: "DiscordRPC/bin/Release/net9.0"
+      - name: Upload .NET FX
+        uses: actions/upload-artifact@v4
+        with:
+          name: "netfx4.5-dll"
+          path: "DiscordRPC/bin/Release/net45"
+
   
   # Update the release
   release:
@@ -62,14 +77,30 @@ jobs:
     needs: [ tag, build ]
     if: ${{ startsWith(needs.tag.outputs.tag, 'v') }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - uses: "marvinpinto/action-automatic-releases@latest"
+
+      - name: Package Artifacts
+        run: |
+          mkdir -p release
+
+          # Copy Zip
+          for d in artifacts/*-dll/ ; do
+              folder="${d%/}"
+              zipname="${folder}.zip"
+              (cd "$folder" && zip -r "../../release/$(basename "$zipname")" .)
+          done
+
+          # Copy Nuget
+          cp artifacts/**/*.nupkg release/.
+            
+      - name: Create GitHub Release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ needs.tag.outputs.tag }}
           prerelease: true
           title: Release ${{ needs.tag.outputs.tag }}
-          files: artifacts/**/*
+          files: release/**/*

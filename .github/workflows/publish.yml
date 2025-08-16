@@ -8,8 +8,8 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
       
       - name: Fetch Release Asset
         uses: dsaltares/fetch-gh-release-asset@1.0.0

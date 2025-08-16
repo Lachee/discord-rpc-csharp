@@ -25,6 +25,7 @@ namespace DiscordRPC.IO
 		/// <summary>
 		/// The pipe the client is currently connected too
 		/// </summary>
+		[System.Obsolete("The connected pipe is not neccessary information.")]
 		int ConnectedPipe { get; }
 
 		/// <summary>
@@ -33,7 +34,7 @@ namespace DiscordRPC.IO
 		/// <param name="pipe">If -1 is passed, the pipe will find the first available pipe, otherwise it connects to the pipe that was supplied</param>
 		/// <returns></returns>
 		bool Connect(int pipe);
-		
+
 		/// <summary>
 		/// Reads a frame if there is one available. Returns false if there is none. This should be non blocking (aka use a Peek first).
 		/// </summary>
@@ -46,11 +47,11 @@ namespace DiscordRPC.IO
 		/// </summary>
 		/// <param name="frame">The frame to be written</param>
 		bool WriteFrame(PipeFrame frame);
-		
+
 		/// <summary>
 		/// Closes the connection
 		/// </summary>
 		void Close();
-        
+
 	}
 }

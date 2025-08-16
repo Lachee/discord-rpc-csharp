@@ -8,27 +8,25 @@ on:
 jobs:
   # Build the documentation
   build:
-    runs-on: windows-latest # Required by DocFX
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      
+      - name: Copy Files
+        run: |
+          cp README.md Docfx/index.md
+          cp -r Resources Docfx/Resources
 
-      - name: Install DocFX
-        run: | 
-          choco install -y docfx
-          docfx --version
-          
-      - name: Use README.md as index.md
-        run: cp README.md Docfx/index.md
-
-      - name: Build Site
-        run: docfx Docfx/docfx.json
-
-      # Upload the generated documentation
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v1
+      - uses: nunit/docfx-action@v4.1.0
+        name: Build Documentation
         with:
-          name: _site
-          path: _site # Must equals the 'build.dest' value on your docfx.json
+          args: Docfx/docfx.json
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Documentation
+          path: _site
 
   # Deploy the generated documentation to the gh-pages branch
   deploy:
@@ -36,18 +34,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
-
       # Download the generated documentation
       - name: Download site artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
-          name: _site
+          name: Documentation
+          path: docs
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: _site
+          publish_dir: docs

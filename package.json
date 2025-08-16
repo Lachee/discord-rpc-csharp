@@ -1,3 +1,19 @@
 {
-    "version": "1.3.0"
+    "version": "1.6.2",
+    "scripts": {
+        "docs:watch": "npm-watch docs:build",
+        "docs:build": "docfx build Docfx/docfx.json"
+    },
+    "watch": {
+        "docs:build": {
+            "patterns": [
+                "Docfx/**/*"
+            ],
+            "extensions": "md,yml",
+            "quiet": false
+        }
+    },
+    "devDependencies": {
+        "npm-watch": "^0.11.0"
+    }
 }

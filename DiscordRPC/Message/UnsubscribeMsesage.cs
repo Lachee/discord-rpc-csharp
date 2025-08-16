@@ -11,7 +11,7 @@ namespace DiscordRPC.Message
 		/// The type of message received from discord
 		/// </summary>
 		public override MessageType Type { get { return MessageType.Unsubscribe; } }
-		
+
 		/// <summary>
 		/// The event that was subscribed too.
 		/// </summary>
@@ -28,10 +28,6 @@ namespace DiscordRPC.Message
 
 				case ServerEvent.ActivityJoinRequest:
 					Event = EventType.JoinRequest;
-					break;
-
-				case ServerEvent.ActivitySpectate:
-					Event = EventType.Spectate;
 					break;
 			}
 		}

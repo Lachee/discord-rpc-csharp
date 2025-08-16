@@ -1,7 +1,7 @@
 # Discord Rich Presence
 
 [![Release 📦](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf)](https://www.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Lachee/discord-rpc-csharp&amp;utm_campaign=Badge_Grade) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf)](https://app.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/) 
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=master)](https://github.com/Lachee/discord-rpc-csharp/tags)
 
 This is a C# _implementation_ of the [Discord RPC](https://github.com/discordapp/discord-rpc) library which was originally written in C++. This avoids having to use the official C++ and instead provides a managed way of using the Rich Presence within the .NET environment*.
@@ -27,11 +27,12 @@ All the documentation can be found [lachee.github.io/discord-rpc-csharp/docs/](h
 
 **Dependencies:**
  - Newtonsoft.Json 
- - .NET Standard 2.0
+ - .NET Standard 2.0 runtime or .NET Framework 4.5: 
+	- `fx 4.5`, `core 3.1`, `net 7.0`, `net 8.0`, `net 9.0`
  
 ### **.NET Project**
 
-For projects that target either .NET Core or .NETFX, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
+For projects that target either the .NET Standard or .NET Framework, you can get the package on [nuget](https://www.nuget.org/packages/DiscordRichPresence/):
 ```
 PM> Install-Package DiscordRichPresence
 ```
@@ -133,6 +134,14 @@ void Deinitialize()
 }
 ```
 
+## Examples
+To run the current example, either open the solution in Visual Studio and run the DiscordRPC.Example project or use Dotnet:
+
+```
+dotnet run --project DiscordRPC.Example
+```
+
+
 ## Building
 
 [![Release 📦](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml) [![Documentation 📚](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml)
@@ -173,3 +182,17 @@ Here is an example of how to add `runFullTrust` to your WIN UI 3 application:
 ```
 
 If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts `runFullTrust` capability.
+
+## Tests
+There are currently no tests available to validate the library. This is a active issue and need help with this.
+The test suite will likely need a way to mock the RPC client.
+
+## Contribution
+All contributions are welcome and I am happy for any contribution. However, there are some things that will not be accepted:
+- Spelling only fixes (rude to only contribute to something copilot could do)
+- Complete or large rewrites (unwanted work load to review)
+- Dependency substitutions / removals / additions (these require a issue and discussion first)
+- Support for features only provided by custom Discord clients
+- Obviously AI additions
+
+For more information, please read CONTRIBUTING.md

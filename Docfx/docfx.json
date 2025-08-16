@@ -4,9 +4,12 @@
       "src": [
         {
           "src": "..",
-          "files": [ "**.csproj" ]
+          "files": [
+            "**.csproj"
+          ]
         }
       ],
+      "enumSortOrder": "declaringOrder",
       "globalNamespaceId": "Global",
       "dest": "api"
     }
@@ -14,32 +17,48 @@
   "build": {
     "globalMetadata": {
       "_appTitle": "Discord RPC C#",
+      "_appName": "Discord RPC C#",
+      "_appLogoPath": "Resources/logo-small.png",
+      "_appFaviconPath": "Resources/logo.svg",
       "_appFooter": "<a href=\"https://github.com/Lachee/discord-rpc-csharp\">Contribute</a> on GitHub",
       "_enableSearch": true
     },
-
     "content": [
       {
-        "files": [ "api/*.yml" ]
+        "files": [
+          "api/*.yml"
+        ]
       },
       {
-        "files": [  "articles/toc.yml", "articles/**.md" ]
+        "files": [
+          "articles/toc.yml",
+          "articles/**.md"
+        ]
       },
       {
-        "files": [ "toc.yml", "index.md" ]
+        "files": [
+          "toc.yml",
+          "index.md"
+        ]
       }
     ],
     "resource": [
       {
-        "files": [ "Resources/**"]
+        "files": [
+          "Resources/**"
+        ]
       }
     ],
     "sitemap": {
       "baseUrl": "https://lachee.github.io/discord-rpc-csharp/"
     },
-    "template": ["default", "templates/darkfx"],
-    "xref": [ "https://normanderwan.github.io/UnityXrefMaps/xrefmap.yml" ],
-    "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
+    "template": [
+      "default",
+      "modern"
+    ],
+    "postProcessors": [
+      "ExtractSearchIndex"
+    ],
     "dest": "../_site"
   }
 }

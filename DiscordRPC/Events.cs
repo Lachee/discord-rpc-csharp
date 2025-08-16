@@ -60,6 +60,7 @@ namespace DiscordRPC.Events
     /// </summary>
     /// <param name="sender">The Discord client handler that sent this event</param>
     /// <param name="args">The arguments supplied with the event</param>
+    [System.Obsolete("Spectating is no longer supported by Discord.")]
     public delegate void OnSpectateEvent(object sender, SpectateMessage args);
 
     /// <summary>
