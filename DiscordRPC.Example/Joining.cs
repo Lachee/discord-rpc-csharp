@@ -6,25 +6,26 @@ using DiscordRPC.Message;
 
 namespace DiscordRPC.Example
 {
-    public class Joining : IExample
+    class Joining : IExample
     {
         private DiscordRpcClient client;
         private string lobbyId = "1234567890"; // Example lobby ID
         private CancellationTokenSource waitingForJoinCancellationTokenSource;
-        private int partySize = 1; // Initial party size, can be updated as users join
+        private int partySize = 2; // Initial party size, can be updated as users join
 
-        public void Setup()
+        public void Setup(Options opts)
         {
             Random random = new Random();
             waitingForJoinCancellationTokenSource = new CancellationTokenSource();
-            client = new DiscordRpcClient("424087019149328395")
-            {
-                Logger = new Logging.ConsoleLogger(Logging.LogLevel.Trace, true),
-            };
 
-            // Register the URI scheme. 
-            // This is how Discord will launch your game when a user clicks on a join or spectate button.
-            client.RegisterUriScheme();
+			client = new DiscordRpcClient(opts.ClientId, pipe: opts.Pipe)
+			{
+				Logger = new Logging.ConsoleLogger(opts.LogLevel, true)
+			};
+
+			// Register the URI scheme. 
+			// This is how Discord will launch your game when a user clicks on a join or spectate button.
+			client.RegisterUriScheme();
 
             // Listen to some events
             client.Subscribe(EventType.Join | EventType.JoinRequest);   // Tell Unity we want to handle these events ourselves.
@@ -46,7 +47,7 @@ namespace DiscordRPC.Example
                     Max = 4,
                 },
 
-                // // Set the secrets. This is how a launching app will figure out how to connect to the game.
+                // Set the secrets. This is how a launching app will figure out how to connect to the game.
                 Secrets = new()
                 {
                     Join = $"join:{lobbyId}"

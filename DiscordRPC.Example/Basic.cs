@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 
 namespace DiscordRPC.Example
 {
-    public class Basic : IExample
+    class Basic : IExample
     {
         private DiscordRpcClient client;
 
-        public void Setup()
+        public void Setup(Options opts)
         {
-            client = new DiscordRpcClient("424087019149328395")
+            client = new DiscordRpcClient(opts.ClientId, pipe: opts.Pipe)
             {
-                Logger = new Logging.ConsoleLogger(Logging.LogLevel.Info, true)
+                Logger = new Logging.ConsoleLogger(opts.LogLevel, true)
             };
 
             client.OnReady += (sender, msg) =>
