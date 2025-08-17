@@ -1338,6 +1338,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/features/joining.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/features/joining.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/features/timestamps.md",
       "output": {
         ".html": {
@@ -1382,46 +1392,6 @@
       "output": {
         ".html": {
           "relative_path": "articles/intro.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/join_spectate/intro.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/join_spectate/intro.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/join_spectate/join.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/join_spectate/join.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/join_spectate/join_requests.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/join_spectate/join_requests.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/join_spectate/spectate.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/join_spectate/spectate.html"
         }
       },
       "version": ""

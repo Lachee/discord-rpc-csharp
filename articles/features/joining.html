@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Joining and Parties | Discord RPC C# </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Joining and Parties | Discord RPC C# ">
+      
+      
+      <link rel="icon" href="../../Resources/logo.svg">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/joining.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../Resources/logo-small.png" alt="Discord RPC C#">
+            Discord RPC C#
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="joining-and-parties">Joining and Parties</h1>
+
+<h2 id="parties">Parties</h2>
+<p>Discord can show you and your friends in a party together for a specific game.</p>
+<p><img src="https://i.lu.je/2025/firefox_cxOtJ1xrdJ.png" alt="image of parties"></p>
+<p>The (xref:DiscordRPC.Party) can be used to create parties and control their size. With helper functions such as (xref:DiscordRPC.DiscordRpcClient.UpdatePartySize(int)) you can dynamically update when players join and leave.</p>
+<pre><code class="lang-cs">client.SetPresence(new()
+{
+    Details = &quot;Party Example&quot;,
+    State = &quot;In Game&quot;,
+    Party = new()
+    {
+        ID = &quot;my-unique-party-id&quot;,
+        Privacy = Party.PrivacySetting.Private,
+        Size = 1,
+        Max = 4,
+    },
+});
+</code></pre>
+<p>The (xref:DiscordRPC.Party.ID) is a unique id (to your application) that tells Discord what party the user is currently in. When two users use the same ID, Discord will group them together.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>If the size is set larger than actual number of users sharing the ID, then a default &quot;fake&quot; user is displayed instead.</p>
+<p>This value is also synchronised across all clients with the same ID.</p>
+</div>
+<h2 id="joining--lobbies">Joining / Lobbies</h2>
+<p>Users can use your Rich Presence as a very basic invite / join system. As long as the Party is set, you are able to provide special secret that discord will share to other users.</p>
+<p>When accepted/joined, the other player's game will be launched and a (xref:DiscordRPC.DiscordRpcClient.OnJoin) will be called with the secret you provided in your presence.</p>
+<p><img src="https://i.lu.je/2025/Discord_dT7xxZDifj.png" alt="image of join button"></p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Rich Presence only sends your secret to the other player. Your game must be able to connect and manage lobbies itself.</p>
+<p>Check out <a href="https://partner.steamgames.com/doc/features/multiplayer/matchmaking">Steams Documentation</a> for their lobbies.</p>
+</div>
+<h3 id="launching-your-game">Launching your game</h3>
+<p>Discord uses custom <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes">URI Schemes</a> to launch your game. It requires one to be set to show any of joining buttons.</p>
+<p>This library provides functionality to do this. Before initializing, use the RegisterScheme function:</p>
+<pre><code class="lang-cs">client.RegisterUriScheme();
+client.Initialize();
+</code></pre>
+<p>If you have a Steam game, you can launch using the <code>steam://</code> scheme instead by providing an appid:</p>
+<pre><code class="lang-cs">client.RegisterUriScheme(&quot;657300&quot;);
+client.Initialize();
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>You need to register the URI scheme to see other user's Join button and invites.</p>
+</div>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>MacOS requires schemes to be registered through <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">App Bundles</a>. This library cannot access your App Bundle and cannot automatically register <strong>non-steam</strong> games.</p>
+<p>If you are publishing a MacOS game, you <strong>must</strong> provide either a <code>Steam App ID</code> or a custom uri scheme (such as <code>my-game://launch</code>) to the <code>RegisterUriScheme</code>.</p>
+</div>
+<h3 id="setting-a-secret">Setting a Secret</h3>
+<p>Users will connect to multiplayer sessions of your game using a shared secret. When a presence is set, you can designate a secret that will be shared with users who will use that to join.</p>
+<p>This library doesn't provide a mechanism to connect to multiplayer sessions (match making) and will be dependant on your game, engine, and networking stack.</p>
+<p>These secrets should contain enough data to know who &amp; how to connect to someone but shouldn't include sensitive data like IP addresses.</p>
+<p>As a basic example, consider this implementation:</p>
+<pre><code class="lang-cs">client.SetPresence(new()
+{
+    Details = &quot;Party Example&quot;,
+    State = &quot;In Game&quot;,
+    Party = new() { /* .. Party Details .. */ },
+
+    //  This is how a launching app will figure out how to connect to the game.
+    Secrets = new()
+    {
+        Join = Lobby.CreateJoinToken(Lobby.current.ID)
+    },
+});
+
+</code></pre>
+<p>Note that <code>Lobby.current.ID</code> and <code>Lobby.CreateJoinToken()</code> will be up to your implementation. A naive approach would be a set password as the secret, but a better approach would be to use a signed key such as a <a href="https://www.jwt.io/introduction#when-to-use-json-web-tokens">JWT</a> which contains a lobby ID and signed by the lobby host.</p>
+<h3 id="joining">Joining</h3>
+<p>When a Party and Secret are set and the <strong>viewing</strong> user has had the URI Scheme registered, Discord will display a &quot;Join&quot; button on the presence.</p>
+<p><img src="https://i.lu.je/2025/Discord_dT7xxZDifj.png" alt="join"></p>
+<p>When a user clicks the Join button, Discord will launch the application using the URI Scheme that you registered earlier.</p>
+<p>Your application will then need to subscribe to (). Once subscribed, Discord will then send a Join message via the (xref:DiscordRPC.DiscordRpcClient.OnJoin) event. Once this event is received, use the secret from the event to join the lobby.</p>
+<p>Below is an example on this process:</p>
+<pre><code class="lang-cs">client.Subscribe(EventType.Join);
+client.OnJoin += (object sender, JoinMessage args) =&gt;  {
+    Lobby.JoinWithToken(args.Secret);
+};  
+</code></pre>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>We do not automatically subscribe to events. This library is primarily uesd for simple Rich Presence and the Joining is a feature generally only useful for Games.</p>
+<p>Because of this, by default this app will not receive Discord Join events. You must call the (xref:DiscordRPC.DiscordRpcClient.subscribe).</p>
+</div>
+<div class="TIP">
+<h5>Tip</h5>
+<p>You can directly invite users to play your game. They will see a game invitation like so, and if they have run the URI Scheme registration too, they will be able to launch from here.</p>
+<p><img src="https://i.lu.je/2025/Discord_ivzV8uc0F8.png" alt="invite button"></p>
+</div>
+<h3 id="ask-to-join">Ask to Join</h3>
+<p>To make your lobby a invite-only, set your (xref:DiscordRPC.Party.PrivacySetting) to <code>Private</code>.</p>
+<p>This will change the &quot;Join&quot; button to a &quot;Ask To Join&quot;. Users can directly respond to this in Discord, or you can listen to this event and respond to it directly in game using the (xref:DiscordRPC.DiscordRpcClient.OnJoinRequested)</p>
+<p><img src="https://i.lu.je/2025/Discord_P1f65SgZun.png" alt="ask to join"></p>
+<p>Subscribe to these events and use the (xref:DiscordRPC.DiscordRpcClient.Respond):</p>
+<pre><code class="lang-cs">client.Subscribe(EventType.JoinRequest);
+client.OnJoinRequested += async (object sender, JoinRequestMessage args) =&gt; {
+    var result = await UI.ShowRequestToJoin(args.user); // Hypothetical UI system
+    client.Respond(args.User, result.accepted);
+};
+</code></pre>
+<h2 id="spectating">Spectating</h2>
+<p>Spectating has been removed from Discord.</p>
+<h2 id="code-example">Code Example</h2>
+<p>The <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Joining.cs">DiscordRPC.Example</a> project contains a very basic example of the joining flow. Use 2 seperate clients as an example.</p>
+<pre><code class="lang-sh"># Run on the first pipe
+dotnet run --framework net9 --project DiscordRPC.Example --example=Joining --pipe=0
+
+# Run on the second pipe
+dotnet run --framework net9 --project DiscordRPC.Example --example=Joining --pipe=1
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>While it does register a scheme, this example cannot launch properly because it just registers the dotnet runner.</p>
+<p>This wont be a problem in a full application.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/features/joining.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <a href="https://github.com/Lachee/discord-rpc-csharp">Contribute</a> on GitHub
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
