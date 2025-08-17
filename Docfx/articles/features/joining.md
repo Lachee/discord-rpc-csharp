@@ -4,7 +4,7 @@ Discord can show you and your friends in a party together for a specific game.
 
 ![image of parties](https://i.lu.je/2025/firefox_cxOtJ1xrdJ.png)
 
-The (xref:DiscordRPC.Party) can be used to create parties and control their size. With helper functions such as (xref:DiscordRPC.DiscordRpcClient.UpdatePartySize(int)) you can dynamically update when players join and leave.
+The [Party](xref:DiscordRPC.Party) can be used to create parties and control their size. With helper functions such as [DiscordRpcClient.UpdatePartySize](xref:DiscordRPC.DiscordRpcClient.UpdatePartySize(System.Int32)) you can dynamically update when players join and leave.
 ```cs
 client.SetPresence(new()
 {
@@ -19,7 +19,7 @@ client.SetPresence(new()
     },
 });
 ```
-The (xref:DiscordRPC.Party.ID) is a unique id (to your application) that tells Discord what party the user is currently in. When two users use the same ID, Discord will group them together.
+The [Party.ID](xref:DiscordRPC.Party.ID) is a unique id (to your application) that tells Discord what party the user is currently in. When two users use the same ID, Discord will group them together.
 
 > [!TIP]
 > If the size is set larger than actual number of users sharing the ID, then a default "fake" user is displayed instead.
@@ -29,7 +29,7 @@ The (xref:DiscordRPC.Party.ID) is a unique id (to your application) that tells D
 ## Joining / Lobbies
 Users can use your Rich Presence as a very basic invite / join system. As long as the Party is set, you are able to provide special secret that discord will share to other users.
 
-When accepted/joined, the other player's game will be launched and a (xref:DiscordRPC.DiscordRpcClient.OnJoin) will be called with the secret you provided in your presence.
+When accepted/joined, the other player's game will be launched and a [OnJoin](xref:DiscordRPC.DiscordRpcClient.OnJoin) will be called with the secret you provided in your presence.
 
 ![image of join button](https://i.lu.je/2025/Discord_dT7xxZDifj.png)
 
@@ -92,11 +92,12 @@ When a Party and Secret are set and the **viewing** user has had the URI Scheme 
 
 ![join](https://i.lu.je/2025/Discord_dT7xxZDifj.png)
 
-When a user clicks the Join button, Discord will launch the application using the URI Scheme that you registered earlier. 
+When a user clicks the Join button, Discord will launch the application.
 
-Your application will then need to subscribe to (). Once subscribed, Discord will then send a Join message via the (xref:DiscordRPC.DiscordRpcClient.OnJoin) event. Once this event is received, use the secret from the event to join the lobby.
+Once loaded, your application needs to subscribe to the [EventType.Join](xref:DiscordRPC.EventType).
+Then Discord will then send a Join message via the [OnJoin](xref:DiscordRPC.DiscordRpcClient.OnJoin) event which contains the secret that was set earlier.
 
-Below is an example on this process:
+Use that secret to then connect to the lobby:
 ```cs
 client.Subscribe(EventType.Join);
 client.OnJoin += (object sender, JoinMessage args) =>  {
@@ -107,7 +108,7 @@ client.OnJoin += (object sender, JoinMessage args) =>  {
 > [!WARNING]
 > We do not automatically subscribe to events. This library is primarily uesd for simple Rich Presence and the Joining is a feature generally only useful for Games.
 >
-> Because of this, by default this app will not receive Discord Join events. You must call the (xref:DiscordRPC.DiscordRpcClient.subscribe).
+> Because of this, by default this app will not receive Discord Join events. You must call the [DiscordRpcClient.Subscribe](xref:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)).
 
 > [!TIP]
 > You can directly invite users to play your game. They will see a game invitation like so, and if they have run the URI Scheme registration too, they will be able to launch from here.
@@ -115,13 +116,13 @@ client.OnJoin += (object sender, JoinMessage args) =>  {
 > ![invite button](https://i.lu.je/2025/Discord_ivzV8uc0F8.png)
 
 ### Ask to Join
-To make your lobby a invite-only, set your (xref:DiscordRPC.Party.PrivacySetting) to `Private`.
+To make your lobby a invite-only, set your [Privacy Settings](xref:DiscordRPC.Party.PrivacySetting) to `Private`.
 
-This will change the "Join" button to a "Ask To Join". Users can directly respond to this in Discord, or you can listen to this event and respond to it directly in game using the (xref:DiscordRPC.DiscordRpcClient.OnJoinRequested)
+This will change the "Join" button to a "Ask To Join". Users can directly respond to this in Discord, or you can listen to this event and respond to it directly in game using the [OnJoinRequested](xref:DiscordRPC.DiscordRpcClient.OnJoinRequested)
 
 ![ask to join](https://i.lu.je/2025/Discord_P1f65SgZun.png)
 
-Subscribe to these events and use the (xref:DiscordRPC.DiscordRpcClient.Respond):
+Subscribe to these events and use the [Respond](xref:DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User,System.Boolean)):
 
 ```cs
 client.Subscribe(EventType.JoinRequest);
@@ -131,7 +132,7 @@ client.OnJoinRequested += async (object sender, JoinRequestMessage args) => {
 };
 ```
 
-## Spectating
+### Spectating
 Spectating has been removed from Discord.
 
 ## Code Example
