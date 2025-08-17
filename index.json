@@ -99,21 +99,6 @@
     "title": "Namespace DiscordRPC.Events | Discord RPC C#",
     "summary": "Namespace DiscordRPC.Events Delegates OnCloseEvent Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again. OnConnectionEstablishedEvent The connection to the discord client was succesfull. This is called before OnReadyEvent. OnConnectionFailedEvent Failed to establish any connection with discord. Discord is potentially not running? OnErrorEvent Called when a error has occured during the transmission of a message. For example, if a bad Rich Presence payload is sent, this event will be called explaining what went wrong. OnJoinEvent Called when the Discord Client wishes for this process to join a game. OnJoinRequestedEvent Called when another discord user requests permission to join this game. OnPresenceUpdateEvent Called when the Discord Client has updated the presence. OnReadyEvent Called when the Discord Client is ready to send and receive messages. OnRpcMessageEvent A RPC Message is received. OnSpectateEvent Called when the Discord Client wishes for this process to spectate a game. OnSubscribeEvent Called when the Discord Client has subscribed to an event. OnUnsubscribeEvent Called when the Discord Client has unsubscribed from an event."
   },
-  "api/DiscordRPC.Example.Basic.html": {
-    "href": "api/DiscordRPC.Example.Basic.html",
-    "title": "Class Basic | Discord RPC C#",
-    "summary": "Class Basic Namespace DiscordRPC.Example Assembly DiscordRPC.Example.dll public class Basic Inheritance object Basic Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods Run() public Task Run() Returns Task Setup() public void Setup() Teardown() public void Teardown()"
-  },
-  "api/DiscordRPC.Example.Joining.html": {
-    "href": "api/DiscordRPC.Example.Joining.html",
-    "title": "Class Joining | Discord RPC C#",
-    "summary": "Class Joining Namespace DiscordRPC.Example Assembly DiscordRPC.Example.dll public class Joining Inheritance object Joining Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods Run() public Task Run() Returns Task Setup() public void Setup() Teardown() public void Teardown()"
-  },
-  "api/DiscordRPC.Example.html": {
-    "href": "api/DiscordRPC.Example.html",
-    "title": "Namespace DiscordRPC.Example | Discord RPC C#",
-    "summary": "Namespace DiscordRPC.Example Classes Basic Joining"
-  },
   "api/DiscordRPC.Exceptions.BadPresenceException.html": {
     "href": "api/DiscordRPC.Exceptions.BadPresenceException.html",
     "title": "Class BadPresenceException | Discord RPC C#",
