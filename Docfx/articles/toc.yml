@@ -26,13 +26,5 @@
 - name: Timestamps
   href: features/timestamps.md
 
-- name: Join / Spectate
-  items:
-  - name: Introduction
-    href: join_spectate/intro.md
-  - name: Getting Requests
-    href: join_spectate/join_requests.md
-  - name: Joining Games
-    href: join_spectate/join.md
-  - name: Spectating Games
-    href: join_spectate/spectate.md
+- name: Joining & Parties
+  href: features/joining.md
