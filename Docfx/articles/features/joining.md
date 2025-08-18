@@ -118,11 +118,11 @@ The `Lobby.JoinWithToken` will be dependant on your implementation. However, usi
 ### Ask to Join
 To make your lobby a invite-only, set your [Privacy Settings](xref:DiscordRPC.Party.PrivacySetting) to `Private`.
 
-This will change the "Join" button to a "Ask To Join". Users can directly respond to this in Discord, or you can listen to this event and respond to it directly in game using the [OnJoinRequested](xref:DiscordRPC.DiscordRpcClient.OnJoinRequested)
+This will change the "Join" button to a "Ask To Join". When clicked, a message will appear in the host's Discord client. The host can directly respond to this in Discord, or your app can listen to this event and provide a way for the host to respond in game using the [OnJoinRequested](xref:DiscordRPC.DiscordRpcClient.OnJoinRequested) event.
 
 ![ask to join](https://i.lu.je/2025/Discord_P1f65SgZun.png)
 
-Subscribe to these events and use the [Respond](xref:DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User,System.Boolean)):
+To respond in game, subscribe to the [EventType.JoinRequest](xref:DiscordRPC.EventType) and use the [Respond(User, Boolean)](xref:DiscordRPC.DiscordRpcClient.Respond(DiscordRPC.User,System.Boolean)) to tell discord to accept or ignore:
 
 ```cs
 client.Subscribe(EventType.JoinRequest);
@@ -133,7 +133,7 @@ client.OnJoinRequested += async (object sender, JoinRequestMessage args) => {
 ```
 
 ### Spectating
-Spectating has been removed from Discord.
+Spectating has been removed from Discord 😢
 
 ## Code Example
 The [DiscordRPC.Example](https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Joining.cs) project contains a very basic example of the joining flow. Use 2 seperate clients as an example. 
