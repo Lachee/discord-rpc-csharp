@@ -33,10 +33,6 @@ When accepted/joined, the other player's game will be launched and a [OnJoin](xr
 
 ![image of join button](https://i.lu.je/2025/Discord_dT7xxZDifj.png)
 
-> [!NOTE]
-> Rich Presence only sends your secret to the other player. Your game must be able to connect and manage lobbies itself.
->
-> Check out [Steams Documentation](https://partner.steamgames.com/doc/features/multiplayer/matchmaking) for their lobbies.
 
 ### Launching your game
 Discord uses custom [URI Schemes](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes) to launch your game. It requires one to be set to show any of joining buttons.
@@ -62,11 +58,7 @@ client.Initialize();
 > If you are publishing a MacOS game, you **must** provide either a `Steam App ID` or a custom uri scheme (such as `my-game://launch`) to the `RegisterUriScheme`. 
 
 ### Setting a Secret
-Users will connect to multiplayer sessions of your game using a shared secret. When a presence is set, you can designate a secret that will be shared with users who will use that to join.
-
-This library doesn't provide a mechanism to connect to multiplayer sessions (match making) and will be dependant on your game, engine, and networking stack.
-
-These secrets should contain enough data to know who & how to connect to someone but shouldn't include sensitive data like IP addresses.
+To join a game, users will use a secret to connect to a lobby. These secrets should contain enough data to know who & how to connect to lobby but shouldn't include sensitive data like IP addresses.
 
 As a basic example, consider this implementation:
 ```cs
@@ -85,7 +77,11 @@ client.SetPresence(new()
 
 ```
 
-Note that `Lobby.current.ID` and `Lobby.CreateJoinToken()` will be up to your implementation. A naive approach would be a set password as the secret, but a better approach would be to use a signed key such as a [JWT](https://www.jwt.io/introduction#when-to-use-json-web-tokens) which contains a lobby ID and signed by the lobby host.
+The `Lobby.current.ID` and `Lobby.CreateJoinToken()` will be up to your implementation. A naive approach would be to combine the lobby id and the password together. However, a better approach would be to use a signed key such as a [JWT](https://www.jwt.io/introduction#when-to-use-json-web-tokens) which could include the lobby id and the host could verify this token signature before allowing the user to join.
+
+> [!TIP]
+> Rich Presence is not a networking stack and does not provide lobbies or match making.
+> Consult your engine's manual or check out [Steams Documentation](https://partner.steamgames.com/doc/features/multiplayer/matchmaking) for their lobbies.
 
 ### Joining
 When a Party and Secret are set and the **viewing** user has had the URI Scheme registered, Discord will display a "Join" button on the presence. 
