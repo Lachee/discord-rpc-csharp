@@ -114,11 +114,6 @@
 <p>Users can use your Rich Presence as a very basic invite / join system. As long as the Party is set, you are able to provide special secret that discord will share to other users.</p>
 <p>When accepted/joined, the other player's game will be launched and a <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnJoin">OnJoin</a> will be called with the secret you provided in your presence.</p>
 <p><img src="https://i.lu.je/2025/Discord_dT7xxZDifj.png" alt="image of join button"></p>
-<div class="NOTE">
-<h5>Note</h5>
-<p>Rich Presence only sends your secret to the other player. Your game must be able to connect and manage lobbies itself.</p>
-<p>Check out <a href="https://partner.steamgames.com/doc/features/multiplayer/matchmaking">Steams Documentation</a> for their lobbies.</p>
-</div>
 <h3 id="launching-your-game">Launching your game</h3>
 <p>Discord uses custom <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes">URI Schemes</a> to launch your game. It requires one to be set to show any of joining buttons.</p>
 <p>This library provides functionality to do this. Before initializing, use the RegisterScheme function:</p>
@@ -139,9 +134,7 @@ client.Initialize();
 <p>If you are publishing a MacOS game, you <strong>must</strong> provide either a <code>Steam App ID</code> or a custom uri scheme (such as <code>my-game://launch</code>) to the <code>RegisterUriScheme</code>.</p>
 </div>
 <h3 id="setting-a-secret">Setting a Secret</h3>
-<p>Users will connect to multiplayer sessions of your game using a shared secret. When a presence is set, you can designate a secret that will be shared with users who will use that to join.</p>
-<p>This library doesn't provide a mechanism to connect to multiplayer sessions (match making) and will be dependant on your game, engine, and networking stack.</p>
-<p>These secrets should contain enough data to know who &amp; how to connect to someone but shouldn't include sensitive data like IP addresses.</p>
+<p>To join a game, users will use a secret to connect to a lobby. These secrets should contain enough data to know who &amp; how to connect to lobby but shouldn't include sensitive data like IP addresses.</p>
 <p>As a basic example, consider this implementation:</p>
 <pre><code class="lang-cs">client.SetPresence(new()
 {
@@ -157,21 +150,31 @@ client.Initialize();
 });
 
 </code></pre>
-<p>Note that <code>Lobby.current.ID</code> and <code>Lobby.CreateJoinToken()</code> will be up to your implementation. A naive approach would be a set password as the secret, but a better approach would be to use a signed key such as a <a href="https://www.jwt.io/introduction#when-to-use-json-web-tokens">JWT</a> which contains a lobby ID and signed by the lobby host.</p>
+<p>The <code>Lobby.current.ID</code> and <code>Lobby.CreateJoinToken()</code> will be up to your implementation. A naive approach would be to combine the lobby id and the password together. However, a better approach would be to use a signed key such as a <a href="https://www.jwt.io/introduction#when-to-use-json-web-tokens">JWT</a> which could include the lobby id and the host could verify this token signature before allowing the user to join.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>Rich Presence is not a networking stack and does not provide lobbies or match making.
+Consult your engine's manual or check out <a href="https://partner.steamgames.com/doc/features/multiplayer/matchmaking">Steams Documentation</a> for their lobbies.</p>
+</div>
 <h3 id="joining">Joining</h3>
-<p>When a Party and Secret are set and the <strong>viewing</strong> user has had the URI Scheme registered, Discord will display a &quot;Join&quot; button on the presence.</p>
+<p>Users can join directly into a lobby from the Discord client via a &quot;Join&quot; button. The host must have the following set in their presence for this to be available:</p>
+<ul>
+<li>Party</li>
+<li>Secret</li>
+<li>Registered URI Scheme</li>
+</ul>
 <p><img src="https://i.lu.je/2025/Discord_dT7xxZDifj.png" alt="join"></p>
-<p>When a user clicks the Join button, Discord will launch the application.</p>
-<p>Once loaded, your application needs to subscribe to the <a class="xref" href="../../api/DiscordRPC.EventType.html">EventType.Join</a>.
-Then Discord will then send a Join message via the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnJoin">OnJoin</a> event which contains the secret that was set earlier.</p>
-<p>Use that secret to then connect to the lobby:</p>
+<p>When a joining user clicks the &quot;Join&quot; button, Discord will launch the application via the URI Scheme.</p>
+<p>Once loaded, the application will subscribe to the <a class="xref" href="../../api/DiscordRPC.EventType.html">EventType.Join</a>, which will make Discord send a Join message via the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnJoin">OnJoin</a> event. This message will contain the secret set in the host's presence.</p>
+<p>The application can use that secret to then join the lobby. As a basic example:</p>
 <pre><code class="lang-cs">client.Subscribe(EventType.Join);
 client.OnJoin += (object sender, JoinMessage args) =&gt;  {
     Lobby.JoinWithToken(args.Secret);
 };  
 </code></pre>
-<div class="WARNING">
-<h5>Warning</h5>
+<p>The <code>Lobby.JoinWithToken</code> will be dependant on your implementation. However, using a JWT as described earlier, you can extract the target Lobby ID and verify the signing signature when attempting to connect:</p>
+<div class="NOTE">
+<h5>Note</h5>
 <p>We do not automatically subscribe to events. This library is primarily uesd for simple Rich Presence and the Joining is a feature generally only useful for Games.</p>
 <p>Because of this, by default this app will not receive Discord Join events. You must call the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Subscribe_DiscordRPC_EventType_">DiscordRpcClient.Subscribe</a>.</p>
 </div>
@@ -182,9 +185,9 @@ client.OnJoin += (object sender, JoinMessage args) =&gt;  {
 </div>
 <h3 id="ask-to-join">Ask to Join</h3>
 <p>To make your lobby a invite-only, set your <a class="xref" href="../../api/DiscordRPC.Party.PrivacySetting.html">Privacy Settings</a> to <code>Private</code>.</p>
-<p>This will change the &quot;Join&quot; button to a &quot;Ask To Join&quot;. Users can directly respond to this in Discord, or you can listen to this event and respond to it directly in game using the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnJoinRequested">OnJoinRequested</a></p>
+<p>This will change the &quot;Join&quot; button to a &quot;Ask To Join&quot;. When clicked, a message will appear in the host's Discord client. The host can directly respond to this in Discord, or your app can listen to this event and provide a way for the host to respond in game using the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_OnJoinRequested">OnJoinRequested</a> event.</p>
 <p><img src="https://i.lu.je/2025/Discord_P1f65SgZun.png" alt="ask to join"></p>
-<p>Subscribe to these events and use the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Respond_DiscordRPC_User_System_Boolean_">Respond</a>:</p>
+<p>To respond in game, subscribe to the <a class="xref" href="../../api/DiscordRPC.EventType.html">EventType.JoinRequest</a> and use the <a class="xref" href="../../api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_Respond_DiscordRPC_User_System_Boolean_">Respond(User, Boolean)</a> to tell discord to accept or ignore:</p>
 <pre><code class="lang-cs">client.Subscribe(EventType.JoinRequest);
 client.OnJoinRequested += async (object sender, JoinRequestMessage args) =&gt; {
     var result = await UI.ShowRequestToJoin(args.user); // Hypothetical UI system
@@ -192,7 +195,7 @@ client.OnJoinRequested += async (object sender, JoinRequestMessage args) =&gt; {
 };
 </code></pre>
 <h3 id="spectating">Spectating</h3>
-<p>Spectating has been removed from Discord.</p>
+<p>Spectating has been removed from Discord 😢</p>
 <h2 id="code-example">Code Example</h2>
 <p>The <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Joining.cs">DiscordRPC.Example</a> project contains a very basic example of the joining flow. Use 2 seperate clients as an example.</p>
 <pre><code class="lang-sh"># Run on the first pipe
