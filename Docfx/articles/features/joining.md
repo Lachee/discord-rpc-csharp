@@ -84,16 +84,18 @@ The `Lobby.current.ID` and `Lobby.CreateJoinToken()` will be up to your implemen
 > Consult your engine's manual or check out [Steams Documentation](https://partner.steamgames.com/doc/features/multiplayer/matchmaking) for their lobbies.
 
 ### Joining
-When a Party and Secret are set and the **viewing** user has had the URI Scheme registered, Discord will display a "Join" button on the presence. 
+Users can join directly into a lobby from the Discord client via a "Join" button. The host must have the following set in their presence for this to be available:
+* Party
+* Secret
+* Registered URI Scheme
 
 ![join](https://i.lu.je/2025/Discord_dT7xxZDifj.png)
 
-When a user clicks the Join button, Discord will launch the application.
+When a joining user clicks the "Join" button, Discord will launch the application via the URI Scheme.
 
-Once loaded, your application needs to subscribe to the [EventType.Join](xref:DiscordRPC.EventType).
-Then Discord will then send a Join message via the [OnJoin](xref:DiscordRPC.DiscordRpcClient.OnJoin) event which contains the secret that was set earlier.
+Once loaded, the application will subscribe to the [EventType.Join](xref:DiscordRPC.EventType), which will make Discord send a Join message via the [OnJoin](xref:DiscordRPC.DiscordRpcClient.OnJoin) event. This message will contain the secret set in the host's presence.
 
-Use that secret to then connect to the lobby:
+The application can use that secret to then join the lobby. As a basic example:
 ```cs
 client.Subscribe(EventType.Join);
 client.OnJoin += (object sender, JoinMessage args) =>  {
@@ -101,7 +103,9 @@ client.OnJoin += (object sender, JoinMessage args) =>  {
 };  
 ```
 
-> [!WARNING]
+The `Lobby.JoinWithToken` will be dependant on your implementation. However, using a JWT as described earlier, you can extract the target Lobby ID and verify the signing signature when attempting to connect:
+
+> [!NOTE]
 > We do not automatically subscribe to events. This library is primarily uesd for simple Rich Presence and the Joining is a feature generally only useful for Games.
 >
 > Because of this, by default this app will not receive Discord Join events. You must call the [DiscordRpcClient.Subscribe](xref:DiscordRPC.DiscordRpcClient.Subscribe(DiscordRPC.EventType)).
