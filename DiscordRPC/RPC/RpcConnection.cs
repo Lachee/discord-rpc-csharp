@@ -52,6 +52,9 @@ namespace DiscordRPC.RPC
 		}
 		private ILogger _logger;
 
+
+		public int MaxConnectionTries { get; set; }
+    
 		/// <summary>
 		/// Called when a message is received from the RPC and is about to be enqueued. This is cross-thread and will execute on the RPC thread.
 		/// </summary>
@@ -118,6 +121,7 @@ namespace DiscordRPC.RPC
 
 		private AutoResetEvent queueUpdatedEvent = new AutoResetEvent(false);
 		private BackoffDelay delay;                     //The backoff delay before reconnecting.
+		private int tries; 								//number of unsuccessful connections in row
 		#endregion
 
 		/// <summary>
@@ -129,13 +133,15 @@ namespace DiscordRPC.RPC
 		/// <param name="client">The pipe client we shall use.</param>
 		/// <param name="maxRxQueueSize">The maximum size of the out queue</param>
 		/// <param name="maxRtQueueSize">The maximum size of the in queue</param>
-		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512)
+		/// <param name="maxConnectionTries">The maximum amount of tries taken before terminating</param>
+		public RpcConnection(string applicationID, int processID, int targetPipe, INamedPipeClient client, uint maxRxQueueSize = 128, uint maxRtQueueSize = 512, int maxConnectionTries = -1)
 		{
 			this.applicationID = applicationID;
 			this.processID = processID;
 			this.targetPipe = targetPipe;
-			this.namedPipe = client;
-			this.ShutdownOnly = true;
+			namedPipe = client;
+			ShutdownOnly = true;
+			MaxConnectionTries = maxConnectionTries;
 
 			//Assign a default logger
 			Logger = new ConsoleLogger();
@@ -316,6 +322,7 @@ namespace DiscordRPC.RPC
 						//Attempt to establish a handshake
 						EstablishHandshake();
 						Logger.Trace("Connection Established. Starting reading loop...");
+						tries = 0;
 
 						//Continously iterate, waiting for the frame
 						//We want to only stop reading if the inside tells us (mainloop), if we are aborting (abort) or the pipe disconnects
@@ -431,8 +438,17 @@ namespace DiscordRPC.RPC
 						// so we are going to wait a bit before doing it again
 						long sleep = delay.NextDelay();
 
+						tries++;
+
 						Logger.Trace("Waiting {0}ms before attempting to connect again", sleep);
 						Thread.Sleep(delay.NextDelay());
+					}
+					if (tries >= MaxConnectionTries && MaxConnectionTries != -1)
+					{
+						Logger.Error("Terminating attempts to connect, exceeded amount of tries");
+
+						EnqueueMessage(new TooManyConnectionTriesMessage());
+						break;
 					}
 				}
 				//catch(InvalidPipeException e)
