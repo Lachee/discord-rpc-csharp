@@ -1,18 +1,18 @@
-# Standard
-
-The standard guide for all .NET projects.
+# Getting Started
+This is a quck start guide on getting very basic presence working.
 
 ## Download
 
-First the library must be downloaded. For standard projects within the .NET enviorment, a nuget package is available and is updated to the latest release.
+[![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=Release)](https://github.com/Lachee/discord-rpc-csharp/tags)
 
- [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/)
-
-```powershell
-PM> Install-Package DiscordRichPresence
+```sh
+nuget install DiscordRichPresence
 ```
 
-A build of the library itself can be located in the [AppVeyor Artifacts](https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts)
+Install the package [with NuGet](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli). This can be done within the [UI for Visual Studio](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio)
+
+Unpackaged binaries can be found in the project's [Releases](https://github.com/Lachee/discord-rpc-csharp/releases).
 
 ## Usage
 
@@ -28,10 +28,10 @@ You can set the Rich Presence of your app at any time while the client object ha
 
 The creation of the client should happen once in the lifetime of the app. Where you put the constructor is upto your application design principles, but in general its always a good idea to put it in your initializers.
 
-The client should be _ideally_ treated like a [singleton](https://stackoverflow.com/a/2155713/5010271) and only ever created once. Multiple instances of the client can conflict with each other and cause unpredictable results within Discord and the end users Rich Presence.
+The client should be treated like a [singleton](https://stackoverflow.com/a/2155713/5010271) and only ever created once. Multiple instances of the client can conflict with each other and cause unpredictable results within Discord and the end users Rich Presence.
 
 ```cs
-public DiscordRpcClient Client { get; private set;}
+public DiscordRpcClient Client { get; private set; }
 
 void Setup() {
 	Client = new DiscordRpcClient("my_client_id");	//Creates the client
@@ -62,6 +62,7 @@ client.SetPresence(new RichPresence()
 ```
 
 You may call this as regularly as you wish, the default behaviour of the application will ignore duplicate presence and Discord itself will handle ratelimiting. 
+
 With that said, its always a good idea to only set the presence when there is actual change, to avoid any overheads. 
 
 ### Disposal
@@ -93,9 +94,15 @@ void Update() {
 }
 ```
 
-Please note that this method is _only_ required where cross-thread talk is a big no-no. Implementing this as a Timer would just defeat the purpose as they are [threaded anyways](https://stackoverflow.com/questions/1435876/do-c-sharp-timers-elapse-on-a-separate-thread).
+> [!NOTE]
+> This method is _only_ required where cross-thread talk is a big no-no. 
+> Implementing this as a Timer would just defeat the purpose as they are [threaded anyways](https://stackoverflow.com/questions/1435876/do-c-sharp-timers-elapse-on-a-separate-thread).
 
-## Further Reading
 
-If you wish to implement the Join and Spectate feature within your project (those buttons), please read [Joining & Spectating Introduction](../join_spectate/intro.md) to get started.
+## Code Example
 
+The [DiscordRPC.Example](https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Basic.cs) project contains a very basic example of setting up a client and creating your first presence.
+
+```sh
+dotnet run --framework net9 --project DiscordRPC.Example --example=Basic
+```

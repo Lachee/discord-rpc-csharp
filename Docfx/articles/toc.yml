@@ -2,14 +2,7 @@
   href: intro.md
 
 - name: Getting started
-  items:
-  - name: Standard Project
-    href: getting_started/standard.md
-  - name: Unity3D Project
-    href: getting_started/unity3d.md
-  - name: Mono Game Project
-    href: getting_started/monogame.md
-
+  href: getting_started.md
 
 - name: Activity Types
   href: features/activity_types.md
