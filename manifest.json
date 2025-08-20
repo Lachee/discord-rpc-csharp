@@ -1358,30 +1358,10 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/getting_started/monogame.md",
+      "source_relative_path": "articles/getting_started.md",
       "output": {
         ".html": {
-          "relative_path": "articles/getting_started/monogame.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/getting_started/standard.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/getting_started/standard.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "articles/getting_started/unity3d.md",
-      "output": {
-        ".html": {
-          "relative_path": "articles/getting_started/unity3d.html"
+          "relative_path": "articles/getting_started.html"
         }
       },
       "version": ""

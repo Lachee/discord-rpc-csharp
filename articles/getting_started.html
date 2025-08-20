@@ -2,21 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Standard | Discord RPC C# </title>
+      <title>Getting Started | Discord RPC C# </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Standard | Discord RPC C# ">
+      <meta name="title" content="Getting Started | Discord RPC C# ">
       
       
-      <link rel="icon" href="../../Resources/logo.svg">
-      <link rel="stylesheet" href="../../public/docfx.min.css">
-      <link rel="stylesheet" href="../../public/main.css">
-      <meta name="docfx:navrel" content="../../toc.html">
-      <meta name="docfx:tocrel" content="../toc.html">
+      <link rel="icon" href="../Resources/logo.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
       
-      <meta name="docfx:rel" content="../../">
+      <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/standard.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../../public/docfx.min.js"></script>
+      <script type="module" src="./../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../Resources/logo-small.png" alt="Discord RPC C#">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../Resources/logo-small.png" alt="Discord RPC C#">
             Discord RPC C#
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,15 +85,16 @@
         </div>
 
         <article data-uid="">
-<h1 id="standard">Standard</h1>
+<h1 id="getting-started">Getting Started</h1>
 
-<p>The standard guide for all .NET projects.</p>
+<p>This is a quck start guide on getting very basic presence working.</p>
 <h2 id="download">Download</h2>
-<p>First the library must be downloaded. For standard projects within the .NET enviorment, a nuget package is available and is updated to the latest release.</p>
-<p><a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a></p>
-<pre><code class="lang-powershell">PM&gt; Install-Package DiscordRichPresence
+<p><a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a>
+<a href="https://github.com/Lachee/discord-rpc-csharp/tags"><img src="https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=Release" alt="GitHub package.json version"></a></p>
+<pre><code class="lang-sh">nuget install DiscordRichPresence
 </code></pre>
-<p>A build of the library itself can be located in the <a href="https://ci.appveyor.com/project/Lachee/discord-rpc-csharp/build/artifacts">AppVeyor Artifacts</a></p>
+<p>Install the package <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli">with NuGet</a>. This can be done within the <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio">UI for Visual Studio</a></p>
+<p>Unpackaged binaries can be found in the project's <a href="https://github.com/Lachee/discord-rpc-csharp/releases">Releases</a>.</p>
 <h2 id="usage">Usage</h2>
 <p>The library has 3 phases that must be followed,</p>
 <ol>
@@ -104,8 +105,8 @@
 <p>You can set the Rich Presence of your app at any time while the client object has been constructed. The client will store the state of the presence and automatically resend it once initialized again.</p>
 <h3 id="initialization">Initialization</h3>
 <p>The creation of the client should happen once in the lifetime of the app. Where you put the constructor is upto your application design principles, but in general its always a good idea to put it in your initializers.</p>
-<p>The client should be <em>ideally</em> treated like a <a href="https://stackoverflow.com/a/2155713/5010271">singleton</a> and only ever created once. Multiple instances of the client can conflict with each other and cause unpredictable results within Discord and the end users Rich Presence.</p>
-<pre><code class="lang-cs">public DiscordRpcClient Client { get; private set;}
+<p>The client should be treated like a <a href="https://stackoverflow.com/a/2155713/5010271">singleton</a> and only ever created once. Multiple instances of the client can conflict with each other and cause unpredictable results within Discord and the end users Rich Presence.</p>
+<pre><code class="lang-cs">public DiscordRpcClient Client { get; private set; }
 
 void Setup() {
 	Client = new DiscordRpcClient(&quot;my_client_id&quot;);	//Creates the client
@@ -128,8 +129,8 @@ client.SetPresence(new RichPresence()
 	}
 });
 </code></pre>
-<p>You may call this as regularly as you wish, the default behaviour of the application will ignore duplicate presence and Discord itself will handle ratelimiting.
-With that said, its always a good idea to only set the presence when there is actual change, to avoid any overheads.</p>
+<p>You may call this as regularly as you wish, the default behaviour of the application will ignore duplicate presence and Discord itself will handle ratelimiting.</p>
+<p>With that said, its always a good idea to only set the presence when there is actual change, to avoid any overheads.</p>
 <h3 id="disposal">Disposal</h3>
 <p>It is important that the client is properly disposed when finished. This will safely disconnect from Discord and dispose of the resources correctly. If you have any issues with ghosting (particularly in Unity3D), make sure you dispose the client.</p>
 <pre><code class="lang-cs">	//Dispose client
@@ -150,14 +151,20 @@ void Update() {
 	Client.Invoke();
 }
 </code></pre>
-<p>Please note that this method is <em>only</em> required where cross-thread talk is a big no-no. Implementing this as a Timer would just defeat the purpose as they are <a href="https://stackoverflow.com/questions/1435876/do-c-sharp-timers-elapse-on-a-separate-thread">threaded anyways</a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>If you wish to implement the Join and Spectate feature within your project (those buttons), please read <a href="../join_spectate/intro.md">Joining &amp; Spectating Introduction</a> to get started.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>This method is <em>only</em> required where cross-thread talk is a big no-no.
+Implementing this as a Timer would just defeat the purpose as they are <a href="https://stackoverflow.com/questions/1435876/do-c-sharp-timers-elapse-on-a-separate-thread">threaded anyways</a>.</p>
+</div>
+<h2 id="code-example">Code Example</h2>
+<p>The <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Basic.cs">DiscordRPC.Example</a> project contains a very basic example of setting up a client and creating your first presence.</p>
+<pre><code class="lang-sh">dotnet run --framework net9 --project DiscordRPC.Example --example=Basic
+</code></pre>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/standard.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
