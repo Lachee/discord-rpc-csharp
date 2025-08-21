@@ -1,10 +1,10 @@
 <table frame="void">
     <tr>
       <td width="200px">
-        <img src="https://raw.githubusercontent.com/Lachee/discord-rpc-unity/master/Resources/logo.png" align="center" width="100%" />
+        <img src="https://raw.githubusercontent.com/Lachee/discord-rpc-csharp/master/Resources/logo.png" align="center" width="100%" />
       </td>
       <td>
-        <h1>Discord RPC Unity</h1>
+        <h1>Discord RPC CSharp</h1>
         <p>
 			<a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦" /></a>
 			<a href="https://app.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge" /></a>
