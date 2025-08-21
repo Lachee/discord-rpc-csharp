@@ -7,6 +7,10 @@ using DiscordRPC.Registry;
 using DiscordRPC.RPC;
 using DiscordRPC.RPC.Commands;
 using System;
+#if !DISABLE_MSLOGGEREXTENSION
+using Hi3Helper.SharpDiscordRPC.DiscordRPC.Logging;
+using ILoggerMs = Microsoft.Extensions.Logging.ILogger;
+#endif
 
 namespace DiscordRPC
 {
@@ -207,6 +211,15 @@ namespace DiscordRPC
         /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
         public DiscordRpcClient(string applicationID) : this(applicationID, -1) { }
 
+#if !DISABLE_MSLOGGEREXTENSION
+        /// <summary>
+        /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join / Spectate events.
+        /// </summary>
+        /// <param name="applicationID">The ID of the application created at discord's developers portal.</param>
+        /// <param name="logger">The logger used to report messages. Uses Microsoft's implementation of logging extension</param>
+        public DiscordRpcClient(string applicationID, ILoggerMs logger) : this(applicationID, -1, new MsILoggerWrapper(logger)) { }
+#endif
+
         /// <summary>
         /// Creates a new Discord RPC Client which can be used to send Rich Presence and receive Join events. This constructor exposes more advance features such as custom NamedPipeClients and Loggers.
         /// </summary>
@@ -250,7 +263,7 @@ namespace DiscordRPC
             };
         }
 
-        #endregion
+#endregion
 
         #region Message Handling
         /// <summary>
