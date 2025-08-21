@@ -20,7 +20,7 @@
       "_appName": "Discord RPC C#",
       "_appLogoPath": "Resources/logo-small.png",
       "_appFaviconPath": "Resources/logo.svg",
-      "_appFooter": "<a href=\"https://github.com/Lachee/discord-rpc-csharp\">Contribute</a> on GitHub",
+      "_appFooter": "<a href=\"https://github.com/Lachee/discord-rpc-csharp/blob/master/CONTRIBUTING.md\">Contribute</a> to this library on GitHub",
       "_enableSearch": true
     },
     "content": [
