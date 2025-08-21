@@ -6,6 +6,8 @@
       href: getting_started/mono.md
     - name: Use with UWP
       href: getting_started/uwp.md
+    - name: Use with WinForm
+      href: getting_started/winform.md
 
 - name: Activity Types
   href: features/activity_types.md
