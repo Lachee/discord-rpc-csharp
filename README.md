@@ -4,7 +4,7 @@
         <img src="https://raw.githubusercontent.com/Lachee/discord-rpc-csharp/master/Resources/logo.png" align="center" width="100%" />
       </td>
       <td>
-        <h1>Discord RPC CSharp</h1>
+        <h1>Discord RPC C#</h1>
         <p>
 			<a href="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml"><img src="https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg" alt="Release 📦" /></a>
 			<a href="https://app.codacy.com/gh/Lachee/discord-rpc-csharp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/30c4e9f58b7f4a058f79ad0acd743edf" alt="Codacy Badge" /></a>
@@ -12,7 +12,7 @@
 			<a href="https://github.com/Lachee/discord-rpc-csharp/tags"><img src="https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=release" alt="GitHub package.json version" /></a>
         </p>
 		<p>
-			<strong>Discord RPC Csharp</strong> is a C# <em>implementation</em> of <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a>. 
+			<strong>Discord RPC C#</strong> is a C# <em>implementation</em> of <a href="https://github.com/discordapp/discord-rpc">Discord RPC</a>. 
 			It enables integration of Discord Rich Presence into .NET applications without relying on the deprecated official C++ library.
 		</p>
 		<p>
@@ -109,7 +109,7 @@ public static void Main()
 > [!TIP]
 > Some platforms require specific tricks, gotchyas, and troubleshooting.
 >
-> Check out the main documentation [Getting Started](https://lachee.github.io/discord-rpc-csharp/articles/getting_started/introduction.html) to address these issues.x
+> Check out the main documentation [Getting Started](https://lachee.github.io/discord-rpc-csharp/articles/getting_started/introduction.html) to address these issues.
 
 
 ## Code Example
