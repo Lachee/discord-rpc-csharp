@@ -1388,6 +1388,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/getting_started/winform.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started/winform.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/rich_presence/guidelines.md",
       "output": {
         ".html": {

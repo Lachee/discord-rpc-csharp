@@ -2,21 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Namespace DiscordRPC.Logging | Discord RPC C# </title>
+      <title>WinForm | Discord RPC C# </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Namespace DiscordRPC.Logging | Discord RPC C# ">
+      <meta name="title" content="WinForm | Discord RPC C# ">
       
       
-      <link rel="icon" href="../Resources/logo.svg">
-      <link rel="stylesheet" href="../public/docfx.min.css">
-      <link rel="stylesheet" href="../public/main.css">
-      <meta name="docfx:navrel" content="../toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <link rel="icon" href="../../Resources/logo.svg">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
       
-      <meta name="docfx:rel" content="../">
+      <meta name="docfx:rel" content="../../">
       
       
-      
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/winform.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../public/docfx.min.js"></script>
+      <script type="module" src="./../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -39,12 +39,12 @@
 
   </head>
 
-  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../Resources/logo-small.png" alt="Discord RPC C#">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../Resources/logo-small.png" alt="Discord RPC C#">
             Discord RPC C#
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,54 +84,24 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="DiscordRPC.Logging">
+        <article data-uid="">
+<h1 id="winform">WinForm</h1>
 
-  <h1 id="DiscordRPC_Logging" data-uid="DiscordRPC.Logging" class="text-break">Namespace DiscordRPC.Logging</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-
-    <h3 id="classes">
-Classes
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="DiscordRPC.Logging.ConsoleLogger.html">ConsoleLogger</a></dt>
-      <dd><p>Logs the outputs to the console using <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.console.writeline#system-console-writeline">WriteLine()</a></p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="DiscordRPC.Logging.FileLogger.html">FileLogger</a></dt>
-      <dd><p>Logs the outputs to a file</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="DiscordRPC.Logging.NullLogger.html">NullLogger</a></dt>
-      <dd><p>Ignores all log events</p>
-</dd>
-    </dl>
-    <h3 id="interfaces">
-Interfaces
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="DiscordRPC.Logging.ILogger.html">ILogger</a></dt>
-      <dd><p>Logging interface to log the internal states of the pipe. Logs are sent in a NON thread safe way. They can come from multiple threads and it is upto the ILogger to account for it.</p>
-</dd>
-    </dl>
-    <h3 id="enums">
-Enums
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="DiscordRPC.Logging.LogLevel.html">LogLevel</a></dt>
-      <dd><p>Level of logging to use.</p>
-</dd>
-    </dl>
-
+<p>Here are some additional notes about WinForm and getting Rich Presence into these type of applications.</p>
+<h2 id="timers--event-loops">Timers &amp; Event Loops</h2>
+<p>To get thread safe events, manually use a timer.</p>
+<pre><code class="lang-csharp">var timer = new System.Timers.Timer(150);
+timer.Elapsed += (sender, args) =&gt; { client.Invoke(); };
+timer.Start();
+</code></pre>
 
 </article>
 
         <div class="contribution d-print-none">
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/winform.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
 
       </div>
 
