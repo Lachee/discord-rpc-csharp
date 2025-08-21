@@ -12,6 +12,7 @@ For non-dotnet platforms, there are a variety of guides to get you started
 | [MonoGame](https://monogame.net/) | [Mono Guide](./mono.md) |
 | [Unity3D](https://unity.com/) | 📦 Package [lachee/discord-rpc-unity](https://github.com/lachee/discord-rpc-unity/) |
 | [UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) | [UWP Guide](./uwp.md) |
+| [WinForm](https://learn.microsoft.com/en-us/visualstudio/ide/create-csharp-winform-visual-studio?view=vs-2022) | [WinForm Guide](./winform.md) |
 
 The following guide will assume a standard .NET application.
 
