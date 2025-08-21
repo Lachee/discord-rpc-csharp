@@ -4,19 +4,14 @@ This is a quck start guide on getting very basic presence working.
 ## Platforms
 For non-dotnet platforms, there are a variety of guides to get you started
 
-| Platform | Support | Documentation |
-|----------|---------|---------------|
-| .NET App | ✅ Full Support | [Getting Started](./introduction.md#download) |
-| [Godot](https://godotengine.org/) | 🚧 WIP Support | [lachee/discord-rpc-godot](https://github.com/Lachee/discord-rpc-godot/) |
-| [Mono](https://www.mono-project.com/) | ⚠️ Seperate Guide | [Mono Guide](./mono.md) |
-| [MonoGame](https://monogame.net/) | ⚠️ Seperate Guide | [Mono Guide](./mono.md) |
-| [Unity3D](https://unity.com/) | ✅ Full Support | [lachee/discord-rpc-unity](https://github.com/lachee/discord-rpc-unity/) |
-| [UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) | ⚠️ Seperate Guide | [UWP Guide](./uwp.md) |
-
-> ✅ Full Support - works out of the box
-> ⚠️ Seperate Guide - requires some additional setup
-> 🚧 WIP Support - actively being worked on
-
+| Platform | Guide |
+|----------|---------------|
+| .NET app | [Getting Started](./introduction.md#download) |
+| [Godot](https://godotengine.org/) | 🚧 📦 Package [lachee/discord-rpc-godot](https://github.com/Lachee/discord-rpc-godot/) |
+| [Mono](https://www.mono-project.com/) | [Mono Guide](./mono.md) |
+| [MonoGame](https://monogame.net/) | [Mono Guide](./mono.md) |
+| [Unity3D](https://unity.com/) | 📦 Package [lachee/discord-rpc-unity](https://github.com/lachee/discord-rpc-unity/) |
+| [UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) | [UWP Guide](./uwp.md) |
 
 The following guide will assume a standard .NET application.
 
