@@ -126,6 +126,10 @@ The [DiscordRPC.Example](https://github.com/Lachee/discord-rpc-csharp/blob/maste
 dotnet run --framework net9 --project DiscordRPC.Example --example=Basic
 ```
 
+## Building
+
+Check out the building guide in the [CONTRIBUTING.md](https://github.com/Lachee/discord-rpc-csharp/blob/master/CONTRIBUTING.md)
+
 # Need More Help?
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/lachee/discord-rpc-csharp.svg?color=green&label=issues%20opened&logo=github)](https://github.com/Lachee/discord-rpc-csharp/issues)

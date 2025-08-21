@@ -49,5 +49,15 @@ For now, to ease in maintainability, entities are within the `Entity/` folder bu
 
 See the README for more about building and testing your version. 
 
+## 📦 Building & Testing
+
+[![Release 📦](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/release.yml) [![Documentation 📚](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Lachee/discord-rpc-csharp/actions/workflows/documentation.yml)
+
+```
+dotnet build -c Release
+```
+> [!NOTE]
+> This is a stub. More indepth build/testing guides will be available at some point. 
+
 ## 😴 Licensing
 By submitting a PR, you are agreeing that your code is licensed under the same as defined in the accompying license file of the project. You transfer all rights to the code to the project and its community in perpetuity and retain authorship credit to the code.
