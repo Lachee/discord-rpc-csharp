@@ -7,16 +7,16 @@
       <meta name="title" content="Getting Started | Discord RPC C# ">
       
       
-      <link rel="icon" href="../Resources/logo.svg">
-      <link rel="stylesheet" href="../public/docfx.min.css">
-      <link rel="stylesheet" href="../public/main.css">
-      <meta name="docfx:navrel" content="../toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <link rel="icon" href="../../Resources/logo.svg">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
       
-      <meta name="docfx:rel" content="../">
+      <meta name="docfx:rel" content="../../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/introduction.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -30,7 +30,7 @@
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
 
-      <script type="module" src="./../public/docfx.min.js"></script>
+      <script type="module" src="./../../public/docfx.min.js"></script>
 
       <script>
         const theme = localStorage.getItem('theme') || 'auto'
@@ -43,8 +43,8 @@
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
-          <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../Resources/logo-small.png" alt="Discord RPC C#">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../Resources/logo-small.png" alt="Discord RPC C#">
             Discord RPC C#
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,12 +88,61 @@
 <h1 id="getting-started">Getting Started</h1>
 
 <p>This is a quck start guide on getting very basic presence working.</p>
+<h2 id="platforms">Platforms</h2>
+<p>For non-dotnet platforms, there are a variety of guides to get you started</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Support</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET App</td>
+<td>✅ Full Support</td>
+<td><a href="introduction.html#download">Getting Started</a></td>
+</tr>
+<tr>
+<td><a href="https://godotengine.org/">Godot</a></td>
+<td>🚧 WIP Support</td>
+<td><a href="https://github.com/Lachee/discord-rpc-godot/">lachee/discord-rpc-godot</a></td>
+</tr>
+<tr>
+<td><a href="https://www.mono-project.com/">Mono</a></td>
+<td>⚠️ Seperate Guide</td>
+<td><a href="mono.html">Mono Guide</a></td>
+</tr>
+<tr>
+<td><a href="https://monogame.net/">MonoGame</a></td>
+<td>⚠️ Seperate Guide</td>
+<td><a href="mono.html">Mono Guide</a></td>
+</tr>
+<tr>
+<td><a href="https://unity.com/">Unity3D</a></td>
+<td>✅ Full Support</td>
+<td><a href="https://github.com/lachee/discord-rpc-unity/">lachee/discord-rpc-unity</a></td>
+</tr>
+<tr>
+<td><a href="https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide">UWP</a></td>
+<td>⚠️ Seperate Guide</td>
+<td><a href="uwp.html">UWP Guide</a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>✅ Full Support - works out of the box
+⚠️ Seperate Guide - requires some additional setup
+🚧 WIP Support - actively being worked on</p>
+</blockquote>
+<p>The following guide will assume a standard .NET application.</p>
 <h2 id="download">Download</h2>
 <p><a href="https://www.nuget.org/packages/DiscordRichPresence/"><img src="https://img.shields.io/nuget/v/DiscordRichPresence.svg" alt="Nuget"></a>
 <a href="https://github.com/Lachee/discord-rpc-csharp/tags"><img src="https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=Release" alt="GitHub package.json version"></a></p>
-<pre><code class="lang-sh">nuget install DiscordRichPresence
+<pre><code class="lang-sh">dotnet add package DiscordRichPresence
 </code></pre>
-<p>Install the package <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli">with NuGet</a>. This can be done within the <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio">UI for Visual Studio</a></p>
+<p>Download the package with <a href="https://www.nuget.org/packages/DiscordRichPresence/">NuGet</a> to start using in your project.</p>
 <p>Unpackaged binaries can be found in the project's <a href="https://github.com/Lachee/discord-rpc-csharp/releases">Releases</a>.</p>
 <h2 id="usage">Usage</h2>
 <p>The library has 3 phases that must be followed,</p>
@@ -160,11 +209,14 @@ Implementing this as a Timer would just defeat the purpose as they are <a href="
 <p>The <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/DiscordRPC.Example/Basic.cs">DiscordRPC.Example</a> project contains a very basic example of setting up a client and creating your first presence.</p>
 <pre><code class="lang-sh">dotnet run --framework net9 --project DiscordRPC.Example --example=Basic
 </code></pre>
+<h1 id="need-more-help">Need More Help?</h1>
+<p><a href="https://github.com/Lachee/discord-rpc-csharp/issues"><img src="https://img.shields.io/github/issues-raw/lachee/discord-rpc-csharp.svg?color=green&amp;label=issues%20opened&amp;logo=github" alt="GitHub issues"></a></p>
+<p>Still stuck? Make a <a href="https://github.com/Lachee/discord-rpc-csharp/issues/new">new GitHub issue</a>!</p>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/introduction.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

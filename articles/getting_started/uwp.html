@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>UWP / .NET MAUI / WIN UI 3 | Discord RPC C# </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="UWP / .NET MAUI / WIN UI 3 | Discord RPC C# ">
+      
+      
+      <link rel="icon" href="../../Resources/logo.svg">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/uwp.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../Resources/logo-small.png" alt="Discord RPC C#">
+            Discord RPC C#
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+
+<div class="NOTE">
+<h5>Note</h5>
+<p>This article is a stub and is not complete.</p>
+<p>Please help by <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/advance/uwp.md">expanding it</a>.</p>
+</div>
+<h1 id="uwp--net-maui--win-ui-3">UWP / .NET MAUI / WIN UI 3</h1>
+<p>For now, the library doesn't work on UWP applications until we find the issue and fix it.</p>
+<p>In order to make this library work with the WIN UI 3 related applications such as .NET MAUI, you need to define <code>runFullTrust</code> Capability inside <code>Package.appxmanifest</code>.</p>
+<p>Here is an example of how to add <code>runFullTrust</code> to your WIN UI 3 application:</p>
+<p><code>Package.appxmanifest</code>:</p>
+<pre><code class="lang-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+
+&lt;Package
+  xmlns=&quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10&quot;
+  xmlns:uap=&quot;http://schemas.microsoft.com/appx/manifest/uap/windows10&quot;
+  xmlns:rescap=&quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities&quot;
+  IgnorableNamespaces=&quot;uap rescap&quot;&gt;
+  ...
+    &lt;Capabilities&gt;
+	    &lt;rescap:Capability Name=&quot;runFullTrust&quot; /&gt;
+    &lt;/Capabilities&gt;
+&lt;/Package&gt;
+</code></pre>
+<p>If you use .NET MAUI or WIN UI 3 template for C#, it automatically puts <code>runFullTrust</code> capability.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Lachee/discord-rpc-csharp/blob/master/Docfx/articles/getting_started/uwp.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <a href="https://github.com/Lachee/discord-rpc-csharp">Contribute</a> on GitHub
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

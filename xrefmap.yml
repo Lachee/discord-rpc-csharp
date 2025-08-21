@@ -1,9 +1,6 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
-- uid: Articles.Intro
-  name: Getting started with DiscordRPC C#
-  href: articles/intro.html
 - uid: DiscordRPC
   name: DiscordRPC
   href: api/DiscordRPC.html

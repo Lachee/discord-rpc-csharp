@@ -1358,20 +1358,30 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/getting_started.md",
+      "source_relative_path": "articles/getting_started/introduction.md",
       "output": {
         ".html": {
-          "relative_path": "articles/getting_started.html"
+          "relative_path": "articles/getting_started/introduction.html"
         }
       },
       "version": ""
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/intro.md",
+      "source_relative_path": "articles/getting_started/mono.md",
       "output": {
         ".html": {
-          "relative_path": "articles/intro.html"
+          "relative_path": "articles/getting_started/mono.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting_started/uwp.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started/uwp.html"
         }
       },
       "version": ""
