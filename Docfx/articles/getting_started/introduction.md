@@ -1,16 +1,35 @@
 # Getting Started
 This is a quck start guide on getting very basic presence working.
 
+## Platforms
+For non-dotnet platforms, there are a variety of guides to get you started
+
+| Platform | Support | Documentation |
+|----------|---------|---------------|
+| .NET App | ✅ Full Support | [Getting Started](./introduction.md#download) |
+| [Godot](https://godotengine.org/) | 🚧 WIP Support | [lachee/discord-rpc-godot](https://github.com/Lachee/discord-rpc-godot/) |
+| [Mono](https://www.mono-project.com/) | ⚠️ Seperate Guide | [Mono Guide](./mono.md) |
+| [MonoGame](https://monogame.net/) | ⚠️ Seperate Guide | [Mono Guide](./mono.md) |
+| [Unity3D](https://unity.com/) | ✅ Full Support | [lachee/discord-rpc-unity](https://github.com/lachee/discord-rpc-unity/) |
+| [UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide) | ⚠️ Seperate Guide | [UWP Guide](./uwp.md) |
+
+> ✅ Full Support - works out of the box
+> ⚠️ Seperate Guide - requires some additional setup
+> 🚧 WIP Support - actively being worked on
+
+
+The following guide will assume a standard .NET application.
+
 ## Download
 
 [![Nuget](https://img.shields.io/nuget/v/DiscordRichPresence.svg)](https://www.nuget.org/packages/DiscordRichPresence/)
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/lachee/discord-rpc-csharp?label=Release)](https://github.com/Lachee/discord-rpc-csharp/tags)
 
 ```sh
-nuget install DiscordRichPresence
+dotnet add package DiscordRichPresence
 ```
 
-Install the package [with NuGet](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-nuget-cli). This can be done within the [UI for Visual Studio](https://learn.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio)
+Download the package with [NuGet](https://www.nuget.org/packages/DiscordRichPresence/) to start using in your project.
 
 Unpackaged binaries can be found in the project's [Releases](https://github.com/Lachee/discord-rpc-csharp/releases).
 
@@ -106,3 +125,9 @@ The [DiscordRPC.Example](https://github.com/Lachee/discord-rpc-csharp/blob/maste
 ```sh
 dotnet run --framework net9 --project DiscordRPC.Example --example=Basic
 ```
+
+# Need More Help?
+
+[![GitHub issues](https://img.shields.io/github/issues-raw/lachee/discord-rpc-csharp.svg?color=green&label=issues%20opened&logo=github)](https://github.com/Lachee/discord-rpc-csharp/issues)
+
+Still stuck? Make a [new GitHub issue](https://github.com/Lachee/discord-rpc-csharp/issues/new)! 

@@ -14,7 +14,7 @@ The user's information is not immediately available. You must wait for the `OnRe
 This event will contain the current user information, and the [DiscordRpcClient.CurrentUser](xref:DiscordRPC.DiscordRpcClient.CurrentUser) is not valid until it has invoked.
 
 > [!WARNING]
-> As described in the [Getting Started](../getting_started/standard.md#events), events are executed in another thread.
+> As described in the [Getting Started](../getting_started.md#events), events are executed in another thread.
 >
 > If you are using a Game Engine, you need to manually use [DiscordRpcClient.Invoke](xref:DiscordRPC.DiscordRpcClient.Invoke) on your main thread or otherwise handle the cross-thread data transfer.
 

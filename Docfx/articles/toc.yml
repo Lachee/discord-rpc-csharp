@@ -1,8 +1,11 @@
-- name: Introduction
-  href: intro.md
-
 - name: Getting started
-  href: getting_started.md
+  items:
+    - name: Introduction
+      href: getting_started/introduction.md
+    - name: Use with Mono
+      href: getting_started/mono.md
+    - name: Use with UWP
+      href: getting_started/uwp.md
 
 - name: Activity Types
   href: features/activity_types.md
@@ -21,3 +24,5 @@
 
 - name: Joining & Parties
   href: features/joining.md
+
+  
