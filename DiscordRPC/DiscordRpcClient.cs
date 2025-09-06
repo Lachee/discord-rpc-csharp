@@ -18,6 +18,20 @@ namespace DiscordRPC
     {
         #region Properties
 
+        /// <summary>
+        /// Maximal amount of tries before aborting connection. If -1, then limit isn't present.
+        /// </summary>
+        /// <remarks>15 should be optimal value (~70s)</remarks>
+        public int MaxConnectionTries
+        {
+            get { return _maxConnectionTries; }
+            set
+            {
+                _maxConnectionTries = value;
+                if (connection != null) connection.MaxConnectionTries = value;
+            }
+        }
+        private int _maxConnectionTries;
 
         /// <summary>
         /// Gets a value indicating if the client has registered a URI Scheme. If this is false, Join events will fail.
@@ -41,7 +55,7 @@ namespace DiscordRPC
         public int ProcessID { get; private set; }
 
         /// <summary>
-        /// The maximum size of the message queue received from Discord. 
+        /// The maximum size of the message queue received from Discord.
         /// </summary>
         public int MaxQueueSize { get; private set; }
 
@@ -197,6 +211,11 @@ namespace DiscordRPC
         /// The RPC Connection has sent a message. Called before any other event and executed from the RPC Thread.
         /// </summary>
         public event OnRpcMessageEvent OnRpcMessage;
+
+        /// <summary>
+        /// Too many failed connection tries. You must reinitialize the client.
+        /// </summary>
+        public event OnTooManyConnectionTriesEvent OnTooManyConnectionTries;
         #endregion
 
         #region Initialization
@@ -215,7 +234,11 @@ namespace DiscordRPC
         /// <param name="logger">The logger used to report messages. If null, then a <see cref="NullLogger"/> will be created and logs will be ignored.</param>
         /// <param name="autoEvents">Should events be automatically invoked from the RPC Thread as they arrive from discord?</param>
         /// <param name="client">The pipe client to use and communicate to discord through. If null, the default <see cref="ManagedNamedPipeClient"/> will be used.</param>
-        public DiscordRpcClient(string applicationID, int pipe = -1, ILogger logger = null, bool autoEvents = true, INamedPipeClient client = null)
+        /// <param name="maxConnectionTries">
+        /// The maximum number of connection attempts before terminating.
+        /// Use -1 to disable the limit entirely. A value of 15 is typically optimal (~70 seconds).
+        /// </param>
+        public DiscordRpcClient(string applicationID, int pipe = -1, ILogger logger = null, bool autoEvents = true, INamedPipeClient client = null, int maxConnectionTries = -1)
         {
             //Make sure appID is NOT null.
             if (string.IsNullOrEmpty(applicationID))
@@ -228,6 +251,7 @@ namespace DiscordRPC
             HasRegisteredUriScheme = false;
             AutoEvents = autoEvents;
             SkipIdenticalPresence = true;
+            _maxConnectionTries = maxConnectionTries;
 
             //Prepare the logger
             _logger = logger ?? new NullLogger();
@@ -236,7 +260,8 @@ namespace DiscordRPC
             connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client ?? new ManagedNamedPipeClient(), autoEvents ? 0 : 128U)
             {
                 ShutdownOnly = _shutdownOnly,
-                Logger = _logger
+                Logger = _logger,
+                MaxConnectionTries = _maxConnectionTries
             };
 
             //Subscribe to its event
@@ -404,6 +429,13 @@ namespace DiscordRPC
                 case MessageType.ConnectionFailed:
                     if (OnConnectionFailed != null)
                         OnConnectionFailed.Invoke(this, message as ConnectionFailedMessage);
+                    break;
+                
+                case MessageType.TooManyConnectionTries:
+                    if (OnTooManyConnectionTries != null)
+                        OnTooManyConnectionTries.Invoke(this, message as TooManyConnectionTriesMessage);
+
+                    Deinitialize();
                     break;
 
                 //We got a message we dont know what to do with.

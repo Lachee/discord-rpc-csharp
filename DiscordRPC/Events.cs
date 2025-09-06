@@ -85,6 +85,13 @@ namespace DiscordRPC.Events
     /// <param name="args">The arguments supplied with the event</param>
     public delegate void OnConnectionFailedEvent(object sender, ConnectionFailedMessage args);
 
+    /// <summary>
+    /// Too many failed connection tries. You must reinitialize the client.
+    /// </summary>
+    /// <param name="sender">The Discord client handler that sent this event</param>
+    /// <param name="args">The arguments supplied with the event</param>
+    public delegate void OnTooManyConnectionTriesEvent(object sender, TooManyConnectionTriesMessage args);
+
 
     /// <summary>
     /// A RPC Message is received.
