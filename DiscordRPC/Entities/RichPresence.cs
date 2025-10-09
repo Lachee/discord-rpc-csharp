@@ -14,6 +14,24 @@ namespace DiscordRPC
     public class BaseRichPresence
     {
         /// <summary>
+        /// The application name shown after "Playing/Listening to/Watching/Competing in".
+        /// <para>Max 128 characters</para>
+        /// </summary>
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (!ValidateString(value, out _name, false, 128))
+                    throw new StringOutOfRangeException("Name", 0, 128);
+            }
+        }
+
+        /// <summary>Internal inner name string</summary>
+        protected internal string _name;
+
+        /// <summary>
         /// The user's current <see cref="Party"/> status. For example, "Playing Solo" or "With Friends".
         /// <para>Max 128 characters</para>
         /// </summary>
@@ -28,7 +46,7 @@ namespace DiscordRPC
             }
         }
 
-        /// <summary>Inernal inner state string</summary>
+        /// <summary>Internal inner state string</summary>
         protected internal string _state;
 
         /// <summary>
@@ -48,7 +66,7 @@ namespace DiscordRPC
                     throw new ArgumentException("Url must be a valid URI");
             }
         }
-        /// <summary>Inernal inner state URL string</summary>
+        /// <summary>Internal inner state URL string</summary>
         protected internal string _stateUrl;
 
         /// <summary>
@@ -65,7 +83,7 @@ namespace DiscordRPC
                     throw new StringOutOfRangeException(128);
             }
         }
-        /// <summary>Inernal inner detail string</summary>
+        /// <summary>Internal inner detail string</summary>
         protected internal string _details;
 
         /// <summary>
@@ -85,7 +103,7 @@ namespace DiscordRPC
                     throw new ArgumentException("Url must be a valid URI");
             }
         }
-        /// <summary>Inernal inner detail URL string</summary>
+        /// <summary>Internal inner detail URL string</summary>
         protected internal string _detailsUrl;
 
         /// <summary>
@@ -230,7 +248,8 @@ namespace DiscordRPC
             if (other == null)
                 return false;
 
-            if (State != other.State ||
+            if (Name != other.Name ||
+                State != other.State ||
                 StateUrl != other.StateUrl ||
                 Details != other.Details ||
                 DetailsUrl != other.DetailsUrl ||
@@ -265,7 +284,7 @@ namespace DiscordRPC
                 return false;
             }
 
-            //Checks if the timestamps are different
+            //Checks if the party is different
             if (Party != null)
             {
                 if (other.Party == null ||
@@ -307,6 +326,7 @@ namespace DiscordRPC
         public RichPresence ToRichPresence()
         {
             var presence = new RichPresence();
+            presence.Name = Name;
             presence.State = State;
             presence.StateUrl = StateUrl;
             presence.Details = Details;
@@ -366,6 +386,16 @@ namespace DiscordRPC
 
 
         #region Builder
+        /// <summary>
+        /// Sets the name of the Rich Presence. See also <seealso cref="BaseRichPresence.Name"/>.
+        /// </summary>
+        /// <param name="name">The name of the application.</param>
+        /// <returns>The modified Rich Presence.</returns>
+        public RichPresence WithName(string name)
+        {
+            Name = name;
+            return this;
+        }
         /// <summary>
         /// Sets the state of the Rich Presence. See also <seealso cref="BaseRichPresence.State"/>.
         /// </summary>
@@ -511,6 +541,7 @@ namespace DiscordRPC
         {
             return new RichPresence
             {
+                Name = this._name != null ? _name.Clone() as string : null,
                 State = this._state != null ? _state.Clone() as string : null,
                 StateUrl = this._stateUrl != null ? _stateUrl.Clone() as string : null,
                 Details = this._details != null ? _details.Clone() as string : null,
@@ -561,6 +592,7 @@ namespace DiscordRPC
         /// <returns>self</returns>
         internal RichPresence Merge(BaseRichPresence presence)
         {
+            this._name = presence.Name;
             this._state = presence.State;
             this._stateUrl = presence.StateUrl;
             this._details = presence.Details;
@@ -638,12 +670,5 @@ namespace DiscordRPC
         /// </summary>
         [JsonProperty("application_id")]
         public string ClientID { get; private set; }
-
-        /// <summary>
-        /// Name of the bot
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; private set; }
-
     }
 }
