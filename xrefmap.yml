@@ -270,6 +270,19 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.BaseRichPresence.HasTimestamps
   nameWithType: BaseRichPresence.HasTimestamps
+- uid: DiscordRPC.BaseRichPresence.Name
+  name: Name
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Name
+  commentId: P:DiscordRPC.BaseRichPresence.Name
+  fullName: DiscordRPC.BaseRichPresence.Name
+  nameWithType: BaseRichPresence.Name
+- uid: DiscordRPC.BaseRichPresence.Name*
+  name: Name
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Name_
+  commentId: Overload:DiscordRPC.BaseRichPresence.Name
+  isSpec: "True"
+  fullName: DiscordRPC.BaseRichPresence.Name
+  nameWithType: BaseRichPresence.Name
 - uid: DiscordRPC.BaseRichPresence.Party
   name: Party
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence_Party
@@ -386,6 +399,12 @@ references:
   commentId: F:DiscordRPC.BaseRichPresence._detailsUrl
   fullName: DiscordRPC.BaseRichPresence._detailsUrl
   nameWithType: BaseRichPresence._detailsUrl
+- uid: DiscordRPC.BaseRichPresence._name
+  name: _name
+  href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence__name
+  commentId: F:DiscordRPC.BaseRichPresence._name
+  fullName: DiscordRPC.BaseRichPresence._name
+  nameWithType: BaseRichPresence._name
 - uid: DiscordRPC.BaseRichPresence._state
   name: _state
   href: api/DiscordRPC.BaseRichPresence.html#DiscordRPC_BaseRichPresence__state
@@ -1103,6 +1122,22 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.DiscordRpcClient.UpdateLargeAsset
   nameWithType: DiscordRpcClient.UpdateLargeAsset
+- uid: DiscordRPC.DiscordRpcClient.UpdateName(System.String)
+  name: UpdateName(string)
+  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_UpdateName_System_String_
+  commentId: M:DiscordRPC.DiscordRpcClient.UpdateName(System.String)
+  name.vb: UpdateName(String)
+  fullName: DiscordRPC.DiscordRpcClient.UpdateName(string)
+  fullName.vb: DiscordRPC.DiscordRpcClient.UpdateName(String)
+  nameWithType: DiscordRpcClient.UpdateName(string)
+  nameWithType.vb: DiscordRpcClient.UpdateName(String)
+- uid: DiscordRPC.DiscordRpcClient.UpdateName*
+  name: UpdateName
+  href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_UpdateName_
+  commentId: Overload:DiscordRPC.DiscordRpcClient.UpdateName
+  isSpec: "True"
+  fullName: DiscordRPC.DiscordRpcClient.UpdateName
+  nameWithType: DiscordRpcClient.UpdateName
 - uid: DiscordRPC.DiscordRpcClient.UpdateParty(DiscordRPC.Party)
   name: UpdateParty(Party)
   href: api/DiscordRPC.DiscordRpcClient.html#DiscordRPC_DiscordRpcClient_UpdateParty_DiscordRPC_Party_
@@ -3504,6 +3539,22 @@ references:
   isSpec: "True"
   fullName: DiscordRPC.RichPresence.WithDetailsUrl
   nameWithType: RichPresence.WithDetailsUrl
+- uid: DiscordRPC.RichPresence.WithName(System.String)
+  name: WithName(string)
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithName_System_String_
+  commentId: M:DiscordRPC.RichPresence.WithName(System.String)
+  name.vb: WithName(String)
+  fullName: DiscordRPC.RichPresence.WithName(string)
+  fullName.vb: DiscordRPC.RichPresence.WithName(String)
+  nameWithType: RichPresence.WithName(string)
+  nameWithType.vb: RichPresence.WithName(String)
+- uid: DiscordRPC.RichPresence.WithName*
+  name: WithName
+  href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithName_
+  commentId: Overload:DiscordRPC.RichPresence.WithName
+  isSpec: "True"
+  fullName: DiscordRPC.RichPresence.WithName
+  nameWithType: RichPresence.WithName
 - uid: DiscordRPC.RichPresence.WithParty(DiscordRPC.Party)
   name: WithParty(Party)
   href: api/DiscordRPC.RichPresence.html#DiscordRPC_RichPresence_WithParty_DiscordRPC_Party_
