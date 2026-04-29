@@ -71,7 +71,7 @@ public static void Main()
 		Logger = new Logging.ConsoleLogger(Logging.LogLevel.Info, true)
 	};
 
-	client.OnReady += (sender, e) =>
+	client.OnReady += (sender, msg) =>
 	{
 		Console.WriteLine("Connected to discord with user {0}", msg.User.Username);
 		Console.WriteLine("Avatar: {0}", msg.User.GetAvatarURL(User.AvatarFormat.WebP));
