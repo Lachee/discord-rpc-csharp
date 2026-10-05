@@ -648,6 +648,32 @@ namespace DiscordRPC
             return true;
         }
 
+        /// <summary>
+        /// Checks if the other rich presence is equal to the current one
+        /// </summary>
+        /// <param name="presenceA"></param>
+        /// <param name="presenceB"></param>
+        /// <returns></returns>
+        public static bool operator ==(RichPresence presenceA, RichPresence presenceB)
+        {
+            if (ReferenceEquals(presenceA, presenceB)) return true;
+    
+            if (ReferenceEquals(presenceA, null) || ReferenceEquals(presenceB, null)) return false;
+    
+            return presenceA.Matches(presenceB);
+        }
+
+        /// <summary>
+        /// Checks if the other rich presence differs from the current one
+        /// </summary>
+        /// <param name="presenceA"></param>
+        /// <param name="presenceB"></param>
+        /// <returns></returns>
+        public static bool operator !=(RichPresence presenceA, RichPresence presenceB)
+        {
+            return !(presenceA == presenceB);
+        }
+
         #endregion
 
         /// <summary>
